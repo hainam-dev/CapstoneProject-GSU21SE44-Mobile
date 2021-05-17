@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "447887254930",
+    "project_id": "fir-mumbi-app-mobile",
+    "storage_bucket": "fir-mumbi-app-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:447887254930:android:0a8e67ec2ae6d7c0f48d4b",
+        "android_client_info": {
+          "package_name": "com.example.mumbi_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "447887254930-3vcd55ljnsvgs1ealbg2d0snu34l4vp3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mumbi_app",
+            "certificate_hash": "34ce116032c410e7d92caef5d70f23ce63e7b4dc"
+          }
+        },
+        {
+          "client_id": "447887254930-6lvjj8kcv8a3bnm107go7in3eh3p48b9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6J3M7_IHwVwfRH36RjE1BfahmSWlVoHg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "447887254930-6lvjj8kcv8a3bnm107go7in3eh3p48b9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
