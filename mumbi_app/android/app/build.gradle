@@ -26,13 +26,17 @@ apply plugin: 'com.google.gms.google-services'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 28
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.mumbi_app"
-        minSdkVersion 16
-        targetSdkVersion 30
+        minSdkVersion 21
+        targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -47,13 +51,10 @@ android {
 }
 
 
-
-
-
-
-
-
-
 flutter {
     source '../..'
+}
+dependencies {
+    implementation 'com.google.firebase:firebase-core:17.0.0'
+
 }
