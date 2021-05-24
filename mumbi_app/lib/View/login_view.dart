@@ -3,11 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:mumbi_app/Utils/splashScreen.dart';
-import 'package:mumbi_app/View/childrenInfo.dart';
-import 'package:mumbi_app/View/parentInfo_view.dart';
-import 'package:mumbi_app/View/momInfo_view.dart';
+import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
-import 'package:mumbi_app/View/homeTemp_view.dart';
 import 'package:mumbi_app/Utils/constant.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -17,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: ColorTheme,
       ),
       home: new SplashScreen(),
       routes: <String, WidgetBuilder>{

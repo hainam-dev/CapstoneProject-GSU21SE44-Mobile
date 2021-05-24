@@ -59,9 +59,10 @@ flutter:
     - assets/images/logo.png
     - assets/images/apple_logo.jpg
     - assets/images/Image.png
-    - assets/images//icon_child.png
-    - assets/images//icon_boy.png
-    - assets/images//icon_girl.png
+    - assets/images/icon_child.png
+    - assets/images/icon_boy.png
+    - assets/images/icon_girl.png
+    - assets/images/icon_calendar.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
@@ -91,6 +92,7 @@ flutter:
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Light.ttf
+          weight: 500
 
   #
   # For details regarding fonts from package dependencies,

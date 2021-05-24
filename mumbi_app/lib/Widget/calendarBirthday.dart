@@ -3,16 +3,19 @@ import 'package:mumbi_app/Model/childrenInfo_model.dart';
 import 'package:mumbi_app/Utils/constant.dart';
 
 class CalendarBirthday extends StatefulWidget {
+final title;
 
+  const CalendarBirthday(this.title);
   @override
-  _CalendarBirthdayState createState() => _CalendarBirthdayState();
+  _CalendarBirthdayState createState() => _CalendarBirthdayState(this.title);
 }
 
 class _CalendarBirthdayState extends State<CalendarBirthday> {
   Date _date = new Date();
   TextEditingController _dateController = TextEditingController();
   DateTime selectedDate = DateTime.now();
-
+  final title;
+  _CalendarBirthdayState(this.title);
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
@@ -52,8 +55,8 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
             },
             controller: _dateController,
             decoration: InputDecoration(
-              labelStyle: TextStyle(color: COLOR_THEME),
-              labelText: 'Ngày sinh',
+              labelStyle: TextStyle(color: COLOR_THEME,fontWeight: FontWeight.w600,fontSize: 14.0),
+              labelText: title,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(

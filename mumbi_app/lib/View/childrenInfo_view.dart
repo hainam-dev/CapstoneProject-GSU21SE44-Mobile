@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mumbi_app/Model/childrenInfo_model.dart';
 import 'package:mumbi_app/Utils/constant.dart';
 import 'package:mumbi_app/Widget/calendarBirthday.dart';
 import 'package:mumbi_app/Widget/calendarCalculate.dart';
 
-class ParentInfo extends StatefulWidget {
-  final appbarTitle;
-
-  ParentInfo(this.appbarTitle);
-
+class ChildrenInfo extends StatefulWidget {
   @override
-  _ParentInfoState createState() => _ParentInfoState(this.appbarTitle);
+  _ParentInfoState createState() => _ParentInfoState();
 }
 
-class _ParentInfoState extends State<ParentInfo> {
+class _ParentInfoState extends State<ChildrenInfo> {
   final formKey = GlobalKey<FormState>();
   String username = '';
   String dateOfBirth = '';
   String phoneNumber = '';
-  final appbarTitle;
-
-  _ParentInfoState(this.appbarTitle);
+  String selectedValue;
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +27,14 @@ class _ParentInfoState extends State<ParentInfo> {
         designSize: Size(1125, 2436),
         orientation: Orientation.portrait);
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         toolbarHeight: 48,
         title: Text(
-          '$appbarTitle',
+          'Thêm bé/thai kì',
           style: TextStyle(fontFamily: 'Lato', fontSize: 20),
         ),
       ),
-      backgroundColor: Colors.white,
       body: Container(
         height: 2344,
         width: 1125,
@@ -54,34 +49,21 @@ class _ParentInfoState extends State<ParentInfo> {
                   key: formKey,
                   child: ListView(
                     children: [
-                      _buildUsername(),
+                      const SizedBox(height: 5),
+                      _buildUsername('Họ & tên (*)'),
                       const SizedBox(height: 12),
-                      CalendarBirthday('Ngày sinh'),
+                      _buildUsername('Tên ở nhà'),
                       const SizedBox(height: 12),
-                      _buildPhoneNumber(),
+                      _buildStatus(),
                       const SizedBox(height: 12),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Flexible(
-                            child: _buildBloodGroup(
-                                'Nhóm máu', 'Nhóm máu', ['A', 'B', 'O', 'AB']),
-                            flex: 2,
-                          ),
-                          const SizedBox(
-                            width: 17,
-                          ),
-                          Flexible(
-                            child: _buildBloodGroup('Hệ máu (Rh)',
-                                'Hệ máu (Rh)', ['RH(D)+', 'RH(D)-']),
-                            flex: 2,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 166,
-                      ),
+                      (selectedValue.toString() == "Bé đã sinh")
+                          ? CalendarBirthday('Ngày sinh')
+                          : (selectedValue.toString() == "Thai nhi")
+                              ? CalendarCalculate()
+                              : CalendarBirthday('Ngày sinh'),
+                      const SizedBox(height: 12),
+                      _buildGender(),
+                      const SizedBox(height: 88),
                       _getActionButtons()
                     ],
                   ),
@@ -94,12 +76,13 @@ class _ParentInfoState extends State<ParentInfo> {
     );
   }
 
-  Widget _buildUsername() => Container(
+  Widget _buildUsername(String name) => Container(
         height: 58,
         child: TextFormField(
+          style: TextStyle(fontFamily: 'Lato', fontWeight: FontWeight.w100),
           decoration: InputDecoration(
             labelStyle: TextStyle(color: COLOR_THEME),
-            labelText: 'Họ & tên (*)',
+            labelText: name,
             hintStyle: TextStyle(color: COLOR_THEME),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -124,47 +107,14 @@ class _ParentInfoState extends State<ParentInfo> {
         ),
       );
 
-  Widget _buildPhoneNumber() => Container(
-        height: 58,
-        child: TextFormField(
-          decoration: InputDecoration(
-            labelStyle: TextStyle(color: COLOR_THEME),
-            labelText: 'Số điện thoại',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                width: 1,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_THEME, width: 1.0),
-            ),
-          ),
-          validator: (value) {
-            final pattern = r'((84|0[3|5|7|8|9])+([0-9]{8})\b)';
-            final regExp = RegExp(pattern);
-            if (value.isEmpty) {
-              return 'Vui lòng nhập số điện thoại của bạn.';
-            } else if (!regExp.hasMatch(value)) {
-              return 'Số điện thoại không đúng, vui lòng nhập lại!';
-            } else {
-              return null;
-            }
-          },
-          onSaved: (value) => setState(() => phoneNumber = value),
-          keyboardType: TextInputType.phone,
-        ),
-      );
-
-  Widget _buildBloodGroup(
-          String labelText, String hinText, List<String> items) =>
-      Container(
-        height: 58,
+  Widget _buildStatus() => Container(
+        height: 60,
         width: 163,
         child: new DropdownButtonFormField<String>(
+          value: selectedValue,
           decoration: InputDecoration(
             labelStyle: TextStyle(color: COLOR_THEME),
-            labelText: labelText,
+            labelText: 'Trạng thái(*)',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
@@ -173,16 +123,121 @@ class _ParentInfoState extends State<ParentInfo> {
             ),
           ),
           hint: Text(
-            hinText,
+            'Trạng thái(*)',
             style: TextStyle(color: COLOR_THEME),
           ),
-          items: items.map((String value) {
-            return new DropdownMenuItem<String>(
-              value: value,
-              child: new Text(value),
-            );
-          }).toList(),
-          onChanged: (_) {},
+          items: [
+            DropdownMenuItem(
+              value: 'Thai nhi',
+              child: new Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Image.asset(
+                    IMAGE + 'icon_child.png',
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: new Text(
+                      'Thai nhi',
+                      style: TextStyle(fontSize: 16.0, fontFamily: 'Lato'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            DropdownMenuItem(
+              value: 'Bé đã sinh',
+              child: new Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Image.asset(
+                    IMAGE + 'icon_child.png',
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: new Text(
+                      'Bé đã sinh',
+                      style: TextStyle(fontSize: 16.0, fontFamily: 'Lato'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          onChanged: (value) async {
+            print(selectedValue = value);
+            await setState(() {
+              _ParentInfoState();
+            });
+          },
+          // value: _value,
+          isExpanded: true,
+        ),
+      );
+
+  Widget _buildGender() => Container(
+        height: 60,
+        width: 163,
+        child: new DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            labelStyle: TextStyle(color: COLOR_THEME),
+            labelText: 'Giới tính(*)',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(
+                width: 1,
+              ),
+            ),
+          ),
+          hint: Text(
+            'Giới tính(*)',
+            style: TextStyle(color: COLOR_THEME),
+          ),
+          items: [
+            DropdownMenuItem(
+              value: 'Bé trai',
+              child: new Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Image.asset(
+                    IMAGE + 'icon_boy.png',
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: new Text(
+                      'Bé trai',
+                      style: TextStyle(fontSize: 16.0, fontFamily: 'Lato'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            DropdownMenuItem(
+              value: 'Bé gái',
+              child: new Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Image.asset(
+                    IMAGE + 'icon_girl.png',
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: new Text(
+                      'Bé gái',
+                      style: TextStyle(fontSize: 16.0, fontFamily: 'Lato'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          onChanged: (value) {},
+          // value: _value,
+          isExpanded: true,
         ),
       );
 

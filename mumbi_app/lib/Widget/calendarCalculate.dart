@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Model/childrenInfo_model.dart';
 import 'package:mumbi_app/Utils/constant.dart';
+import 'package:mumbi_app/View/calculateDate_view.dart';
 
 class CalendarCalculate extends StatefulWidget {
-
-
   @override
   _CalendarCalculateState createState() => _CalendarCalculateState();
 }
@@ -45,61 +44,65 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
     return Container(
       width: 343,
       height: 58,
-      child: GestureDetector(
-        onTap: () => _selectDate(context),
-        child: AbsorbPointer(
-          child: TextFormField(
-            onSaved: (val) {
-              _date.date = selectedDate;
-            },
-            controller: _dateController,
-            decoration: InputDecoration(
-              labelStyle: TextStyle(color: COLOR_THEME),
-              labelText: 'Ngày dự sinh',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
-                  width: 1,
-                ),
-              ),
-              suffix: Container(
-                width: 109,
-                height: 40,
-                child: Row(
-                  children: [
-                    VerticalDivider(
-                      thickness: 1,
-                      color: Colors.grey,
-                    ),
-                    RaisedButton(
-                      child: new Text(
-                        "Tính ngày",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          fontFamily: 'Lato',
-                        ),
+      child: Row(
+        children: [
+          Container(
+            width: 224,
+            child: GestureDetector(
+              onTap: () => _selectDate(context),
+              child: AbsorbPointer(
+                child: TextFormField(
+                  onSaved: (val) {
+                    _date.date = selectedDate;
+                  },
+                  controller: _dateController,
+                  decoration: InputDecoration(
+                    labelStyle: TextStyle(
+                        color: COLOR_THEME, fontWeight: FontWeight.w600),
+                    labelText: 'Ngày dự sinh',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(
+                        width: 1,
                       ),
-                      textColor: Colors.white,
-                      color: COLOR_THEME,
-                      onPressed: () {
-                        setState(() {});
-                      },
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(8.0)),
                     ),
-                  ],
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) return "Please enter a date";
+                    return null;
+                  },
                 ),
               ),
             ),
-            validator: (value) {
-              if (value.isEmpty) return "Please enter a date";
-              return null;
-            },
           ),
-        ),
+          SizedBox(
+            width: 10,
+          ),
+          Container(
+            width: 109,
+            height: 58,
+            child: RaisedButton(
+              child: new Text(
+                "Tính ngày",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.0,fontWeight: FontWeight.w700,
+                  fontFamily: 'Lato',
+                ),
+              ),
+              textColor: Colors.white,
+              color: COLOR_THEME,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CalculateDate()));
+                setState(() {});
+              },
+              shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(15.0)),
+            ),
+          )
+        ],
       ),
     );
-
   }
 }
