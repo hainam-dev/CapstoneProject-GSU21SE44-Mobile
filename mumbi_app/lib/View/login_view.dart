@@ -2,7 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:mumbi_app/View/fatherInfo_view.dart';
+import 'package:mumbi_app/Utils/splashScreen.dart';
+import 'package:mumbi_app/View/childrenInfo.dart';
+import 'package:mumbi_app/View/parentInfo_view.dart';
+import 'package:mumbi_app/View/momInfo_view.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
 import 'package:mumbi_app/View/homeTemp_view.dart';
 import 'package:mumbi_app/Utils/constant.dart';
@@ -16,7 +19,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(),
+      home: new SplashScreen(),
+      routes: <String, WidgetBuilder>{
+        //SPLASH_SCREEN: (BuildContext context) => new MapScreen(),
+        '/LoginScreen': (BuildContext context) => new LoginScreen(),
+      },
     );
   }
 }
@@ -106,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     FirebaseUser user = await auth.currentUser();
                     print(value);
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => FatherInfo()));
+                        MaterialPageRoute(builder: (context) => ChildrenInfo()));
                   },
                 );
               },

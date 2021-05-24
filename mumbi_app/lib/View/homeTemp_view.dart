@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
 
+import '../main.dart';
 import 'login_view.dart';
 
 class HomeTemp extends StatelessWidget {
