@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mumbi_app/Model/childrenInfo_model.dart';
-import 'package:mumbi_app/Utils/constant.dart';
+import 'package:mumbi_app/Constant/assets_path.dart';
+import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/Widget/calendarBirthday.dart';
 import 'package:mumbi_app/Widget/calendarCalculate.dart';
+import 'package:mumbi_app/Widget/customText.dart';
 
 class ChildrenInfo extends StatefulWidget {
   @override
@@ -20,31 +22,26 @@ class _ParentInfoState extends State<ChildrenInfo> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(
-        BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width,
-            maxHeight: MediaQuery.of(context).size.height),
-        designSize: Size(1125, 2436),
-        orientation: Orientation.portrait);
+    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        toolbarHeight: 48,
-        title: Text(
-          'Thêm bé/thai kì',
-          style: TextStyle(fontFamily: 'Lato', fontSize: 20),
+        toolbarHeight: SizeConfig.blockSizeVertical * 6,
+        title: CustomText(
+          text: 'Thêm bé/thai kì',
+          size: 20.0,
         ),
       ),
       body: Container(
-        height: 2344,
-        width: 1125,
+        height: SizeConfig.blockSizeVertical * 100,
+        width: SizeConfig.blockSizeHorizontal * 100,
         child: SingleChildScrollView(
           child: Column(
             children: [
               _buildChangeAvatar(),
               new Container(
-                height: 552,
-                width: 343,
+                height: SizeConfig.blockSizeVertical * 80,
+                width: SizeConfig.blockSizeHorizontal * 90,
                 child: Form(
                   key: formKey,
                   child: ListView(
@@ -77,13 +74,13 @@ class _ParentInfoState extends State<ChildrenInfo> {
   }
 
   Widget _buildUsername(String name) => Container(
-        height: 58,
+        height: SizeConfig.blockSizeVertical * 8,
         child: TextFormField(
           style: TextStyle(fontFamily: 'Lato', fontWeight: FontWeight.w100),
           decoration: InputDecoration(
-            labelStyle: TextStyle(color: COLOR_THEME),
+            labelStyle: TextStyle(color: getColor),
             labelText: name,
-            hintStyle: TextStyle(color: COLOR_THEME),
+            hintStyle: TextStyle(color: getColor),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
@@ -92,7 +89,7 @@ class _ParentInfoState extends State<ChildrenInfo> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: COLOR_THEME, width: 1.0),
+              borderSide: BorderSide(color: getColor, width: 1.0),
             ),
           ),
           validator: (value) {
@@ -108,12 +105,12 @@ class _ParentInfoState extends State<ChildrenInfo> {
       );
 
   Widget _buildStatus() => Container(
-        height: 60,
-        width: 163,
+        height: SizeConfig.blockSizeVertical * 7.5,
+        width: SizeConfig.blockSizeHorizontal * 90,
         child: new DropdownButtonFormField<String>(
           value: selectedValue,
           decoration: InputDecoration(
-            labelStyle: TextStyle(color: COLOR_THEME),
+            labelStyle: TextStyle(color: getColor, fontSize: 16.0, fontWeight: FontWeight.w500,fontFamily: 'Lato'),
             labelText: 'Trạng thái(*)',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -122,10 +119,7 @@ class _ParentInfoState extends State<ChildrenInfo> {
               ),
             ),
           ),
-          hint: Text(
-            'Trạng thái(*)',
-            style: TextStyle(color: COLOR_THEME),
-          ),
+          
           items: [
             DropdownMenuItem(
               value: 'Thai nhi',
@@ -134,13 +128,12 @@ class _ParentInfoState extends State<ChildrenInfo> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   new Image.asset(
-                    IMAGE + 'icon_child.png',
+                    iconChild,
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 10.0),
-                    child: new Text(
-                      'Thai nhi',
-                      style: TextStyle(fontSize: 16.0, fontFamily: 'Lato'),
+                    child: new CustomText(
+                      text: 'Thai nhi',
                     ),
                   ),
                 ],
@@ -153,13 +146,12 @@ class _ParentInfoState extends State<ChildrenInfo> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   new Image.asset(
-                    IMAGE + 'icon_child.png',
+                    iconChild,
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 10.0),
-                    child: new Text(
-                      'Bé đã sinh',
-                      style: TextStyle(fontSize: 16.0, fontFamily: 'Lato'),
+                    child: new CustomText(
+                      text: 'Bé đã sinh',
                     ),
                   ),
                 ],
@@ -178,11 +170,11 @@ class _ParentInfoState extends State<ChildrenInfo> {
       );
 
   Widget _buildGender() => Container(
-        height: 60,
-        width: 163,
+        height: SizeConfig.blockSizeVertical * 7.5,
+        width: SizeConfig.blockSizeHorizontal * 90,
         child: new DropdownButtonFormField<String>(
           decoration: InputDecoration(
-            labelStyle: TextStyle(color: COLOR_THEME),
+            labelStyle: TextStyle(color: getColor, fontSize: 16.0, fontWeight: FontWeight.w500,fontFamily: 'Lato'),
             labelText: 'Giới tính(*)',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -191,10 +183,7 @@ class _ParentInfoState extends State<ChildrenInfo> {
               ),
             ),
           ),
-          hint: Text(
-            'Giới tính(*)',
-            style: TextStyle(color: COLOR_THEME),
-          ),
+       
           items: [
             DropdownMenuItem(
               value: 'Bé trai',
@@ -203,13 +192,12 @@ class _ParentInfoState extends State<ChildrenInfo> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   new Image.asset(
-                    IMAGE + 'icon_boy.png',
+                    iconBoy,
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 10.0),
-                    child: new Text(
-                      'Bé trai',
-                      style: TextStyle(fontSize: 16.0, fontFamily: 'Lato'),
+                    child: new CustomText(
+                      text: 'Bé trai',
                     ),
                   ),
                 ],
@@ -222,13 +210,12 @@ class _ParentInfoState extends State<ChildrenInfo> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   new Image.asset(
-                    IMAGE + 'icon_girl.png',
+                    iconGirl,
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 10.0),
-                    child: new Text(
-                      'Bé gái',
-                      style: TextStyle(fontSize: 16.0, fontFamily: 'Lato'),
+                    child: new CustomText(
+                      text: 'Bé gái',
                     ),
                   ),
                 ],
@@ -251,14 +238,14 @@ class _ParentInfoState extends State<ChildrenInfo> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 new Container(
-                  width: 140.0,
-                  height: 140.0,
+                  height: SizeConfig.blockSizeVertical * 18,
+                  width: SizeConfig.blockSizeHorizontal * 40,
                   decoration: new BoxDecoration(
                     border: Border.all(
                         color: Color.fromRGBO(250, 101, 138, 1), width: 2),
                     shape: BoxShape.circle,
                     image: new DecorationImage(
-                      image: new ExactAssetImage(IMAGE + 'Image.png'),
+                      image: new ExactAssetImage(chooseImage),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -291,11 +278,11 @@ class _ParentInfoState extends State<ChildrenInfo> {
           children: <Widget>[
             Flexible(
               child: Container(
-                width: 120,
-                height: 50,
+                height: SizeConfig.blockSizeVertical * 7,
+                width: SizeConfig.blockSizeHorizontal * 35,
                 child: new FlatButton(
                   child: new Text("Hủy"),
-                  textColor: COLOR_THEME,
+                  textColor: getColor,
                   onPressed: () {
                     setState(() {});
                   },
@@ -309,12 +296,12 @@ class _ParentInfoState extends State<ChildrenInfo> {
             ),
             Flexible(
               child: Container(
-                  width: 207,
-                  height: 50,
+                  height: SizeConfig.blockSizeVertical * 7,
+                  width: SizeConfig.blockSizeHorizontal * 65,
                   child: new RaisedButton(
                     child: new Text("Lưu thông tin"),
                     textColor: Colors.white,
-                    color: COLOR_THEME,
+                    color: getColor,
                     onPressed: () {
                       setState(() {});
                     },

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mumbi_app/Utils/constant.dart';
+import 'package:mumbi_app/Constant/assets_path.dart';
+import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/Widget/calendarBirthday.dart';
 
 class CalculateDate extends StatefulWidget {
@@ -15,31 +17,26 @@ class _CalculateDateState extends State<CalculateDate> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(
-        BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width,
-            maxHeight: MediaQuery.of(context).size.height),
-        designSize: Size(1125, 2436),
-        orientation: Orientation.portrait);
+    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        toolbarHeight: 48,
+        toolbarHeight: SizeConfig.blockSizeVertical * 6,
         title: Text(
           'Tính ngày dự sinh',
           style: TextStyle(fontFamily: 'Lato', fontSize: 20),
         ),
       ),
       body: Container(
-        height: 2344,
-        width: 1125,
+        height: SizeConfig.blockSizeVertical * 100,
+        width: SizeConfig.blockSizeHorizontal * 100,
         child: SingleChildScrollView(
           child: Column(
             children: [
               _buildCalendarImage(),
               Container(
-                width: 343.0,
-                height: 44.0,
+                height: SizeConfig.blockSizeVertical * 7,
+                width: SizeConfig.blockSizeHorizontal * 90,
                 child: Text(
                   'Mẹ ơi! Hãy nhập những thông tin dưới đây để biết được ngày con chào đời nhé.',
                   textAlign: TextAlign.center,
@@ -73,8 +70,8 @@ class _CalculateDateState extends State<CalculateDate> {
   }
 
   Widget _btnSave() => Container(
-        width: 207,
-        height: 50,
+        height: SizeConfig.blockSizeVertical * 7,
+        width: SizeConfig.blockSizeHorizontal * 60,
         child: new RaisedButton(
           child: new Text(
             "Lưu thông tin",
@@ -84,7 +81,7 @@ class _CalculateDateState extends State<CalculateDate> {
                 fontFamily: 'Lato'),
           ),
           textColor: Colors.white,
-          color: COLOR_THEME,
+          color: getColor,
           onPressed: () {
             setState(() {});
           },
@@ -94,14 +91,14 @@ class _CalculateDateState extends State<CalculateDate> {
       );
 
   Widget _chooseRadioBtn() => Container(
-        width: 343.0,
-        height: 24.0,
+        height: SizeConfig.blockSizeVertical * 3,
+        width: SizeConfig.blockSizeHorizontal * 90,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container(
-              width: 164.0,
-              height: 24.0,
+              height: SizeConfig.blockSizeVertical * 3,
+              width: SizeConfig.blockSizeHorizontal * 45,
               child: ListTile(
                 title: const Text('Con so'),
                 leading: Radio<ListRadio>(
@@ -116,8 +113,8 @@ class _CalculateDateState extends State<CalculateDate> {
               ),
             ),
             Container(
-              width: 164.0,
-              height: 24.0,
+              height: SizeConfig.blockSizeVertical * 3,
+              width: SizeConfig.blockSizeHorizontal * 45,
               child: ListTile(
                 title: const Text('Con rạ'),
                 leading: Radio<ListRadio>(
@@ -136,12 +133,12 @@ class _CalculateDateState extends State<CalculateDate> {
       );
 
   Widget _typePeriod() => Container(
-        width: 343,
-        height: 58,
+        height: SizeConfig.blockSizeVertical * 7,
+        width: SizeConfig.blockSizeHorizontal * 90,
         child: TextFormField(
           decoration: InputDecoration(
-            labelStyle: TextStyle(
-                color: COLOR_THEME, fontSize: 15.0, fontFamily: 'Lato'),
+            labelStyle:
+                TextStyle(color: getColor, fontSize: 15.0, fontFamily: 'Lato'),
             labelText: 'Độ dài chu kì kinh nguyệt',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -150,7 +147,7 @@ class _CalculateDateState extends State<CalculateDate> {
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_THEME, width: 1.0),
+              borderSide: BorderSide(color: getColor, width: 1.0),
             ),
           ),
           validator: (value) {
@@ -172,11 +169,11 @@ class _CalculateDateState extends State<CalculateDate> {
   Widget _buildCalendarImage() => Padding(
         padding: EdgeInsets.only(top: 32.0, bottom: 32.0),
         child: new Container(
-          width: 194.0,
-          height: 164.0,
+          height: SizeConfig.blockSizeVertical * 20,
+          width: SizeConfig.blockSizeHorizontal * 50,
           decoration: new BoxDecoration(
             image: new DecorationImage(
-              image: new ExactAssetImage(IMAGE + 'icon_calendar.png'),
+              image: new ExactAssetImage(iconCalendar),
               fit: BoxFit.cover,
             ),
           ),

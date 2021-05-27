@@ -121,6 +121,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  get:
+    dependency: "direct main"
+    description:
+      name: get
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.4"
   google_sign_in:
     dependency: "direct main"
     description:
@@ -157,7 +164,7 @@ packages:
     source: hosted
     version: "3.1.4"
   intl:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: intl
       url: "https://pub.dartlang.org"
@@ -266,6 +273,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
+  titled_navigation_bar:
+    dependency: "direct main"
+    description:
+      name: titled_navigation_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.0"
   typed_data:
     dependency: transitive
     description:

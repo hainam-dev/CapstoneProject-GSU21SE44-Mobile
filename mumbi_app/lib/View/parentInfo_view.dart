@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mumbi_app/Utils/constant.dart';
+import 'package:mumbi_app/Constant/assets_path.dart';
+import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/Widget/calendarBirthday.dart';
-import 'package:mumbi_app/Widget/calendarCalculate.dart';
+import 'package:mumbi_app/Widget/customText.dart';
 
 class ParentInfo extends StatefulWidget {
   final appbarTitle;
@@ -25,31 +27,26 @@ class _ParentInfoState extends State<ParentInfo> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(
-        BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width,
-            maxHeight: MediaQuery.of(context).size.height),
-        designSize: Size(1125, 2436),
-        orientation: Orientation.portrait);
+    SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 48,
-        title: Text(
-          '$appbarTitle',
-          style: TextStyle(fontFamily: 'Lato', fontSize: 20),
+        toolbarHeight: SizeConfig.blockSizeVertical * 6,
+        title: CustomText(
+          text: '$appbarTitle',
+          size: 20.0,
         ),
       ),
       backgroundColor: Colors.white,
       body: Container(
-        height: 2344,
-        width: 1125,
+        height: SizeConfig.blockSizeVertical * 100,
+        width: SizeConfig.blockSizeHorizontal * 100,
         child: SingleChildScrollView(
           child: Column(
             children: [
               _buildChangeAvatar(),
               new Container(
-                height: 552,
-                width: 343,
+                height: SizeConfig.blockSizeVertical * 80,
+                width: SizeConfig.blockSizeHorizontal * 90,
                 child: Form(
                   key: formKey,
                   child: ListView(
@@ -95,12 +92,12 @@ class _ParentInfoState extends State<ParentInfo> {
   }
 
   Widget _buildUsername() => Container(
-        height: 58,
+        height: SizeConfig.blockSizeVertical * 8,
         child: TextFormField(
           decoration: InputDecoration(
-            labelStyle: TextStyle(color: COLOR_THEME),
+            labelStyle: TextStyle(color: getColor),
             labelText: 'Họ & tên (*)',
-            hintStyle: TextStyle(color: COLOR_THEME),
+            hintStyle: TextStyle(color: getColor),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
@@ -109,7 +106,7 @@ class _ParentInfoState extends State<ParentInfo> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: COLOR_THEME, width: 1.0),
+              borderSide: BorderSide(color: getColor, width: 1.0),
             ),
           ),
           validator: (value) {
@@ -125,10 +122,10 @@ class _ParentInfoState extends State<ParentInfo> {
       );
 
   Widget _buildPhoneNumber() => Container(
-        height: 58,
+        height: SizeConfig.blockSizeVertical * 8,
         child: TextFormField(
           decoration: InputDecoration(
-            labelStyle: TextStyle(color: COLOR_THEME),
+            labelStyle: TextStyle(color: getColor),
             labelText: 'Số điện thoại',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -137,7 +134,7 @@ class _ParentInfoState extends State<ParentInfo> {
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_THEME, width: 1.0),
+              borderSide: BorderSide(color: getColor, width: 1.0),
             ),
           ),
           validator: (value) {
@@ -159,11 +156,11 @@ class _ParentInfoState extends State<ParentInfo> {
   Widget _buildBloodGroup(
           String labelText, String hinText, List<String> items) =>
       Container(
-        height: 58,
-        width: 163,
+        height: SizeConfig.blockSizeVertical * 7,
+        width: SizeConfig.blockSizeHorizontal * 45,
         child: new DropdownButtonFormField<String>(
           decoration: InputDecoration(
-            labelStyle: TextStyle(color: COLOR_THEME),
+            labelStyle: TextStyle(color: getColor),
             labelText: labelText,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -174,7 +171,7 @@ class _ParentInfoState extends State<ParentInfo> {
           ),
           hint: Text(
             hinText,
-            style: TextStyle(color: COLOR_THEME),
+            style: TextStyle(color: getColor),
           ),
           items: items.map((String value) {
             return new DropdownMenuItem<String>(
@@ -196,14 +193,14 @@ class _ParentInfoState extends State<ParentInfo> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 new Container(
-                  width: 140.0,
-                  height: 140.0,
+                  height: SizeConfig.blockSizeVertical * 18,
+                  width: SizeConfig.blockSizeHorizontal * 40,
                   decoration: new BoxDecoration(
                     border: Border.all(
                         color: Color.fromRGBO(250, 101, 138, 1), width: 2),
                     shape: BoxShape.circle,
                     image: new DecorationImage(
-                      image: new ExactAssetImage(IMAGE + 'Image.png'),
+                      image: new ExactAssetImage(chooseImage),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -236,11 +233,11 @@ class _ParentInfoState extends State<ParentInfo> {
           children: <Widget>[
             Flexible(
               child: Container(
-                width: 120,
-                height: 50,
+                height: SizeConfig.blockSizeVertical * 7,
+                width: SizeConfig.blockSizeHorizontal * 35,
                 child: new FlatButton(
                   child: new Text("Hủy"),
-                  textColor: COLOR_THEME,
+                  textColor: getColor,
                   onPressed: () {
                     setState(() {});
                   },
@@ -254,12 +251,12 @@ class _ParentInfoState extends State<ParentInfo> {
             ),
             Flexible(
               child: Container(
-                  width: 207,
-                  height: 50,
+                  height: SizeConfig.blockSizeVertical * 7,
+                  width: SizeConfig.blockSizeHorizontal * 65,
                   child: new RaisedButton(
                     child: new Text("Lưu thông tin"),
                     textColor: Colors.white,
-                    color: COLOR_THEME,
+                    color: getColor,
                     onPressed: () {
                       setState(() {});
                     },

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/childrenInfo_model.dart';
-import 'package:mumbi_app/Utils/constant.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
 
 class CalendarBirthday extends StatefulWidget {
-final title;
+  final title;
 
   const CalendarBirthday(this.title);
   @override
@@ -17,6 +18,7 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
   final title;
   _CalendarBirthdayState(this.title);
   Future<Null> _selectDate(BuildContext context) async {
+    SizeConfig().init(context);
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -41,11 +43,12 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
         _dateController.text = date;
       });
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 343,
-      height: 58,
+      height: SizeConfig.blockSizeVertical * 7,
+      width: SizeConfig.blockSizeHorizontal * 90,
       child: GestureDetector(
         onTap: () => _selectDate(context),
         child: AbsorbPointer(
@@ -55,7 +58,8 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
             },
             controller: _dateController,
             decoration: InputDecoration(
-              labelStyle: TextStyle(color: COLOR_THEME,fontWeight: FontWeight.w600,fontSize: 14.0),
+              labelStyle: TextStyle(
+                  color: getColor, fontWeight: FontWeight.w600, fontSize: 14.0),
               labelText: title,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),

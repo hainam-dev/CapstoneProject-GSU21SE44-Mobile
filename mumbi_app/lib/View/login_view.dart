@@ -2,11 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:mumbi_app/Utils/splashScreen.dart';
+import 'package:mumbi_app/Constant/assets_path.dart';
+import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
+import 'package:mumbi_app/View/fatherInfo_view.dart';
+import 'package:mumbi_app/View/menuRemind.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
-import 'package:mumbi_app/Utils/constant.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mumbi_app/Widget/splashScreen.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -15,6 +19,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: ColorTheme,
+        fontFamily: 'Lato',
+        iconTheme: new IconThemeData(color: Colors.white, size: 24.0),
       ),
       home: new SplashScreen(),
       routes: <String, WidgetBuilder>{
@@ -33,19 +39,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(
-        BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width,
-            maxHeight: MediaQuery.of(context).size.height),
-        designSize: Size(1125, 2436),
-        orientation: Orientation.portrait);
+    SizeConfig().init(context);
     return Scaffold(
       body: Container(
-        height: 2436,
-        width: 1125,
+        height: SizeConfig.blockSizeVertical * 100,
+        width: SizeConfig.blockSizeHorizontal * 100,
         decoration: new BoxDecoration(
           image: new DecorationImage(
-            image: AssetImage(IMAGE + "background.png"),
+            image: AssetImage(backgroundApp),
             fit: BoxFit.cover,
           ),
         ),
@@ -53,12 +54,12 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Container(
               margin: EdgeInsets.only(left: 32, right: 32, top: 84),
-              height: 356,
-              width: 311,
+              height: SizeConfig.blockSizeVertical * 60,
+              width: SizeConfig.blockSizeHorizontal * 90,
               child: Column(
                 children: <Widget>[
                   Image.asset(
-                    IMAGE + "logo.png",
+                    logoApp,
                     scale: 1.2,
                   ),
                   _btnLogin()
@@ -97,8 +98,8 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
   Widget _btnLogin() => Container(
-        height: 179,
-        width: 311,
+        height: SizeConfig.safeBlockVertical * 20,
+        width: SizeConfig.safeBlockHorizontal * 100,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -110,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     FirebaseUser user = await auth.currentUser();
                     print(value);
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ChildrenInfo()));
+                        MaterialPageRoute(builder: (context) => MenuRemind()));
                   },
                 );
               },
@@ -122,9 +123,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontFamily: 'Lato'),
               ),
               new Image.asset(
-                IMAGE + 'google_logo.png',
-                height: 30.0,
-                width: 30.0,
+                logoGoogle,
+                height: SizeConfig.safeBlockVertical * 5,
+                width: SizeConfig.safeBlockHorizontal * 8,
               ),
               Colors.white,
               Color.fromRGBO(79, 79, 79, 1),
@@ -146,9 +147,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontFamily: 'Lato'),
                 ),
                 new Image.asset(
-                  IMAGE + 'apple_logo.jpg',
-                  height: 30.0,
-                  width: 30.0,
+                  logoFacebook,
+                  height: SizeConfig.safeBlockVertical * 5,
+                  width: SizeConfig.safeBlockHorizontal * 8,
                 ),
                 Colors.black,
                 Color.fromRGBO(255, 255, 255, 1),

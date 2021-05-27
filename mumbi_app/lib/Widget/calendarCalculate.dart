@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/childrenInfo_model.dart';
-import 'package:mumbi_app/Utils/constant.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/calculateDate_view.dart';
 
 class CalendarCalculate extends StatefulWidget {
@@ -14,6 +15,7 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
   DateTime selectedDate = DateTime.now();
 
   Future<Null> _selectDate(BuildContext context) async {
+    SizeConfig().init(context);
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -42,12 +44,12 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 343,
-      height: 58,
+      height: SizeConfig.blockSizeVertical * 7.5,
+      width: SizeConfig.blockSizeHorizontal * 90,
       child: Row(
         children: [
           Container(
-            width: 224,
+            width: SizeConfig.blockSizeHorizontal * 60,
             child: GestureDetector(
               onTap: () => _selectDate(context),
               child: AbsorbPointer(
@@ -57,8 +59,8 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
                   },
                   controller: _dateController,
                   decoration: InputDecoration(
-                    labelStyle: TextStyle(
-                        color: COLOR_THEME, fontWeight: FontWeight.w600),
+                    labelStyle:
+                        TextStyle(color: getColor, fontWeight: FontWeight.w600),
                     labelText: 'Ngày dự sinh',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -79,19 +81,20 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
             width: 10,
           ),
           Container(
-            width: 109,
-            height: 58,
+            height: SizeConfig.blockSizeVertical * 7.5,
+            width: SizeConfig.blockSizeHorizontal * 27,
             child: RaisedButton(
               child: new Text(
                 "Tính ngày",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 16.0,fontWeight: FontWeight.w700,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w700,
                   fontFamily: 'Lato',
                 ),
               ),
               textColor: Colors.white,
-              color: COLOR_THEME,
+              color: getColor,
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => CalculateDate()));
