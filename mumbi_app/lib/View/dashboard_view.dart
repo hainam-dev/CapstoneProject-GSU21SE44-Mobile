@@ -61,8 +61,8 @@ class _DashBoardState extends State<DashBoard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    //createListTileHome(context, LIGHT_PINK_COLOR, pregnancy, "Tuần thứ 3 của thai kì", "Bạn còn 259 ngày để gặp được bé", ChildPrenancy()),
-                    //createListTileHome(context, LIGHT_BLUE_COLOR, embe, "Bé đã 6 tháng 3 ngày tuổi", "Bạn có thể bắt đầu cho bé ăn dậm", ChildPrenancy()),
+                    //createListTileHome(context, LIGHT_PINK_COLOR, pregnancy, "Tuần thứ 3 của thai kì", "Bạn còn 259 ngày để gặp được bé", ChildrenInfo()),
+                    //createListTileHome(context, LIGHT_BLUE_COLOR, embe, "Bé đã 6 tháng 3 ngày tuổi", "Bạn có thể bắt đầu cho bé ăn dậm", ChildrenInfo()),
                     createListTileHome(context, LIGHT_GREY_COLOR, empty, "Chưa có thông tin", "Nhấp vào để thêm thông tin bé/thai kì ", ChildrenInfo()),
                     SizedBox(height: 20,),
                     createTitle("Tính năng nổi bật"),
