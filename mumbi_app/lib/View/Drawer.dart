@@ -3,6 +3,7 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/View/menuRemind.dart';
 import 'package:mumbi_app/View/momInfo_view.dart';
+import 'package:mumbi_app/View/teethTrack_view.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'contact_view.dart';
 import 'listBabyDiary_view.dart';
@@ -46,7 +47,7 @@ Widget getDrawer(BuildContext context) {
           createListTileNavigator(context, reminder, 'Nhắc nhở', MenuRemind()),
           createListTileNavigator(context, saved, 'Đã lưu', MyFamily()),
           createListTileNavigator(context, babyDiary, 'Nhật ký của bé', BabyDiary()),
-          createListTileNavigator(context, teethGrow, 'Mọc răng', MyFamily()),
+          createListTileNavigator(context, teethGrow, 'Mọc răng', TrackTeeth()),
           createListTileNavigator(context, contact, 'Liên Hệ Hỗ Trợ', Contact()),
           SizedBox(height: 15,),
           createListTileNavigatorNoTrailing(context, logout, 'Đăng xuất'),

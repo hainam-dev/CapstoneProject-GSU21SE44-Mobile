@@ -13,7 +13,7 @@ class BotNavBar extends StatefulWidget {
 class _BotNavBarState extends State<BotNavBar> {
   int selectedIndex = 0;
   Widget _dashBoard = DashBoard();
-  Widget _guildBook = GuildBook();
+  Widget _guildBook = GuideBook();
   Widget _tracking = Tracking();
 
   @override

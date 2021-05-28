@@ -43,6 +43,14 @@ final String pregnancy = _getImagePath('thaiki.png');
 final String addImage = _getImagePath('themhinhanh.png');
 final String addDiary = _getImagePath('themnhatky.png');
 final String injection = _getImagePath('tiemchung.png');
+final String bookmark = _getImagePath('ic_bookmark.png');
+final String ic_tooth = _getImagePath('ic_tooth.png');
+final String img_hamtren = _getImagePath('hamtren.png');
+final String img_hamduoi = _getImagePath('hamduoi.png');
+final String ic_teeth1 = _getImagePath('ic_teeth1.png');
+final String ic_teeth2 = _getImagePath('ic_teeth2.png');
+final String ic_teeth1_choose = _getImagePath('ic_teeth1_choose.png');
+final String ic_teeth2_choose = _getImagePath('ic_teeth2_choose.png');
 
 
 
