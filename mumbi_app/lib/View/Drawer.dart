@@ -3,11 +3,10 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/View/menuRemind.dart';
 import 'package:mumbi_app/View/momInfo_view.dart';
-import 'package:mumbi_app/Widget/utils.dart';
-
-import 'BabyDiary.dart';
-import 'Contact.dart';
-import 'MyFamily.dart';
+import 'package:mumbi_app/Widget/createList.dart';
+import 'contact_view.dart';
+import 'listBabyDiary_view.dart';
+import 'myFamily_view.dart';
 
 
 Widget getDrawer(BuildContext context) {
@@ -22,7 +21,7 @@ Widget getDrawer(BuildContext context) {
             ),
           elevation: 0,
           margin: EdgeInsets.zero,
-          color: getColor,
+          color: PINK_COLOR,
           child: ListTile(
             title: Text('Tài khoản',style: TextStyle(color: Colors.white,fontSize: 20),),
           ),

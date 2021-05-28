@@ -4,13 +4,14 @@ import 'package:flutter/painting.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/View/BotNavBar.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/View/fatherInfo_view.dart';
 import 'package:mumbi_app/View/menuRemind.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mumbi_app/Widget/splashScreen.dart';
+
+import 'bottomNavBar_view.dart';
 
 class MyApp extends StatelessWidget {
   @override

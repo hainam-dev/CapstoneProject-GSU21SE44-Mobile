@@ -81,7 +81,7 @@ class _CalculateDateState extends State<CalculateDate> {
                 fontFamily: 'Lato'),
           ),
           textColor: Colors.white,
-          color: getColor,
+          color: PINK_COLOR,
           onPressed: () {
             setState(() {});
           },
@@ -138,7 +138,7 @@ class _CalculateDateState extends State<CalculateDate> {
         child: TextFormField(
           decoration: InputDecoration(
             labelStyle:
-                TextStyle(color: getColor, fontSize: 15.0, fontFamily: 'Lato'),
+                TextStyle(color: PINK_COLOR, fontSize: 15.0, fontFamily: 'Lato'),
             labelText: 'Độ dài chu kì kinh nguyệt',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -147,7 +147,7 @@ class _CalculateDateState extends State<CalculateDate> {
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: getColor, width: 1.0),
+              borderSide: BorderSide(color: PINK_COLOR, width: 1.0),
             ),
           ),
           validator: (value) {

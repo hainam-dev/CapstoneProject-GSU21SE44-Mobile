@@ -95,9 +95,9 @@ class _ParentInfoState extends State<ParentInfo> {
         height: SizeConfig.blockSizeVertical * 8,
         child: TextFormField(
           decoration: InputDecoration(
-            labelStyle: TextStyle(color: getColor),
+            labelStyle: TextStyle(color: PINK_COLOR),
             labelText: 'Họ & tên (*)',
-            hintStyle: TextStyle(color: getColor),
+            hintStyle: TextStyle(color: PINK_COLOR),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
@@ -106,7 +106,7 @@ class _ParentInfoState extends State<ParentInfo> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: getColor, width: 1.0),
+              borderSide: BorderSide(color: PINK_COLOR, width: 1.0),
             ),
           ),
           validator: (value) {
@@ -125,7 +125,7 @@ class _ParentInfoState extends State<ParentInfo> {
         height: SizeConfig.blockSizeVertical * 8,
         child: TextFormField(
           decoration: InputDecoration(
-            labelStyle: TextStyle(color: getColor),
+            labelStyle: TextStyle(color: PINK_COLOR),
             labelText: 'Số điện thoại',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -134,7 +134,7 @@ class _ParentInfoState extends State<ParentInfo> {
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: getColor, width: 1.0),
+              borderSide: BorderSide(color: PINK_COLOR, width: 1.0),
             ),
           ),
           validator: (value) {
@@ -160,7 +160,7 @@ class _ParentInfoState extends State<ParentInfo> {
         width: SizeConfig.blockSizeHorizontal * 45,
         child: new DropdownButtonFormField<String>(
           decoration: InputDecoration(
-            labelStyle: TextStyle(color: getColor),
+            labelStyle: TextStyle(color: PINK_COLOR),
             labelText: labelText,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -171,7 +171,7 @@ class _ParentInfoState extends State<ParentInfo> {
           ),
           hint: Text(
             hinText,
-            style: TextStyle(color: getColor),
+            style: TextStyle(color: PINK_COLOR),
           ),
           items: items.map((String value) {
             return new DropdownMenuItem<String>(
@@ -237,7 +237,7 @@ class _ParentInfoState extends State<ParentInfo> {
                 width: SizeConfig.blockSizeHorizontal * 35,
                 child: new FlatButton(
                   child: new Text("Hủy"),
-                  textColor: getColor,
+                  textColor: PINK_COLOR,
                   onPressed: () {
                     setState(() {});
                   },
@@ -256,7 +256,7 @@ class _ParentInfoState extends State<ParentInfo> {
                   child: new RaisedButton(
                     child: new Text("Lưu thông tin"),
                     textColor: Colors.white,
-                    color: getColor,
+                    color: PINK_COLOR,
                     onPressed: () {
                       setState(() {});
                     },

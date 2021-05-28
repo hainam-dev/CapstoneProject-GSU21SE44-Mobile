@@ -59,7 +59,7 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
             controller: _dateController,
             decoration: InputDecoration(
               labelStyle: TextStyle(
-                  color: getColor, fontWeight: FontWeight.w600, fontSize: 14.0),
+                  color: PINK_COLOR, fontWeight: FontWeight.w600, fontSize: 14.0),
               labelText: title,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),

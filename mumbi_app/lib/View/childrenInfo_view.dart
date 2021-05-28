@@ -78,9 +78,9 @@ class _ParentInfoState extends State<ChildrenInfo> {
         child: TextFormField(
           style: TextStyle(fontFamily: 'Lato', fontWeight: FontWeight.w100),
           decoration: InputDecoration(
-            labelStyle: TextStyle(color: getColor),
+            labelStyle: TextStyle(color: PINK_COLOR),
             labelText: name,
-            hintStyle: TextStyle(color: getColor),
+            hintStyle: TextStyle(color: PINK_COLOR),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
@@ -89,7 +89,7 @@ class _ParentInfoState extends State<ChildrenInfo> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: getColor, width: 1.0),
+              borderSide: BorderSide(color: PINK_COLOR, width: 1.0),
             ),
           ),
           validator: (value) {
@@ -110,7 +110,7 @@ class _ParentInfoState extends State<ChildrenInfo> {
         child: new DropdownButtonFormField<String>(
           value: selectedValue,
           decoration: InputDecoration(
-            labelStyle: TextStyle(color: getColor, fontSize: 16.0, fontWeight: FontWeight.w500,fontFamily: 'Lato'),
+            labelStyle: TextStyle(color: PINK_COLOR, fontSize: 16.0, fontWeight: FontWeight.w500,fontFamily: 'Lato'),
             labelText: 'Trạng thái(*)',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -174,7 +174,7 @@ class _ParentInfoState extends State<ChildrenInfo> {
         width: SizeConfig.blockSizeHorizontal * 90,
         child: new DropdownButtonFormField<String>(
           decoration: InputDecoration(
-            labelStyle: TextStyle(color: getColor, fontSize: 16.0, fontWeight: FontWeight.w500,fontFamily: 'Lato'),
+            labelStyle: TextStyle(color: PINK_COLOR, fontSize: 16.0, fontWeight: FontWeight.w500,fontFamily: 'Lato'),
             labelText: 'Giới tính(*)',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -282,7 +282,7 @@ class _ParentInfoState extends State<ChildrenInfo> {
                 width: SizeConfig.blockSizeHorizontal * 35,
                 child: new FlatButton(
                   child: new Text("Hủy"),
-                  textColor: getColor,
+                  textColor: PINK_COLOR,
                   onPressed: () {
                     setState(() {});
                   },
@@ -301,7 +301,7 @@ class _ParentInfoState extends State<ChildrenInfo> {
                   child: new RaisedButton(
                     child: new Text("Lưu thông tin"),
                     textColor: Colors.white,
-                    color: getColor,
+                    color: PINK_COLOR,
                     onPressed: () {
                       setState(() {});
                     },

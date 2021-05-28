@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import '../Widget/utils.dart';
-import 'AddBabyDiary.dart';
+import 'package:mumbi_app/Widget/createList.dart';
+
+import 'addBabyDiary_view.dart';
 
 
 class BabyDiary extends StatefulWidget {
@@ -48,7 +49,7 @@ class _BabyDiaryState extends State<BabyDiary> {
         icon: Image.asset(
           addDiary,
         ),
-        backgroundColor: getColor,
+        backgroundColor: PINK_COLOR,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

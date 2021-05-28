@@ -60,7 +60,7 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
                   controller: _dateController,
                   decoration: InputDecoration(
                     labelStyle:
-                        TextStyle(color: getColor, fontWeight: FontWeight.w600),
+                        TextStyle(color: PINK_COLOR, fontWeight: FontWeight.w600),
                     labelText: 'Ngày dự sinh',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -94,7 +94,7 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
                 ),
               ),
               textColor: Colors.white,
-              color: getColor,
+              color: PINK_COLOR,
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => CalculateDate()));

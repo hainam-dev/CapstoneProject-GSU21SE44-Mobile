@@ -48,7 +48,7 @@ class _ListRemindScreenState extends State<ListRemindScreen> {
         onTap: (index) => index = selectedIndex,
         curve: Curves.easeInBack,
         items: items,
-        activeColor: getColor,
+        activeColor: PINK_COLOR,
         inactiveColor: Colors.blueGrey,
       ),
     );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/View/BabyDiaryDetails.dart';
-import 'package:mumbi_app/View/BotNavBar.dart';
+import 'package:mumbi_app/View/babyDiaryDetails_view.dart';
+import 'package:mumbi_app/View/bottomNavBar_view.dart';
 import 'package:mumbi_app/View/login_view.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
 
@@ -176,12 +176,12 @@ Widget createListTileSelectedAccount(
       title: Text(_title),
       subtitle: Text(
         _subtitle,
-        style: TextStyle(color: getColor),
+        style: TextStyle(color: PINK_COLOR),
       ),
       trailing: Icon(
         Icons.check,
         size: 25,
-        color: getColor,
+        color: PINK_COLOR,
       ),
       onTap: () {
         Navigator.push(
@@ -351,7 +351,7 @@ Widget createDiaryItem(BuildContext context, String _time, String _content) {
           Text(
             "Ngày " + _time,
             style: TextStyle(
-              color: getColor,
+              color: PINK_COLOR,
               fontSize: 24,
               fontWeight: FontWeight.w600,
             ),

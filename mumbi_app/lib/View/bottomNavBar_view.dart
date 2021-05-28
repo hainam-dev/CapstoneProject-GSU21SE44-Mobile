@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/View/DashBoard.dart';
-import 'package:mumbi_app/View/GuildBook.dart';
 import 'package:mumbi_app/View/Tracking.dart';
+
+import 'dashboard_view.dart';
+import 'guideBook_view.dart';
 
 class BotNavBar extends StatefulWidget {
   @override
@@ -40,7 +41,7 @@ class _BotNavBarState extends State<BotNavBar> {
       currentIndex: this.selectedIndex,
       unselectedItemColor: GREY_COLOR,
       selectedIconTheme: IconThemeData(
-        color: getColor,
+        color: PINK_COLOR,
         opacity: 1.0,
       ),
       unselectedIconTheme: IconThemeData(
