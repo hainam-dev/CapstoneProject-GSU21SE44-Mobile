@@ -5,6 +5,7 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
+import 'package:mumbi_app/View/dashboard_view.dart';
 import 'package:mumbi_app/View/fatherInfo_view.dart';
 import 'package:mumbi_app/View/menuRemind.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       home: new SplashScreen(),
       routes: <String, WidgetBuilder>{
         //SPLASH_SCREEN: (BuildContext context) => new MapScreen(),
-        '/LoginScreen': (BuildContext context) => new LoginScreen(),
+        '/LoginScreen': (BuildContext context) => new BotNavBar(),
       },
     );
   }
@@ -83,10 +84,11 @@ class _LoginScreenState extends State<LoginScreen> {
           shape: new RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(30.0)),
           padding:
-              EdgeInsets.only(top: 7.0, bottom: 7.0, right: 40.0, left: 7.0),
+              EdgeInsets.all(7.0),
           onPressed: onPressed,
           child: new Row(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               logo,
               Padding(
