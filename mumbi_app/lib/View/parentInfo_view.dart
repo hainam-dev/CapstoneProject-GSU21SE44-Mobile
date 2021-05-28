@@ -40,58 +40,55 @@ class _ParentInfoState extends State<ParentInfo> {
       body: Container(
         height: SizeConfig.blockSizeVertical * 100,
         width: SizeConfig.blockSizeHorizontal * 100,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildChangeAvatar(),
-              new Container(
-                height: SizeConfig.blockSizeVertical * 80,
-                width: SizeConfig.blockSizeHorizontal * 90,
-                child: Form(
-                  key: formKey,
-                  child: ListView(
-                    children: [
-                      _buildUsername(),
-                      const SizedBox(height: 12),
-                      CalendarBirthday('Ngày sinh'),
-                      const SizedBox(height: 12),
-                      _buildPhoneNumber(),
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Flexible(
-                            child: _buildBloodGroup(
-                                'Nhóm máu', 'Nhóm máu', ['A', 'B', 'O', 'AB']),
-                            flex: 2,
-                          ),
-                          const SizedBox(
-                            width: 17,
-                          ),
-                          Flexible(
-                            child: _buildBloodGroup('Hệ máu (Rh)',
-                                'Hệ máu (Rh)', ['RH(D)+', 'RH(D)-']),
-                            flex: 2,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 166,
-                      ),
-                      _getActionButtons()
-                    ],
-                  ),
+        child: Column(
+          children: [
+            _buildChangeAvatar(),
+            new Container(
+              height: SizeConfig.blockSizeVertical * 60,
+              width: SizeConfig.blockSizeHorizontal * 90,
+              child: Form(
+                key: formKey,
+                child: ListView(
+                  children: [
+                    _buildUsername(),
+                    const SizedBox(height: 12),
+                    CalendarBirthday('Ngày sinh'),
+                    const SizedBox(height: 12),
+                    _buildPhoneNumber(),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Flexible(
+                          child: _buildBloodGroup(
+                              'Nhóm máu', 'Nhóm máu', ['A', 'B', 'O', 'AB']),
+                          flex: 2,
+                        ),
+                        const SizedBox(
+                          width: 17,
+                        ),
+                        Flexible(
+                          child: _buildBloodGroup('Hệ máu (Rh)',
+                              'Hệ máu (Rh)', ['RH(D)+', 'RH(D)-']),
+                          flex: 2,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 166,),
+                    _getActionButtons()
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildUsername() => Container(
+  Widget _buildUsername() =>
+      Container(
         height: SizeConfig.blockSizeVertical * 8,
         child: TextFormField(
           decoration: InputDecoration(
@@ -121,7 +118,8 @@ class _ParentInfoState extends State<ParentInfo> {
         ),
       );
 
-  Widget _buildPhoneNumber() => Container(
+  Widget _buildPhoneNumber() =>
+      Container(
         height: SizeConfig.blockSizeVertical * 8,
         child: TextFormField(
           decoration: InputDecoration(
@@ -153,8 +151,8 @@ class _ParentInfoState extends State<ParentInfo> {
         ),
       );
 
-  Widget _buildBloodGroup(
-          String labelText, String hinText, List<String> items) =>
+  Widget _buildBloodGroup(String labelText, String hinText,
+      List<String> items) =>
       Container(
         height: SizeConfig.blockSizeVertical * 7,
         width: SizeConfig.blockSizeHorizontal * 45,
@@ -183,7 +181,8 @@ class _ParentInfoState extends State<ParentInfo> {
         ),
       );
 
-  Widget _buildChangeAvatar() => Padding(
+  Widget _buildChangeAvatar() =>
+      Padding(
         padding: EdgeInsets.only(top: 24.0, bottom: 24),
         child: new Stack(
           fit: StackFit.loose,
@@ -227,7 +226,8 @@ class _ParentInfoState extends State<ParentInfo> {
         ),
       );
 
-  Widget _getActionButtons() => Container(
+  Widget _getActionButtons() =>
+      Container(
         child: new Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
