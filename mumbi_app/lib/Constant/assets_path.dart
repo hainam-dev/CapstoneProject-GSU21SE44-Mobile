@@ -16,6 +16,35 @@ final String remindMilk = _getImagePath('remindMilk.png');
 final String remindMusic = _getImagePath('remindMusic.png');
 final String remindSleep = _getImagePath('remindSleep.png');
 
+final String fatherImage = _getImagePath('cha.jpg');
+final String term = _getImagePath('chinhsach.png');
+final String emptyDiary = _getImagePath('chuaconhatky.png');
+final String saved = _getImagePath('daluu.png');
+final String logout = _getImagePath('dangxuat.png');
+final String terms = _getImagePath('dieukhoan.png');
+final String email = _getImagePath('email.png');
+final String embe = _getImagePath('embe.png');
+final String embenhatky = _getImagePath('embenhatky.jpg');
+final String myFamily = _getImagePath('giadinhcuatoi.png');
+final String hinhcon = _getImagePath('hinhcon.jpg');
+final String hinhembe1 = _getImagePath('hinhembe1.jpg');
+final String hotline = _getImagePath('hotline.png');
+final String diaryFrame = _getImagePath('khungnhatki.png');
+final String empty = _getImagePath('koco.png');
+final String illSchedule = _getImagePath('lichkhambenh.png');
+final String contact = _getImagePath('lienhehotro.png');
+final String developmentMilestone = _getImagePath('mocphattrien.png');
+final String teethGrow = _getImagePath('mocrang.png');
+final String motherImage = _getImagePath('mom.jpg');
+final String reminder = _getImagePath('nhacnho.png');
+final String babyDiary = _getImagePath('nhatkycuabe.png');
+final String readIcon = _getImagePath('readicon.png');
+final String pregnancy = _getImagePath('thaiki.png');
+final String addImage = _getImagePath('themhinhanh.png');
+final String addDiary = _getImagePath('themnhatky.png');
+final String injection = _getImagePath('tiemchung.png');
+
+
 
 String _getImagePath(String fileName){
   return imageAssetsRoot + fileName;

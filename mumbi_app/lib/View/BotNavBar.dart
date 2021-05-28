@@ -1,0 +1,78 @@
+import 'package:flutter/material.dart';
+import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/View/DashBoard.dart';
+import 'package:mumbi_app/View/GuildBook.dart';
+import 'package:mumbi_app/View/Tracking.dart';
+
+class BotNavBar extends StatefulWidget {
+  @override
+  _BotNavBarState createState() => _BotNavBarState();
+}
+
+class _BotNavBarState extends State<BotNavBar> {
+  int selectedIndex = 0;
+  Widget _dashBoard = DashBoard();
+  Widget _guildBook = GuildBook();
+  Widget _tracking = Tracking();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: getBody(),
+      bottomNavigationBar: getBotNavBar(),
+    );
+  }
+
+  Widget getBody() {
+    if (this.selectedIndex == 0) {
+      return this._dashBoard;
+    } else if (this.selectedIndex == 1) {
+      return this._guildBook;
+    } else {
+      return this._tracking;
+    }
+  }
+
+  Widget getBotNavBar() {
+    int selectedIndex = 0;
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      currentIndex: this.selectedIndex,
+      unselectedItemColor: GREY_COLOR,
+      selectedIconTheme: IconThemeData(
+        color: getColor,
+        opacity: 1.0,
+      ),
+      unselectedIconTheme: IconThemeData(
+        color: GREY_COLOR,
+        opacity: 1.0,
+      ),
+      items: [
+        item(Icon(Icons.home_outlined), "Trang Chủ"),
+        item(Icon(Icons.article_outlined), "Cẩm Nang"),
+        item(Icon(Icons.analytics_outlined), "Theo Dõi"),
+      ],
+      onTap: (int index) {
+        this.setState(() {
+          this.selectedIndex = index;
+        });
+      },
+    );
+  }
+
+  void onTapHandler(int index) {
+    this.setState(() {
+      this.selectedIndex = index;
+    });
+  }
+}
+
+item(Icon _icon, String _name,) {
+  return BottomNavigationBarItem(
+    icon: _icon,
+    title: Text(
+      _name,
+      style: TextStyle(fontWeight: FontWeight.w600),
+    ),
+  );
+}

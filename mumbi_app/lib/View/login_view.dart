@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
+import 'package:mumbi_app/View/BotNavBar.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/View/fatherInfo_view.dart';
 import 'package:mumbi_app/View/menuRemind.dart';
@@ -111,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     FirebaseUser user = await auth.currentUser();
                     print(value);
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MenuRemind()));
+                        MaterialPageRoute(builder: (context) => BotNavBar()));
                   },
                 );
               },
