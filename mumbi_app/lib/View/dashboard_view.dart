@@ -61,7 +61,7 @@ class _DashBoardState extends State<DashBoard> {
         child: Column(
           children: [
             Container(
-              height: SizeConfig.blockSizeVertical * 38,
+              height: SizeConfig.blockSizeVertical * 40,
               padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,7 +92,7 @@ class _DashBoardState extends State<DashBoard> {
                     height: 16,
                   ),
                   Container(
-                    height: SizeConfig.blockSizeVertical * 12,
+                    height: SizeConfig.blockSizeVertical * 13,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[

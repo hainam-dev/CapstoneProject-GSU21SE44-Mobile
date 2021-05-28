@@ -5,9 +5,8 @@ import 'package:mumbi_app/Model/category_model.dart';
 import 'package:mumbi_app/helper/data.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mumbi_app/helper/news.dart';
-
-import 'Drawer.dart';
 import 'article_view.dart';
+import 'drawer_view.dart';
 
 class GuideBook extends StatefulWidget {
   const GuideBook({Key key}) : super(key: key);

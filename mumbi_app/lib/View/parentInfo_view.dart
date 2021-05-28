@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
@@ -22,6 +25,25 @@ class _ParentInfoState extends State<ParentInfo> {
   String dateOfBirth = '';
   String phoneNumber = '';
   final appbarTitle;
+  File _image;
+
+  _imgFromCamera() async {
+    File image = await ImagePicker.pickImage(
+        source: ImageSource.camera, imageQuality: 50);
+
+    setState(() {
+      _image = image;
+    });
+  }
+
+  _imgFromGallery() async {
+    File image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: 50);
+
+    setState(() {
+      _image = image;
+    });
+  }
 
   _ParentInfoState(this.appbarTitle);
 
@@ -29,6 +51,7 @@ class _ParentInfoState extends State<ParentInfo> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         toolbarHeight: SizeConfig.blockSizeVertical * 6,
         title: CustomText(
@@ -44,7 +67,7 @@ class _ParentInfoState extends State<ParentInfo> {
           children: [
             _buildChangeAvatar(),
             new Container(
-              height: SizeConfig.blockSizeVertical * 60,
+              height: SizeConfig.blockSizeVertical * 65,
               width: SizeConfig.blockSizeHorizontal * 90,
               child: Form(
                 key: formKey,
@@ -69,13 +92,15 @@ class _ParentInfoState extends State<ParentInfo> {
                           width: 17,
                         ),
                         Flexible(
-                          child: _buildBloodGroup('Hệ máu (Rh)',
-                              'Hệ máu (Rh)', ['RH(D)+', 'RH(D)-']),
+                          child: _buildBloodGroup('Hệ máu (Rh)', 'Hệ máu (Rh)',
+                              ['RH(D)+', 'RH(D)-']),
                           flex: 2,
                         ),
                       ],
                     ),
-                    SizedBox(height: 166,),
+                    SizedBox(
+                      height: 166,
+                    ),
                     _getActionButtons()
                   ],
                 ),
@@ -87,8 +112,7 @@ class _ParentInfoState extends State<ParentInfo> {
     );
   }
 
-  Widget _buildUsername() =>
-      Container(
+  Widget _buildUsername() => Container(
         height: SizeConfig.blockSizeVertical * 8,
         child: TextFormField(
           decoration: InputDecoration(
@@ -118,8 +142,7 @@ class _ParentInfoState extends State<ParentInfo> {
         ),
       );
 
-  Widget _buildPhoneNumber() =>
-      Container(
+  Widget _buildPhoneNumber() => Container(
         height: SizeConfig.blockSizeVertical * 8,
         child: TextFormField(
           decoration: InputDecoration(
@@ -151,8 +174,8 @@ class _ParentInfoState extends State<ParentInfo> {
         ),
       );
 
-  Widget _buildBloodGroup(String labelText, String hinText,
-      List<String> items) =>
+  Widget _buildBloodGroup(
+          String labelText, String hinText, List<String> items) =>
       Container(
         height: SizeConfig.blockSizeVertical * 7,
         width: SizeConfig.blockSizeHorizontal * 45,
@@ -181,53 +204,103 @@ class _ParentInfoState extends State<ParentInfo> {
         ),
       );
 
-  Widget _buildChangeAvatar() =>
-      Padding(
-        padding: EdgeInsets.only(top: 24.0, bottom: 24),
-        child: new Stack(
-          fit: StackFit.loose,
-          children: <Widget>[
-            new Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Container(
-                  height: SizeConfig.blockSizeVertical * 18,
-                  width: SizeConfig.blockSizeHorizontal * 40,
-                  decoration: new BoxDecoration(
-                    border: Border.all(
-                        color: Color.fromRGBO(250, 101, 138, 1), width: 2),
-                    shape: BoxShape.circle,
-                    image: new DecorationImage(
-                      image: new ExactAssetImage(chooseImage),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 100.0, left: 100.0),
-              child: new Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
                 children: <Widget>[
-                  new CircleAvatar(
-                    backgroundColor: Color.fromRGBO(251, 103, 139, 1),
-                    radius: 16.0,
-                    child: new Icon(
-                      Icons.image_rounded,
-                      color: Colors.white,
-                    ),
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Thêm từ albums'),
+                      onTap: () {
+                        _imgFromGallery();
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Chụp hình'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ],
               ),
             ),
-          ],
+          );
+        });
+  }
+
+  Widget _buildChangeAvatar() => Padding(
+        padding: EdgeInsets.only(top: 24.0, bottom: 26),
+        child: new Center(
+          child: GestureDetector(
+            onTap: () {
+              _showPicker(context);
+            },
+            child: CircleAvatar(
+              radius: 65,
+              backgroundColor: PINK_COLOR,
+              child: _image != null
+                  ? Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(65),
+                          child: Image.file(
+                            _image,
+                            height: 125,
+                            width: 125,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Positioned(
+                          right: 5,
+                          bottom: 5,
+                          child: CircleAvatar(
+                            backgroundColor: WHITE_COLOR,
+                            radius: 14.0,
+                            child: new CircleAvatar(
+                              backgroundColor: PINK_COLOR,
+                              radius: 13.0,
+                              child: Icon(
+                                Icons.image_rounded,
+                                color: Colors.white,
+                                size: 22,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : CircleAvatar(
+                      radius: 63,
+                      backgroundColor: Colors.grey[200],
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.camera_alt,
+                            color: Colors.grey[800],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          CustomText(
+                            text: 'Chọn ảnh',
+                            size: 16.0,
+                          )
+                        ],
+                      ),
+                    ),
+            ),
+          ),
         ),
       );
 
-  Widget _getActionButtons() =>
-      Container(
+  Widget _getActionButtons() => Container(
         child: new Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[

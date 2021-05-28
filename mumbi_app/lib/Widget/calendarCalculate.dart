@@ -81,7 +81,7 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
             width: 10,
           ),
           Container(
-            height: SizeConfig.blockSizeVertical * 7.5,
+            height: SizeConfig.blockSizeVertical * 7,
             width: SizeConfig.blockSizeHorizontal * 27,
             child: RaisedButton(
               child: new Text(

@@ -50,13 +50,9 @@ Widget getDrawer(BuildContext context) {
           createListTileNavigator(context, saved, 'Đã lưu', MyFamily()),
           SizedBox(height: 1,),
           createListTileNavigator(context, babyDiary, 'Nhật ký của bé', BabyDiary()),
-<<<<<<< HEAD:mumbi_app/lib/View/Drawer.dart
+          SizedBox(height: 1,),
           createListTileNavigator(context, teethGrow, 'Mọc răng', TrackTeeth()),
-=======
           SizedBox(height: 1,),
-          createListTileNavigator(context, teethGrow, 'Mọc răng', MyFamily()),
-          SizedBox(height: 1,),
->>>>>>> d7924277df13f00416e712303a4fce7572b7cd7f:mumbi_app/lib/View/drawer_view.dart
           createListTileNavigator(context, contact, 'Liên Hệ Hỗ Trợ', Contact()),
           SizedBox(height: 15,),
           createListTileNavigatorNoTrailing(context, logout, 'Đăng xuất'),
