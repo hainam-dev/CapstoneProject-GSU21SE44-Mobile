@@ -35,39 +35,37 @@ class _ParentInfoState extends State<ChildrenInfo> {
       body: Container(
         height: SizeConfig.blockSizeVertical * 100,
         width: SizeConfig.blockSizeHorizontal * 100,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildChangeAvatar(),
-              new Container(
-                height: SizeConfig.blockSizeVertical * 80,
-                width: SizeConfig.blockSizeHorizontal * 90,
-                child: Form(
-                  key: formKey,
-                  child: ListView(
-                    children: [
-                      const SizedBox(height: 5),
-                      _buildUsername('Họ & tên (*)'),
-                      const SizedBox(height: 12),
-                      _buildUsername('Tên ở nhà'),
-                      const SizedBox(height: 12),
-                      _buildStatus(),
-                      const SizedBox(height: 12),
-                      (selectedValue.toString() == "Bé đã sinh")
-                          ? CalendarBirthday('Ngày sinh')
-                          : (selectedValue.toString() == "Thai nhi")
-                              ? CalendarCalculate()
-                              : CalendarBirthday('Ngày sinh'),
-                      const SizedBox(height: 12),
-                      _buildGender(),
-                      const SizedBox(height: 88),
-                      _getActionButtons()
-                    ],
-                  ),
+        child: Column(
+          children: [
+            _buildChangeAvatar(),
+            new Container(
+              height: SizeConfig.blockSizeVertical * 60,
+              width: SizeConfig.blockSizeHorizontal * 90,
+              child: Form(
+                key: formKey,
+                child: ListView(
+                  children: [
+                    const SizedBox(height: 5),
+                    _buildUsername('Họ & tên (*)'),
+                    const SizedBox(height: 12),
+                    _buildUsername('Tên ở nhà'),
+                    const SizedBox(height: 12),
+                    _buildStatus(),
+                    const SizedBox(height: 12),
+                    (selectedValue.toString() == "Bé đã sinh")
+                        ? CalendarBirthday('Ngày sinh')
+                        : (selectedValue.toString() == "Thai nhi")
+                            ? CalendarCalculate()
+                            : CalendarBirthday('Ngày sinh'),
+                    const SizedBox(height: 12),
+                    _buildGender(),
+                    const SizedBox(height: 88),
+                    _getActionButtons()
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/babyDiaryDetails_view.dart';
 import 'package:mumbi_app/View/bottomNavBar_view.dart';
 import 'package:mumbi_app/View/login_view.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
-
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 Widget createListTile(BuildContext context, String _imageName, String _text) {
   return Card(
@@ -102,7 +103,7 @@ Widget createButtonTextImage(String _text, String _image) {
         SizedBox(height: 8),
         Text(
           _text,
-          style: TextStyle(fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 14),
         )
       ],
     ),
@@ -118,6 +119,8 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
       borderRadius: BorderRadius.circular(12.0),
     ),
     child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ListTile(
           shape: RoundedRectangleBorder(
@@ -125,16 +128,34 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
           ),
           leading: Image(
             image: AssetImage(_imageName),
-            height: 90,
-            width: 90,
+            height: SizeConfig.blockSizeVertical * 20,
+            width: SizeConfig.blockSizeHorizontal * 20,
           ),
-          title: Text(
-            _text,
-            style: TextStyle(fontWeight: FontWeight.w700),
-          ),
-          subtitle: Text(
-            _subText,
-            style: TextStyle(color: GREY_COLOR),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _text,
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16.0),
+              ),
+              SizedBox(height: 8.0),
+              Text(
+                _subText,
+                style: TextStyle(color: GREY_COLOR, fontSize: 13.0),
+              ),
+              SizedBox(height: 10.0),
+              LinearPercentIndicator(
+                backgroundColor: WHITE_COLOR,
+                width: SizeConfig.blockSizeHorizontal * 50,
+                lineHeight: 8.0,
+                percent: 0.6,
+                progressColor: PINK_COLOR,
+              ),
+              // Text(
+              //   "Tìm hiểu thêm",
+              //   style: TextStyle(color: BLUE_COLOR, fontSize: 13.0),
+              // ),
+            ],
           ),
           onTap: () {
             Navigator.push(
@@ -225,8 +246,8 @@ Widget createListTileNavigator(
     child: ListTile(
       leading: Image(
         image: AssetImage(_imageName),
-        height: 30,
-        width: 30,
+        height: SizeConfig.blockSizeVertical * 8,
+        width: SizeConfig.blockSizeHorizontal * 8,
       ),
       title: Text(_text),
       trailing: Icon(Icons.arrow_forward_ios, size: 15),
@@ -246,13 +267,13 @@ Widget createListTileNavigatorNoTrailing(
     child: ListTile(
       leading: Image(
         image: AssetImage(_imageName),
-        height: 30,
-        width: 30,
+        height: SizeConfig.blockSizeVertical * 8,
+        width: SizeConfig.blockSizeHorizontal * 8,
       ),
       title: Text(_text),
       onTap: () async {
         await LoginViewModel().signOutGoogle();
-        Navigator.pop(
+        Navigator.push(
             context, MaterialPageRoute(builder: (context) => MyApp()));
         print("Logout");
       },
@@ -343,7 +364,6 @@ Widget createDiaryItem(BuildContext context, String _time, String _content) {
           image: AssetImage(diaryFrame),
           fit: BoxFit.fill,
         ),
-
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

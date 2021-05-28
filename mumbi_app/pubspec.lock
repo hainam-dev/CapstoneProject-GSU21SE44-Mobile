@@ -315,6 +315,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.0"
+<<<<<<< HEAD
   petitparser:
     dependency: transitive
     description:
@@ -329,6 +330,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
+=======
+  percent_indicator:
+    dependency: "direct main"
+    description:
+      name: percent_indicator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
+>>>>>>> d7924277df13f00416e712303a4fce7572b7cd7f
   plugin_platform_interface:
     dependency: transitive
     description:
