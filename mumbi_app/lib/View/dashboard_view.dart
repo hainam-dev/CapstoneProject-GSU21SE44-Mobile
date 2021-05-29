@@ -56,18 +56,19 @@ class _DashBoardState extends State<DashBoard> {
       ),
       drawer: getDrawer(context),
       body: Container(
-        height: SizeConfig.blockSizeVertical * 100,
-        width: SizeConfig.blockSizeHorizontal * 100,
+        height: SizeConfig.safeBlockVertical * 100,
+        width: SizeConfig.safeBlockHorizontal * 100,
         child: Column(
           children: [
             Container(
-              height: SizeConfig.blockSizeVertical * 40,
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 5),
+              height: SizeConfig.safeBlockVertical * 43,
+              padding: EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: SizeConfig.blockSizeVertical * 13,
+                    padding: EdgeInsets.only(bottom: 16),
+                    height: SizeConfig.safeBlockVertical * 14,
                     child: createListTileHome(
                         context,
                         LIGHT_PINK_COLOR,
@@ -84,15 +85,12 @@ class _DashBoardState extends State<DashBoard> {
                     //       "Nhấp vào để thêm thông tin bé/thai kì ",
                     //       ChildrenInfo()),
                   ),
-                  SizedBox(
-                    height: 16,
-                  ),
                   createTitle("Tính năng nổi bật"),
                   SizedBox(
-                    height: 16,
+                    height: SizeConfig.safeBlockVertical * 2,
                   ),
                   Container(
-                    height: SizeConfig.blockSizeVertical * 13,
+                    height: SizeConfig.safeBlockVertical * 13,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -103,8 +101,8 @@ class _DashBoardState extends State<DashBoard> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 10,
+                 SizedBox(
+                    height: 20,
                   ),
                   createTitle("Tin tức mới nhất"),
                 ],

@@ -96,35 +96,39 @@ class _CalculateDateState extends State<CalculateDate> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Container(
-              height: SizeConfig.blockSizeVertical * 3,
-              width: SizeConfig.blockSizeHorizontal * 45,
-              child: ListTile(
-                title: const Text('Con so'),
-                leading: Radio<ListRadio>(
-                  value: ListRadio.btn1,
-                  groupValue: _site,
-                  onChanged: (ListRadio value) {
-                    setState(() {
-                      _site = value;
-                    });
-                  },
+            GestureDetector(
+              child: Container(
+                height: SizeConfig.blockSizeVertical * 5,
+                width: SizeConfig.blockSizeHorizontal * 45,
+                child: ListTile(
+                  title: const Text('Con so'),
+                  leading: Radio<ListRadio>(
+                    value: ListRadio.btn1,
+                    groupValue: _site,
+                    onChanged: (ListRadio value) {
+                      setState(() {
+                        _site = value;
+                      });
+                    },
+                  ),
                 ),
               ),
             ),
-            Container(
-              height: SizeConfig.blockSizeVertical * 3,
-              width: SizeConfig.blockSizeHorizontal * 45,
-              child: ListTile(
-                title: const Text('Con rạ'),
-                leading: Radio<ListRadio>(
-                  value: ListRadio.btn2,
-                  groupValue: _site,
-                  onChanged: (ListRadio value) {
-                    setState(() {
-                      _site = value;
-                    });
-                  },
+            GestureDetector(
+              child: Container(
+                height: SizeConfig.blockSizeVertical * 5,
+                width: SizeConfig.blockSizeHorizontal * 45,
+                child: ListTile(
+                  title: const Text('Con rạ'),
+                  leading: Radio<ListRadio>(
+                    value: ListRadio.btn2,
+                    groupValue: _site,
+                    onChanged: (ListRadio value) {
+                      setState(() {
+                        _site = value;
+                      });
+                    },
+                  ),
                 ),
               ),
             ),
@@ -137,8 +141,8 @@ class _CalculateDateState extends State<CalculateDate> {
         width: SizeConfig.blockSizeHorizontal * 90,
         child: TextFormField(
           decoration: InputDecoration(
-            labelStyle:
-                TextStyle(color: PINK_COLOR, fontSize: 15.0, fontFamily: 'Lato'),
+            labelStyle: TextStyle(
+                color: PINK_COLOR, fontSize: 15.0, fontFamily: 'Lato'),
             labelText: 'Độ dài chu kì kinh nguyệt',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
