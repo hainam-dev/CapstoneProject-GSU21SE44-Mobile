@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 
 class Contact extends StatefulWidget {
@@ -16,12 +17,12 @@ class _ContactState extends State<Contact> {
       ),
       body: ListView(
         children: [
-          createListTile(context, "dieukhoan.png", "Điều khoản & Điều kiện"),
-          createListTile(context, "chinhsach.png", "Chính sách bảo mật và chia sẻ thông tin"),
+          createListTile(context, rule, "Điều khoản & Điều kiện"),
+          createListTile(context, term, "Chính sách bảo mật và chia sẻ thông tin"),
           SizedBox(height: 15,),
           createTitleCard("Bạn cần hỗ trợ?"),
-          createListTileWithBlueTextTrailing("hotline.png", "Hotline", "+84 1900 1560"),
-          createListTileWithBlueTextTrailing("email.png", "Email", "support@mumbi.com"),
+          createListTileWithBlueTextTrailing(hotline, "Hotline", "+84 1900 1560"),
+          createListTileWithBlueTextTrailing(email, "Email", "support@mumbi.com"),
         ],
       ),
     );
