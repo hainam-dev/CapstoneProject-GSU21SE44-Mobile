@@ -42,7 +42,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
           children: [
             PickerImage(),
             new Container(
-              height: SizeConfig.blockSizeVertical * 65,
+              height: SizeConfig.blockSizeVertical * 55,
               width: SizeConfig.blockSizeHorizontal * 90,
               child: Form(
                 key: formKey,
@@ -55,10 +55,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     const SizedBox(height: 12),
                     new CustomStatusDropdown(
                       'Trạng thái (*)',
-                      'Thai nhi',
-                      'Bé đã sinh',
-                      iconChild,
-                      iconChild,
+                      itemsStatus,
                       function: (value) {
                         setState(
                           () {
@@ -76,18 +73,13 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     const SizedBox(height: 12),
                     new CustomStatusDropdown(
                       'Giới tính (*)',
-                      'Bé trai',
-                      'Bé gái',
-                      iconBoy,
-                      iconGirl,
+                      itemsGender,
                       function: (value) {
                         setState(
                           () {},
                         );
                       },
                     ),
-                    const SizedBox(height: 88),
-                    CustomBottomButton()
                   ],
                 ),
               ),
@@ -95,6 +87,88 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
           ],
         ),
       ),
+      bottomNavigationBar: CustomBottomButton(titleCancel: 'Hủy',titleSave: 'Lưu thông tin',
+        cancelFunction: () => {Navigator.pop(context)},
+        saveFunction: () => {print('Clicked save information childrend')},
+      ),
     );
   }
+
+  final List<DropdownMenuItem<String>> itemsStatus = [
+    DropdownMenuItem(
+      value: 'Thai nhi',
+      child: new Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          new Image.asset(
+            iconChild,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: new CustomText(
+              text: 'Thai nhi',
+            ),
+          ),
+        ],
+      ),
+    ),
+    DropdownMenuItem(
+      value: 'Bé đã sinh',
+      child: new Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          new Image.asset(
+            iconChild,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: new CustomText(
+              text: 'Bé đã sinh',
+            ),
+          ),
+        ],
+      ),
+    ),
+  ];
+
+  final List<DropdownMenuItem<String>> itemsGender = [
+    DropdownMenuItem(
+      value: 'Bé trai',
+      child: new Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          new Image.asset(
+            iconBoy,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: new CustomText(
+              text: 'Bé trai',
+            ),
+          ),
+        ],
+      ),
+    ),
+    DropdownMenuItem(
+      value: 'Bé gái',
+      child: new Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          new Image.asset(
+            iconGirl,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: new CustomText(
+              text: 'Bé gái',
+            ),
+          ),
+        ],
+      ),
+    ),
+  ];
 }

@@ -8,6 +8,7 @@ import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/View/dashboard_view.dart';
 import 'package:mumbi_app/View/fatherInfo_view.dart';
 import 'package:mumbi_app/View/menuRemind.dart';
+import 'package:mumbi_app/View/notificationAlarm_view.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mumbi_app/Widget/splashScreen.dart';
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       home: new SplashScreen(),
       routes: <String, WidgetBuilder>{
         //SPLASH_SCREEN: (BuildContext context) => new MapScreen(),
-        '/LoginScreen': (BuildContext context) => new BotNavBar(),
+        '/LoginScreen': (BuildContext context) => new DashBoard(),
       },
     );
   }
