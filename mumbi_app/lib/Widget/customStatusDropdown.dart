@@ -8,36 +8,26 @@ import 'customText.dart';
 
 class CustomStatusDropdown extends StatefulWidget {
   final title;
-  final title1;
-  final title2;
-  final image1;
-  final image2;
+  final listItems;
   final function;
-  const CustomStatusDropdown(
-      this.title, this.title1, this.title2, this.image1, this.image2,
-      {this.function});
+  const CustomStatusDropdown(this.title, this.listItems, {this.function});
 
   @override
-  _CustomStatusDropdownState createState() => _CustomStatusDropdownState(
-      this.title, this.title1, this.title2, this.image1, this.image2);
+  _CustomStatusDropdownState createState() =>
+      _CustomStatusDropdownState(this.title, this.listItems);
 }
 
 class _CustomStatusDropdownState extends State<CustomStatusDropdown> {
   String selectedValue;
   String title;
-  String title1;
-  String title2;
-  String image1;
-  String image2;
-  _CustomStatusDropdownState(
-      this.title, this.title1, this.title2, this.image1, this.image2);
+  var listItems;
+  _CustomStatusDropdownState(this.title, this.listItems);
   @override
   Widget build(BuildContext context) {
-    return _buildStatus(title, title1, title2, image1, image2);
+    return _buildStatus(title, listItems);
   }
 
-  Widget _buildStatus(String title, String title1, String title2, String image1,
-          String image2) =>
+  Widget _buildStatus(String title, List<DropdownMenuItem> listItems) =>
       Container(
         height: SizeConfig.blockSizeVertical * 7.5,
         width: SizeConfig.blockSizeHorizontal * 90,
@@ -57,45 +47,7 @@ class _CustomStatusDropdownState extends State<CustomStatusDropdown> {
               ),
             ),
           ),
-
-          items: [
-            DropdownMenuItem(
-              value: title1,
-              child: new Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new Image.asset(
-                    image1,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10.0),
-                    child: new CustomText(
-                      text: title1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            DropdownMenuItem(
-              value: title2,
-              child: new Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new Image.asset(
-                    image1,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10.0),
-                    child: new CustomText(
-                      text: title2,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          items: widget.listItems,
           onChanged: widget.function,
           // value: _value,
           isExpanded: true,

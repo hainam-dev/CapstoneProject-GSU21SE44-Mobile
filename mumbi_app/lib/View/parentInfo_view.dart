@@ -44,7 +44,7 @@ class _ParentInfoState extends State<ParentInfo> {
           children: [
             PickerImage(),
             new Container(
-              height: SizeConfig.blockSizeVertical * 65,
+              height: SizeConfig.blockSizeVertical * 55,
               width: SizeConfig.blockSizeHorizontal * 90,
               child: Form(
                 key: formKey,
@@ -75,16 +75,16 @@ class _ParentInfoState extends State<ParentInfo> {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 166,
-                    ),
-                    CustomBottomButton()
                   ],
                 ),
               ),
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: CustomBottomButton(titleCancel: 'Hủy',titleSave: 'Lưu thông tin',
+        cancelFunction: () => {Navigator.pop(context)},
+        saveFunction: () => {print('Clicked add information parent')},
       ),
     );
   }

@@ -8,13 +8,15 @@ final String iconBoy = _getImagePath('icon_boy.png');
 final String iconGirl = _getImagePath('icon_girl.png');
 final String iconChild = _getImagePath('icon_child.png');
 final String iconCalendar = _getImagePath('icon_calendar.png');
-final String iconPlus = _getImagePath('icon_plus.png');
 final String chooseImage = _getImagePath('Image.png');
 final String remindDrink = _getImagePath('remindDrink.png');
+final String alarmDrink = _getImagePath('alarmDrink.png');
 final String remindFitness = _getImagePath('remindFitness.png');
 final String remindMilk = _getImagePath('remindMilk.png');
 final String remindMusic = _getImagePath('remindMusic.png');
 final String remindSleep = _getImagePath('remindSleep.png');
+final String backgroundAlarm = _getImagePath('background_alarm.png');
+final String circleAlarm = _getImagePath('circleAlarm.png');
 
 final String fatherImage = _getImagePath('cha.jpg');
 final String term = _getImagePath('chinhsach.png');
