@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       home: new SplashScreen(),
       routes: <String, WidgetBuilder>{
         //SPLASH_SCREEN: (BuildContext context) => new MapScreen(),
-        '/LoginScreen': (BuildContext context) => new LoginScreen(),
+        '/LoginScreen': (BuildContext context) => new BotNavBar(),
       },
     );
   }

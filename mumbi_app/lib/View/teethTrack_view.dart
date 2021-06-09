@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/View/teethDetail_view.dart';
 
@@ -56,14 +57,14 @@ class _TrackTeethState extends State<TrackTeeth> {
                 children: <Widget>[
 
                   // Răng hàm trên
-                  Container(child: Image.asset(img_hamtren, width: 302, height: 189)),
+                  Container(child: SvgPicture.asset(img_hamtren, width: 302, height: 189)),
 
                   // Răng 1
                   Positioned(
                     height: 85, width: 85,top: 100, left: -2,
                     child: Container(
                       child: IconButton(
-                        icon: Image.asset(_flag ? ic_teeth1 : ic_teeth1_choose ),
+                        icon: SvgPicture.asset(_flag ? ic_teeth1 : ic_teeth1_choose ),
                         onPressed: () =>
                             setState(() => _flag = !_flag),
                       ),
@@ -73,7 +74,7 @@ class _TrackTeethState extends State<TrackTeeth> {
                     height: 85, width: 85,top: 60, left: 10,
                     child: Container(
                       child: IconButton(
-                        icon: Image.asset(_flag2 ? ic_teeth2 : ic_teeth2_choose ),
+                        icon: SvgPicture.asset(_flag2 ? ic_teeth2 : ic_teeth2_choose ),
                         onPressed: () =>
                             setState(() => _flag2 = !_flag2),
                       ),
@@ -85,7 +86,7 @@ class _TrackTeethState extends State<TrackTeeth> {
                 ],
               ),
               // Răng hàm dưới
-              Container(child: Image.asset(img_hamduoi, width: 302, height: 189)),
+              Container(child: SvgPicture.asset(img_hamduoi, width: 302, height: 189)),
               //
 
               //Thông tin
