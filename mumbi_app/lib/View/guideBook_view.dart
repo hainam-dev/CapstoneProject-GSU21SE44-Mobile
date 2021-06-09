@@ -8,7 +8,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mumbi_app/helper/news.dart';
 import 'article_view.dart';
 import 'drawer_view.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class GuideBook extends StatefulWidget {
   const GuideBook({Key key}) : super(key: key);
@@ -55,14 +54,8 @@ class _GuideBookState extends State<GuideBook> {
             padding: EdgeInsets.only(left: 10, right: 10),
             child: CircleAvatar(
               backgroundColor: Colors.white,
-<<<<<<< HEAD
-              child:
-                  IconButton(icon: Image.asset(bookmark), onPressed: () => {}),
-=======
-              child: IconButton(icon: SvgPicture.asset(bookmark),
-                  onPressed: () => {}
-              ),
->>>>>>> origin/Feature/Implement/Track-Pregnancy
+              child: IconButton(
+                  icon: SvgPicture.asset(bookmark), onPressed: () => {}),
             ),
           ),
         ],
@@ -219,61 +212,52 @@ class BlogTile extends StatelessWidget {
             ),
             child: Stack(children: [
               Column(
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w500),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w500),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
                     ),
-                  ),
-                  Row(
-                    children: [
-<<<<<<< HEAD
-                      Text(
-                        dateTime,
-                        style: TextStyle(fontSize: 13, color: Colors.black54),
-                      ),
-                      IconButton(
-                        // padding: EdgeInsets.only(right: 80, top: 50),
-                        icon: Image.asset(bookmark),
-                        onPressed: () => {
-                          buildInsertButton(),
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-=======
+                    Row(children: [
                       Column(
                         children: <Widget>[
                           Container(
                             child: Text(
                               title,
-                              style: TextStyle(fontSize: 16, color: Colors.black87, fontWeight: FontWeight.w500),overflow: TextOverflow.ellipsis,maxLines: 2,),
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w500),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
                           ),
                           Row(
                             children: [
                               Text(
-                                dateTime, style: TextStyle(fontSize: 13,color: Colors.black54),),
+                                dateTime,
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.black54),
+                              ),
                               IconButton(
                                 icon: SvgPicture.asset(bookmark),
-                                onPressed: () =>{
+                                onPressed: () => {
                                   buildInsertButton(),
                                 },
                               ),
                             ],
-                          ),],
+                          ),
+                        ],
                       )
-                    ]
-                ),
->>>>>>> origin/Feature/Implement/Track-Pregnancy
-              )
+                    ]),
+                  ])
             ]),
           )
         ],
