@@ -12,25 +12,35 @@ class PickerImage extends StatefulWidget {
 }
 
 class _PickerImageState extends State<PickerImage> {
-    File _image;
+  File _image;
+  final _picker = ImagePicker();
 
   _imgFromCamera() async {
-    File image = await ImagePicker.pickImage(
-        source: ImageSource.camera, imageQuality: 50);
+    final image =
+        await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
 
     setState(() {
-      _image = image;
+      if (image != null) {
+        _image = File(image.path);
+      } else {
+        print('No image selected.');
+      }
     });
   }
 
   _imgFromGallery() async {
-    File image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 50);
+    final image =
+        await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
-      _image = image;
+      if (image != null) {
+        _image = File(image.path);
+      } else {
+        print('No image selected.');
+      }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return _buildChangeAvatar();

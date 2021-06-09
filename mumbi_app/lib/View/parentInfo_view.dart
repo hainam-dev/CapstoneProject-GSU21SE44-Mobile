@@ -34,6 +34,7 @@ class _ParentInfoState extends State<ParentInfo> {
         title: CustomText(
           text: '$appbarTitle',
           size: 20.0,
+          color: WHITE_COLOR,
         ),
       ),
       backgroundColor: Colors.white,
@@ -82,7 +83,9 @@ class _ParentInfoState extends State<ParentInfo> {
           ],
         ),
       ),
-      bottomNavigationBar: CustomBottomButton(titleCancel: 'Hủy',titleSave: 'Lưu thông tin',
+      bottomNavigationBar: CustomBottomButton(
+        titleCancel: 'Hủy',
+        titleSave: 'Lưu thông tin',
         cancelFunction: () => {Navigator.pop(context)},
         saveFunction: () => {print('Clicked add information parent')},
       ),

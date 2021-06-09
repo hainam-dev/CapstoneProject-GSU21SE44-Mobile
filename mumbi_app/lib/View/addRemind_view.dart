@@ -6,6 +6,7 @@ import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/Widget/customBottomButton.dart';
 import 'package:mumbi_app/Widget/customStatusDropdown.dart';
 import 'package:mumbi_app/Widget/customText.dart';
+import 'package:mumbi_app/Widget/timePicker.dart';
 import 'package:titled_navigation_bar/titled_navigation_bar.dart';
 
 class AddRemindScreen extends StatefulWidget {
@@ -49,27 +50,9 @@ class _AddRemindScreenState extends State<AddRemindScreen> {
             SizedBox(
               height: 16.0,
             ),
-            Row(
-              children: [
-                Icon(
-                  Icons.add,
-                  color: PINK_COLOR,
-                  size: 24.0,
-                ),
-                CustomText(
-                  text: 'Thêm nhắc nhở',
-                  size: 14.0,
-                  weight: FontWeight.w600,
-                  color: PINK_COLOR,
-                ),
-              ],
-            ),
+           TimePicker(),
             SizedBox(
               height: 10.0,
-            ),
-            Divider(
-              color: Color.fromRGBO(238, 238, 238, 1),
-              thickness: 2.0,
             ),
             SizedBox(
               height: 16.0,

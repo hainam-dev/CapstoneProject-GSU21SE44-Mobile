@@ -272,7 +272,7 @@ Widget createListTileNavigatorNoTrailing(
       ),
       title: Text(_text),
       onTap: () async {
-        await LoginViewModel().signOutGoogle();
+        await LoginViewModel().signOut();
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => MyApp()));
         print("Logout");

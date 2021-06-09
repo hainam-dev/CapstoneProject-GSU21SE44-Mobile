@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
@@ -9,10 +10,14 @@ import 'package:mumbi_app/View/dashboard_view.dart';
 import 'package:mumbi_app/View/fatherInfo_view.dart';
 import 'package:mumbi_app/View/menuRemind.dart';
 import 'package:mumbi_app/View/notificationAlarm_view.dart';
+import 'package:mumbi_app/View/parentInfo_view.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mumbi_app/Widget/familyTree.dart';
 import 'package:mumbi_app/Widget/splashScreen.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import '../main.dart';
 import 'bottomNavBar_view.dart';
 
 class MyApp extends StatelessWidget {
@@ -28,7 +33,7 @@ class MyApp extends StatelessWidget {
       home: new SplashScreen(),
       routes: <String, WidgetBuilder>{
         //SPLASH_SCREEN: (BuildContext context) => new MapScreen(),
-        '/LoginScreen': (BuildContext context) => new DashBoard(),
+        '/LoginScreen': (BuildContext context) => new LoginScreen(),
       },
     );
   }
@@ -40,8 +45,21 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool _isLoading = false;
+  ProgressDialog pr;
   @override
   Widget build(BuildContext context) {
+    pr = ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false);
+
+    pr.style(
+      message: "Đang đăng nhập, bạn vui lòng chờ trong giây lát...",
+      borderRadius: 10.0,
+      backgroundColor: WHITE_COLOR,
+      elevation: 10.0,
+      messageTextStyle:
+          TextStyle(color: PINK_COLOR, fontSize: 16.0, fontFamily: 'Lato'),
+    );
     SizeConfig().init(context);
     return Scaffold(
       body: Container(
@@ -84,8 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
           elevation: 0.0,
           shape: new RoundedRectangleBorder(
               borderRadius: new BorderRadius.circular(30.0)),
-          padding:
-              EdgeInsets.all(7.0),
+          padding: EdgeInsets.all(7.0),
           onPressed: onPressed,
           child: new Row(
             mainAxisSize: MainAxisSize.min,
@@ -109,15 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             _btnLoginStyle(
               () async {
-                await LoginViewModel().signInWithGoogle().then(
-                  (value) async {
-                    FirebaseAuth auth = FirebaseAuth.instance;
-                    FirebaseUser user = await auth.currentUser();
-                    print(value);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => BotNavBar()));
-                  },
-                );
+                _isLoading ? null : _loginGoogle();
               },
               new Text(
                 "Đăng nhập với google",
@@ -162,4 +171,31 @@ class _LoginScreenState extends State<LoginScreen> {
           ],
         ),
       );
+
+  void _loginGoogle() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    LoginViewModel loginViewModel = LoginViewModel();
+    var userInfo;
+    await pr.show();
+    await loginViewModel.signInWithGoogle().then((value) => {userInfo = value});
+    if (userInfo != null) {
+      storage.write(key: "UserInfo", value: userInfo);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('UserInfo', userInfo);
+      pr.hide();
+      await Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => new NotificationAlarmScreen()),
+          (router) => false);
+    } else {
+      // _showMsg(context, "Please sign in with FPT Education mail");
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
 }
