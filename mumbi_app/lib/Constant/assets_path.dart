@@ -1,4 +1,5 @@
 final String imageAssetsRoot = "assets/images/";
+final String imageTeethAssetsRoot = "assets/images/teeth/";
 
 final String backgroundApp = _getImagePath('background.png');
 final String logoApp = _getImagePath('logo.png');
@@ -43,18 +44,30 @@ final String pregnancy = _getImagePath('thaiki.png');
 final String addImage = _getImagePath('themhinhanh.png');
 final String addDiary = _getImagePath('themnhatky.png');
 final String injection = _getImagePath('tiemchung.png');
-final String bookmark = _getImagePath('ic_bookmark.png');
+final String bookmark = _getImagePath('ic_bookmark.svg');
 final String ic_tooth = _getImagePath('ic_tooth.png');
-final String img_hamtren = _getImagePath('hamtren.png');
-final String img_hamduoi = _getImagePath('hamduoi.png');
-final String ic_teeth1 = _getImagePath('ic_teeth1.png');
-final String ic_teeth2 = _getImagePath('ic_teeth2.png');
-final String ic_teeth1_choose = _getImagePath('ic_teeth1_choose.png');
-final String ic_teeth2_choose = _getImagePath('ic_teeth2_choose.png');
+final String ic_needle = _getImagePath('needle.svg');
+
+
+final String img_beco = _getImagePath('conco.svg');
+final String ic_playlist = _getImagePath('ic_playlist.svg');
+final String ic_poet = _getImagePath('ic_poet.svg');
+final String ic_kechuyen = _getImagePath('ic_kechuyen.svg');
+
+//teeth
+final String img_hamtren = _getImageTeethPath('hamtren.svg');
+final String img_hamduoi = _getImageTeethPath('hamduoi.svg');
+final String ic_teeth1 = _getImageTeethPath('ic_teeth1_ht.svg');
+final String ic_teeth2 = _getImageTeethPath('ic_teeth2_ht.svg');
+final String ic_teeth1_choose = _getImageTeethPath('ic_teeth1_ht_choose.svg');
+final String ic_teeth2_choose = _getImageTeethPath('ic_teeth2_ht_choose.svg');
 
 
 
 String _getImagePath(String fileName){
   return imageAssetsRoot + fileName;
+}
+String _getImageTeethPath(String fileName){
+  return imageTeethAssetsRoot + fileName;
 }
 

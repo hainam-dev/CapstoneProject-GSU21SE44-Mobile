@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Model/article_model.dart';
 import 'package:mumbi_app/Model/category_model.dart';
@@ -7,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mumbi_app/helper/news.dart';
 import 'article_view.dart';
 import 'drawer_view.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class GuideBook extends StatefulWidget {
   const GuideBook({Key key}) : super(key: key);
@@ -53,7 +55,7 @@ class _GuideBookState extends State<GuideBook> {
             padding: EdgeInsets.only(left: 10, right: 10),
             child: CircleAvatar(
               backgroundColor: Colors.white,
-              child: IconButton(icon: Image.asset(bookmark),
+              child: IconButton(icon: SvgPicture.asset(bookmark),
                   onPressed: () => {}
               ),
             ),
@@ -178,7 +180,6 @@ class BlogTile extends StatelessWidget {
                 child: Stack(
                     children: [
                       Column(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Container(
                             child: Text(
@@ -190,8 +191,7 @@ class BlogTile extends StatelessWidget {
                               Text(
                                 dateTime, style: TextStyle(fontSize: 13,color: Colors.black54),),
                               IconButton(
-                                // padding: EdgeInsets.only(right: 80, top: 50),
-                                icon: Image.asset(bookmark),
+                                icon: SvgPicture.asset(bookmark),
                                 onPressed: () =>{
                                   buildInsertButton(),
                                 },

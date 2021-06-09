@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/View/injectionSchedule.dart';
+import 'package:mumbi_app/View/pregnancy_update_detail.dart';
+import 'package:mumbi_app/View/pregnancy_view.dart';
 import 'package:mumbi_app/View/tracking_view.dart';
+import 'package:mumbi_app/View/baby_development.dart';
 import 'dashboard_view.dart';
 import 'guideBook_view.dart';
 
@@ -13,7 +17,7 @@ class _BotNavBarState extends State<BotNavBar> {
   int selectedIndex = 0;
   Widget _dashBoard = DashBoard();
   Widget _guildBook = GuideBook();
-  Widget _tracking = Tracking();
+  Widget _tracking = HomePregnancy();
 
   @override
   Widget build(BuildContext context) {
