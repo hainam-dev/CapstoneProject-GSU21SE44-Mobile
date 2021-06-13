@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Constant/userInfo.dart';
 import 'package:mumbi_app/Model/user_model.dart';
 import 'package:mumbi_app/View/menuRemind.dart';
 import 'package:mumbi_app/View/momInfo_view.dart';
@@ -36,9 +37,9 @@ Widget getDrawer(BuildContext context) {
             margin: EdgeInsets.zero,
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage(motherImage),
-              ),
-              title: Text("Nguyễn Thị Bé Nhỏ"),
+                  // backgroundImage: NetworkImage(userModel.data.photo),
+                  ),
+              // title: Text(userModel.data.email),
               subtitle: Text("0978 820 456"),
               trailing: Icon(
                 Icons.arrow_forward_ios,

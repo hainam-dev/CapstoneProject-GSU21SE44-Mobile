@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -185,11 +187,17 @@ class _LoginScreenState extends State<LoginScreen> {
       storage.write(key: "UserInfo", value: userInfo);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('UserInfo', userInfo);
-      pr.hide();
-      await Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => new BotNavBar()),
-          (router) => false);
+      String roleID = jsonDecode(userInfo)['data']['role'];
+      if (roleID.toString() == "role01") {
+        pr.hide();
+        await Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => new BotNavBar()),
+            (router) => false);
+      } else {
+        pr.hide();
+        print("Ban khong co quyen truy cap");
+      }
     } else {
       // _showMsg(context, "Please sign in with FPT Education mail");
     }

@@ -4,11 +4,12 @@ import 'package:mumbi_app/Model/user_model.dart';
 
 import '../main.dart';
 
-getInfo(Object model) async {
+getInfo() async {
   dynamic user = await storage.read(key: "UserInfo");
   if (user == null)
     return null;
   else {
-    model = UserModel.fromJson(jsonDecode(user));
+    UserModel userModel = UserModel.fromJson(jsonDecode(user));
+    return userModel;
   }
 }

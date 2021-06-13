@@ -1,16 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Constant/userInfo.dart';
-import 'package:mumbi_app/Model/user_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:mumbi_app/Widget/customText.dart';
-import '../main.dart';
 import 'drawer_view.dart';
 import 'changeAccount_view.dart';
 import 'childPregnancy_view.dart';
@@ -21,7 +16,6 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
-  UserModel userModel;
   final List _listNews = [
     'https://image.winudf.com/v2/image/Y29tLmJta3NzZXJ2aWNlcy5tb21hbmRiYWJ5d2FsbHBhcGVyc2hkX3NjcmVlbl84XzE1NDAwOTcwMDRfMDUy/screen-8.jpg?fakeurl=1&type=.jpg',
     'https://ehospice.com/wp-content/uploads/2018/07/5b815c14d2e7c6a76e0d161c0f70d6a1-1-770x500.jpg',
@@ -30,12 +24,6 @@ class _DashBoardState extends State<DashBoard> {
     'https://image.freepik.com/free-photo/young-mother-taking-care-her-little-baby-girl-beautiful-mom-her-daughter-indoors-bedroom-loving-family-attractive-mum-holding-her-child_136813-261.jpg',
     'https://images.ctfassets.net/9l3tjzgyn9gr/3HQ9DOnGNgAPXtH8W1xpuS/08e4de3bec3ef8fbcc46272e011a1f6e/newborn-baby-mommy-and-son-mom-and-baby-new-mother_t20_eoz0WW.jpg?w=1800&q=50&fm=jpg&fl=progressive',
   ];
-
-  @override
-  void initState() {
-    getInfo(userModel);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +46,10 @@ class _DashBoardState extends State<DashBoard> {
                       radius: 18,
                       child: CircleAvatar(
                         radius: 17,
-                        backgroundImage: NetworkImage(userModel.data.photo),
+                        backgroundImage: AssetImage(motherImage),
                       ),
                     ),
-                  ),
+                  )
                 ],
               )),
         ],
