@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       home: new SplashScreen(),
       routes: <String, WidgetBuilder>{
         //SPLASH_SCREEN: (BuildContext context) => new MapScreen(),
-        '/LoginScreen': (BuildContext context) => new BotNavBar(),
+        '/LoginScreen': (BuildContext context) => new LoginScreen(),
       },
     );
   }
@@ -188,8 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
       pr.hide();
       await Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(
-              builder: (context) => new NotificationAlarmScreen()),
+          MaterialPageRoute(builder: (context) => new BotNavBar()),
           (router) => false);
     } else {
       // _showMsg(context, "Please sign in with FPT Education mail");

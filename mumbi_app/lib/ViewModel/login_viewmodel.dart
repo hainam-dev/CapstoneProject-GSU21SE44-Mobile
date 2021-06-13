@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mumbi_app/Repository/user_repository.dart';
+import 'package:mumbi_app/Model/user_model.dart';
+import 'package:mumbi_app/Repository/login_repository.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
 
 class LoginViewModel extends Model {
+  LoginRepository _loginRepository = LoginRepository();
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
@@ -15,9 +19,9 @@ class LoginViewModel extends Model {
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _googleSignIn = googleSignin ?? GoogleSignIn();
 
-  Future<String> signInWithGoogle() async {
+  Future<dynamic> signInWithGoogle() async {
     try {
-      var data;
+      var response;
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
@@ -35,9 +39,15 @@ class LoginViewModel extends Model {
         var fcmToken = await _firebaseMessaging.getToken();
         print("idToken: " + token);
         print("fcmToken: " + fcmToken);
-        data = await UserRepository.callAPILoginGoogle(token, fcmToken);
+        response = await _loginRepository.callAPILoginGoogle(token, fcmToken);
+        if (response != null) {
+          UserModel userModel = UserModel.fromJson(jsonDecode(response));
+          print(userModel.data);
+          return response;
+        }
+        notifyListeners();
       }
-      return data;
+      return null;
     } catch (e) {
       print("signInWithGoogle Error: " + e.toString());
       signOut();

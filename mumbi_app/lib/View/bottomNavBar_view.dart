@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Model/user_model.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
 import 'package:mumbi_app/View/pregnancy_update_detail.dart';
 import 'package:mumbi_app/View/pregnancy_view.dart';
@@ -70,7 +71,10 @@ class _BotNavBarState extends State<BotNavBar> {
   }
 }
 
-item(Icon _icon, String _name,) {
+item(
+  Icon _icon,
+  String _name,
+) {
   return BottomNavigationBarItem(
     icon: _icon,
     title: Text(
