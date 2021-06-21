@@ -1,22 +1,22 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../main.dart';
 
-class UserModel {
+class UserModel extends Model{
   Data data;
 
-  UserModel({this.data});
+  UserModel({
+    this.data});
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        data: Data.fromJson(json["data"]),
-      );
+    data: Data.fromJson(json["data"]),
+  );
 
   Map<String, dynamic> toJson() => {
-        "data": data.toJson(),
-      };
+    "data": data.toJson(),
+  };
 }
 
 class Data {
@@ -31,20 +31,25 @@ class Data {
   String photo;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        email: json["email"],
-        role: json["role"],
-        photo: json["photo"],
-      );
+    email: json["email"],
+    role: json["role"],
+    photo: json["photo"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "email": email,
-        "role": role,
-        "photo": photo,
-      };
+    "email": email,
+    "role": role,
+    "photo": photo,
+  };
 
-  @override
-  String toString() {
-    // TODO: implement toString
-    return '{${this.email}, ${this.photo}}';
+  void getInfo() async {
+    dynamic user = await storage.read(key: "UserInfo");
+    if (user == null)
+      return null;
+    else {
+      user = jsonDecode(user);
+      email = user['email'];
+      photo = user['photo'];
+    }
   }
 }

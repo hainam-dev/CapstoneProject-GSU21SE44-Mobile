@@ -42,7 +42,10 @@ class LoginViewModel extends Model {
         response = await _loginRepository.callAPILoginGoogle(token, fcmToken);
         if (response != null) {
           UserModel userModel = UserModel.fromJson(jsonDecode(response));
-          print(userModel.data);
+          print(userModel.data.email);
+          print(userModel.data.photo);
+          print(userModel.data.role);
+          print(response);
           return response;
         }
         notifyListeners();
@@ -79,4 +82,5 @@ class LoginViewModel extends Model {
   Future<String> getUser() async {
     return (await _firebaseAuth.currentUser).email;
   }
+
 }

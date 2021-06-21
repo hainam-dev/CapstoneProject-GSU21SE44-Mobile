@@ -49,7 +49,7 @@ class _CalculateDateState extends State<CalculateDate> {
               SizedBox(
                 height: 12.0,
               ),
-              CalendarBirthday('Chọn ngày đầu tiên của kì kinh nguyệt cuối'),
+              CalendarBirthday('Chọn ngày đầu tiên của kì kinh nguyệt cuối',""),
               SizedBox(
                 height: 24.0,
               ),

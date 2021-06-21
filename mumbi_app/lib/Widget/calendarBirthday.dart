@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/dateTime_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 
 class CalendarBirthday extends StatefulWidget {
   final title;
+  final birthday;
 
-  const CalendarBirthday(this.title);
+  const CalendarBirthday(this.title, this.birthday);
   @override
-  _CalendarBirthdayState createState() => _CalendarBirthdayState(this.title);
+  _CalendarBirthdayState createState() => _CalendarBirthdayState(this.title, this.birthday);
 }
 
 class _CalendarBirthdayState extends State<CalendarBirthday> {
@@ -16,7 +18,8 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
   TextEditingController _dateController = TextEditingController();
   DateTime selectedDate = DateTime.now();
   final title;
-  _CalendarBirthdayState(this.title);
+  final birthday;
+  _CalendarBirthdayState(this.title, this.birthday);
   Future<Null> _selectDate(BuildContext context) async {
     SizeConfig().init(context);
     final DateTime picked = await showDatePicker(
@@ -42,6 +45,14 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
             "${picked.toLocal().day}/${picked.toLocal().month}/${picked.toLocal().year}";
         _dateController.text = date;
       });
+  }
+
+  @override
+  void initState() {
+    if(birthday != "0001-01-01T00:00:00")
+      _dateController.text =
+          DateFormat('dd/MM/yyyy').format(DateTime.parse(birthday));
+    super.initState();
   }
 
   @override

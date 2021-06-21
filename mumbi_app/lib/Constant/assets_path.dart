@@ -46,6 +46,7 @@ final String pregnancy = _getImagePath('thaiki.png');
 final String addImage = _getImagePath('themhinhanh.png');
 final String addDiary = _getImagePath('themnhatky.png');
 final String injection = _getImagePath('tiemchung.png');
+final String editpencil = _getImagePath('hinhcayvietedit.svg');
 final String bookmark = _getImagePath('ic_bookmark.svg');
 final String ic_tooth = _getImagePath('ic_tooth.png');
 final String ic_needle = _getImagePath('needle.svg');

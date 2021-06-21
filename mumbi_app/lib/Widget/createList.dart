@@ -141,16 +141,16 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
               SizedBox(height: 8.0),
               Text(
                 _subText,
-                style: TextStyle(color: GREY_COLOR, fontSize: 13.0),
+                style: TextStyle(color: GREY_COLOR, fontSize: 14.0),
               ),
               SizedBox(height: 10.0),
-              LinearPercentIndicator(
+              /*LinearPercentIndicator(
                 backgroundColor: WHITE_COLOR,
                 width: SizeConfig.blockSizeHorizontal * 50,
                 lineHeight: 8.0,
                 percent: 0.6,
                 progressColor: PINK_COLOR,
-              ),
+              ),*/
               // Text(
               //   "Tìm hiểu thêm",
               //   style: TextStyle(color: BLUE_COLOR, fontSize: 13.0),

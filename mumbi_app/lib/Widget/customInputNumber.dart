@@ -4,16 +4,17 @@ import 'package:mumbi_app/Utils/size_config.dart';
 
 class CustomInputNumber extends StatefulWidget {
   final title;
+  final phoneNumber;
 
-  const CustomInputNumber(this.title);
+  const CustomInputNumber(this.title, this.phoneNumber);
   @override
-  _CustomInputNumberState createState() => _CustomInputNumberState(title);
+  _CustomInputNumberState createState() => _CustomInputNumberState(title, phoneNumber);
 }
 
 class _CustomInputNumberState extends State<CustomInputNumber> {
   String title;
   String phoneNumber = '';
-  _CustomInputNumberState(this.title);
+  _CustomInputNumberState(this.title, this.phoneNumber);
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class _CustomInputNumberState extends State<CustomInputNumber> {
   Widget _buildPhoneNumber(String title) => Container(
         height: SizeConfig.blockSizeVertical * 8,
         child: TextFormField(
+          initialValue: phoneNumber,
           decoration: InputDecoration(
             labelStyle: TextStyle(color: PINK_COLOR),
             labelText: title,

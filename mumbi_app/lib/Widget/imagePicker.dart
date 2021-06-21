@@ -7,13 +7,20 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'customText.dart';
 
 class PickerImage extends StatefulWidget {
+  final getImage;
+
+  const PickerImage(this.getImage);
+
   @override
-  _PickerImageState createState() => _PickerImageState();
+  _PickerImageState createState() => _PickerImageState(getImage);
 }
 
 class _PickerImageState extends State<PickerImage> {
+  final getImage;
   File _image;
   final _picker = ImagePicker();
+
+  _PickerImageState(this.getImage);
 
   _imgFromCamera() async {
     final image =
@@ -39,6 +46,12 @@ class _PickerImageState extends State<PickerImage> {
         print('No image selected.');
       }
     });
+  }
+
+  @override
+  void initState() {
+
+    super.initState();
   }
 
   @override
@@ -117,12 +130,42 @@ class _PickerImageState extends State<PickerImage> {
                         ),
                       ],
                     )
-                  : CircleAvatar(
+                  : getImage != "" ? Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(65),
+                    child: Image.network(
+                      getImage,
+                      height: 125,
+                      width: 125,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Positioned(
+                    right: 5,
+                    bottom: 5,
+                    child: CircleAvatar(
+                      backgroundColor: WHITE_COLOR,
+                      radius: 14.0,
+                      child: new CircleAvatar(
+                        backgroundColor: PINK_COLOR,
+                        radius: 13.0,
+                        child: Icon(
+                          Icons.image_rounded,
+                          color: Colors.white,
+                          size: 22,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ): CircleAvatar(
                       radius: 63,
                       backgroundColor: Colors.grey[200],
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          getImage != null ? Image.network(getImage) :
                           Icon(
                             Icons.camera_alt,
                             color: Colors.grey[800],

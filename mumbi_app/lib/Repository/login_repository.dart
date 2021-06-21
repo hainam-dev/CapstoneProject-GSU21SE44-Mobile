@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:async';
-import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:mumbi_app/Constant/common_api.dart';
 
 class LoginRepository {
   Future<dynamic> callAPILoginGoogle(String idToken, String fcmToken) async {
     var response = await http.post(
-      Uri.parse('https://192.168.1.7:45455/api/Accounts/Authenticate'),
+      Uri.parse('${LOGIN}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

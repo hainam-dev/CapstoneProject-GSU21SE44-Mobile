@@ -40,7 +40,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
         width: SizeConfig.blockSizeHorizontal * 100,
         child: Column(
           children: [
-            PickerImage(),
+            PickerImage(""),
             new Container(
               height: SizeConfig.blockSizeVertical * 55,
               width: SizeConfig.blockSizeHorizontal * 90,
@@ -49,9 +49,9 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                 child: ListView(
                   children: [
                     const SizedBox(height: 5),
-                    CustomInputText('Họ & tên (*)'),
+                    CustomInputText('Họ & tên (*)',"tèo"),
                     const SizedBox(height: 12),
-                    CustomInputText('Tên ở nhà'),
+                    CustomInputText('Tên ở nhà',"tí"),
                     const SizedBox(height: 12),
                     new CustomStatusDropdown(
                       'Trạng thái (*)',
@@ -66,10 +66,10 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     ),
                     const SizedBox(height: 12),
                     (selectedValue.toString() == "Bé đã sinh")
-                        ? CalendarBirthday('Ngày sinh')
+                        ? CalendarBirthday('Ngày sinh',"")
                         : (selectedValue.toString() == "Thai nhi")
                             ? CalendarCalculate()
-                            : CalendarBirthday('Ngày sinh'),
+                            : CalendarBirthday('Ngày sinh',""),
                     const SizedBox(height: 12),
                     new CustomStatusDropdown(
                       'Giới tính (*)',

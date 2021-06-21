@@ -4,14 +4,16 @@ import 'package:mumbi_app/Utils/size_config.dart';
 
 class CustomInputText extends StatefulWidget {
   final title;
-  const CustomInputText(this.title);
+  final value;
+  const CustomInputText(this.title, this.value);
   @override
-  _CustomInputTextState createState() => _CustomInputTextState(title);
+  _CustomInputTextState createState() => _CustomInputTextState(title,value);
 }
 
 class _CustomInputTextState extends State<CustomInputText> {
   String title;
-  _CustomInputTextState(this.title);
+  String value;
+  _CustomInputTextState(this.title,this.value);
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class _CustomInputTextState extends State<CustomInputText> {
   Widget _buildUsername(String name) => Container(
         height: SizeConfig.blockSizeVertical * 8,
         child: TextFormField(
+          initialValue: value,
           style: TextStyle(fontFamily: 'Lato', fontWeight: FontWeight.w100),
           decoration: InputDecoration(
             labelStyle: TextStyle(color: PINK_COLOR),
