@@ -7,8 +7,11 @@ import 'package:mumbi_app/Model/mom_model.dart';
 
 class MomRepository{
   static Future<dynamic> apiGetMomByID(String accountID) async{
-    String url = "${GET_MOM_BY_ID}$accountID";
-    var response = await http.get(Uri.parse(url));
+    var response = await http.get(
+            Uri.parse("${GET_MOM_BY_ID}$accountID"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },);
     if (response.statusCode == 200) {
       return response.body;
     }

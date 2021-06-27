@@ -11,7 +11,7 @@ class LoginRepository {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: json
-          .encode(<String, String>{'IdToken': idToken, 'FcmToken': fcmToken}),
+          .encode(<String, String>{'idToken': idToken, 'fcmToken': fcmToken}),
     );
 
     if (response.statusCode == 200) return response.body;

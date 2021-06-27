@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/dad_model.dart';
 import 'package:mumbi_app/Model/mom_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/View/parentInfo_view.dart';
+import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/parent_viewmodel.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class MyFamily extends StatefulWidget {
   @override
@@ -17,12 +20,22 @@ class MyFamily extends StatefulWidget {
 class _MyFamilyState extends State<MyFamily> {
   MomModel momModel;
   DadModel dadModel;
+  List<dynamic> childListModel;
   bool isLoading = true;
 
-  getModelForMom() async{
-    ParentViewModel MomViewModel = ParentViewModel();
-    await MomViewModel.getMomByID();
-    momModel = MomViewModel.momModel;
+  getModel() async{
+    ParentViewModel momViewModel = ParentViewModel();
+    await momViewModel.getMomByID();
+    momModel = momViewModel.momModel;
+
+    ParentViewModel dadViewModel = ParentViewModel();
+    await dadViewModel.getDadByMom();
+    dadModel = dadViewModel.dadModel;
+
+    ChildViewModel childViewModel = ChildViewModel();
+    await childViewModel.getChildByMom();
+    childListModel = childViewModel.childList;
+
     setState(() {
       isLoading = false;
     });
@@ -30,8 +43,8 @@ class _MyFamilyState extends State<MyFamily> {
 
   @override
   void initState() {
+    getModel();
     super.initState();
-    getModelForMom();
   }
 
   @override
@@ -50,15 +63,15 @@ class _MyFamilyState extends State<MyFamily> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  createAddFamilyCard(context, "Thêm cha", ParentInfo("Thông tin cha",dadModel)),
-                  /*createFamilyCard(
+                  dadModel == null ? createAddFamilyCard(context, "Thêm cha", ParentInfo("Thông tin cha",dadModel,"Create"))
+                  :createFamilyCard(
                       context,
-                      "https://file.tinnhac.com/resize/600x-/2020/06/17/20200617123908-fdf3.jpg",
-                      "Nguyễn Thị Cha Jennie",
+                      dadModel.image,
+                      dadModel.fullName,
                       LIGHT_BLUE_COLOR,
                       "Cha",
                       BLUE_COLOR,
-                      ParentInfo("Thông tin cha")),*/
+                      ParentInfo("Thông tin cha",dadModel,"Update")),
                   createFamilyCard(
                       context,
                       momModel.image,
@@ -66,31 +79,35 @@ class _MyFamilyState extends State<MyFamily> {
                       LIGHT_PINK_COLOR,
                       "Mẹ",
                       PINK_COLOR,
-                      ParentInfo("Thông tin mẹ",momModel)),
+                      ParentInfo("Thông tin mẹ",momModel,"Update")),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  createFamilyCard(
-                      context,
-                      "https://static.wikia.nocookie.net/producerviet/images/a/a8/Lisa.jpg/revision/latest/top-crop/width/360/height/450?cb=20201124151216&path-prefix=vi",
-                      "Nguyễn Thị Con Lisa",
-                      LIGHT_PINK_COLOR,
-                      "Con gái",
-                      PINK_COLOR,
-                      ChildrenInfo()),
-                  createAddFamilyCard(context, "Thêm bé / thai kì", ChildrenInfo()),
-                  /*createFamilyCard(
-                      context,
-                      "https://vtv1.mediacdn.vn/thumb_w/650/2020/8/18/jisoo01-1597719389935404726851.jpg",
-                      "Nguyễn Thị Con Jisoo",
-                      LIGHT_BLUE_COLOR,
-                      "Con trai",
-                      BLUE_COLOR,
-                      ChildrenInfo()),*/
-                ],
-              ),
+             childListModel.length == 0
+                 ? Align(alignment: Alignment.topLeft,child: createAddFamilyCard(context, "Thêm bé / thai kì", ChildrenInfo(childListModel,"Create")))
+                 :Flexible(
+                   child: GridView.builder(
+                       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                         maxCrossAxisExtent: SizeConfig.safeBlockVertical * 30,
+                         crossAxisSpacing: 5,
+                         mainAxisSpacing: 5),
+                       itemCount: childListModel.length + 1,
+                       itemBuilder: (BuildContext context, index) {
+                         if(index == childListModel.length){
+                           return createAddFamilyCard(context, "Thêm bé / thai kì", ChildrenInfo("","Create"));
+                         }
+                         //if(childListModel[index]['isBorn'] == true){
+                           return createFamilyCard(
+                               context,
+                               childListModel[index]['image'],
+                               childListModel[index]['fullName'],
+                               childListModel[index]['gender'] == "Bé trai" ? LIGHT_BLUE_COLOR : LIGHT_PINK_COLOR,
+                               childListModel[index]['gender'] == "Bé trai" ? "Con trai" : "Con gái",
+                               childListModel[index]['gender'] == "Bé trai" ? BLUE_COLOR : PINK_COLOR,
+                               ChildrenInfo(childListModel[index],"Update"));
+                         //}
+                       }),
+                 ),
+              SizedBox(height: 20,)
             ],
           ),
         ));

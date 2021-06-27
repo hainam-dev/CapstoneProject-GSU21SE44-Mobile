@@ -17,6 +17,14 @@ class ChildRepository{
     }
   }
 
+  static Future<dynamic> apiGetChildByMom(String momID) async{
+    String url = "${GET_CHILD_BY_MOM}${momID}";
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return response.body;
+    }
+  }
+
   static Future<dynamic> apiGetChildByID(ChildModel childModel) async{
     var response = await http.put(
         Uri.parse("${GET_CHILD_BY_ID}${childModel.childID}"),
@@ -31,19 +39,7 @@ class ChildRepository{
 
   static Future<dynamic> apiUpdateChildInfo(ChildModel childModel) async {
     var response = await http.put(
-        Uri.parse("${UPDATE_CHILD_INFO}/${childModel.childID}"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8'
-        },
-        body: jsonEncode(childModel.toJson()));
-    if (response.statusCode == 200) {
-      return response.body;
-    }
-  }
-
-  static Future<dynamic> apiUpdatePregnancyInfo(ChildModel childModel) async {
-    var response = await http.put(
-        Uri.parse("${UPDATE_PREGNANCY_INFO}${childModel.childID}"),
+        Uri.parse("${UPDATE_CHILD_INFO}${childModel.childID}"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
@@ -54,8 +50,8 @@ class ChildRepository{
   }
 
   static Future<dynamic> apiDeleteChild(String childID) async {
-    var response = await http.delete(
-      Uri.parse("${DELETE_CHILD}/${childID}"),
+    var response = await http.put(
+      Uri.parse("${DELETE_CHILD}${childID}"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },

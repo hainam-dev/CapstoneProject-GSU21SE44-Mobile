@@ -5,7 +5,8 @@ import 'package:mumbi_app/Utils/size_config.dart';
 class CustomInputText extends StatefulWidget {
   final title;
   final value;
-  const CustomInputText(this.title, this.value);
+  final function;
+  const CustomInputText(this.title, this.value, {this.function});
   @override
   _CustomInputTextState createState() => _CustomInputTextState(title,value);
 }
@@ -41,13 +42,13 @@ class _CustomInputTextState extends State<CustomInputText> {
             ),
           ),
           validator: (value) {
-            if (value.length < 4) {
-              return 'Enter at least 4 characters';
+            if (value.length == 0) {
+              return 'Vui lòng nhập tên của bạn';
             } else {
               return null;
             }
           },
-          onSaved: (value) => setState(() => value),
+          onChanged: widget.function,
           keyboardType: TextInputType.name,
         ),
       );

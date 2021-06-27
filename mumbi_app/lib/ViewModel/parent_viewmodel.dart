@@ -11,10 +11,7 @@ import '../main.dart';
 class ParentViewModel extends Model{
 
   MomModel momModel;
-
-  ParentViewModel(){
-    getMomByID();
-  }
+  DadModel dadModel;
 
   //MOM
   void getMomByID() async{
@@ -49,7 +46,37 @@ class ParentViewModel extends Model{
   }
 
   //DAD
+  void getDadByMom() async{
+    String momID = "";
+    dynamic user = await storage.read(key: "UserInfo");
+    if (user == null)
+      return null;
+    else {
+      user = jsonDecode(user);
+      momID = user['data']['email'];
+    }
+    try{
+      var data = await DadRepository.apiGetDadByMomID(momID);
+      if(data != null){
+        data = jsonDecode(data);
+        dadModel = DadModel.fromJson(data);
+        notifyListeners();
+      }
+    }catch (e){
+      print("error: " + e.toString());
+    }
+  }
+
   Future<bool> addDad(DadModel dadModel) async {
+    String momID;
+    dynamic user = await storage.read(key: "UserInfo");
+    if (user == null)
+      return null;
+    else {
+      user = jsonDecode(user);
+      momID = user['data']['email'];
+    }
+    dadModel.momID = momID;
     try {
       String data = await DadRepository.apiAddDad(dadModel);
       return true;
@@ -69,12 +96,13 @@ class ParentViewModel extends Model{
     return false;
   }
 
-  void deleteDad(String accountID) async {
+  Future<bool> deleteDad(String dadID) async {
     try {
-      String data = await DadRepository.apiDeleteDad(accountID);
+      String data = await DadRepository.apiDeleteDad(dadID);
+      return true;
     } catch (e) {
       print("error: " + e.toString());
     }
+    return false;
   }
-
 }

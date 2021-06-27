@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Model/user_model.dart';
-import 'package:mumbi_app/View/injectionSchedule.dart';
-import 'package:mumbi_app/View/pregnancy_update_detail.dart';
 import 'package:mumbi_app/View/pregnancy_view.dart';
-import 'package:mumbi_app/View/tracking_view.dart';
-import 'package:mumbi_app/View/baby_development.dart';
 import 'dashboard_view.dart';
 import 'guideBook_view.dart';
 

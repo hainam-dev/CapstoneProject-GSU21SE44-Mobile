@@ -6,15 +6,15 @@ final String LOGIN = getApiPath("/api/Accounts/Authenticate");
 final String GET_MOM_BY_ID = getApiPath("/api/Moms/GetMomBy/");
 final String UPDATE_MOM = getApiPath("/api/Moms/UpdateMom/");
 
-final String GET_DAD_BY_MOMID = getApiPath("/api/Dads/GetDadBy/");
+final String GET_DAD_BY_MOM = getApiPath("/api/Dads/GetDadBy/");
 final String ADD_DAD = getApiPath("/api/Dads/AddDad");
 final String UPDATE_DAD = getApiPath("/api/Dads/UpdateDad/");
 final String DELETE_DAD = getApiPath("/api/Dads/DeleteDad/");
 
 final String ADD_CHILD = getApiPath("/api/Childrens/AddChildren");
 final String GET_CHILD_BY_ID = getApiPath("/api/Childrens/GetChildrenBy/");
-final String UPDATE_CHILD_INFO = getApiPath("/api/Childrens/updateChildrenInfo/");
-final String UPDATE_PREGNANCY_INFO = getApiPath("/api/Childrens/updatePregnancyInfo/");
+final String GET_CHILD_BY_MOM = getApiPath("/api/Childrens/GetChildrenByMom/");
+final String UPDATE_CHILD_INFO = getApiPath("/api/Childrens/updateChildrenInformation/");
 final String DELETE_CHILD = getApiPath("/api/Childrens/DeleteChildren/");
 
 

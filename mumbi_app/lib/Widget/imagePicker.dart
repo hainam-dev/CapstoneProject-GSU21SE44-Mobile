@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'customText.dart';
 
@@ -19,16 +21,23 @@ class _PickerImageState extends State<PickerImage> {
   final getImage;
   File _image;
   final _picker = ImagePicker();
+  String imagePath;
+
 
   _PickerImageState(this.getImage);
 
   _imgFromCamera() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     final image =
-        await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
+    await _picker.getImage(source: ImageSource.camera, imageQuality: 100);
 
     setState(() {
       if (image != null) {
         _image = File(image.path);
+        var fileContent = _image.readAsBytesSync();
+        var fileContentBase64 = base64.encode(fileContent);
+        print(fileContentBase64);
+        prefs.setString('UserImage', fileContentBase64);
       } else {
         print('No image selected.');
       }
@@ -36,12 +45,17 @@ class _PickerImageState extends State<PickerImage> {
   }
 
   _imgFromGallery() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     final image =
-        await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+    await _picker.getImage(source: ImageSource.gallery, imageQuality: 100);
 
     setState(() {
       if (image != null) {
         _image = File(image.path);
+        var fileContent = _image.readAsBytesSync();
+        var fileContentBase64 = base64.encode(fileContent);
+        print(fileContentBase64);
+        prefs.setString('UserImage', fileContentBase64);
       } else {
         print('No image selected.');
       }
@@ -56,7 +70,7 @@ class _PickerImageState extends State<PickerImage> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildChangeAvatar();
+    return _buildChangeAvatar(context);
   }
 
   void _showPicker(context) {
@@ -89,7 +103,9 @@ class _PickerImageState extends State<PickerImage> {
         });
   }
 
-  Widget _buildChangeAvatar() => Padding(
+
+
+  Widget _buildChangeAvatar(BuildContext context) => Padding(
         padding: EdgeInsets.only(top: 24.0, bottom: 26),
         child: new Center(
           child: GestureDetector(
@@ -134,7 +150,8 @@ class _PickerImageState extends State<PickerImage> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(65),
-                    child: Image.network(
+                    child:
+                    Image.network(
                       getImage,
                       height: 125,
                       width: 125,

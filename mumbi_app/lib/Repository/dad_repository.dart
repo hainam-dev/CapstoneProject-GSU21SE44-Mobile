@@ -6,16 +6,18 @@ import 'package:mumbi_app/Model/dad_model.dart';
 
 class DadRepository{
   static Future<dynamic> apiGetDadByMomID(String momID) async{
-    String url = "${GET_DAD_BY_MOMID}$momID";
-    var response = await http.get(Uri.parse(url));
+    var response = await http.get(
+        Uri.parse("${GET_DAD_BY_MOM}${momID}"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },);
     if (response.statusCode == 200) {
       return response.body;
     }
   }
 
-
   static Future<dynamic> apiAddDad(DadModel dadModel) async{
-    var response = await http.put(
+    var response = await http.post(
         Uri.parse("${ADD_DAD}"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -28,7 +30,7 @@ class DadRepository{
 
   static Future<dynamic> apiUpdateDad(DadModel dadModel) async {
     var response = await http.put(
-        Uri.parse("${UPDATE_DAD}${dadModel.momID}"),
+        Uri.parse("${UPDATE_DAD}${dadModel.Id}"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
@@ -38,9 +40,9 @@ class DadRepository{
     }
   }
 
-  static Future<dynamic> apiDeleteDad(String accountID) async {
-    var response = await http.delete(
-        Uri.parse("${DELETE_DAD}${accountID}"),
+  static Future<dynamic> apiDeleteDad(String dadID) async {
+    var response = await http.put(
+        Uri.parse("${DELETE_DAD}${dadID}"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },
@@ -49,5 +51,4 @@ class DadRepository{
       return response.body;
     }
   }
-
 }

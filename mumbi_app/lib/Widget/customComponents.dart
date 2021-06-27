@@ -192,7 +192,7 @@ Widget createFamilyCard(BuildContext context, String _imageURL, String _name, Co
                 children: [
                   CircleAvatar(
                     radius: 39,
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: PINK_COLOR,
                     backgroundImage: NetworkImage(
                         _imageURL),
                   ),
@@ -207,7 +207,8 @@ Widget createFamilyCard(BuildContext context, String _imageURL, String _name, Co
               ),
               Text(
                 _name,
-                maxLines: 1,
+                maxLines: 2,
+                textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                     fontWeight: FontWeight.w600, fontSize: 15),

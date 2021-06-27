@@ -94,7 +94,7 @@ class _DashBoardState extends State<DashBoard> {
                            empty,
                            "Chưa có thông tin",
                            "Nhấp vào để thêm thông tin bé/thai kì.",
-                           ChildrenInfo()),
+                           ChildrenInfo("","")),
                   ),
                   createTitle("Tính năng nổi bật"),
                   SizedBox(

@@ -2,14 +2,22 @@ class DadModel{
   String Id;
   String fullName;
   String image;
-  DateTime birthday;
+  String birthday;
   String phoneNumber;
   String bloodGroup;
   String rhBloodGroup;
   String momID;
 
-  DadModel(this.fullName, this.image, this.birthday, this.phoneNumber,
-      this.bloodGroup, this.rhBloodGroup);
+
+  DadModel(
+      {this.Id,
+      this.fullName,
+      this.image,
+      this.birthday,
+      this.phoneNumber,
+      this.bloodGroup,
+      this.rhBloodGroup,
+      this.momID});
 
   DadModel.fromJson(Map<String,dynamic> json):
         Id = json['data']['id'],
@@ -25,7 +33,7 @@ class DadModel{
     'id' : Id,
     'fullName' :fullName,
     'image' : image,
-    'birthday' : birthday,
+    'birthDay' : birthday,
     'phonenumber' : phoneNumber,
     'bloodGroup' : bloodGroup,
     'rhBloodGroup' : rhBloodGroup,

@@ -5,8 +5,8 @@ import 'package:mumbi_app/Utils/size_config.dart';
 class CustomInputNumber extends StatefulWidget {
   final title;
   final phoneNumber;
-
-  const CustomInputNumber(this.title, this.phoneNumber);
+  final function;
+  const CustomInputNumber(this.title, this.phoneNumber, {this.function});
   @override
   _CustomInputNumberState createState() => _CustomInputNumberState(title, phoneNumber);
 }
@@ -39,17 +39,18 @@ class _CustomInputNumberState extends State<CustomInputNumber> {
             ),
           ),
           validator: (value) {
-            final pattern = r'((84|0[3|5|7|8|9])+([0-9]{8})\b)';
+            final pattern = r'(84|0[3|5|7|8|9])+([0-9]{8})\b';
             final regExp = RegExp(pattern);
             if (value.isEmpty) {
-              return 'Vui lòng nhập số điện thoại của bạn.';
+              return null;
             } else if (!regExp.hasMatch(value)) {
-              return 'Số điện thoại không đúng, vui lòng nhập lại!';
+              return 'Định dạng Số điện thoại không đúng.';
             } else {
               return null;
             }
           },
           onSaved: (value) => setState(() => phoneNumber = value),
+          onChanged: widget.function,
           keyboardType: TextInputType.phone,
         ),
       );

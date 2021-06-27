@@ -252,6 +252,7 @@ Widget createListTileNavigator(
       title: Text(_text),
       trailing: Icon(Icons.arrow_forward_ios, size: 15),
       onTap: () {
+        Navigator.of(context).pop();
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => _screen));
       },

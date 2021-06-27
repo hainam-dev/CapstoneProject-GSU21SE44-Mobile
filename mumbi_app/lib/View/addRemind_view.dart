@@ -41,6 +41,7 @@ class _AddRemindScreenState extends State<AddRemindScreen> {
             CustomStatusDropdown(
               'Chọn loại nhắc nhở',
               listRemind,
+              "",
               function: (value) {
                 setState(
                   () {},

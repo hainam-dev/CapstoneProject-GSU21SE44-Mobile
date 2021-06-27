@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/dateTime_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CalendarBirthday extends StatefulWidget {
   final title;
   final birthday;
-
-  const CalendarBirthday(this.title, this.birthday);
+  final function;
+  CalendarBirthday(this.title, this.birthday, {this.function});
   @override
   _CalendarBirthdayState createState() => _CalendarBirthdayState(this.title, this.birthday);
 }
@@ -38,21 +38,27 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
             child: child,
           );
         });
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
         var date =
             "${picked.toLocal().day}/${picked.toLocal().month}/${picked.toLocal().year}";
         _dateController.text = date;
       });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('GetBirthday', _dateController.text);
+    }
+    widget.function;
   }
 
   @override
   void initState() {
-    if(birthday != "0001-01-01T00:00:00")
-      _dateController.text =
-          DateFormat('dd/MM/yyyy').format(DateTime.parse(birthday));
     super.initState();
+    if(birthday != ""){
+      _dateController.text = birthday;
+    }else{
+      _dateController.text = "";
+    }
   }
 
   @override
@@ -80,10 +86,8 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
               ),
               suffixIcon: Icon(Icons.calendar_today),
             ),
-            validator: (value) {
-              if (value.isEmpty) return "Please enter a date";
-              return null;
-            },
+            validator:
+              widget.function
           ),
         ),
       ),

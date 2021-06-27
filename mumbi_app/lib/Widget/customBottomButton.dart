@@ -29,7 +29,7 @@ class _CustomBottomButtonState extends State<CustomBottomButton> {
   }
 
   Widget _getActionButtons(String titleCancel, String titleSave) => Container(
-        margin: EdgeInsets.fromLTRB(16, 0, 16, 36),
+        margin: EdgeInsets.fromLTRB(16, 0, 16, 23),
         child: new Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[

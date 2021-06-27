@@ -10,7 +10,8 @@ class CustomStatusDropdown extends StatefulWidget {
   final title;
   final listItems;
   final function;
-  const CustomStatusDropdown(this.title, this.listItems, {this.function});
+  final status;
+  const CustomStatusDropdown(this.title, this.listItems, this.status, {this.function});
 
   @override
   _CustomStatusDropdownState createState() =>
@@ -32,7 +33,7 @@ class _CustomStatusDropdownState extends State<CustomStatusDropdown> {
         height: SizeConfig.blockSizeVertical * 7.5,
         width: SizeConfig.blockSizeHorizontal * 90,
         child: new DropdownButtonFormField<String>(
-          value: selectedValue,
+          value: widget.status,
           decoration: InputDecoration(
             labelStyle: TextStyle(
                 color: PINK_COLOR,

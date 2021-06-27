@@ -9,7 +9,6 @@ final String iconBoy = _getImagePath('icon_boy.png');
 final String iconGirl = _getImagePath('icon_girl.png');
 final String iconChild = _getImagePath('icon_child.png');
 final String iconCalendar = _getImagePath('icon_calendar.png');
-final String chooseImage = _getImagePath('Image.png');
 final String remindDrink = _getImagePath('remindDrink.png');
 final String alarmDrink = _getImagePath('alarmDrink.png');
 final String remindFitness = _getImagePath('remindFitness.png');
@@ -51,6 +50,10 @@ final String bookmark = _getImagePath('ic_bookmark.svg');
 final String ic_tooth = _getImagePath('ic_tooth.png');
 final String ic_needle = _getImagePath('needle.svg');
 
+final String chooseImage = "https://firebasestorage.googleapis.com/v0/b/mumbi-app-84d15.appspot.com/o/DefautImage%2FImage.png?alt=media&token=a50383eb-c411-4747-8fa3-0fa9916cd70c";
+
+final String checked = _getImagePath("checked.png");
+final String unchecked = _getImagePath("uncheck.png");
 
 final String img_beco = _getImagePath('conco.svg');
 final String ic_playlist = _getImagePath('ic_playlist.svg');

@@ -1,21 +1,11 @@
 import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter/services.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/View/childrenInfo_view.dart';
-import 'package:mumbi_app/View/dashboard_view.dart';
-import 'package:mumbi_app/View/fatherInfo_view.dart';
-import 'package:mumbi_app/View/menuRemind.dart';
-import 'package:mumbi_app/View/notificationAlarm_view.dart';
-import 'package:mumbi_app/View/parentInfo_view.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mumbi_app/Widget/familyTree.dart';
 import 'package:mumbi_app/Widget/splashScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:progress_dialog/progress_dialog.dart';

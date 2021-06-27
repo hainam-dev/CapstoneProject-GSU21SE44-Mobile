@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/View/menuRemind.dart';
-import 'package:mumbi_app/View/momInfo_view.dart';
 import 'package:mumbi_app/View/parentInfo_view.dart';
 import 'package:mumbi_app/View/teethTrack_view.dart';
 import 'package:mumbi_app/ViewModel/parent_viewmodel.dart';
@@ -51,10 +50,11 @@ Widget getDrawer(BuildContext context) {
                       color: Colors.black,
                     ),
                     onTap: () {
+                      Navigator.of(context).pop();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ParentInfo("Thông tin mẹ",model.momModel)));
+                              builder: (context) => ParentInfo("Thông tin mẹ",model.momModel,"Update")));
                     },
                   ),
               );

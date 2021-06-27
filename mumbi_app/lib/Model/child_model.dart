@@ -1,31 +1,31 @@
-import 'dart:ffi';
-
 class ChildModel{
   String childID;
   String fullName;
   String nickname;
   String image;
-  int gender;
-  DateTime birthday;
+  String gender;
+  String birthday;
   String bloodGroup;
   String rhBloodGroup;
   String fingertips;
-  Float weight;
-  Float height;
-  Float headCircumference;
-  Float hourSleep;
-  Float avgMilk;
+  double weight;
+  double height;
+  double headCircumference;
+  double hourSleep;
+  double avgMilk;
   String momID;
-  DateTime calculatedBornDate;
-  Float femurLength;
-  Float fetalHeartRate;
+  String calculatedBornDate;
+  double femurLength;
+  double fetalHeartRate;
   int pregnancyWeek;
   String pregnancyType;
   int motherMenstrualCycleTime;
-  Float motherWeight;
+  double motherWeight;
+  bool isBorn;
+
 
   ChildModel(
-      this.childID,
+      {this.childID,
       this.fullName,
       this.nickname,
       this.image,
@@ -46,31 +46,33 @@ class ChildModel{
       this.pregnancyWeek,
       this.pregnancyType,
       this.motherMenstrualCycleTime,
-      this.motherWeight);
+      this.motherWeight,
+      this.isBorn});
 
   ChildModel.fromJson(Map<String,dynamic> json):
-        childID = json['id'],
-        fullName = json['fullName'],
-        nickname = json['nickname'],
-        image = json['image'],
-        gender = json['gender'],
-        birthday = json['birthDay'],
-        bloodGroup = json['bloodGroup'],
-        rhBloodGroup = json['rhBloodGroup'],
-        fingertips = json['fingertips'],
-        weight = json['weight'],
-        height = json['height'],
-        headCircumference = json['headCircumference'],
-        hourSleep = json['hourSleep'],
-        avgMilk = json['avgMilk'],
-        momID = json['momId'],
-        calculatedBornDate = json['calculatedBornDate'],
-        femurLength = json['femurLength'],
-        fetalHeartRate = json['fetalHeartRate'],
-        pregnancyWeek = json['pregnancyWeek'],
-        pregnancyType = json['pregnancyType'],
-        motherMenstrualCycleTime = json['motherMenstrualCycleTime'],
-        motherWeight = json['motherWeight'];
+        childID = json['data']['id'],
+        fullName = json['data']['fullName'],
+        nickname = json['data']['nickname'],
+        image = json['data']['image'],
+        gender = json['data']['gender'],
+        birthday = json['data']['birthDay'],
+        bloodGroup = json['data']['bloodGroup'],
+        rhBloodGroup = json['data']['rhBloodGroup'],
+        fingertips = json['data']['fingertips'],
+        weight = json['data']['weight'],
+        height = json['data']['height'],
+        headCircumference = json['data']['headCircumference'],
+        hourSleep = json['data']['hourSleep'],
+        avgMilk = json['data']['avgMilk'],
+        momID = json['data']['momId'],
+        calculatedBornDate = json['data']['calculatedBornDate'],
+        femurLength = json['data']['femurLength'],
+        fetalHeartRate = json['data']['fetalHeartRate'],
+        pregnancyWeek = json['data']['pregnancyWeek'],
+        pregnancyType = json['data']['pregnancyType'],
+        motherMenstrualCycleTime = json['data']['motherMenstrualCycleTime'],
+        motherWeight = json['data']['motherWeight'],
+        isBorn =  json['data']["isBorn"];
 
   Map<String, dynamic> toJson() => {
     'id' : childID,
@@ -95,5 +97,6 @@ class ChildModel{
     'pregnancyType' : pregnancyType,
     'motherMenstrualCycleTime' : motherMenstrualCycleTime,
     'motherWeight' : motherWeight,
+    'childrenStatus' : isBorn,
   };
 }

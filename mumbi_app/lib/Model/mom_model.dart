@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class MomModel{
   String accountID;
   String fullName;
@@ -37,7 +35,7 @@ class MomModel{
     'accountId' : accountID,
     'fullName' :fullName,
     'image' : image,
-    'birthday' : birthday,
+    'birthDay' : birthday,
     'phonenumber' : phoneNumber,
     'bloodGroup' : bloodGroup,
     'rhBloodGroup' : rhBloodGroup,
