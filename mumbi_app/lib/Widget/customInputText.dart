@@ -42,8 +42,8 @@ class _CustomInputTextState extends State<CustomInputText> {
             ),
           ),
           validator: (value) {
-            if (value.length == 0) {
-              return 'Vui lòng nhập tên của bạn';
+            if (title == "Họ & tên (*)" && value.length == 0) {
+              return 'Vui lòng nhập họ và tên';
             } else {
               return null;
             }

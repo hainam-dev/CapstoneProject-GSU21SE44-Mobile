@@ -65,7 +65,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
         width: SizeConfig.blockSizeHorizontal * 100,
         child: Column(
           children: [
-            PickerImage(widget.action == update ? widget.childModel['image'] : defaultImage),
+            PickerImage(widget.action == update ? widget.childModel.image : defaultImage),
             new Container(
               height: SizeConfig.blockSizeVertical * 55,
               width: SizeConfig.blockSizeHorizontal * 90,
@@ -74,22 +74,26 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                 child: ListView(
                   children: [
                     const SizedBox(height: 5),
-                    CustomInputText('Họ & tên (*)', widget.action == update ? widget.childModel['fullName'] : "", function: (value){
+                    CustomInputText('Họ & tên (*)', widget.action == update ? widget.childModel.fullName : "", function: (value){
                       setState(() {
-                        if(widget.action == update){
-                          widget.childModel['fullName'] = value;
-                        }else{
-
+                        if(widget.action == update) {
+                          widget.childModel.fullName = value;
                         }
                       });
                     },),
                     const SizedBox(height: 12),
-                    CustomInputText('Tên ở nhà', widget.action == update ? widget.childModel['nickname'] : ""),
+                    CustomInputText('Tên ở nhà', widget.action == update ? widget.childModel.nickname : "", function: (value){
+                      setState(() {
+                        if(widget.action == update){
+                          widget.childModel.nickname = value;
+                        }
+                      });
+                    },),
                     const SizedBox(height: 12),
                     new CustomStatusDropdown(
                       'Trạng thái (*)',
                       itemsStatus,
-                      widget.action == update ? getStatus(widget.childModel['isBorn']) : null,
+                      widget.action == update ? getStatus(widget.childModel.isBorn) : null,
                       function: (value) {
                         setState(
                           () {
@@ -100,15 +104,15 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     ),
                     const SizedBox(height: 12),
                     (selectedStatusValue.toString() == born)
-                        ? CalendarBirthday('Ngày sinh',widget.action == update ? widget.childModel['birthDay'] : "")
+                        ? CalendarBirthday('Ngày sinh',widget.action == update ? widget.childModel.birthday : "")
                         : (selectedStatusValue.toString() == notBorn)
                             ? CalendarCalculate()
-                            : CalendarBirthday('Ngày sinh',widget.action == update ? widget.childModel['birthDay'] : ""),
+                            : CalendarBirthday('Ngày sinh',widget.action == update ? widget.childModel.birthday : ""),
                     const SizedBox(height: 12),
                     new CustomStatusDropdown(
                       'Giới tính (*)',
                       itemsGender,
-                      widget.action == update ? widget.childModel['gender'] : null,
+                      widget.action == update ? widget.childModel.gender : null,
                       function: (value) {
                         setState(
                           () {},
@@ -130,6 +134,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
             if(widget.action == update){
               result = await ChildViewModel().updateChildInfo(widget.childModel);
             }
+            showResult(context,result);
           }
         }
       ),
@@ -148,7 +153,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
     switch (value) {
       case 'Xóa thành viên':
         bool result = false;
-        result = await ChildViewModel().deleteChild(widget.childModel['id']);
+        result = await ChildViewModel().deleteChild(widget.childModel.childID);
         Navigator.pop(context);
         Navigator.pop(context);
         Navigator.push(

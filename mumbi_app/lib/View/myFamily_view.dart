@@ -20,7 +20,8 @@ class MyFamily extends StatefulWidget {
 class _MyFamilyState extends State<MyFamily> {
   MomModel momModel;
   DadModel dadModel;
-  List<dynamic> childListModel;
+  ChildModel childModel;
+  List<ChildModel> childListModel;
   bool isLoading = true;
 
   getModel() async{
@@ -34,7 +35,7 @@ class _MyFamilyState extends State<MyFamily> {
 
     ChildViewModel childViewModel = ChildViewModel();
     await childViewModel.getChildByMom();
-    childListModel = childViewModel.childList;
+    childListModel = childViewModel.childListModel;
 
     setState(() {
       isLoading = false;
@@ -94,17 +95,20 @@ class _MyFamilyState extends State<MyFamily> {
                        itemBuilder: (BuildContext context, index) {
                          if(index == childListModel.length){
                            return createAddFamilyCard(context, "Thêm bé / thai kì", ChildrenInfo("","Create"));
+                         }else{
+                           childModel = childListModel[index];
+                           /*if(childModel.isBorn == false){
+                             return null;
+                           }*/
                          }
-                         //if(childListModel[index]['isBorn'] == true){
                            return createFamilyCard(
                                context,
-                               childListModel[index]['image'],
-                               childListModel[index]['fullName'],
-                               childListModel[index]['gender'] == "Bé trai" ? LIGHT_BLUE_COLOR : LIGHT_PINK_COLOR,
-                               childListModel[index]['gender'] == "Bé trai" ? "Con trai" : "Con gái",
-                               childListModel[index]['gender'] == "Bé trai" ? BLUE_COLOR : PINK_COLOR,
-                               ChildrenInfo(childListModel[index],"Update"));
-                         //}
+                               childModel.image,
+                               childModel.fullName,
+                               childModel.gender == "Bé trai" ? LIGHT_BLUE_COLOR : LIGHT_PINK_COLOR,
+                               childModel.gender == "Bé trai" ? "Con trai" : "Con gái",
+                               childModel.gender == "Bé trai" ? BLUE_COLOR : PINK_COLOR,
+                               ChildrenInfo(childModel,"Update"));
                        }),
                  ),
               SizedBox(height: 20,)

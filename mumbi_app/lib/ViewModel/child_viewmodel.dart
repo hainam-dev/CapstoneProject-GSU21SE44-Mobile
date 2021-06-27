@@ -8,8 +8,7 @@ import '../main.dart';
 
 class ChildViewModel extends Model {
   List<dynamic> childList;
-  //List<ChildModel> childListModel;
-  ChildModel childModel;
+  List<ChildModel> childListModel;
 
   Future<bool> addChild(ChildModel childModel) async {
     try {
@@ -45,9 +44,9 @@ class ChildViewModel extends Model {
       String data = await ChildRepository.apiGetChildByMom(momID);
       Map<String, dynamic> jsonList = json.decode(data);
       childList = jsonList['data'];
-      //childListModel = childList.map((e) => ChildModel.fromJson(e)).toList();
+      childListModel = childList.map((e) => ChildModel.fromJson(e)).toList();
     }catch (e){
-      print("error: " + e.toString());
+      print("error: " + e.  toString());
     }
   }
 
