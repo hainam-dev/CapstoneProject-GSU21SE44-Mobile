@@ -46,6 +46,8 @@ class ChildRepository{
         body: jsonEncode(childModel.toJson()));
     if (response.statusCode == 200) {
       return response.body;
+    }else{
+      return response.statusCode;
     }
   }
 

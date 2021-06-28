@@ -37,9 +37,18 @@ class _MyFamilyState extends State<MyFamily> {
     await childViewModel.getChildByMom();
     childListModel = childViewModel.childListModel;
 
+    if(childListModel.length != 0){
+      for (int i = 0; i < childListModel.length; i++){
+        childModel = childListModel[i];
+        if(childModel.isBorn == false) {
+          childListModel.removeAt(i);
+        }
+    }}
+
     setState(() {
       isLoading = false;
     });
+    
   }
 
   @override
@@ -97,9 +106,6 @@ class _MyFamilyState extends State<MyFamily> {
                            return createAddFamilyCard(context, "Thêm bé / thai kì", ChildrenInfo("","Create"));
                          }else{
                            childModel = childListModel[index];
-                           /*if(childModel.isBorn == false){
-                             return null;
-                           }*/
                          }
                            return createFamilyCard(
                                context,
