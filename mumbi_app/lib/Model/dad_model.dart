@@ -1,7 +1,7 @@
 class DadModel{
-  String Id;
+  String id;
   String fullName;
-  String image;
+  String imageURL;
   String birthday;
   String phoneNumber;
   String bloodGroup;
@@ -10,9 +10,9 @@ class DadModel{
 
 
   DadModel(
-      {this.Id,
+      {this.id,
       this.fullName,
-      this.image,
+      this.imageURL,
       this.birthday,
       this.phoneNumber,
       this.bloodGroup,
@@ -20,9 +20,9 @@ class DadModel{
       this.momID});
 
   DadModel.fromJson(Map<String,dynamic> json):
-        Id = json['data']['id'],
+        id = json['data']['id'],
         fullName = json['data']['fullName'],
-        image = json['data']['image'],
+        imageURL = json['data']['imageURL'],
         birthday = json['data']['birthday'],
         phoneNumber = json['data']['phonenumber'],
         bloodGroup = json['data']['bloodGroup'],
@@ -30,10 +30,10 @@ class DadModel{
         momID = json['data']['momId'];
 
   Map<String, dynamic> toJson() => {
-    'id' : Id,
+    'id' : id,
     'fullName' :fullName,
-    'image' : image,
-    'birthDay' : birthday,
+    'imageURL' : imageURL,
+    'birthday' : birthday,
     'phonenumber' : phoneNumber,
     'bloodGroup' : bloodGroup,
     'rhBloodGroup' : rhBloodGroup,

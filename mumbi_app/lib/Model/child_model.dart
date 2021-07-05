@@ -7,20 +7,20 @@ class ChildModel {
   String birthday;
   String bloodGroup;
   String rhBloodGroup;
-  String fingertips;
-  double weight;
-  double height;
-  double headCircumference;
-  double hourSleep;
-  double avgMilk;
+  num fingertips;
+  num weight;
+  num height;
+  num headCircumference;
+  num hourSleep;
+  num avgMilk;
   String momID;
   String calculatedBornDate;
-  double femurLength;
-  double fetalHeartRate;
-  int pregnancyWeek;
+  num femurLength;
+  num fetalHeartRate;
+  num pregnancyWeek;
   String pregnancyType;
-  int motherMenstrualCycleTime;
-  double motherWeight;
+  num motherMenstrualCycleTime;
+  num motherWeight;
   bool isBorn;
 
 
@@ -106,8 +106,8 @@ class ChildModel {
       {
         'id': childID,
         'fullName': fullName,
-        'nickname': image,
-        'image': birthday,
+        'nickname': nickname,
+        'image': image,
         'gender': gender,
         'birthDay': birthday,
         'bloodGroup': bloodGroup,

@@ -8,7 +8,8 @@ import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/View/parentInfo_view.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/parent_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/dad_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -18,22 +19,21 @@ class MyFamily extends StatefulWidget {
 }
 
 class _MyFamilyState extends State<MyFamily> {
-  MomModel momModel;
-  DadModel dadModel;
-  ChildModel childModel;
-  List<ChildModel> childListModel;
-  bool isLoading = true;
+  /*ChildModel childModel;
+  List<ChildModel> childListModel;*/
 
-  getModel() async{
-    ParentViewModel momViewModel = ParentViewModel();
+  getModel() async {
+    /*ParentViewModel momViewModel = ParentViewModel();
     await momViewModel.getMomByID();
     momModel = momViewModel.momModel;
 
-    ParentViewModel dadViewModel = ParentViewModel();
-    await dadViewModel.getDadByMom();
-    dadModel = dadViewModel.dadModel;
+    if(momModel.dadID != null){
+      ParentViewModel dadViewModel = ParentViewModel();
+      await dadViewModel.getDadByMom(momModel.id);
+      dadModel = dadViewModel.dadModel;
+    }*/
 
-    ChildViewModel childViewModel = ChildViewModel();
+    /*ChildViewModel childViewModel = ChildViewModel();
     await childViewModel.getChildByMom();
     childListModel = childViewModel.childListModel;
 
@@ -43,17 +43,11 @@ class _MyFamilyState extends State<MyFamily> {
         if(childModel.isBorn == false) {
           childListModel.removeAt(i);
         }
-    }}
-
-    setState(() {
-      isLoading = false;
-    });
-    
+    }}*/
   }
 
   @override
   void initState() {
-    getModel();
     super.initState();
   }
 
@@ -64,7 +58,7 @@ class _MyFamilyState extends State<MyFamily> {
         appBar: AppBar(
           title: Text("Gia đình của tôi"),
         ),
-        body: isLoading ? Center(child: CircularProgressIndicator()) : Container(
+        body: Container(
           height: SizeConfig.safeBlockVertical * 100,
           width: SizeConfig.safeBlockHorizontal * 100,
           color: LIGHT_GREY_COLOR,
@@ -73,26 +67,41 @@ class _MyFamilyState extends State<MyFamily> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  dadModel == null ? createAddFamilyCard(context, "Thêm cha", ParentInfo("Thông tin cha",dadModel,"Create"))
-                  :createFamilyCard(
-                      context,
-                      dadModel.image,
-                      dadModel.fullName,
-                      LIGHT_BLUE_COLOR,
-                      "Cha",
-                      BLUE_COLOR,
-                      ParentInfo("Thông tin cha",dadModel,"Update")),
-                  createFamilyCard(
-                      context,
-                      momModel.image,
-                      momModel.fullName,
-                      LIGHT_PINK_COLOR,
-                      "Mẹ",
-                      PINK_COLOR,
-                      ParentInfo("Thông tin mẹ",momModel,"Update")),
+                  ScopedModel(
+                      model: DadViewModel.getInstance(),
+                      child: ScopedModelDescendant(builder: (BuildContext context, Widget child, DadViewModel model) {
+                        model.getDadByMom();
+                        return model.dadModel == null
+                            ? createAddFamilyCard(
+                            context, "Thêm cha",
+                            ParentInfo("Thông tin cha", "", "Create"))
+                            : createFamilyCard(
+                            context,
+                            model.dadModel.imageURL,
+                            model.dadModel.fullName,
+                            LIGHT_BLUE_COLOR,
+                            "Cha",
+                            BLUE_COLOR,
+                            ParentInfo(
+                                "Thông tin cha", model.dadModel, "Update"));
+                      },)),
+                  ScopedModel(
+                      model: MomViewModel.getInstance(),
+                      child: ScopedModelDescendant(builder: (BuildContext context, Widget child, MomViewModel model) {
+                        model.getMomByID();
+                        return createFamilyCard(
+                            context,
+                            model.momModel.imageURL,
+                            model.momModel.fullName,
+                            LIGHT_PINK_COLOR,
+                            "Mẹ",
+                            PINK_COLOR,
+                            ParentInfo("Thông tin mẹ", model.momModel, "Update")
+                        );
+                      },))
                 ],
               ),
-             childListModel.length == 0
+              /*childListModel.length == 0
                  ? Align(alignment: Alignment.topLeft,child: createAddFamilyCard(context, "Thêm bé / thai kì", ChildrenInfo(childListModel,"Create")))
                  :Flexible(
                    child: GridView.builder(
@@ -117,7 +126,7 @@ class _MyFamilyState extends State<MyFamily> {
                                ChildrenInfo(childModel,"Update"));
                        }),
                  ),
-              SizedBox(height: 20,)
+              SizedBox(height: 20,)*/
             ],
           ),
         ));

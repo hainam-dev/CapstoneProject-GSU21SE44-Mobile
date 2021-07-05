@@ -1,40 +1,47 @@
 class MomModel{
-  String accountID;
+  String id;
   String fullName;
-  String image;
+  String imageURL;
   String birthday;
   String phoneNumber;
   String bloodGroup;
   String rhBloodGroup;
-  int weight;
-  int height;
+  num weight;
+  num height;
+  String dadID;
 
   MomModel(
-      this.accountID,
+      {this.id,
       this.fullName,
-      this.image,
+      this.imageURL,
       this.birthday,
       this.phoneNumber,
       this.bloodGroup,
       this.rhBloodGroup,
       this.weight,
-      this.height);
+      this.height,
+      this.dadID});
 
-  MomModel.fromJson(Map<String,dynamic> json):
-      accountID = json['data']['accountId'],
-      fullName = json['data']['fullName'],
-      image = json['data']['image'],
-      birthday = json['data']['birthday'],
-      phoneNumber = json['data']['phonenumber'],
-      bloodGroup = json['data']['bloodGroup'],
-      rhBloodGroup = json['data']['rhBloodGroup'],
-      weight = json['data']['weight'],
-      height = json['data']['height'];
+  factory MomModel.fromJson(dynamic json){
+    return MomModel(
+      id : json['data']['id'],
+      fullName: json['data']['fullName'],
+      imageURL: json['data']['imageURL'],
+      birthday : json['data']['birthday'],
+      phoneNumber : json['data']['phonenumber'],
+      bloodGroup : json['data']['bloodGroup'],
+      rhBloodGroup : json['data']['rhBloodGroup'],
+      weight : json['data']['weight'],
+      height : json['data']['height'],
+      dadID : json['data']['dad_Id'],
+    );
+  }
+
 
   Map<String, dynamic> toJson() => {
-    'accountId' : accountID,
+    'id' : id,
     'fullName' :fullName,
-    'image' : image,
+    'imageUrl' : imageURL,
     'birthDay' : birthday,
     'phonenumber' : phoneNumber,
     'bloodGroup' : bloodGroup,

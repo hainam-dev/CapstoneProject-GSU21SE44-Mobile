@@ -2,10 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Model/mom_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
-import 'package:mumbi_app/ViewModel/parent_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:mumbi_app/Widget/customText.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -38,8 +37,8 @@ class _DashBoardState extends State<DashBoard> {
       appBar: AppBar(
         actions: [
           ScopedModel(
-          model: ParentViewModel(),
-            child: ScopedModelDescendant(builder: (BuildContext buildContext, Widget child, ParentViewModel model) {
+          model: MomViewModel.getInstance(),
+            child: ScopedModelDescendant(builder: (BuildContext buildContext, Widget child, MomViewModel model) {
               model.getMomByID();
               return FlatButton(
                   onPressed: () {
@@ -56,7 +55,7 @@ class _DashBoardState extends State<DashBoard> {
                           radius: 18,
                           child: CircleAvatar(
                             radius: 17,
-                            backgroundImage: NetworkImage(model.momModel.image),
+                            backgroundImage: NetworkImage(model.momModel.imageURL),
                           ),
                         ),
                       )

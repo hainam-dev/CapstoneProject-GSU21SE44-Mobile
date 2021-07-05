@@ -6,7 +6,8 @@ import 'package:mumbi_app/Model/dad_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/Utils/upload_image.dart';
 import 'package:mumbi_app/View/myFamily_view.dart';
-import 'package:mumbi_app/ViewModel/parent_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/dad_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/calendarBirthday.dart';
 import 'package:mumbi_app/Widget/customBottomButton.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
@@ -18,7 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ParentInfo extends StatefulWidget {
   final appbarTitle;
-  var model;
+  final model;
   final action;
   ParentInfo(this.appbarTitle, this.model, this.action);
 
@@ -78,7 +79,7 @@ class _ParentInfoState extends State<ParentInfo> {
               width: SizeConfig.blockSizeHorizontal * 100,
               child: Column(
                 children: [
-                  PickerImage(widget.action == update ? widget.model.image : defaultImage),
+                  PickerImage(widget.action == update ? widget.model.imageURL : defaultImage),
                   const SizedBox(height: 8),
                   new Container(
                     height: SizeConfig.blockSizeVertical * 60,
@@ -172,30 +173,24 @@ class _ParentInfoState extends State<ParentInfo> {
         cancelFunction: () => {Navigator.pop(context)},
         saveFunction: () async {
           if(formKey.currentState.validate()){
-            String url = await uploadImageToFirebase(widget.action == update ? widget.model.fullName : dadModel.fullName);
+            String url = await uploadImageToFirebase(widget.action == update ? widget.model.id : dadModel.id);
             if (url != null) {
               if(widget.action == update){
-                widget.model.image = url;
+                widget.model.imageURL = url;
               }else{
-                dadModel.image = url;
+                dadModel.imageURL = url;
               }
             }
             bool result = false;
             if(appbarTitle == momTitle){
-              result = await ParentViewModel().updateMom(widget.model);
+              result = await MomViewModel().updateMom(widget.model);
             }else{
               if(widget.action == update){
-                result = await ParentViewModel().updateDad(widget.model);
+                result = await DadViewModel().updateDad(widget.model);
               }else{
-                result = await ParentViewModel().addDad(dadModel);
+                result = await DadViewModel().addDad(dadModel);
               }
             }
-            Navigator.pop(context);
-            Navigator.pop(context);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyFamily()));
             showResult(context,result);
           }
         },
@@ -207,14 +202,8 @@ class _ParentInfoState extends State<ParentInfo> {
     switch (value) {
       case 'Xóa thành viên':
         bool result = false;
-        result = await ParentViewModel().deleteDad(widget.model.Id);
+        result = await DadViewModel().deleteDad(widget.model.id);
         Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MyFamily()));
-        showResult(context,result);
         break;
     }
   }

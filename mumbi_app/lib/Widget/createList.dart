@@ -6,7 +6,7 @@ import 'package:mumbi_app/View/babyDiaryDetails_view.dart';
 import 'package:mumbi_app/View/bottomNavBar_view.dart';
 import 'package:mumbi_app/View/login_view.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:mumbi_app/ViewModel/logout_viewmodel.dart';
 
 Widget createListTile(BuildContext context, String _imageName, String _text) {
   return Card(
@@ -274,6 +274,7 @@ Widget createListTileNavigatorNoTrailing(
       title: Text(_text),
       onTap: () async {
         await LoginViewModel().signOut();
+        LogoutViewModel().destroyInstance();
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => MyApp()));
         print("Logout");

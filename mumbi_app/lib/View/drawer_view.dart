@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/menuRemind.dart';
 import 'package:mumbi_app/View/parentInfo_view.dart';
 import 'package:mumbi_app/View/teethTrack_view.dart';
-import 'package:mumbi_app/ViewModel/parent_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'contact_view.dart';
@@ -32,18 +33,28 @@ Widget getDrawer(BuildContext context) {
               ),
             ),
             ScopedModel(
-            model: ParentViewModel(),
-              child: ScopedModelDescendant(builder: (BuildContext buildContext, Widget child, ParentViewModel model){
+            model: MomViewModel.getInstance(),
+              child: ScopedModelDescendant(builder: (BuildContext buildContext, Widget child, MomViewModel model){
                 model.getMomByID();
-              return model.momModel == null ? Center(child: CircularProgressIndicator()) : Card(
+              return model.momModel == null
+                  ? loadingUserInfoListTile()
+                  : Card(
                   elevation: 0,
                   margin: EdgeInsets.zero,
                   child: ListTile(
                     leading: CircleAvatar(
-                        backgroundImage: NetworkImage(model.momModel.image == null ? "" :  model.momModel.image),
+                      backgroundColor: Colors.transparent,
+                        backgroundImage: NetworkImage(
+                            model.momModel.imageURL
                         ),
-                    title: Text(model.momModel.fullName == null ? "" :  model.momModel.fullName),
-                    subtitle: model.momModel.phoneNumber == null ? null : Text(model.momModel.phoneNumber),
+                    ),
+                    title: Text(
+                      model.momModel.fullName,
+                      maxLines: 1,
+                    ),
+                    subtitle: model.momModel.phoneNumber == null || model.momModel.phoneNumber == ""
+                        ? null
+                        : Text(model.momModel.phoneNumber),
                     trailing: Icon(
                       Icons.arrow_forward_ios,
                       size: 15,
@@ -94,4 +105,25 @@ Widget getDrawer(BuildContext context) {
         ),
       ),
   );
+}
+
+Widget loadingUserInfoListTile(){
+  return Card(
+    elevation: 0,
+    margin: EdgeInsets.zero,
+    child: ListTile(
+      leading: CircleAvatar(
+        backgroundColor: LIGHT_GREY_COLOR,
+      ),
+      title: Container(
+        width: SizeConfig.blockSizeHorizontal * 1,
+        height: SizeConfig.blockSizeVertical * 0.5,
+        color: LIGHT_GREY_COLOR,
+      ),
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        size: 15,
+        color: Colors.black,
+      ),
+    ),);
 }

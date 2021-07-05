@@ -40,12 +40,13 @@ class LoginViewModel extends Model {
         print("idToken: " + token);
         print("fcmToken: " + fcmToken);
         response = await _loginRepository.callAPILoginGoogle(token, fcmToken);
-        if (response != null) {
+        if (response != null) {/*
           UserModel userModel = UserModel.fromJson(jsonDecode(response));
+          print(userModel.data.id);
           print(userModel.data.email);
           print(userModel.data.photo);
           print(userModel.data.role);
-          print(response);
+          print(response);*/
           return response;
         }
         notifyListeners();

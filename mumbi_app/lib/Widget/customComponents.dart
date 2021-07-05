@@ -188,22 +188,24 @@ Widget createFamilyCard(BuildContext context, String _imageURL, String _name, Co
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 39,
-                    backgroundColor: PINK_COLOR,
-                    backgroundImage: NetworkImage(
-                        _imageURL),
-                  ),
-                  Positioned(
-                    top: -2,
-                    right: -2,
-                    child: Container(
-                      child: SvgPicture.asset(editpencil, width: 25, height: 25,),
-                      ),
+              Flexible(
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 39,
+                      backgroundColor: PINK_COLOR,
+                      backgroundImage: NetworkImage(
+                          _imageURL),
                     ),
-                ],
+                    Positioned(
+                      top: -2,
+                      right: -2,
+                      child: Container(
+                        child: SvgPicture.asset(editpencil, width: 25, height: 25,),
+                        ),
+                      ),
+                  ],
+                ),
               ),
               Text(
                 _name,

@@ -38,19 +38,17 @@ class ChildRepository{
   }
 
   static Future<dynamic> apiUpdateChildInfo(ChildModel childModel) async {
+    String url = "${UPDATE_CHILD_INFO}${childModel.childID}";
     var response = await http.put(
-        Uri.parse("${UPDATE_CHILD_INFO}${childModel.childID}"),
+        Uri.parse(url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(childModel.toJson()));
     if (response.statusCode == 200) {
       return response.body;
-    }else{
-      return response.statusCode;
     }
   }
-
 
   static Future<dynamic> apiDeleteChild(String childID) async {
     var response = await http.put(
