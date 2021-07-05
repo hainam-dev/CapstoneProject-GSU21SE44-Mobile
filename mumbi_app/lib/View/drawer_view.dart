@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/View/menuRemind.dart';
@@ -11,8 +12,11 @@ import 'myFamily_view.dart';
 
 
 Widget getDrawer(BuildContext context) {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: PINK_COLOR, //or set color with: Color(0xFF0000FF)
+  ));
   return Container(
-    width: MediaQuery.of(context).size.width,
+    width: MediaQuery.of(context).size.width*0.75,
     child: Drawer(
       child: ListView(
         children: <Widget>[
@@ -20,28 +24,28 @@ Widget getDrawer(BuildContext context) {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(0.0),
             ),
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          color: PINK_COLOR,
-          child: ListTile(
-            title: Text('Tài khoản',style: TextStyle(color: Colors.white,fontSize: 20),),
-          ),
-        ),
-          Card(
-          elevation: 0,
-          margin: EdgeInsets.zero,
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundImage: AssetImage(motherImage),
+            elevation: 0,
+            margin: EdgeInsets.zero,
+            color: PINK_COLOR,
+            child: ListTile(
+              title: Text('Tài khoản',style: TextStyle(color: Colors.white,fontSize: 20),),
             ),
-            title: Text("Nguyễn Thị Bé Nhỏ"),
-            subtitle: Text("0978 820 456"),
-            trailing: Icon(Icons.arrow_forward_ios,size: 15,color: Colors.black,),
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> MomInfo("Thông tin mẹ")));
-            },
           ),
-        ),
+          Card(
+            elevation: 0,
+            margin: EdgeInsets.zero,
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundImage: AssetImage(motherImage),
+              ),
+              title: Text("Nguyễn Thị Bé Nhỏ"),
+              subtitle: Text("0978 820 456"),
+              trailing: Icon(Icons.arrow_forward_ios,size: 15,color: Colors.black,),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> MomInfo("Thông tin mẹ")));
+              },
+            ),
+          ),
           SizedBox(height: 15,),
           createListTileNavigator(context, myFamily, 'Gia đình của tôi', MyFamily()),
           SizedBox(height: 1,),

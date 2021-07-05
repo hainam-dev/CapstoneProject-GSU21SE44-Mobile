@@ -110,6 +110,34 @@ Widget createButtonTextImage(String _text, String _image) {
   );
 }
 
+Widget createButtonTextImageLink(BuildContext context,String _text, String _image, Widget _screen) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => _screen));
+    },
+    child: FlatButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      // onPressed: () => {},
+      color: Colors.transparent,
+      padding: EdgeInsets.all(10.0),
+      child: Column(
+        // Replace with a Row for horizontal icon + text
+        children: <Widget>[
+          Image(image: AssetImage(_image)),
+          SizedBox(height: 8),
+          Text(
+            _text,
+            style: TextStyle(fontSize: 14),
+          )
+        ],
+      ),
+    ),
+  );
+}
+
 Widget createListTileHome(BuildContext context, Color _color, String _imageName,
     String _text, String _subText, Widget _screen) {
   return Card(
@@ -391,3 +419,36 @@ Widget createDiaryItem(BuildContext context, String _time, String _content) {
     ),
   );
 }
+
+// Widget create(){
+//   return DataRow(
+//     selected: true,
+//     cells: <DataCell>[
+//       DataCell(Text('Tháng 1')),
+//       DataCell(
+//           Row(
+//             // mainAxisSize: MainAxisSize.max,
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Text('1.28'),
+//                 Text('1.26'),
+//               ])),
+//       DataCell(
+//           Row(
+//             // mainAxisSize: MainAxisSize.max,
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Text('1.28'),
+//                 Text('1.26'),
+//               ])),
+//       DataCell(
+//           Row(
+//             // mainAxisSize: MainAxisSize.max,
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Text('1.28'),
+//                 Text('1.26'),
+//               ])),
+//     ],
+//   );
+// }

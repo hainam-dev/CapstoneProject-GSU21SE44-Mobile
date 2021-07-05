@@ -32,71 +32,74 @@ class StackedAreaLineChart extends StatelessWidget {
     return new StackedAreaLineChart('Cân nặng',
       _createSampleData(),
       // Disable animations for image tests.
-      animate: false,
+      animate: true,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return new charts.LineChart(seriesList,
-        defaultRenderer:
-        new charts.LineRendererConfig(includeArea: true, stacked: true),
-        animate: animate);
+    return new charts.LineChart(
+        seriesList,
+        defaultRenderer: new charts.LineRendererConfig(includeArea: true, stacked: true),
+        animate: animate,
+    );
   }
 
   /// Create one series with sample hard coded data.
   static List<charts.Series<LinearSales, int>> _createSampleData() {
-    final myFakeDesktopData = [
-      new LinearSales(0, 5),
-      new LinearSales(2, 25),
-      new LinearSales(4, 100),
-      new LinearSales(6, 75),
-      new LinearSales(8, 75),
-      new LinearSales(10, 75),
-      new LinearSales(12, 75),
+    final nguongTren = [
+      new LinearSales(0, 2,null),
+      new LinearSales(2, 4,null),
+      new LinearSales(4, 6,null),
+      new LinearSales(6, 7,null),
+      new LinearSales(8, 8,null),
+      new LinearSales(10, 9,null),
+      new LinearSales(12, 10,null),
     ];
 
-    var myFakeTabletData = [
-      new LinearSales(0, 10),
-      new LinearSales(2, 25),
-      new LinearSales(4, 100),
-      new LinearSales(6, 75),
-      new LinearSales(8, 75),
-      new LinearSales(10, 75),
-      new LinearSales(12, 75),
+    var nguongDuoi = [
+      new LinearSales(0, 4,null),
+      new LinearSales(2, 5,null),
+      new LinearSales(4, 6, null),
+      new LinearSales(6, 7, null),
+      new LinearSales(8, 8, null),
+      new LinearSales(10, 10, null),
+      new LinearSales(12, 12, null),
     ];
 
-    var myFakeMobileData = [
-      new LinearSales(0, 15),
-      new LinearSales(2, 25),
-      new LinearSales(4, 100),
-      new LinearSales(6, 75),
-      new LinearSales(8, 75),
-      new LinearSales(10, 75),
-      new LinearSales(12, 75),
+    var dataBaby = [
+      new LinearSales(4, 0, [2,2]),
+      new LinearSales(8, 2, [3,3]),
+      new LinearSales(10, 3,[4,4]),
+      new LinearSales(11, 4, [5,5]),
     ];
 
     return [
       new charts.Series<LinearSales, int>(
         id: 'Desktop',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+        dashPatternFn: (LinearSales sales, _) => sales.dashPattern,
         domainFn: (LinearSales sales, _) => sales.year,
         measureFn: (LinearSales sales, _) => sales.sales,
-        data: myFakeDesktopData,
+        data: nguongDuoi,
       ),
       new charts.Series<LinearSales, int>(
         id: 'Tablet',
-        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
-        data: myFakeTabletData,
-      ),
-      new charts.Series<LinearSales, int>(
-        id: 'Mobile',
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
+        dashPatternFn: (LinearSales sales, _) => sales.dashPattern,
         domainFn: (LinearSales sales, _) => sales.year,
         measureFn: (LinearSales sales, _) => sales.sales,
-        data: myFakeMobileData,
+        data: nguongTren,
+      ),
+
+      new charts.Series<LinearSales, int>(
+        id: 'Baby',
+        dashPatternFn: (LinearSales sales, _) => sales.dashPattern,
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (LinearSales sales, _) => sales.year,
+        measureFn: (LinearSales sales, _) => sales.sales,
+        displayName: 'Bé',
+        data: dataBaby,
       ),
     ];
   }
@@ -106,6 +109,7 @@ class StackedAreaLineChart extends StatelessWidget {
 class LinearSales {
   final int year;
   final int sales;
+  final List<int> dashPattern;
 
-  LinearSales(this.year, this.sales);
+  LinearSales(this.year, this.sales, this.dashPattern);
 }

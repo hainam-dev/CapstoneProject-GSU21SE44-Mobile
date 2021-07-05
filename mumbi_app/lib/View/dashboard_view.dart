@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
+import 'package:mumbi_app/View/baby_development.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
+import 'package:mumbi_app/View/injectionSchedule.dart';
+import 'package:mumbi_app/View/vaccinePrice_compare.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:mumbi_app/Widget/customText.dart';
 import 'drawer_view.dart';
@@ -94,10 +97,10 @@ class _DashBoardState extends State<DashBoard> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        createButtonTextImage("Tiêm chủng", injection),
-                        createButtonTextImage("Lịch khám bệnh", illSchedule),
-                        createButtonTextImage(
-                            "Mốc phát triển", developmentMilestone),
+                        createButtonTextImageLink(context,"Tiêm chủng", injection, VaccinePrice()),
+                        createButtonTextImageLink(context, "Lịch tiêm chủng", illSchedule, InjectionSchedule() ),
+                        createButtonTextImageLink(context,
+                            "Mốc phát triển", developmentMilestone, BabyDevelopment()),
                       ],
                     ),
                   ),

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 import 'package:mumbi_app/View/stacked.dart';
+import 'package:mumbi_app/View/standard_index.dart';
+import 'package:mumbi_app/View/activityDetailBaby_update.dart';
+import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class BabyDevelopment extends StatefulWidget {
@@ -47,31 +50,23 @@ class DrawProgress extends StatelessWidget{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
+      margin: EdgeInsets.only(top:16),
+      color: Colors.white,
       padding: EdgeInsets.all(16),
       child: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              // Text('Vận Động thô'),
-              LinearProgressIndicator(
-                minHeight: 16,
-                value: 0.7,
-                backgroundColor: Colors.white,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-              ),
-            ],
-          ),
-          // Row(
-          //   children: <Widget>[
-          //     Text('Vận Động tinh'),
-          //     LinearProgressIndicator(
-          //       minHeight: 16,
-          //       value: 0.5,
-          //       backgroundColor: Colors.white,
-          //       valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
-          //     ),
-          //   ],
-          // )
+          Container(
+            alignment: Alignment.topLeft,
+            child: Text('Mốc phát triển', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),)),
+          Container(
+              padding: EdgeInsets.only(top: 16),
+              alignment: Alignment.topLeft,
+              child: Text('Bé của bạn đã có tiến bộ gì hơn chưa? ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),)),
+          createLinear("Vận động thô",0.7,Colors.green),
+          createLinear("Vận động tinh",0.5,Colors.orange),
+          Container(
+              padding: EdgeInsets.only(top: 16),
+              child: createFlatButton(context,'Cập nhật sự vận động của bé',ActivityDetail())),
         ],
       )
     );
@@ -82,26 +77,52 @@ class DrawChart extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Column(
-        children: <Widget>[
-        Text('Thể trạng của bé', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),),
-        Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: new Column(children: <Widget>[
-              new SizedBox(height: 250.0, child: StackedAreaLineChart.withSampleData()),
-            ])),
-        Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: new Column(children: <Widget>[
-              new SizedBox(height: 250.0, child: StackedAreaLineChart.withSampleData()),
-            ])),
-        Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: new Column(children: <Widget>[
-              new SizedBox(height: 250.0, child: StackedAreaLineChart.withSampleData()),
-            ])),
+    return Container(
+      padding: EdgeInsets.only(top:16, left: 16, right: 16),
+      color: Colors.white,
+      child: Column(
+          children: <Widget>[
+          Row(
+            children: <Widget>[
+              Text('Thể trạng của bé', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),),
+              Container(
+                width: 220,
+                  // margin: EdgeInsets.only(right: 0),
+                  alignment: Alignment.topRight,
+                  child: TextButton(
+                      onPressed: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => StandardIndex()));
+                      },
+                      child: Text('Chỉ số tiêu chuẩn', style: SEMIBOLD_13,))),
+            ],
+          ),
+          Container(
+            // padding: const EdgeInsets.all(8.0),
+              child: new Column(children: <Widget>[
+                Container(
+                    alignment: Alignment.topLeft,
+                    child: Text('Cân nặng',style: SEMIBOLD_16)),
+                new SizedBox(height: 250.0, child: StackedAreaLineChart.withSampleData()),
+              ])),
+          Container(
+              padding: const EdgeInsets.only(top:30.0),
+              child: new Column(children: <Widget>[
+                Container(
+                    alignment: Alignment.topLeft,
+                    child: Text('Chiều cao',style: SEMIBOLD_16)),
+                new SizedBox(height: 250.0, child: StackedAreaLineChart.withSampleData()),
+              ])),
+          Container(
+              padding: const EdgeInsets.only(top:30.0),
+              child: new Column(children: <Widget>[
+                Container(
+                    alignment: Alignment.topLeft,
+                    child: Text('Chu vi đầu',style: SEMIBOLD_16)),
+                new SizedBox(height: 250.0, child: StackedAreaLineChart.withSampleData()),
+              ])),
 
-      ],
+        ],
+      ),
     );
   }
 }
@@ -135,12 +156,6 @@ class BabyDetail extends StatelessWidget{
     );
   }
 }
-/// Sample linear data type.
-class LinearSales {
-  final int year;
-  final int sales;
 
-  LinearSales(this.year, this.sales);
-}
 
 

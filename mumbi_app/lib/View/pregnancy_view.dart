@@ -1,12 +1,20 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
+import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Model/playlist_model.dart';
+import 'package:mumbi_app/Utils/utilsDay.dart';
 import 'package:mumbi_app/helper/data.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Model/tile_model.dart';
 import 'package:mumbi_app/Widget/custom_playlist.dart';
+import 'package:mumbi_app/Widget/customComponents.dart';
+import 'drawer_view.dart';
 import 'pregnancy_update_detail.dart';
 
 
@@ -24,55 +32,73 @@ class _HomePregnancyState extends State<HomePregnancy> {
   DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
 
+  Map<DateTime, List<Event>> selectedEvents;
 
   List<TileModel> listTile = <TileModel>[];
   List<PlayListModel> playlists = <PlayListModel>[];
   List<MutiplePlayListModel> mutiPlayList = <MutiplePlayListModel>[];
   String currentImage = "";
-  String currentUrl = "";
+  String currentSong = "";
   String currentTitle = "";
   String currentSingle = "";
   IconData btnIcon = Icons.play_arrow;
-  PlayListModel curentPlaylists = new PlayListModel();
+  PlayListModel currentPlaylists = new PlayListModel();
 
   AudioPlayer audioPlayer = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
   bool isPlaying = false;
-  String currentSong;
+  Duration duration = new Duration();
+  Duration positon = new Duration();
 
   void playMusic(String url) async{
-    if(isPlaying && currentSong != url){
+    if(isPlaying && currentSong != url) {
       audioPlayer.pause();
       int result = await audioPlayer.play(url);
-      if(result ==1){
+      if (result == 1) {
         setState(() {
           currentSong = url;
         });
-      } else if(!isPlaying){
+      }
+    }else if(!isPlaying){
+        audioPlayer.pause();
         int result = await audioPlayer.play(url);
         if(result == 1){
           setState(() {
             isPlaying= true;
+            btnIcon = Icons.pause;
           });
         }
-      }
     }
+    audioPlayer.onDurationChanged.listen((event) {
+      setState(() {
+        duration = event;
+      });
+    });
+    audioPlayer.onAudioPositionChanged.listen((event) {
+      setState(() {
+        positon = event;
+      });
+    });
   }
 
   @override
   void initState() {
     // TODO: implement initState
+    selectedEvents = getEvents();
     super.initState();
     listTile = listTilePregnancy();
     playlists = getListMusic();
     // mutiPlayList = getMutiplePlayList();
   }
 
+  List<Event> _getEventsFromDay(DateTime date){
+    return selectedEvents[DateTime(date.year, date.month, date.day)] ?? [];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(''),
-        leading: IconButton(icon: Icon(Icons.menu)),
+        title: Text('Thông tin thai kì'),
         actions: <Widget>[
           ElevatedButton(
             onPressed: () => {},
@@ -130,23 +156,13 @@ class _HomePregnancyState extends State<HomePregnancy> {
           )
         ],
       ),
+        drawer: getDrawer(context),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Container(
             child: Column(
                children: <Widget>[
-                 FlatButton(
-                   onPressed: ()=>{},
-                   color: Colors.white,
-                   shape: RoundedRectangleBorder(
-                       side: BorderSide(color: Colors.pinkAccent),
-                       borderRadius: BorderRadius.all(Radius.circular(20))
-                   ),
-                   child:Text('Bé đã ra đời',style: TextStyle(
-                     color: Colors.pinkAccent,fontSize: 14, fontWeight: FontWeight.w600,
-                   ),),
-                 ),
-
+                 createFlatButton(context,'Bé đã ra đời',null),
                  TableCalendar(
                    locale: 'vi',
                    firstDay: DateTime(1990),
@@ -155,9 +171,6 @@ class _HomePregnancyState extends State<HomePregnancy> {
                    calendarFormat: format,
                    daysOfWeekVisible: true,
                    startingDayOfWeek: StartingDayOfWeek.monday,
-                   selectedDayPredicate: (DateTime date ) {
-                     return isSameDay(selectedDay, date);
-                   },
 
                    //Style the calendar
                    calendarStyle: CalendarStyle(
@@ -167,73 +180,60 @@ class _HomePregnancyState extends State<HomePregnancy> {
                      weekendTextStyle: TextStyle(
                          color: Colors.pinkAccent
                      ) ,
-                     selectedDecoration: BoxDecoration(
-                         color: Color(0xFFFC95AE),
-                         shape: BoxShape.circle
-                     ),
                    ),
                    headerStyle: HeaderStyle(
-                     headerPadding: EdgeInsets.symmetric(horizontal: 11, vertical: 21),
-                     leftChevronVisible: false,
-                     rightChevronVisible: false,
-                     formatButtonVisible: true,
-                     titleTextStyle: TextStyle(
-                       fontWeight: FontWeight.w600,
-                       fontSize: 16,
+                     //Week or Month
+                     formatButtonShowsNext: false,
+                     formatButtonDecoration: new BoxDecoration(
+                       color: PINK_COLOR,
+                       borderRadius: BorderRadius.circular(10)
                      ),
-                     // titleTextFormatter: (date, locale) => DateFormat.yM('yMMM').format(DateTime.now())
+                     // headerPadding: EdgeInsets.symmetric(horizontal: 11, vertical: 21),
+                     leftChevronVisible: true,
+                     rightChevronVisible: true,
+                     formatButtonVisible: true,
+                     titleTextStyle: BOLD_16,
+                     titleTextFormatter: (date, locale) => DateFormat.MMMM(locale).format(DateTime.now()),
+                     leftChevronIcon: Icon(Icons.navigate_before_sharp, color: PINK_COLOR,),
+                     rightChevronIcon: Icon(Icons.navigate_next_sharp, color: PINK_COLOR,)
                    ),
-                 ),
-
-                 Container(
-                   height: 264, width: 264,
-                   decoration: BoxDecoration(
-                     borderRadius: BorderRadius.circular(150),
-                     color: Color(0xFFFC95AE),
-                   ),
-                   child: Column(
-                     children: <Widget>[
-                       Container(
-                         margin: EdgeInsets.only(top:52),
-                         width: 60, height: 60,
+                   calendarBuilders: CalendarBuilders(
+                     selectedBuilder: (context, date, events) => Container(
+                         margin: const EdgeInsets.all(4.0),
+                         alignment: Alignment.center,
                          decoration: BoxDecoration(
-                           borderRadius: BorderRadius.circular(150),
-                           color: Color(0xFFFB668A),
-                         ),
-                         child: SvgPicture.asset(img_beco),
-                       ),
-                       Container(
-                           margin: EdgeInsets.only(top:4),
-                           child: Text('Thai kì đã được', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,color: Colors.white),)
-                       ),
-                       Container(
-                           margin: EdgeInsets.only(top:4),
-                           child: Text('4 tuần 5 ngày', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700,color: Colors.white),)
-                       ),
-                       Container(
-                         margin: EdgeInsets.only(top:16),
-                         child: FlatButton(
-                           onPressed: ()=>{},
-                           color: Colors.white,
-                           shape: RoundedRectangleBorder(
-                               borderRadius: BorderRadius.all(Radius.circular(20))
-                           ),
-                           child: TextButton(
-                             child: Text(
-                               'Cập nhật thông tin',style: TextStyle(
-                               color: Color(0xFFFB668A),fontSize: 16, fontWeight: FontWeight.w700,),
-                             ),
-                             onPressed: () => {
-                             Navigator.push(
-                             context,
-                             MaterialPageRoute(builder: (context) => PregnancyUpdate()),
-                             )
-                             },
-                           ),
-                         ),
-                       ),
-                     ],
+                             color: Theme.of(context).primaryColor,
+                             borderRadius: BorderRadius.circular(30.0)),
+                         child: Text(
+                           date.day.toString(),
+                           style: TextStyle(color: Colors.white),
+                         )),
+                     todayBuilder: (context, date, events) => Container(
+                         margin: const EdgeInsets.all(4.0),
+                         alignment: Alignment.center,
+                         decoration: BoxDecoration(
+                             color: Colors.blue,
+                             borderRadius: BorderRadius.circular(30.0)),
+                         child: Text(
+                           date.day.toString(),
+                           style: TextStyle(color: Colors.white),
+                         )),
                    ),
+                   eventLoader: _getEventsFromDay,
+
+                   onDaySelected: (DateTime selectDay, DateTime focusDay) {
+                     setState(() {
+                       selectedDay = selectDay;
+                       focusedDay = focusDay;
+                     });
+                     print(focusedDay);
+                   },
+                   selectedDayPredicate: (DateTime date) {
+                     return isSameDay(selectedDay, date);
+                   },
+                 ),
+                 ..._getEventsFromDay(selectedDay).map(
+                       (Event event) => UpdateInformation(event.dateTime),
                  ),
                  //Cac hoat dong thai giao
                  SingleChildScrollView(
@@ -244,31 +244,80 @@ class _HomePregnancyState extends State<HomePregnancy> {
                        children: <Widget>[
                          Align(
                              alignment: Alignment.topLeft,
-                             child: Text('Các hoạt động thai giáo:', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),)),
-                         ListView.builder(
-                           itemCount: listTile.length,
+                             child: Text('Các hoạt động thai giáo:', style: BOLD_20,)),
+                         customActivityPregnancy(
+                           title: "Nghe Nhạc",
+                           icon: ic_playlist,
+                           playlists: playlists,
+                           widget: ListView.builder(
+                             itemCount: playlists.length,
                              shrinkWrap: true,
-                             // scrollDirection: Axis.vertical,
+                             scrollDirection: Axis.vertical,
                              itemBuilder: (context,index){
-                             return customActivityPregnancy2(
-                               ontap: (){
-                                 //playMusic(playlists[index].url);
-                                 setState((){
-                                   currentImage = playlists[index].image;
-                                   //currentUrl = playlists[index].url;
-                                   currentTitle = playlists[index].title;
-                                   currentSingle = playlists[index].singer;
-                                 });
-                               },
-                               title: listTile[index].title,
-                               playlists: playlists,
-                               icon: listTile[index].icon,
-                             );
-                         }),
+                               return customListTilePlaylist(
+                                 ontap: (){
+                                   playMusic(playlists[index].url);
+                                   setState(() {
+                                     currentImage = playlists[index].image;
+                                     currentTitle = playlists[index].title;
+                                     currentSingle = playlists[index].singer;
+                                   });
+                                 },
+                                 index: index,
+                                 playlists: playlists,
+                               );
+                             },),),
+                         customActivityPregnancy(
+                           title: "Đọc thơ",
+                           icon: ic_poet,
+                           playlists: playlists,
+                           widget: ListView.builder(
+                             itemCount: playlists.length,
+                             shrinkWrap: true,
+                             scrollDirection: Axis.vertical,
+                             itemBuilder: (context,index){
+                               return customListTilePlaylist(
+                                 ontap: (){
+                                   playMusic(playlists[index].url);
+                                   setState(() {
+                                     currentImage = playlists[index].image;
+                                     currentTitle = playlists[index].title;
+                                     currentSingle = playlists[index].singer;
+                                   });
+                                 },
+                                 index: index,
+                                 playlists: playlists,
+                               );
+                             },),),
+                         customActivityPregnancy(
+                           title: "Kể chuyện",
+                           icon: ic_kechuyen,
+                           playlists: playlists,
+                           widget: ListView.builder(
+                             itemCount: playlists.length,
+                             shrinkWrap: true,
+                             scrollDirection: Axis.vertical,
+                             itemBuilder: (context,index){
+                               return customListTilePlaylist(
+                                 ontap: (){
+                                   playMusic(playlists[index].url);
+                                   setState(() {
+                                     currentImage = playlists[index].image;
+                                     currentTitle = playlists[index].title;
+                                     currentSingle = playlists[index].singer;
+                                   });
+                                 },
+                                 index: index,
+                                 playlists: playlists,
+                               );
+                             },),),
                          Column(
                            children: <Widget>[
                              Slider.adaptive(
-                                 value: 0.0, onChanged: (value){
+                                 value: positon.inSeconds.toDouble(),
+                                 min: 0.0,
+                                 max: duration.inSeconds.toDouble(),
+                                 onChanged: (value){
                              }),
                              Row(
                                children: <Widget>[
@@ -283,20 +332,69 @@ class _HomePregnancyState extends State<HomePregnancy> {
                                      icon: Icon(btnIcon, color: Colors.pinkAccent,),
                                      iconSize: 42,
                                      onPressed: (){
+                                       if (isPlaying){
+                                         audioPlayer.pause();
+                                         setState(() {
+                                           btnIcon = Icons.play_arrow;
+                                           isPlaying = false;
+                                         });
+                                       } else {
+                                         audioPlayer.resume();
+                                         setState(() {
+                                           btnIcon = Icons.pause;
+                                           isPlaying = true;
+                                         });
+                                       }
                                  })
                                ],
                              )
                            ],
                          ),
                        ],
-
                      ),
                    ),
-                 )
+                 ),
                ],
             ),
           ),
-        )
+        ),
+    );
+  }
+}
+class UpdateInformation extends StatelessWidget {
+  String dateTime;
+  UpdateInformation(this.dateTime);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 264, width: 264,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(150),
+        color: Color(0xFFFC95AE),
+      ),
+      child: Column(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top:52),
+            width: 60, height: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(150),
+              color: Color(0xFFFB668A),
+            ),
+            child: SvgPicture.asset(img_beco),
+          ),
+          Container(
+              margin: EdgeInsets.only(top:4),
+              child: Text('Thai kì đã được', style: SEMIBOLDWHITE_13,)
+          ),
+          Container(
+              margin: EdgeInsets.only(top:4),
+              child: Text(dateTime, style: BOLDWHITE_20,)
+          ),
+          createButtonWhite(context, 'Cập nhật hông tin', 200, PregnancyUpdate()),
+        ],
+      ),
     );
   }
 }

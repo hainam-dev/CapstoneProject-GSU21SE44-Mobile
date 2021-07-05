@@ -5,6 +5,8 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Model/category_model.dart';
 import 'package:mumbi_app/Model/tile_model.dart';
 import 'package:mumbi_app/Model/playlist_model.dart';
+import 'package:mumbi_app/Utils/utilsDay.dart';
+import 'package:mumbi_app/Model/teeth_model.dart';
 
 List<CategoryModel> getCategories(){
   List<CategoryModel> category = <CategoryModel>[];
@@ -88,7 +90,7 @@ List<PlayListModel> getListMusic(){
   //1
   playListModel = new PlayListModel();
   playListModel.image = 'https://image-us.eva.vn/upload/4-2019/images/2019-11-08/d5725539e07809265069-1573176800-91-width800height550.jpg';
-  playListModel.url = 'https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3';
+  playListModel.url = 'https://nhacchuong123.com/nhac-chuong/amthanh/Nhac-Chuong-Chi-La-Khong-Cung-Nhau-Tang-Phuc-Tr%C6%B0%C6%A1ng-Thao-Nhi.mp3';
   playListModel.title = 'Con cò bé bé';
   playListModel.singer = 'Bé xuân mai';
   playlist.add(playListModel);
@@ -96,15 +98,15 @@ List<PlayListModel> getListMusic(){
   //2
   playListModel = new PlayListModel();
   playListModel.image = 'https://idol.com.vn/wp-content/uploads/2020/12/be-bao-an.png';
-  playListModel.url = 'https://luan.xyz/files/audio/ambient_c_motion.mp3';
-  playListModel.title = 'Con cò bé bé';
+  playListModel.url = 'https://nhacchuong123.com/nhac-chuong/nhac-tik-tok/Nhac%20Chuong%20Co%20Doc%20Vuong%20(Diep%20Khuc)%20-%20Thien%20Tu.mp3';
+  playListModel.title = 'Chú cún con';
   playListModel.singer = 'Bé Bảo An';
   playlist.add(playListModel);
 
   //3
   playListModel = new PlayListModel();
   playListModel.image = 'https://i.ytimg.com/vi/lFxKzXW_64k/maxresdefault.jpg';
-  playListModel.url = 'https://luan.xyz/files/audio/ambient_c_motion.mp3';
+  playListModel.url = 'https://nhacchuong123.com/nhac-chuong/am-thanh/Nhac Chuong Duong Toi Cho Em Ve - buitruonglinh.mp3';
   playListModel.title = 'Một con vịt';
   playListModel.singer = 'Con vịt';
   playlist.add(playListModel);
@@ -112,7 +114,7 @@ List<PlayListModel> getListMusic(){
   //4
   playListModel = new PlayListModel();
   playListModel.image = 'https://i.ytimg.com/vi/TRXo0LiKTyE/hqdefault.jpg';
-  playListModel.url = 'https://luan.xyz/files/audio/ambient_c_motion.mp3';
+  playListModel.url = 'https://nhacchuong123.com/nhac-chuong/nhac-tre/HOAI LAM  - Buon Lam Chi Em Oi - nhacchuong123.com.mp3';
   playListModel.title = 'Chú mèo con';
   playListModel.singer = 'Con mèo';
   playlist.add(playListModel);
@@ -222,3 +224,36 @@ List music = [
     'url': "https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3",
   },
 ];
+
+Map<DateTime, List<Event>> getEvents() {
+  return {
+    DateTime(2021, 6, 14): [Event(dateTime: "5 ngày 5 giờ")],
+    DateTime(2021, 6, 15): [Event(dateTime: "6 ngày 5 giờ")],
+    DateTime(2021, 6, 16): [Event(dateTime: "7 ngày 5 giờ")],
+    DateTime(2021, 6, 17): [Event(dateTime: "8 ngày 5 giờ")],
+    DateTime(2021, 6, 18): [Event(dateTime: "9 ngày 5 giờ")],
+  };
+}
+
+List<TeethModel> getListTeeth(){
+  List<TeethModel> listTeeth = <TeethModel>[];
+  TeethModel teethModel = new TeethModel();
+
+  teethModel.icon = ic_teeth1_ht;
+  teethModel.iconChoose = ic_teeth1_ht_choose;
+  listTeeth.add(teethModel);
+
+  teethModel.icon = ic_teeth2_ht;
+  teethModel.iconChoose = ic_teeth2_ht_choose;
+  listTeeth.add(teethModel);
+
+  teethModel.icon = ic_teeth3_ht;
+  teethModel.iconChoose = ic_teeth3_ht_choose;
+  listTeeth.add(teethModel);
+
+  teethModel.icon = ic_teeth4_ht;
+  teethModel.iconChoose = ic_teeth4_ht_choose;
+  listTeeth.add(teethModel);
+
+  return listTeeth;
+}

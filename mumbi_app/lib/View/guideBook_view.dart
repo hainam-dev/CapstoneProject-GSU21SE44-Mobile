@@ -1,13 +1,28 @@
+// import 'dart:js';
+
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
+import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Constant/savePost.dart';
+import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Model/article_model.dart';
 import 'package:mumbi_app/Model/category_model.dart';
 import 'package:mumbi_app/helper/data.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mumbi_app/helper/news.dart';
+import 'package:mumbi_app/main.dart';
 import 'article_view.dart';
 import 'drawer_view.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+// import 'package:provider/provider.dart';
+import 'package:mumbi_app/state/state_manager.dart';
+import 'package:mumbi_app/View/guideBook_save.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class GuideBook extends StatefulWidget {
   const GuideBook({Key key}) : super(key: key);
@@ -21,8 +36,197 @@ class _GuideBookState extends State<GuideBook> {
   List<ArticleModel> articles = <ArticleModel>[];
   List<ArticleModel> articlesCard = <ArticleModel>[];
 
-  bool _loading = true;
+  // bool _loading = true;
+  //
+  // getNews() async {
+  //   News newsClass = News();
+  //   await newsClass.getNews();
+  //   articles = newsClass.news;
+  //   setState(() {
+  //     _loading = false;
+  //   });
+  // }
 
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    categories = getCategories();
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Cẩm nang'),
+        actions: [
+          // CircleAvatar(
+          //   backgroundColor: Colors.white,
+          //   child: IconButton(icon: Icon(Icons.search), onPressed: () => {}),
+          // ),
+          Container(
+            padding: EdgeInsets.only(left: 10, right: 10),
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: IconButton(
+                  icon: SvgPicture.asset(bookmark),
+                  onPressed: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => GuidebookSave()),
+                    )
+                  }),
+            ),
+          ),
+        ],
+      ),
+      drawer: getDrawer(context),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16,),
+          child: Column(
+            children: <Widget>[
+              ///Blogs
+              BlogTile(),
+              // ListView.separated(
+              //     separatorBuilder: (context, index) => Divider(),
+              //     physics: const NeverScrollableScrollPhysics(),
+              //     shrinkWrap: true,
+              //     scrollDirection: Axis.vertical,
+              //     itemCount: 7,
+              //     itemBuilder: (context, index) {
+              //       return BlogTiles(
+              //         id: articles[index].id,
+              //         title: articles[index].title,
+              //         url: articles[index].url,
+              //         dateTime: articles[index].publishedAt,
+              //         imageUrl: articles[index].urlToImage,
+              //         desc: articles[index].description,
+              //       );
+              //     }),
+
+              //Kien thuc chung
+              Column(
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Kiến thức chung",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: PINK_COLOR),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                      top: 13,
+                    ),
+                    height: 200,
+                    child: ListView.builder(
+                        itemCount: categories.length,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return CategortTitle(
+                            imageUrl: categories[index].imgeUrl,
+                            categoryName: categories[index].cateforyName,
+                            dateTime: categories[index].dateTime,
+                          );
+                        }),
+                  ),
+                ],
+              ),
+
+              //Moc phat trien
+              Column(
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Mốc phát triển",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: PINK_COLOR),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                      top: 13,
+                    ),
+                    height: 200,
+                    child: ListView.builder(
+                        itemCount: categories.length,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return CategortTitle(
+                            imageUrl: categories[index].imgeUrl,
+                            categoryName: categories[index].cateforyName,
+                            dateTime: categories[index].dateTime,
+                          );
+                        }),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// class BlogTiles extends StatelessWidget {
+//   final String imageUrl, title, desc, url, dateTime, id;
+//   BlogTiles(
+//       {@required this.imageUrl,
+//       @required this.title,
+//       @required this.desc,
+//       @required this.url,
+//       @required this.dateTime,
+//       @required this.id});
+//   var storage = FlutterSecureStorage();
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Consumer(builder:(context,watch, child){
+//       final saveInstance = watch(saveListProvider);
+//     });
+//   }
+//
+//   bool isExistInSave(List<ArticleModel> state, ArticleModel articleModel) {
+//     bool found = false;
+//     state.forEach((element) {
+//       if(element.id == articleModel.id)
+//         found = true;
+//     });
+//     return found;
+//   }
+// }
+
+class BlogTile extends StatefulWidget {
+  const BlogTile({Key key}) : super(key: key);
+
+  @override
+  _BlogTileState createState() => _BlogTileState();
+}
+
+class _BlogTileState extends State<BlogTile> {
+  List<ArticleModel> articles = <ArticleModel>[];
+  // List<ArticleModel> articlesCard = <ArticleModel>[];
+  // String imageUrl, title, desc, url, dateTime, id;
+  bool _loading = true;
+  var storage = FlutterSecureStorage();
   getNews() async {
     News newsClass = News();
     await newsClass.getNews();
@@ -34,237 +238,148 @@ class _GuideBookState extends State<GuideBook> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    categories = getCategories();
     getNews();
   }
-
+  // var storage = FlutterSecureStorage();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Cẩm nang'),
-        actions: [
-          CircleAvatar(
-            backgroundColor: Colors.white,
-            child: IconButton(icon: Icon(Icons.search), onPressed: () => {}),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: IconButton(
-                  icon: SvgPicture.asset(bookmark), onPressed: () => {}),
-            ),
-          ),
-        ],
-      ),
-      drawer: getDrawer(context),
-      body: _loading
-          ? Center(
-              child: Container(
-                child: CircularProgressIndicator(),
-              ),
-            )
-          : SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
-                child: Column(
-                  children: <Widget>[
-                    ///Blogs
-                    Container(
-                      padding: EdgeInsets.only(top: 16),
-                      child: ListView.separated(
-                          separatorBuilder: (context, index) => Divider(),
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: 7,
-                          itemBuilder: (context, index) {
-                            return BlogTile(
-                              imageUrl: articles[index].urlToImage,
-                              title: articles[index].title,
-                              desc: articles[index].description,
-                              dateTime: articles[index].publishedAt,
-                              url: articles[index].url,
-                            );
-                          }),
-                    ),
-
-                    //Kien thuc chung
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Kiến thức chung",
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                                color: Palette.kToDark),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(
-                            top: 13,
-                          ),
-                          height: 200,
-                          child: ListView.builder(
-                              itemCount: categories.length,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return CategortTitle(
-                                  imageUrl: categories[index].imgeUrl,
-                                  categoryName: categories[index].cateforyName,
-                                  dateTime: categories[index].dateTime,
-                                );
-                              }),
-                        ),
-                      ],
-                    ),
-
-                    //Moc phat trien
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Mốc phát triển",
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                                color: Palette.kToDark),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(
-                            top: 13,
-                          ),
-                          height: 200,
-                          child: ListView.builder(
-                              itemCount: categories.length,
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return CategortTitle(
-                                  imageUrl: categories[index].imgeUrl,
-                                  categoryName: categories[index].cateforyName,
-                                  dateTime: categories[index].dateTime,
-                                );
-                              }),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-    );
-  }
-}
-
-class BlogTile extends StatelessWidget {
-  final String imageUrl, title, desc, url, dateTime;
-  BlogTile(
-      {@required this.imageUrl,
-      @required this.title,
-      @required this.desc,
-      @required this.url,
-      @required this.dateTime});
-  // final items= List.from(Da)
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ArticleView(
-                      blogUrl: url,
-                    )));
-      },
+    // var bookmarkBloc = Provider.of<ArticleList>(context);
+    return _loading
+        ? Center(
       child: Container(
-          child: Stack(
-        children: <Widget>[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              imageUrl,
-              height: 80,
-              width: 80,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(
-              left: 90,
-            ),
-            child: Stack(children: [
-              Column(
-                  // crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      child: Text(
-                        title,
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.w500),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
+        child: CircularProgressIndicator(),
+      ),
+    )
+        :
+    Container(
+      padding: EdgeInsets.only(top: 16),
+      child: ListView.separated(
+          separatorBuilder: (context, index) => Divider(),
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: 7,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ArticleView(
+                          blogUrl: articles[index].guidebookContent,
+                        ))
+                );
+              },
+              child: Container(
+                  child: Stack(
+                    children: <Widget>[
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          articles[index].imageURL,
+                          height: 80,
+                          width: 80,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    Row(children: [
-                      Column(
-                        children: <Widget>[
-                          Container(
-                            child: Text(
-                              title,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w500),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                dateTime,
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.black54),
-                              ),
-                              IconButton(
-                                icon: SvgPicture.asset(bookmark),
-                                onPressed: () => {
-                                  buildInsertButton(),
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
+                      Container(
+                        width: SizeConfig.blockSizeVertical * 70,
+                        padding: EdgeInsets.only(left: 90,),
+                        child: Stack(children: [
+                          Column(
+                            // crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  child: Text(
+                                    articles[index].title,
+                                    style: BOLD_16,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                  ),
+                                ),
+                                Stack(children: [
+                                  Column(
+                                    children: <Widget>[
+                                      Row(
+                                        children: [
+                                          Text(
+                                            articles[index].createdTime,
+                                            style: REG_13,
+                                          ),
+                                          IconButton(
+                                            icon: articles[index].status == false ? SvgPicture.asset(bookmark) : SvgPicture.asset(bookmark_choose),
+                                            onPressed: () async{
+                                              ArticleModel articleModel = new ArticleModel(
+                                                id: articles[index].id,
+                                                title: articles[index].title,
+                                                guidebookContent: articles[index].guidebookContent,
+                                                createdBy: articles[index].createdBy,
+                                                createdTime: articles[index].createdTime,
+                                                imageURL: articles[index].imageURL,
+                                              );
+
+
+                                              // if(isExistInSave(bookmarkBloc.list, articleModel)){
+                                              //   bookmarkBloc.list.remove(articleModel);
+                                              // } else {
+                                              //   bookmarkBloc.add(articleModel);
+                                              //   var string = json.encode(articleModel.toJson());
+                                              //   await storage.write(
+                                              //       key: saveKey,
+                                              //       value: string);
+                                              // }
+                                              var saveInstance = context.read(saveListProvider).state;
+                                              print(saveInstance.toString());
+
+                                              if(isExistInSave(saveInstance.state, articleModel)){
+                                                context.read(saveListProvider).state.remove(articleModel);
+                                                Scaffold.of(context).showSnackBar(SnackBar(content: Text("Đã bỏ lưu", textAlign: TextAlign.right,), duration: Duration(seconds: 1),));
+                                                print('cancel');
+                                                articles[index].status = false;
+                                              } else {
+                                                context.read(saveListProvider).state.add(articleModel);
+                                                print('SAVE');
+                                                // print(articleModel.toJson() as List<dynamic>);
+                                                articles[index].status = true;
+                                                Scaffold.of(context).showSnackBar(SnackBar(content: Text("Đã lưu",textAlign: TextAlign.right), duration: Duration(seconds: 1),));
+                                              }
+                                              var string = json.encode(context.read(saveListProvider).state.state);
+                                              // var stringMap  = string.map((model) => ArticleModel.fromJson(model)).toList;
+                                              await storage.write(
+                                                  key: saveKey,
+                                                  value: string);
+                                              print('DA ENCODE');
+                                              print(storage.read(key: saveKey).toString());
+                                              setState(() {
+
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                ]),
+                              ])
+                        ]),
                       )
-                    ]),
-                  ])
-            ]),
-          )
-        ],
-      )),
+                    ],
+                  )),
+            );
+          }),
     );
   }
+  bool isExistInSave(List<ArticleModel> state, ArticleModel articleModel) {
+    bool found = false;
+    state.forEach((element) {
+      if(element.id == articleModel.id)
+        found = true;
+    });
+    return found;
+  }
 }
+
 
 Widget buildInsertButton() => ElevatedButton(onPressed: () => {});
 
@@ -311,22 +426,4 @@ class CategortTitle extends StatelessWidget {
       ),
     );
   }
-}
-
-class Palette {
-  static const MaterialColor kToDark = const MaterialColor(
-    0xffE25D7D, // 0% comes in here, this will be color picked if no shade is selected when defining a Color property which doesn’t require a swatch.
-    const <int, Color>{
-      50: const Color(0xffE25D7D), //10%
-      100: const Color(0xffb74c3a), //20%
-      200: const Color(0xffa04332), //30%
-      300: const Color(0xff89392b), //40%
-      400: const Color(0xff733024), //50%
-      500: const Color(0xff5c261d), //60%
-      600: const Color(0xff451c16), //70%
-      700: const Color(0xff2e130e), //80%
-      800: const Color(0xff170907), //90%
-      900: const Color(0xff000000), //100%
-    },
-  );
 }
