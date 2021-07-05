@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 import 'package:mumbi_app/View/vaccinePrice_compare.dart';
 import 'package:mumbi_app/View/injectiondetail_view.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
+
 
 class InjectionSchedule extends StatefulWidget {
   const InjectionSchedule({Key key}) : super(key: key);
@@ -38,7 +41,7 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
             child: Row(
               children: <Widget>[
                 SizedBox(
-                  width: 180,
+                  width: SizeConfig.safeBlockHorizontal * 40,
                   height: 50,
                   child: DropdownButton(
                       value: _value1,
@@ -62,37 +65,41 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                         });
                       }),
                 ),
-                SizedBox(
-                  width: 180,
-                  height: 50,
-                  child: DropdownButton<String>(
-                    focusColor:Colors.white,
-                    value: _chosenValue,
-                    //elevation: 5,
-                    style: TextStyle(color: Colors.white),
-                    iconEnabledColor:Colors.black,
-                    items: <String>[
-                      'Chưa tiêm',
-                      'Đã tiêm',
-                      'Bỏ qua',
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value,style:TextStyle(color:Colors.black),),
-                      );
-                    }).toList(),
-                    hint:Text(
-                      "Trạng Thái",
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500),
+
+                Container(
+                  padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10),
+                  child: SizedBox(
+                    width: SizeConfig.safeBlockHorizontal * 40,
+                    height: 50,
+                    child: DropdownButton<String>(
+                      focusColor:Colors.white,
+                      value: _chosenValue,
+                      //elevation: 5,
+                      style: TextStyle(color: Colors.white),
+                      iconEnabledColor:Colors.black,
+                      items: <String>[
+                        'Chưa tiêm',
+                        'Đã tiêm',
+                        'Bỏ qua',
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value,style:TextStyle(color:Colors.black),),
+                        );
+                      }).toList(),
+                      hint:Text(
+                        "Trạng Thái",
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      onChanged: (String value) {
+                        setState(() {
+                          _chosenValue = value;
+                        });
+                      },
                     ),
-                    onChanged: (String value) {
-                      setState(() {
-                        _chosenValue = value;
-                      });
-                    },
                   ),
                 )
               ],
@@ -152,11 +159,8 @@ class InjectTable extends StatelessWidget{
     // TODO: implement build
     return GestureDetector(
         onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => InjectionDetail()),
-      );},
+
+      },
       child: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(16),
@@ -190,21 +194,45 @@ class InjectTable extends StatelessWidget{
                        ),
                      ),
                    ],
-                   rows: const <DataRow>[
+                   rows: <DataRow>[
                      DataRow(
                        cells: <DataCell>[
-                         DataCell(Text('09/05/2021')),
+                         DataCell(Text('09/05/2021', style: SEMIBOLD_13,)),
                          DataCell(Text('Lao')),
                          DataCell(Text('3/4')),
-                         DataCell(SizedBox(
-                           child: TextButton(child:Text('Chưa Tiêm')),
+                         DataCell(TableRowInkWell(
+                           onTap: () {
+                             Navigator.push(
+                               context,
+                               MaterialPageRoute(
+                                   builder: (context) => InjectionDetail()),
+                             );},
+                           child: TextButton(
+                               child:Text('Chưa Tiêm')),
                          )),
                        ],
                      ),
                      DataRow(
                        cells: <DataCell>[
 
-                         DataCell(Text('09/05/2021')),
+                         DataCell(Text('09/05/2021', style: SEMIBOLD_13,)),
+                         DataCell(Text('Lao')),
+                         DataCell(Text('3/4')),
+                         DataCell(TableRowInkWell(
+                           onTap: () {
+                             Navigator.push(
+                               context,
+                               MaterialPageRoute(
+                                   builder: (context) => InjectionDetail()),
+                             );},
+                           child: TextButton(
+                               child:Text('Đã Tiêm')),
+                         )),
+                       ],
+                     ),
+                     DataRow(
+                       cells: <DataCell>[
+                         DataCell(Text('09/05/2021', style: SEMIBOLD_13,)),
                          DataCell(Text('Lao')),
                          DataCell(Text('3/4')),
                          DataCell(Text('Chưa tiêm')),
@@ -212,16 +240,8 @@ class InjectTable extends StatelessWidget{
                      ),
                      DataRow(
                        cells: <DataCell>[
-                         DataCell(Text('09/05/2021')),
-                         DataCell(Text('Lao')),
-                         DataCell(Text('3/4')),
-                         DataCell(Text('Chưa tiêm')),
-                       ],
-                     ),
-                     DataRow(
-                       cells: <DataCell>[
-                         DataCell(Text('09/05/2021')),
-                         DataCell(Text('Lao')),
+                         DataCell(Text('09/05/2021', style: SEMIBOLD_13,)),
+                         DataCell(Text('Lao', style: REG_13,)),
                          DataCell(Text('3/4')),
                          DataCell(Text('Chưa tiêm')),
                        ],

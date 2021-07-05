@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
@@ -13,101 +14,109 @@ import 'listBabyDiary_view.dart';
 import 'myFamily_view.dart';
 
 Widget getDrawer(BuildContext context) {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: PINK_COLOR, //or set color with: Color(0xFF0000FF)
+  ));
   return Container(
-      width: MediaQuery.of(context).size.width*0.75,
-      child: Drawer(
-        child: ListView(
-          children: <Widget>[
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0.0),
-              ),
-              elevation: 0,
-              margin: EdgeInsets.zero,
-              color: PINK_COLOR,
-              child: ListTile(
-                title: Text(
-                  'Tài khoản',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
+    width: MediaQuery.of(context).size.width * 0.75,
+    child: Drawer(
+      child: ListView(
+        children: <Widget>[
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0.0),
+            ),
+            elevation: 0,
+            margin: EdgeInsets.zero,
+            color: PINK_COLOR,
+            child: ListTile(
+              title: Text(
+                'Tài khoản',
+                style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ),
-            ScopedModel(
+          ),
+          ScopedModel(
             model: MomViewModel.getInstance(),
-              child: ScopedModelDescendant(builder: (BuildContext buildContext, Widget child, MomViewModel model){
-                model.getMomByID();
+            child: ScopedModelDescendant(builder:
+                (BuildContext buildContext, Widget child, MomViewModel model) {
+              model.getMomByID();
               return model.momModel == null
                   ? loadingUserInfoListTile()
                   : Card(
-                  elevation: 0,
-                  margin: EdgeInsets.zero,
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                        backgroundImage: NetworkImage(
-                            model.momModel.imageURL
+                      elevation: 0,
+                      margin: EdgeInsets.zero,
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          backgroundImage:
+                              NetworkImage(model.momModel.imageURL),
                         ),
-                    ),
-                    title: Text(
-                      model.momModel.fullName,
-                      maxLines: 1,
-                    ),
-                    subtitle: model.momModel.phoneNumber == null || model.momModel.phoneNumber == ""
-                        ? null
-                        : Text(model.momModel.phoneNumber),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 15,
-                      color: Colors.black,
-                    ),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ParentInfo("Thông tin mẹ",model.momModel,"Update")));
-                    },
-                  ),
-              );
-            }),),
-            SizedBox(
-              height: 15,
-            ),
-            createListTileNavigator(
-                context, myFamily, 'Gia đình của tôi', MyFamily()),
-            SizedBox(
-              height: 1,
-            ),
-            createListTileNavigator(context, reminder, 'Nhắc nhở', MenuRemind()),
-            SizedBox(
-              height: 1,
-            ),
-            createListTileNavigator(context, saved, 'Đã lưu', MyFamily()),
-            SizedBox(
-              height: 1,
-            ),
-            createListTileNavigator(
-                context, babyDiary, 'Nhật ký của bé', BabyDiary()),
-            SizedBox(
-              height: 1,
-            ),
-            createListTileNavigator(context, teethGrow, 'Mọc răng', TrackTeeth()),
-            SizedBox(
-              height: 1,
-            ),
-            createListTileNavigator(
-                context, contact, 'Liên Hệ Hỗ Trợ', Contact()),
-            SizedBox(
-              height: 15,
-            ),
-            createListTileNavigatorNoTrailing(context, logout, 'Đăng xuất'),
-          ],
-        ),
+                        title: Text(
+                          model.momModel.fullName,
+                          maxLines: 1,
+                        ),
+                        subtitle: model.momModel.phoneNumber == null ||
+                                model.momModel.phoneNumber == ""
+                            ? null
+                            : Text(model.momModel.phoneNumber),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 15,
+                          color: Colors.black,
+                        ),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ParentInfo(
+                                      "Thông tin mẹ",
+                                      model.momModel,
+                                      "Update")));
+                        },
+                      ),
+                    );
+            }),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          createListTileNavigator(
+              context, myFamily, 'Gia đình của tôi', MyFamily()),
+          SizedBox(
+            height: 1,
+          ),
+          createListTileNavigator(context, reminder, 'Nhắc nhở', MenuRemind()),
+          SizedBox(
+            height: 1,
+          ),
+          createListTileNavigator(context, saved, 'Đã lưu', MyFamily()),
+          SizedBox(
+            height: 1,
+          ),
+          createListTileNavigator(
+              context, babyDiary, 'Nhật ký của bé', BabyDiary()),
+          SizedBox(
+            height: 1,
+          ),
+          createListTileNavigator(context, teethGrow, 'Mọc răng', TrackTeeth()),
+          SizedBox(
+            height: 1,
+          ),
+          createListTileNavigator(
+              context, contact, 'Liên Hệ Hỗ Trợ', Contact()),
+          SizedBox(
+            height: 15,
+          ),
+          createListTileNavigatorNoTrailing(context, logout, 'Đăng xuất'),
+        ],
       ),
+    ),
   );
 }
 
-Widget loadingUserInfoListTile(){
+Widget loadingUserInfoListTile() {
   return Card(
     elevation: 0,
     margin: EdgeInsets.zero,
@@ -125,5 +134,6 @@ Widget loadingUserInfoListTile(){
         size: 15,
         color: Colors.black,
       ),
-    ),);
+    ),
+  );
 }

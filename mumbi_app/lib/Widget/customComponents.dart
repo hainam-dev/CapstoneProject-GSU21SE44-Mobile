@@ -1,56 +1,72 @@
+import 'dart:ffi';
+
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:mumbi_app/Model/playlist_model.dart';
+import 'package:mumbi_app/View/example.dart';
+import 'package:mumbi_app/Constant/textStyle.dart';
 
-Widget createTextFeild(String title){
+Widget createTextFeild(String title) {
   return Container(
     padding: EdgeInsets.only(left: 16, right: 16, top: 12),
     child: TextField(
-      decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: title
+      decoration:
+          InputDecoration(border: OutlineInputBorder(), labelText: title),
+    ),
+  );
+}
+
+Widget createButtonConfirm(String title) {
+  return SingleChildScrollView(
+    child: Container(
+      padding: EdgeInsets.only(left: 16, right: 16),
+      child: SizedBox(
+        width: 190,
+        height: 50,
+        child: ElevatedButton(
+          onPressed: () => {},
+          style: ButtonStyle(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18.0),
+          ))),
+          child: Text(title,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+        ),
       ),
     ),
   );
 }
-Widget createButtonConfirm(String title){
-return Container(
-  padding: EdgeInsets.only(left: 16, right: 16),
-  child: SizedBox(
-    width: 205,
-    height: 50,
-    child: ElevatedButton(onPressed: () => {},
-      style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-              )
-          )
-      ),
-      child: Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-    ),
-  ),
-);
-}
 
-Widget createButtonCancel(String title){
+Widget createButtonCancel(BuildContext context, String title, Widget _screen) {
   return SizedBox(
     width: 120,
     height: 50,
-    child: RaisedButton(onPressed: () => {},
+    child: RaisedButton(
+      onPressed: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => _screen),
+        )
+      },
       color: Colors.white,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20))
-      ),
+          borderRadius: BorderRadius.all(Radius.circular(20))),
       padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
-      child: Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),),
+      child: Text(
+        title,
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+      ),
     ),
   );
 }
 
-Widget createListTile(String name){
+Widget createListTile(String name) {
   return Container(
     decoration: new BoxDecoration(
       color: Colors.white,
@@ -58,15 +74,14 @@ Widget createListTile(String name){
     child: ListTile(
       leading: CircleAvatar(
           backgroundColor: Colors.grey,
-          child: Icon( Icons.assignment_ind_sharp)),
+          child: Icon(Icons.assignment_ind_sharp)),
       title: Text(name),
       onTap: () => {},
-      trailing: Icon( Icons.keyboard_arrow_down_outlined),
     ),
   );
 }
 
-Widget createListTileDetail(String name, String detail){
+Widget createListTileDetail(String name, String detail) {
   return Container(
     decoration: new BoxDecoration(
       color: Colors.white,
@@ -74,75 +89,66 @@ Widget createListTileDetail(String name, String detail){
     child: ListTile(
       leading: CircleAvatar(
           backgroundColor: Colors.grey,
-          child: Icon( Icons.assignment_ind_sharp)),
+          child: Icon(Icons.assignment_ind_sharp)),
       subtitle: Text(name),
       title: Text(detail),
       onTap: () => {},
-      trailing: Icon( Icons.keyboard_arrow_down_outlined),
+      trailing: Icon(Icons.keyboard_arrow_down_outlined),
     ),
   );
 }
 
-Widget createListTileNext(String name, String detail){
+Widget createListTileNext(String name, String detail) {
   return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     decoration: new BoxDecoration(
       color: LIGHT_BLUE_COLOR,
     ),
     child: ListTile(
       leading: CircleAvatar(
-          backgroundColor: Colors.grey,
-          child: SvgPicture.asset(ic_needle)),
-      subtitle: Text(name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-      title: Text(detail,),
+          backgroundColor: Colors.grey, child: SvgPicture.asset(ic_needle)),
+      subtitle: Text(name,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+      title: Text(
+        detail,
+      ),
       onTap: () => {},
-      trailing: Icon( Icons.navigate_next),
+      trailing: Icon(Icons.navigate_next),
     ),
   );
 }
 
-Widget createListOption(int value, onChange){
+Widget createListOption(int value, onChange) {
   int _value = 1;
   return Container(
     decoration: new BoxDecoration(
       color: Colors.white,
     ),
-    child: Row(
-      children: <Widget>[
-        CircleAvatar(
-            backgroundColor: Colors.grey,
-            child: Icon( Icons.assignment_ind_sharp)),
-        Text('bé bông'
-        ),
-        DropdownButton(
-            value: _value,
-            items: [
-              DropdownMenuItem(
-                child: Text("First Item"),
-                value: 1,
-              ),
-              DropdownMenuItem(
-                child: Text("Second Item"),
-                value: 2,
-              ),
-              DropdownMenuItem(
-                  child: Text("Third Item"),
-                  value: 3
-              ),
-              DropdownMenuItem(
-                  child: Text("Fourth Item"),
-                  value: 4
-              )
-            ],
-            onChanged: onChange
+    child: Row(children: <Widget>[
+      CircleAvatar(
+          backgroundColor: Colors.grey,
+          child: Icon(Icons.assignment_ind_sharp)),
+      Text('bé bông'),
+      DropdownButton(
+          value: _value,
+          items: [
+            DropdownMenuItem(
+              child: Text("First Item"),
+              value: 1,
             ),
-
-      ]
-    ),
+            DropdownMenuItem(
+              child: Text("Second Item"),
+              value: 2,
+            ),
+            DropdownMenuItem(child: Text("Third Item"), value: 3),
+            DropdownMenuItem(child: Text("Fourth Item"), value: 4)
+          ],
+          onChanged: onChange),
+    ]),
   );
 }
 
-Widget createDataWithIcon(String name){
+Widget createDataWithIcon(String name) {
   return Container(
     decoration: new BoxDecoration(
       color: Colors.white,
@@ -151,14 +157,14 @@ Widget createDataWithIcon(String name){
       children: <Widget>[
         CircleAvatar(
             backgroundColor: Colors.grey,
-            child: Icon( Icons.assignment_ind_sharp)),
+            child: Icon(Icons.assignment_ind_sharp)),
         Text(name),
       ],
     ),
   );
 }
 
-Widget createData(String name){
+Widget createData(String name) {
   return Container(
     decoration: new BoxDecoration(
       color: Colors.white,
@@ -167,7 +173,14 @@ Widget createData(String name){
   );
 }
 
-Widget createFamilyCard(BuildContext context, String _imageURL, String _name, Color _labelColor, String _labelText , Color _labelTextColor, Widget _screen){
+Widget createFamilyCard(
+    BuildContext context,
+    String _imageURL,
+    String _name,
+    Color _labelColor,
+    String _labelText,
+    Color _labelTextColor,
+    Widget _screen) {
   return Container(
     height: SizeConfig.blockSizeVertical * 22,
     width: SizeConfig.blockSizeHorizontal * 50,
@@ -194,16 +207,19 @@ Widget createFamilyCard(BuildContext context, String _imageURL, String _name, Co
                     CircleAvatar(
                       radius: 39,
                       backgroundColor: PINK_COLOR,
-                      backgroundImage: NetworkImage(
-                          _imageURL),
+                      backgroundImage: NetworkImage(_imageURL),
                     ),
                     Positioned(
                       top: -2,
                       right: -2,
                       child: Container(
-                        child: SvgPicture.asset(editpencil, width: 25, height: 25,),
+                        child: SvgPicture.asset(
+                          editpencil,
+                          width: 25,
+                          height: 25,
                         ),
                       ),
+                    ),
                   ],
                 ),
               ),
@@ -212,22 +228,19 @@ Widget createFamilyCard(BuildContext context, String _imageURL, String _name, Co
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontWeight: FontWeight.w600, fontSize: 15),
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
               ),
               Card(
                 elevation: 0,
                 color: _labelColor,
                 child: Padding(
-                  padding:
-                  const EdgeInsets.fromLTRB(20, 8, 20, 8),
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
                   child: Text(
                     _labelText,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        color: _labelTextColor,
-                        fontWeight: FontWeight.w600),
+                        color: _labelTextColor, fontWeight: FontWeight.w600),
                   ),
                 ),
               )
@@ -235,16 +248,99 @@ Widget createFamilyCard(BuildContext context, String _imageURL, String _name, Co
           ),
         ),
         onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    _screen)),
+            context, MaterialPageRoute(builder: (context) => _screen)),
       ),
     ),
   );
 }
 
-Widget createAddFamilyCard(BuildContext context, String _title, Widget _screen){
+Widget createFlatButton(BuildContext context, String _title, Widget _screen) {
+  return FlatButton(
+    onPressed: () => {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => _screen),
+      )
+    },
+    color: Colors.white,
+    shape: RoundedRectangleBorder(
+        side: BorderSide(color: Colors.pinkAccent),
+        borderRadius: BorderRadius.all(Radius.circular(20))),
+    child: Text(
+      _title,
+      style: TextStyle(
+        color: Colors.pinkAccent,
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  );
+}
+
+Widget createLinear(String _name, double _value, Color _color) {
+  return Container(
+    padding: EdgeInsets.only(
+      top: 16,
+    ),
+    child: Row(
+      children: <Widget>[
+        Container(
+            width: 100,
+            child: Text(
+              _name,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+            )),
+        Container(
+          padding: EdgeInsets.only(left: 16),
+          child: SizedBox(
+            width: 200,
+            child: LinearProgressIndicator(
+              minHeight: 16,
+              value: _value,
+              // semanticsValue:"Percent " + (_value * 100).toString() + "%",
+              backgroundColor: Colors.white,
+              valueColor: AlwaysStoppedAnimation<Color>(_color),
+            ),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.only(left: 4),
+          child: Text(
+            (_value * 100).round().toString() + "%",
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget createButtonWhite(
+    BuildContext context, String title, double _width, Widget screen) {
+  return SizedBox(
+    width: _width,
+    height: 50,
+    child: RaisedButton(
+      onPressed: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => screen),
+        )
+      },
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20))),
+      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+      child: Text(
+        title,
+        style: BOLDPINK_16,
+      ),
+    ),
+  );
+}
+
+Widget createAddFamilyCard(
+    BuildContext context, String _title, Widget _screen) {
   return Container(
     height: SizeConfig.blockSizeVertical * 22,
     width: SizeConfig.blockSizeHorizontal * 50,
@@ -274,16 +370,38 @@ Widget createAddFamilyCard(BuildContext context, String _title, Widget _screen){
                 _title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    fontWeight: FontWeight.w600, fontSize: 15),
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
               ),
             ],
           ),
         ),
         onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => _screen)),
+            context, MaterialPageRoute(builder: (context) => _screen)),
+      ),
+    ),
+  );
+}
+
+Widget getButtonUpload(BuildContext context) {
+  return Align(
+    alignment: Alignment.topLeft,
+    child: Container(
+      decoration: new BoxDecoration(
+        color: GREY_100,
+      ),
+      child: SizedBox(
+        width: 80,
+        height: 80,
+        child: DottedBorder(
+          strokeCap: StrokeCap.butt,
+          color: GREY_COLOR_LIGHT,
+          // gap: 3,
+          strokeWidth: 1,
+          child: Center(
+              child: FlatButton(
+            child: SvgPicture.asset(btn_plus),
+          )),
+        ),
       ),
     ),
   );
@@ -295,3 +413,17 @@ Widget createAddFamilyCard(BuildContext context, String _title, Widget _screen){
 //     value: i,
 //   );
 // }
+Widget createTeeth(String icon, String iconChoose, bool choose) {
+  return Positioned(
+    height: 85,
+    width: 85,
+    top: 100,
+    left: -2,
+    child: Container(
+      child: IconButton(
+        icon: SvgPicture.asset(choose ? iconChoose : icon),
+        // onPressed: ontap,
+      ),
+    ),
+  );
+}

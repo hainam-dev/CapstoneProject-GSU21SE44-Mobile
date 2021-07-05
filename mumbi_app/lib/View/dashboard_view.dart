@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
+import 'package:mumbi_app/View/baby_development.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
+import 'package:mumbi_app/View/injectionSchedule.dart';
+import 'package:mumbi_app/View/vaccinePrice_compare.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:mumbi_app/Widget/customText.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'drawer_view.dart';
 import 'changeAccount_view.dart';
 
-
-
 class DashBoard extends StatefulWidget {
-
   @override
   _DashBoardState createState() => _DashBoardState();
 }
@@ -37,31 +37,38 @@ class _DashBoardState extends State<DashBoard> {
       appBar: AppBar(
         actions: [
           ScopedModel(
-          model: MomViewModel.getInstance(),
-            child: ScopedModelDescendant(builder: (BuildContext buildContext, Widget child, MomViewModel model) {
+            model: MomViewModel.getInstance(),
+            child: ScopedModelDescendant(builder:
+                (BuildContext buildContext, Widget child, MomViewModel model) {
               model.getMomByID();
               return FlatButton(
                   onPressed: () {
-                    Navigator.push(context,
+                    Navigator.push(
+                        context,
                         MaterialPageRoute(
-                            builder: (context) => ChangeAccount(model.momModel)));
+                            builder: (context) =>
+                                ChangeAccount(model.momModel)));
                   },
                   child: Stack(
                     children: [
-                      model.momModel == null ? Center(child: CircularProgressIndicator()) :Padding(
-                        padding: const EdgeInsets.only(right: 0),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 18,
-                          child: CircleAvatar(
-                            radius: 17,
-                            backgroundImage: NetworkImage(model.momModel.imageURL),
-                          ),
-                        ),
-                      )
+                      model.momModel == null
+                          ? Center(child: CircularProgressIndicator())
+                          : Padding(
+                              padding: const EdgeInsets.only(right: 0),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 18,
+                                child: CircleAvatar(
+                                  radius: 17,
+                                  backgroundImage:
+                                      NetworkImage(model.momModel.imageURL),
+                                ),
+                              ),
+                            )
                     ],
                   ));
-            }),),
+            }),
+          ),
         ],
       ),
       drawer: getDrawer(context),
@@ -79,21 +86,22 @@ class _DashBoardState extends State<DashBoard> {
                   Container(
                     padding: EdgeInsets.only(bottom: 16),
                     height: SizeConfig.safeBlockVertical * 14,
-                    child: /*createListTileHome(
+                    child:
+                        /*createListTileHome(
                         context,
                         LIGHT_PINK_COLOR,
                         pregnancy,
                         "Tuần thứ 3 của thai kì",
                         "Bạn còn 259 ngày để gặp được bé",
                         ChildrenInfo()),*/
-                    /*createListTileHome(context, LIGHT_BLUE_COLOR, embe, "Bé đã 6 tháng 3 ngày tuổi", "Bạn có thể bắt đầu cho bé ăn dậm", ChildrenInfo()),*/
-                       createListTileHome(
-                           context,
-                           LIGHT_GREY_COLOR,
-                           empty,
-                           "Chưa có thông tin",
-                           "Nhấp vào để thêm thông tin bé/thai kì.",
-                           ChildrenInfo("","")),
+                        /*createListTileHome(context, LIGHT_BLUE_COLOR, embe, "Bé đã 6 tháng 3 ngày tuổi", "Bạn có thể bắt đầu cho bé ăn dậm", ChildrenInfo()),*/
+                        createListTileHome(
+                            context,
+                            LIGHT_GREY_COLOR,
+                            empty,
+                            "Chưa có thông tin",
+                            "Nhấp vào để thêm thông tin bé/thai kì.",
+                            ChildrenInfo("", "")),
                   ),
                   createTitle("Tính năng nổi bật"),
                   SizedBox(
@@ -104,10 +112,12 @@ class _DashBoardState extends State<DashBoard> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        createButtonTextImage("Tiêm chủng", injection),
-                        createButtonTextImage("Lịch khám bệnh", illSchedule),
-                        createButtonTextImage(
-                            "Mốc phát triển", developmentMilestone),
+                        createButtonTextImageLink(
+                            context, "Tiêm chủng", injection, VaccinePrice()),
+                        createButtonTextImageLink(context, "Lịch tiêm chủng",
+                            illSchedule, InjectionSchedule()),
+                        createButtonTextImageLink(context, "Mốc phát triển",
+                            developmentMilestone, BabyDevelopment()),
                       ],
                     ),
                   ),

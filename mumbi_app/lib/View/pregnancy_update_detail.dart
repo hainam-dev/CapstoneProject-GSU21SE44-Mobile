@@ -45,7 +45,7 @@ class Update extends StatelessWidget{
         margin: EdgeInsets.only(top: 200, left: 16),
         child: Row(
           children: <Widget>[
-            createButtonCancel('Hủy'),
+            createButtonCancel(context,'Hủy', context.widget),
             createButtonConfirm('Lưu thông tin')
           ],
         ),

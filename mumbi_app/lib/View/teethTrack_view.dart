@@ -1,7 +1,14 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/View/teethDetail_view.dart';
+import 'package:mumbi_app/View/teethProcess.dart';
+import 'package:mumbi_app/Widget/customComponents.dart';
+import 'package:mumbi_app/helper/data.dart';
+import 'package:mumbi_app/Model/teeth_model.dart';
+
 
 class TrackTeeth extends StatefulWidget {
   const TrackTeeth({Key key}) : super(key: key);
@@ -12,8 +19,48 @@ class TrackTeeth extends StatefulWidget {
 
 class _TrackTeethState extends State<TrackTeeth> {
   // List<CustomerModel> customers = <CustomerModel>[];
-  bool _flag =true;
-  bool _flag2 =true;
+  bool _choose =false;
+  bool _flag1 =false;
+  bool _flag2 =false;
+  bool _flag3 =true;
+  bool _flag4 =true;
+  bool _flag5 =true;
+  bool _flag6 =true;
+  bool _flag7 =true;
+  bool _flag8 =true;
+  bool _flag9 =true;
+  bool original = true;
+  bool original_and_present = true;
+
+  String ht_teeth1= ic_teeth1_ht;
+  String ht_teeth2= ic_teeth2_ht;
+  String ht_teeth3= ic_teeth3_ht;
+  String ht_teeth4= ic_teeth4_ht;
+  String ht_teeth5= ic_teeth5_ht;
+  String ht_teeth6= ic_teeth6_ht;
+  String ht_teeth7= ic_teeth7_ht;
+  String ht_teeth8= ic_teeth8_ht;
+
+  int positon;
+  int lastPress = 0;
+  List<bool> chooseDate = List.generate(10, (index) => false);
+  List<int> _list = List.generate(10, (index) => index);
+  List<TeethModel> listTeeth = <TeethModel>[];
+
+  void chooseTeeth(){
+
+  }
+  // List<Widget> listTeeth(int index){
+  //   return selectedWidget[(index==0) && []];
+  // }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    listTeeth = getListTeeth();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +70,14 @@ class _TrackTeethState extends State<TrackTeeth> {
         actions: [
           Container(
             child: IconButton(
-              icon: Image.asset(ic_tooth),
-              onPressed: () => {},),
+              icon: SvgPicture.asset(ic_tooth),
+              onPressed: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TeethProcess()),
+                ),
+              },),
           )
         ],
         leading: IconButton(
@@ -34,7 +87,7 @@ class _TrackTeethState extends State<TrackTeeth> {
       ),
       body: GestureDetector(
         onTap: () => {
-
+          _choose = !_choose
         },
         child: SingleChildScrollView(
           child: Column(
@@ -44,42 +97,15 @@ class _TrackTeethState extends State<TrackTeeth> {
                 decoration: new BoxDecoration(
                   color: Colors.white,
                 ),
-                child: ListTile(
-                  leading: CircleAvatar(
-                      backgroundColor: Colors.grey,
-                      child: Icon( Icons.assignment_ind_sharp)),
-                  title: Text("Nguyễn Thị Bống"),
-                  onTap: () => {},
-                  trailing: Icon( Icons.keyboard_arrow_down_outlined),
-                ),
+                child: createListTile('Nguyễn Thị Bống')
               ),
               Stack(
                 children: <Widget>[
 
                   // Răng hàm trên
                   Container(child: SvgPicture.asset(img_hamtren, width: 302, height: 189)),
-
-                  // Răng 1
-                  Positioned(
-                    height: 85, width: 85,top: 100, left: -2,
-                    child: Container(
-                      child: IconButton(
-                        icon: SvgPicture.asset(_flag ? ic_teeth1 : ic_teeth1_choose ),
-                        onPressed: () =>
-                            setState(() => _flag = !_flag),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    height: 85, width: 85,top: 60, left: 10,
-                    child: Container(
-                      child: IconButton(
-                        icon: SvgPicture.asset(_flag2 ? ic_teeth2 : ic_teeth2_choose ),
-                        onPressed: () =>
-                            setState(() => _flag2 = !_flag2),
-                      ),
-                    ),
-                  ),
+                  //stateless
+                  createTeeth(ic_teeth1_ht,ic_teeth1_ht_choose,!_choose)
 
 
 

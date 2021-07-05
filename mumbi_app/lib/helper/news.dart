@@ -7,30 +7,34 @@ class News{
   List<ArticleModel> news = [];
 
   Future<void> getNews() async{
-    String url = "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=68888c005ba246debc1e59efffe6d96b";
 
-  var response = await http.get(Uri.parse(url));
+    try{
+      String url = "http://mumbicapstone-dev.ap-southeast-1.elasticbeanstalk.com/api/Guidebooks/GetAllGuidebook";
 
-  var jsonData = convert.jsonDecode(response.body) as Map<String, dynamic>;
+      var response = await http.get(Uri.parse(url));
 
-  if(jsonData['status'] == "ok"){
-    jsonData["articles"].forEach((element){
+      var jsonData = convert.jsonDecode(response.body) as Map<String, dynamic>;
 
-      if(element["urlToImage"] != null && element['description'] != null){
-        ArticleModel articleModel = ArticleModel(
-            title: element['title'],
-          author: element["author"],
-          description: element["description"],
-          url: element["url"],
-          urlToImage: element["urlToImage"],
-          publishedAt:  element["publishedAt"],
-          content: element["content"]
-        );
-        news.add(articleModel);
+      if(jsonData['succeeded'] == true){
+        jsonData["data"].forEach((element){
+
+          if(element["title"] != null && element['guidebookContent'] != null){
+            ArticleModel articleModel = ArticleModel(
+                id: element['id'],
+                title: element['title'],
+                createdBy: element["createdBy"],
+                createdTime: element["createdTime"],
+                imageURL: element["imageURL"],
+                guidebookContent: element["guidebookContent"],
+                status: false
+            );
+            news.add(articleModel);
+          }
+        });
       }
-    });
-  }
 
-
+    } catch(e){
+      print(e.toString());
+    }
   }
 }
