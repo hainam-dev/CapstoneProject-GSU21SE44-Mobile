@@ -4,9 +4,10 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/babyDiaryDetails_view.dart';
 import 'package:mumbi_app/View/bottomNavBar_view.dart';
-import 'package:mumbi_app/View/login_view.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/logout_viewmodel.dart';
+
+import '../app.dart';
 
 Widget createListTile(BuildContext context, String _imageName, String _text) {
   return Card(
@@ -110,11 +111,11 @@ Widget createButtonTextImage(String _text, String _image) {
   );
 }
 
-Widget createButtonTextImageLink(BuildContext context,String _text, String _image, Widget _screen) {
+Widget createButtonTextImageLink(
+    BuildContext context, String _text, String _image, Widget _screen) {
   return GestureDetector(
     onTap: () {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => _screen));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => _screen));
     },
     child: FlatButton(
       shape: RoundedRectangleBorder(

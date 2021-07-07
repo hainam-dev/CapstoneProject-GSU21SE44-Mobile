@@ -21,7 +21,13 @@ class SplashScreenState extends State<SplashScreen>
   }
 
   void navigationPage() {
-    Navigator.of(context).pushReplacementNamed('/LoginScreen');
+    if (this.mounted) {
+      // check whether the state object is in tree
+      setState(() {
+        Navigator.of(context).pushReplacementNamed('/LoginScreen');
+        // make changes here
+      });
+    }
   }
 
   @override
@@ -29,16 +35,20 @@ class SplashScreenState extends State<SplashScreen>
     super.initState();
     animationController = new AnimationController(
         vsync: this, duration: new Duration(seconds: 2));
+
     animation =
         new CurvedAnimation(parent: animationController, curve: Curves.easeOut);
 
     animation.addListener(() => this.setState(() {}));
     animationController.forward();
-
-    setState(() {
-      _visible = !_visible;
-    });
+    _visible = !_visible;
     startTime();
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
   }
 
   @override

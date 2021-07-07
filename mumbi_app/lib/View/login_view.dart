@@ -12,25 +12,6 @@ import 'package:progress_dialog/progress_dialog.dart';
 import '../main.dart';
 import 'bottomNavBar_view.dart';
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: ColorTheme,
-        fontFamily: 'Lato',
-        iconTheme: new IconThemeData(color: Colors.white, size: 24.0),
-      ),
-      home: new SplashScreen(),
-      routes: <String, WidgetBuilder>{
-        //SPLASH_SCREEN: (BuildContext context) => new MapScreen(),
-        '/LoginScreen': (BuildContext context) => new LoginScreen(),
-      },
-    );
-  }
-}
-
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
