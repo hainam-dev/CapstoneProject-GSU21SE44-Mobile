@@ -8,6 +8,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'View/login_view.dart';
 import 'package:flutter/services.dart';
 
+
 final storage = FlutterSecureStorage();
 
 class MyHttpOverrides extends HttpOverrides {
@@ -23,9 +24,11 @@ void main() async {
   HttpOverrides.global = new MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+
   initializeDateFormatting().then((_) => runApp(ProviderScope(
         child: MyApp(),
       )));

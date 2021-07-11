@@ -3,16 +3,25 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/dateTime_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/calculateDate_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CalendarCalculate extends StatefulWidget {
+  final estimatedDate;
+  final function;
+
+  const CalendarCalculate(this.estimatedDate, {this.function});
+
   @override
-  _CalendarCalculateState createState() => _CalendarCalculateState();
+  _CalendarCalculateState createState() => _CalendarCalculateState(this.estimatedDate);
 }
 
 class _CalendarCalculateState extends State<CalendarCalculate> {
   Date _date = new Date();
   TextEditingController _dateController = TextEditingController();
   DateTime selectedDate = DateTime.now();
+  final estimatedDate;
+
+  _CalendarCalculateState(this.estimatedDate);
 
   Future<Null> _selectDate(BuildContext context) async {
     SizeConfig().init(context);
@@ -20,7 +29,7 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
         context: context,
         initialDate: selectedDate,
         firstDate: DateTime(2019, 8),
-        lastDate: DateTime(2100),
+        lastDate: DateTime(2050),
         builder: (BuildContext context, Widget child) {
           return Theme(
             data: ThemeData(
@@ -32,13 +41,27 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
             child: child,
           );
         });
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != selectedDate){
       setState(() {
         selectedDate = picked;
         var date =
             "${picked.toLocal().day}/${picked.toLocal().month}/${picked.toLocal().year}";
         _dateController.text = date;
       });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('GetBirthday', _dateController.text);
+    }
+    widget.function;
+  }
+
+  @override
+  void initState() {
+    if(widget.estimatedDate != ""){
+      _dateController.text = estimatedDate;
+    }else{
+      _dateController.text = "";
+    }
+    super.initState();
   }
 
   @override
@@ -69,10 +92,8 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
                       ),
                     ),
                   ),
-                  validator: (value) {
-                    if (value.isEmpty) return "Please enter a date";
-                    return null;
-                  },
+                    validator:
+                    widget.function
                 ),
               ),
             ),

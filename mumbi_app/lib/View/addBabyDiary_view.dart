@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Widget/createList.dart';
-import 'listBabyDiary_view.dart';
+import 'diary_view.dart';
 
 class AddBabyDiary extends StatefulWidget {
   @override

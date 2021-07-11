@@ -19,16 +19,19 @@ class DadModel{
       this.rhBloodGroup,
       this.momID});
 
-  DadModel.fromJson(Map<String,dynamic> json):
-        id = json['data']['id'],
-        fullName = json['data']['fullName'],
-        imageURL = json['data']['imageURL'],
-        birthday = json['data']['birthday'],
-        phoneNumber = json['data']['phonenumber'],
-        bloodGroup = json['data']['bloodGroup'],
-        rhBloodGroup = json['data']['rhBloodGroup'],
-        momID = json['data']['momId'];
-
+  factory DadModel.fromJson(dynamic json){
+    return DadModel(
+      id: json['data']['id'],
+      fullName: json['data']['fullName'],
+      imageURL: json['data']['imageURL'],
+      birthday: json['data']['birthday'],
+      phoneNumber: json['data']['phonenumber'],
+      bloodGroup: json['data']['bloodGroup'],
+      rhBloodGroup: json['data']['rhBloodGroup'],
+      momID: json['data']['momId'],
+    );
+  }
+  
   Map<String, dynamic> toJson() => {
     'id' : id,
     'fullName' :fullName,

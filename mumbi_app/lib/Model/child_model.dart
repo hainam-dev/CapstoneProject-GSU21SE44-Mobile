@@ -1,79 +1,76 @@
 class ChildModel {
-  String childID;
+  String id;
   String fullName;
   String nickname;
-  String image;
+  String imageURL;
   String gender;
+  String estimatedBornDate;
   String birthday;
   String bloodGroup;
   String rhBloodGroup;
   num fingertips;
+  num headVortex;
+  String momID;
+  bool bornFlag;
   num weight;
   num height;
   num headCircumference;
   num hourSleep;
   num avgMilk;
-  String momID;
-  String calculatedBornDate;
   num femurLength;
   num fetalHeartRate;
   num pregnancyWeek;
-  String pregnancyType;
-  num motherMenstrualCycleTime;
   num motherWeight;
-  bool isBorn;
 
 
-  ChildModel({this.childID,
-    this.fullName,
-    this.nickname,
-    this.image,
-    this.gender,
-    this.birthday,
-    this.bloodGroup,
-    this.rhBloodGroup,
-    this.fingertips,
-    this.weight,
-    this.height,
-    this.headCircumference,
-    this.hourSleep,
-    this.avgMilk,
-    this.momID,
-    this.calculatedBornDate,
-    this.femurLength,
-    this.fetalHeartRate,
-    this.pregnancyWeek,
-    this.pregnancyType,
-    this.motherMenstrualCycleTime,
-    this.motherWeight,
-    this.isBorn});
-
+  ChildModel(
+      {this.id,
+      this.fullName,
+      this.nickname,
+      this.imageURL,
+      this.gender,
+      this.estimatedBornDate,
+      this.birthday,
+      this.bloodGroup,
+      this.rhBloodGroup,
+      this.fingertips,
+      this.headVortex,
+      this.momID,
+      this.bornFlag,
+      this.weight,
+      this.height,
+      this.headCircumference,
+      this.hourSleep,
+      this.avgMilk,
+      this.femurLength,
+      this.fetalHeartRate,
+      this.pregnancyWeek,
+      this.motherWeight});
 
   factory ChildModel.fromJson(dynamic json){
     return ChildModel(
-      childID : json['id'],
+      id : json['id'],
       fullName : json['fullName'],
       nickname : json['nickname'],
-      image : json['image'],
+      imageURL : json['imageURL'],
       gender : json['gender'],
-      birthday : json['birthDay'],
+      estimatedBornDate : json['estimatedBornDate'],
+      birthday : json['birthday'],
       bloodGroup : json['bloodGroup'],
       rhBloodGroup : json['rhBloodGroup'],
       fingertips : json['fingertips'],
+      headVortex: json['headVortex'],
+      momID : json['momId'],
+      bornFlag : json['bornFlag'],
       weight : json['weight'],
       height : json['height'],
       headCircumference : json['headCircumference'],
       hourSleep : json['hourSleep'],
       avgMilk : json['avgMilk'],
-      momID : json['momId'],
-      calculatedBornDate : json['calculatedBornDate'],
       femurLength : json['femurLength'],
       fetalHeartRate : json['fetalHeartRate'],
       pregnancyWeek : json['pregnancyWeek'],
-      pregnancyType : json['pregnancyType'],
-      motherMenstrualCycleTime : json['motherMenstrualCycleTime'],
       motherWeight : json['motherWeight'],
-      isBorn : json["isBorn"],
     );
   }
 
@@ -104,28 +101,27 @@ class ChildModel {
 
   Map<String, dynamic> toJson() =>
       {
-        'id': childID,
+        'id': id,
         'fullName': fullName,
         'nickname': nickname,
-        'image': image,
+        'imageURL': imageURL,
         'gender': gender,
-        'birthDay': birthday,
+        'estimatedBornDate': estimatedBornDate,
+        'birthday': birthday,
         'bloodGroup': bloodGroup,
         'rhBloodGroup': rhBloodGroup,
         'fingertips': fingertips,
+        'headVortex' : headVortex,
+        'momID': momID,
         'weight': weight,
         'height': height,
         'headCircumference': headCircumference,
         'hourSleep': hourSleep,
         'avgMilk': avgMilk,
-        'momID': momID,
-        'calculatedBornDate': calculatedBornDate,
         'femurLength': femurLength,
         'fetalHeartRate': fetalHeartRate,
         'pregnancyWeek': pregnancyWeek,
-        'pregnancyType': pregnancyType,
-        'motherMenstrualCycleTime': motherMenstrualCycleTime,
         'motherWeight': motherWeight,
-        'childrenStatus': isBorn,
+        'childrenStatus': bornFlag == true ? 2 : 1,
       };
 }

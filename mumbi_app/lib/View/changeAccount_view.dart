@@ -4,23 +4,18 @@ import 'package:mumbi_app/Widget/createList.dart';
 
 
 class ChangeAccount extends StatefulWidget {
-  final momModel;
-
-  ChangeAccount(this.momModel);
 
   @override
-  _ChangeAccountState createState() => _ChangeAccountState(this.momModel);
+  _ChangeAccountState createState() => _ChangeAccountState();
 }
 
 class _ChangeAccountState extends State<ChangeAccount> {
-  final momModel;
-  _ChangeAccountState(this.momModel);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Chuyển tài khoản"),
+        title: Text("Chuyển thành viên"),
       ),
       body: SingleChildScrollView(
         child: Column(

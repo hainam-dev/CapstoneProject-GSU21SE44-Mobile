@@ -50,6 +50,16 @@ class _CustomStatusDropdownState extends State<CustomStatusDropdown> {
           ),
           items: widget.listItems,
           onChanged: widget.function,
+          validator: (value) {
+            if (value == null) {
+              if(title == "Trạng thái (*)"){
+                return "Chọn trạng thái cho bé";
+              }else if (title == 'Giới tính (*)'){
+                return "Chọn giới tính cho bé";
+              }
+            }
+            return null;
+          },
           // value: _value,
           isExpanded: true,
         ),

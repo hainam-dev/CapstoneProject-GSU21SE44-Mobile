@@ -1,14 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Model/news_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/baby_development.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
+import 'package:mumbi_app/View/community_view.dart';
+import 'package:mumbi_app/View/newsDetails_view.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
-import 'package:mumbi_app/View/injectionSchedule.dart';
 import 'package:mumbi_app/View/vaccinePrice_compare.dart';
+import 'package:mumbi_app/ViewModel/news_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
+import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:mumbi_app/Widget/customText.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'drawer_view.dart';
@@ -20,14 +26,6 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
-  final List _listNews = [
-    'https://image.winudf.com/v2/image/Y29tLmJta3NzZXJ2aWNlcy5tb21hbmRiYWJ5d2FsbHBhcGVyc2hkX3NjcmVlbl84XzE1NDAwOTcwMDRfMDUy/screen-8.jpg?fakeurl=1&type=.jpg',
-    'https://ehospice.com/wp-content/uploads/2018/07/5b815c14d2e7c6a76e0d161c0f70d6a1-1-770x500.jpg',
-    'https://images.ctfassets.net/9l3tjzgyn9gr/photo-226873/ddfbba301f774e587ad73311d1c15368/226873-mom-and-baby.jpg?fm=jpg&fl=progressive&q=50&w=1200',
-    'https://femina.wwmindia.com/content/2020/jul/baby61009062xl1594802348.jpg',
-    'https://image.freepik.com/free-photo/young-mother-taking-care-her-little-baby-girl-beautiful-mom-her-daughter-indoors-bedroom-loving-family-attractive-mum-holding-her-child_136813-261.jpg',
-    'https://images.ctfassets.net/9l3tjzgyn9gr/3HQ9DOnGNgAPXtH8W1xpuS/08e4de3bec3ef8fbcc46272e011a1f6e/newborn-baby-mommy-and-son-mom-and-baby-new-mother_t20_eoz0WW.jpg?w=1800&q=50&fm=jpg&fl=progressive',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +45,7 @@ class _DashBoardState extends State<DashBoard> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                ChangeAccount(model.momModel)));
+                                ChangeAccount()));
                   },
                   child: Stack(
                     children: [
@@ -61,7 +59,7 @@ class _DashBoardState extends State<DashBoard> {
                                 child: CircleAvatar(
                                   radius: 17,
                                   backgroundImage:
-                                      NetworkImage(model.momModel.imageURL),
+                                      CachedNetworkImageProvider(model.momModel.imageURL),
                                 ),
                               ),
                             )
@@ -78,13 +76,13 @@ class _DashBoardState extends State<DashBoard> {
         child: Column(
           children: [
             Container(
-              height: SizeConfig.safeBlockVertical * 43,
+              height: SizeConfig.safeBlockVertical * 35,
               padding: EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(bottom: 16),
+                    padding: EdgeInsets.only(bottom: 10),
                     height: SizeConfig.safeBlockVertical * 14,
                     child:
                         /*createListTileHome(
@@ -105,42 +103,48 @@ class _DashBoardState extends State<DashBoard> {
                   ),
                   createTitle("Tính năng nổi bật"),
                   SizedBox(
-                    height: SizeConfig.safeBlockVertical * 2,
+                    height: SizeConfig.safeBlockVertical * 1,
                   ),
                   Container(
-                    height: SizeConfig.safeBlockVertical * 13,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         createButtonTextImageLink(
                             context, "Tiêm chủng", injection, VaccinePrice()),
-                        createButtonTextImageLink(context, "Lịch tiêm chủng",
-                            illSchedule, InjectionSchedule()),
+                        createButtonTextImageLink(context, "Cộng đồng",
+                            community, Community()),
                         createButtonTextImageLink(context, "Mốc phát triển",
                             developmentMilestone, BabyDevelopment()),
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   createTitle("Tin tức mới nhất"),
                 ],
               ),
             ),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                crossAxisSpacing: 3,
-                mainAxisSpacing: 3,
-                children: _listNews
-                    .map((item) => createNewsItem(
-                        item,
-                        "Promum Diamond - vitamin tổng hợp cho bà bầu",
-                        readIcon,
-                        "10 phút đọc"))
-                    .toList(),
+            ScopedModel(
+              model: NewsViewModel.getInstance(),
+              child: ScopedModelDescendant(builder: (BuildContext context, Widget child, NewsViewModel model) {
+                model.getAllNews();
+                return model.newsListModel == null
+                    ? loadingProgress()
+                    : Flexible(
+                  child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: SizeConfig.safeBlockVertical * 30,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5),
+                      itemCount: model.newsListModel.length,
+                      itemBuilder: (BuildContext context, index) {
+                        NewsModel newsModel = model.newsListModel[index];
+                        return createNewsItem(newsModel.imageURL, newsModel.title,
+                            newsModel.estimatedFinishTime.toString(),NewsDetail(newsModel));
+                      }),
+                );
+              },
               ),
             ),
           ],
@@ -150,39 +154,61 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   Widget createNewsItem(
-      String _imageURL, String _title, String _icon, String _estimatedTime) {
-    return Card(
-      elevation: 2,
-      child: Column(
-        children: [
-          ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
-              child: Image.network(_imageURL)),
-          Padding(
-            padding: EdgeInsets.fromLTRB(8, 0, 5, 0),
-            child: Text(
-              _title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 13, fontFamily: 'Lato'),
+      String _imageURL, String _title,String _estimatedTime, Widget _screen) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => _screen));
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(2.0),
+        child: Card(
+          elevation: 1.6,
+          child: Scaffold(
+            backgroundColor: WHITE_COLOR,
+            body: SingleChildScrollView(
+              physics: NeverScrollableScrollPhysics(),
+              child: ClipRRect(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(6.0)),
+                      child: CachedNetworkImage(imageUrl: _imageURL)),
             ),
-          ),
-          Expanded(
-            child: Row(
+            bottomNavigationBar:
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Image(
-                  image: AssetImage(_icon),
-                  height: 30,
-                  width: 30,
+                SizedBox(height: 5,),
+                Flexible(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 8,right: 4),
+                    child: Text(
+                      _title,
+                      textAlign: TextAlign.left,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
-                CustomText(
-                  text: _estimatedTime,
-                  size: 13.0,
+                Row(
+                  children: [
+                    Image(
+                      image: AssetImage(readIcon),
+                      height: 30,
+                      width: 30,
+                    ),
+                    Text(
+                      _estimatedTime + " phút đọc",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 13,color: LIGHT_DARK_GREY_COLOR),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

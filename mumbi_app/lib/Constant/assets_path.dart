@@ -31,9 +31,9 @@ final String myFamily = _getImagePath('giadinhcuatoi.png');
 final String hinhcon = _getImagePath('hinhcon.jpg');
 final String hinhembe1 = _getImagePath('hinhembe1.jpg');
 final String hotline = _getImagePath('hotline.png');
-final String diaryFrame = _getImagePath('khungnhatki.png');
+final String diaryFrame = _getImagePath('khungnhatki.svg');
 final String empty = _getImagePath('koco.png');
-final String illSchedule = _getImagePath('lichkhambenh.png');
+final String community = _getImagePath('congdong.png');
 final String contact = _getImagePath('lienhehotro.png');
 final String developmentMilestone = _getImagePath('mocphattrien.png');
 final String teethGrow = _getImagePath('mocrang.png');
@@ -54,6 +54,7 @@ final String ic_needle = _getImagePath('needle.svg');
 final String btn_plus = _getImagePath('btn_plus.svg');
 
 final String chooseImage = "https://firebasestorage.googleapis.com/v0/b/mumbi-app-84d15.appspot.com/o/DefautImage%2FImage.png?alt=media&token=a50383eb-c411-4747-8fa3-0fa9916cd70c";
+final String defaultImage = "https://firebasestorage.googleapis.com/v0/b/mumbi-app-84d15.appspot.com/o/DefautImage%2FdefaultAvatar.png?alt=media&token=7b5bedcc-5330-48af-a317-9e846cc65a58";
 
 final String checked = _getImagePath("checked.png");
 final String unchecked = _getImagePath("uncheck.png");
