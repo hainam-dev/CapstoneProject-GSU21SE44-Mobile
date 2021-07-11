@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Constant/savePost.dart';
+import 'package:mumbi_app/Constant/saveKey.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Model/article_model.dart';
 import 'package:mumbi_app/Model/category_model.dart';
@@ -90,22 +90,6 @@ class _GuideBookState extends State<GuideBook> {
             children: <Widget>[
               ///Blogs
               BlogTile(),
-              // ListView.separated(
-              //     separatorBuilder: (context, index) => Divider(),
-              //     physics: const NeverScrollableScrollPhysics(),
-              //     shrinkWrap: true,
-              //     scrollDirection: Axis.vertical,
-              //     itemCount: 7,
-              //     itemBuilder: (context, index) {
-              //       return BlogTiles(
-              //         id: articles[index].id,
-              //         title: articles[index].title,
-              //         url: articles[index].url,
-              //         dateTime: articles[index].publishedAt,
-              //         imageUrl: articles[index].urlToImage,
-              //         desc: articles[index].description,
-              //       );
-              //     }),
 
               //Kien thuc chung
               Column(
@@ -186,33 +170,6 @@ class _GuideBookState extends State<GuideBook> {
   }
 }
 
-// class BlogTiles extends StatelessWidget {
-//   final String imageUrl, title, desc, url, dateTime, id;
-//   BlogTiles(
-//       {@required this.imageUrl,
-//       @required this.title,
-//       @required this.desc,
-//       @required this.url,
-//       @required this.dateTime,
-//       @required this.id});
-//   var storage = FlutterSecureStorage();
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Consumer(builder:(context,watch, child){
-//       final saveInstance = watch(saveListProvider);
-//     });
-//   }
-//
-//   bool isExistInSave(List<ArticleModel> state, ArticleModel articleModel) {
-//     bool found = false;
-//     state.forEach((element) {
-//       if(element.id == articleModel.id)
-//         found = true;
-//     });
-//     return found;
-//   }
-// }
 
 class BlogTile extends StatefulWidget {
   const BlogTile({Key key}) : super(key: key);
@@ -319,16 +276,6 @@ class _BlogTileState extends State<BlogTile> {
                                                 imageURL: articles[index].imageURL,
                                               );
 
-
-                                              // if(isExistInSave(bookmarkBloc.list, articleModel)){
-                                              //   bookmarkBloc.list.remove(articleModel);
-                                              // } else {
-                                              //   bookmarkBloc.add(articleModel);
-                                              //   var string = json.encode(articleModel.toJson());
-                                              //   await storage.write(
-                                              //       key: saveKey,
-                                              //       value: string);
-                                              // }
                                               var saveInstance = context.read(saveListProvider).state;
                                               print(saveInstance.toString());
 
@@ -379,9 +326,6 @@ class _BlogTileState extends State<BlogTile> {
     return found;
   }
 }
-
-
-Widget buildInsertButton() => ElevatedButton(onPressed: () => {});
 
 class CategortTitle extends StatelessWidget {
   final imageUrl, categoryName, dateTime;

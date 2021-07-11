@@ -64,8 +64,6 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.blockSizeVertical * 7,
-      width: SizeConfig.blockSizeHorizontal * 90,
       child: GestureDetector(
         onTap: () => _selectDate(context),
         child: AbsorbPointer(

@@ -1,4 +1,5 @@
 import 'package:charts_flutter/flutter.dart';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,21 +9,32 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
+import 'package:mumbi_app/Model/teeth_model.dart';
+import 'package:mumbi_app/ViewModel/teeth_viewmodel.dart';
 
 import 'package:mumbi_app/Widget/calendarBirthday.dart';
+import 'package:mumbi_app/Widget/customBottomButton.dart';
+import 'package:mumbi_app/Widget/customStatusDropdown.dart';
+import 'package:mumbi_app/Widget/customText.dart';
 import 'package:mumbi_app/Widget/imagePicker.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class TeethDetail extends StatefulWidget {
-  const TeethDetail({Key key}) : super(key: key);
+  final model;
+  final action;
+  TeethDetail(this.action,this.model);
 
   @override
   _TeethDetailState createState() => _TeethDetailState();
 }
 
 class _TeethDetailState extends State<TeethDetail> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   File _image;
   final _picker = ImagePicker();
+  TeethModel teethModel;
+  String update = "Update";
 
   _imgFromCamera() async {
     final image =
@@ -81,6 +93,14 @@ class _TeethDetailState extends State<TeethDetail> {
   }
 
   @override
+  void initState() {
+    if(widget.action != update){
+      teethModel = TeethModel();
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -94,53 +114,119 @@ class _TeethDetailState extends State<TeethDetail> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.only(left: 16, right: 16, top: 12),
-          child: Column(
-            // mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              CalendarBirthday('Ngày', ""),
-              Container(
-                padding: EdgeInsets.only(top: 12),
-                child: TextField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Răng'),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 12),
-                child: TextField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Trạng thái(*)'),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 12),
-                child: TextField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Ghi chú (nếu có)'),
-                ),
-              ),
-              _pickerAvartar(context),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  padding: EdgeInsets.only(top: 200, bottom: 12),
-                  child: Row(
-                    children: <Widget>[
-                      createButtonCancel(context, 'Hủy', context.widget),
-                      createButtonConfirm('Cập nhật')
-                    ],
+        child: ScopedModel(
+        model: TeethViewModel.getInstance(),
+          child: Form(
+            key: formKey,
+            child: Container(
+              padding: EdgeInsets.only(left: 16, right: 16, top: 12),
+              child: Column(
+                // mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  CalendarBirthday('Ngày', widget.action == update ? widget.model.birthday : "",function: (value) {
+                    /*if (value.isEmpty) {
+                                              return "Vui lòng nhập ngày sinh";
+                                            } else {*/
+                    setState(() {
+                    if(widget.action == update){
+                    widget.model.growTime = value;
+                    }else{
+                    teethModel.growTime = value;
+                    }
+                    });
+                    return null;},),
+                  createTextFeildDisable("Răng","ahihi", (hhhh){
+
+                  }),
+                  Container(
+                    padding: EdgeInsets.only(top: 12),
+                    child: new CustomStatusDropdown(
+                      'Trạng thái (*)',
+                      itemsStatus,
+                      widget.action == update ? widget.model.grownFlag : null,
+                      function: (value) {
+                        setState(() {
+                          if(widget.action == update){
+                            widget.model.grownFlag = value;
+                          }else{
+                            teethModel.grownFlag = value;
+                          }
+                          },
+                        );
+                      },
+                    ),
                   ),
-                ),
-              )
-            ],
+                  createTextFeild("Ghi chú (nếu có)", "Nhập ghi chú cho răng",widget.action == update ? widget.model.note : "",
+                          (value){
+                        setState(() {
+                          if(widget.action == update){
+                            widget.model.note = value;
+                          }else{
+                            teethModel.name = value;
+                          }
+                        });
+                      }),
+                  _pickerAvartar(context),
+                ],
+              ),
+            ),
           ),
         ),
       ),
+      bottomNavigationBar: createBottomNavigationBar(context, "Hủy", "Cập nhật",
+          () async {
+          if(formKey.currentState.validate()){
+          print("OK");
+          bool result = false;
+
+          // if(appbarTitle == momTitle){
+          //   result = await TeethViewModel().updateTeeth(chi, widget.model);
+          }else{
+            // if(widget.action == update){
+            //   result = await DadViewModel().updateDad(widget.model);
+            // }else{
+            //   result = await DadViewModel().addDad(dadModel);
+            // }
+          }
+
+        }
+
+      ),
     );
   }
+
+  final List<DropdownMenuItem<String>> itemsStatus = [
+    DropdownMenuItem(
+      value: 'Đã mọc',
+      child: new Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: new CustomText(
+              text: 'Đã mọc',
+            ),
+          ),
+        ],
+      ),
+    ),
+    DropdownMenuItem(
+      value: 'Chưa mọc',
+      child: new Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: new CustomText(
+              text: 'Chưa mọc',
+            ),
+          ),
+        ],
+      ),
+    ),
+  ];
 
   Widget _pickerAvartar(BuildContext context) {
     return GestureDetector(

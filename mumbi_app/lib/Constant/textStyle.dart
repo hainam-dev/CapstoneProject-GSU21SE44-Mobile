@@ -5,6 +5,7 @@ const TextStyle SEMIBOLD_13 = TextStyle(fontSize: 14, fontWeight: FontWeight.w60
 const TextStyle SEMIBOLDWHITE_13 = TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white);
 const TextStyle BOLD_16 = TextStyle(fontSize: 16, fontWeight: FontWeight.w700);
 const TextStyle SEMIBOLD_16 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400);
+const TextStyle SEMIBOLD_18 = TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
 const TextStyle SEMIBOLDPINK_16 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: PINK_COLOR);
 const TextStyle BOLDPINK_16 = TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: PINK_COLOR);
 const TextStyle REG_13 = TextStyle(fontSize: 13, fontWeight: FontWeight.w400);
