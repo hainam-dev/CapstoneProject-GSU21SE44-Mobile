@@ -6,21 +6,24 @@ import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/teeth_model.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
 
-class TeethRepository{
-  static Future<dynamic> apiGetTeethByTeethId(int teethId) async{
+class TeethRepository {
+  static Future<dynamic> apiGetTeethByTeethId(int teethId) async {
     var response = await http.get(
       Uri.parse("${GET_TOOTH_BY_ID}${teethId}"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
-      },);
+      },
+    );
     if (response.statusCode == 200) {
       return response.body;
     }
   }
 
-  static Future<dynamic> apiUpdateTeeth(ChildModel childModel, TeethModel teethModel) async {
+  static Future<dynamic> apiUpdateTeeth(
+      ChildModel childModel, TeethModel teethModel) async {
     var response = await http.put(
-        Uri.parse("${UPDATE_TOOTH_BY_ID}${childModel.childID}/${teethModel.toothId}"),
+        Uri.parse(
+            "${UPDATE_TOOTH_BY_ID}${childModel.id}/${teethModel.toothId}"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },

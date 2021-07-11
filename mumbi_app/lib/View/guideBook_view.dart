@@ -47,13 +47,11 @@ class _GuideBookState extends State<GuideBook> {
   //   });
   // }
 
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     categories = getCategories();
-
   }
 
   @override
@@ -73,11 +71,12 @@ class _GuideBookState extends State<GuideBook> {
               child: IconButton(
                   icon: SvgPicture.asset(bookmark),
                   onPressed: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => GuidebookSave()),
-                    )
-                  }),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => GuidebookSave()),
+                        )
+                      }),
             ),
           ),
         ],
@@ -85,7 +84,9 @@ class _GuideBookState extends State<GuideBook> {
       drawer: getDrawer(context),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16,),
+          padding: EdgeInsets.symmetric(
+            horizontal: 16,
+          ),
           child: Column(
             children: <Widget>[
               ///Blogs
@@ -170,7 +171,6 @@ class _GuideBookState extends State<GuideBook> {
   }
 }
 
-
 class BlogTile extends StatefulWidget {
   const BlogTile({Key key}) : super(key: key);
 
@@ -198,130 +198,171 @@ class _BlogTileState extends State<BlogTile> {
     super.initState();
     getNews();
   }
+
   // var storage = FlutterSecureStorage();
   @override
   Widget build(BuildContext context) {
     // var bookmarkBloc = Provider.of<ArticleList>(context);
     return _loading
         ? Center(
-      child: Container(
-        child: CircularProgressIndicator(),
-      ),
-    )
-        :
-    Container(
-      padding: EdgeInsets.only(top: 16),
-      child: ListView.separated(
-          separatorBuilder: (context, index) => Divider(),
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          itemCount: 7,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ArticleView(
-                          blogUrl: articles[index].guidebookContent,
-                        ))
-                );
-              },
-              child: Container(
-                  child: Stack(
-                    children: <Widget>[
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          articles[index].imageURL,
-                          height: 80,
-                          width: 80,
-                          fit: BoxFit.cover,
+            child: Container(
+              child: CircularProgressIndicator(),
+            ),
+          )
+        : Container(
+            padding: EdgeInsets.only(top: 16),
+            child: ListView.separated(
+                separatorBuilder: (context, index) => Divider(),
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: 6,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ArticleView(
+                                    blogUrl: articles[index].guidebookContent,
+                                  )));
+                    },
+                    child: Container(
+                        child: Stack(
+                      children: <Widget>[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            articles[index].imageURL,
+                            height: 80,
+                            width: 80,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                      Container(
-                        width: SizeConfig.blockSizeVertical * 70,
-                        padding: EdgeInsets.only(left: 90,),
-                        child: Stack(children: [
-                          Column(
-                            // crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  child: Text(
-                                    articles[index].title,
-                                    style: BOLD_16,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
+                        Container(
+                          width: SizeConfig.blockSizeVertical * 70,
+                          padding: EdgeInsets.only(
+                            left: 90,
+                          ),
+                          child: Stack(children: [
+                            Column(
+                                // crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    child: Text(
+                                      articles[index].title,
+                                      style: BOLD_16,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
                                   ),
-                                ),
-                                Stack(children: [
-                                  Column(
-                                    children: <Widget>[
-                                      Row(
-                                        children: [
-                                          Text(
-                                            articles[index].createdTime,
-                                            style: REG_13,
-                                          ),
-                                          IconButton(
-                                            icon: articles[index].status == false ? SvgPicture.asset(bookmark) : SvgPicture.asset(bookmark_choose),
-                                            onPressed: () async{
-                                              ArticleModel articleModel = new ArticleModel(
-                                                id: articles[index].id,
-                                                title: articles[index].title,
-                                                guidebookContent: articles[index].guidebookContent,
-                                                createdBy: articles[index].createdBy,
-                                                createdTime: articles[index].createdTime,
-                                                imageURL: articles[index].imageURL,
-                                              );
+                                  Stack(children: [
+                                    Column(
+                                      children: <Widget>[
+                                        Row(
+                                          children: [
+                                            Text(
+                                              articles[index].createdTime,
+                                              style: REG_13,
+                                            ),
+                                            IconButton(
+                                              icon: articles[index].status ==
+                                                      false
+                                                  ? SvgPicture.asset(bookmark)
+                                                  : SvgPicture.asset(
+                                                      bookmark_choose),
+                                              onPressed: () async {
+                                                ArticleModel articleModel =
+                                                    new ArticleModel(
+                                                  id: articles[index].id,
+                                                  title: articles[index].title,
+                                                  guidebookContent:
+                                                      articles[index]
+                                                          .guidebookContent,
+                                                  createdBy:
+                                                      articles[index].createdBy,
+                                                  createdTime: articles[index]
+                                                      .createdTime,
+                                                  imageURL:
+                                                      articles[index].imageURL,
+                                                );
 
-                                              var saveInstance = context.read(saveListProvider).state;
-                                              print(saveInstance.toString());
+                                                var saveInstance = context
+                                                    .read(saveListProvider)
+                                                    .state;
+                                                print(saveInstance.toString());
 
-                                              if(isExistInSave(saveInstance.state, articleModel)){
-                                                context.read(saveListProvider).state.remove(articleModel);
-                                                Scaffold.of(context).showSnackBar(SnackBar(content: Text("Đã bỏ lưu", textAlign: TextAlign.right,), duration: Duration(seconds: 1),));
-                                                print('cancel');
-                                                articles[index].status = false;
-                                              } else {
-                                                context.read(saveListProvider).state.add(articleModel);
-                                                print('SAVE');
-                                                // print(articleModel.toJson() as List<dynamic>);
-                                                articles[index].status = true;
-                                                Scaffold.of(context).showSnackBar(SnackBar(content: Text("Đã lưu",textAlign: TextAlign.right), duration: Duration(seconds: 1),));
-                                              }
-                                              var string = json.encode(context.read(saveListProvider).state.state);
-                                              // var stringMap  = string.map((model) => ArticleModel.fromJson(model)).toList;
-                                              await storage.write(
-                                                  key: saveKey,
-                                                  value: string);
-                                              print('DA ENCODE');
-                                              print(storage.read(key: saveKey).toString());
-                                              setState(() {
-
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                ]),
-                              ])
-                        ]),
-                      )
-                    ],
-                  )),
-            );
-          }),
-    );
+                                                if (isExistInSave(
+                                                    saveInstance.state,
+                                                    articleModel)) {
+                                                  context
+                                                      .read(saveListProvider)
+                                                      .state
+                                                      .remove(articleModel);
+                                                  Scaffold.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                      "Đã bỏ lưu",
+                                                      textAlign:
+                                                          TextAlign.right,
+                                                    ),
+                                                    duration:
+                                                        Duration(seconds: 1),
+                                                  ));
+                                                  print('cancel');
+                                                  articles[index].status =
+                                                      false;
+                                                } else {
+                                                  context
+                                                      .read(saveListProvider)
+                                                      .state
+                                                      .add(articleModel);
+                                                  print('SAVE');
+                                                  // print(articleModel.toJson() as List<dynamic>);
+                                                  articles[index].status = true;
+                                                  Scaffold.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                    content: Text("Đã lưu",
+                                                        textAlign:
+                                                            TextAlign.right),
+                                                    duration:
+                                                        Duration(seconds: 1),
+                                                  ));
+                                                }
+                                                var string = json.encode(context
+                                                    .read(saveListProvider)
+                                                    .state
+                                                    .state);
+                                                // var stringMap  = string.map((model) => ArticleModel.fromJson(model)).toList;
+                                                await storage.write(
+                                                    key: saveKey,
+                                                    value: string);
+                                                print('DA ENCODE');
+                                                print(storage
+                                                    .read(key: saveKey)
+                                                    .toString());
+                                                setState(() {});
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    )
+                                  ]),
+                                ])
+                          ]),
+                        )
+                      ],
+                    )),
+                  );
+                }),
+          );
   }
+
   bool isExistInSave(List<ArticleModel> state, ArticleModel articleModel) {
     bool found = false;
     state.forEach((element) {
-      if(element.id == articleModel.id)
-        found = true;
+      if (element.id == articleModel.id) found = true;
     });
     return found;
   }

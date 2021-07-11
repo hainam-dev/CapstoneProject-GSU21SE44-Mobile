@@ -11,7 +11,8 @@ class CustomStatusDropdown extends StatefulWidget {
   final listItems;
   final function;
   final status;
-  const CustomStatusDropdown(this.title, this.listItems, this.status, {this.function});
+  const CustomStatusDropdown(this.title, this.listItems, this.status,
+      {this.function});
 
   @override
   _CustomStatusDropdownState createState() =>
@@ -30,7 +31,8 @@ class _CustomStatusDropdownState extends State<CustomStatusDropdown> {
 
   Widget _buildStatus(String title, List<DropdownMenuItem> listItems) =>
       Container(
-
+        height: SizeConfig.blockSizeVertical * 7.5,
+        width: SizeConfig.blockSizeHorizontal * 90,
         child: new DropdownButtonFormField<String>(
           value: widget.status,
           decoration: InputDecoration(
@@ -51,9 +53,9 @@ class _CustomStatusDropdownState extends State<CustomStatusDropdown> {
           onChanged: widget.function,
           validator: (value) {
             if (value == null) {
-              if(title == "Trạng thái (*)"){
+              if (title == "Trạng thái (*)") {
                 return "Chọn trạng thái cho bé";
-              }else if (title == 'Giới tính (*)'){
+              } else if (title == 'Giới tính (*)') {
                 return "Chọn giới tính cho bé";
               }
             }
