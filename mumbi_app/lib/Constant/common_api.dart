@@ -11,12 +11,17 @@ final String ADD_DAD = getApiPath("/api/DadInfo/AddDadInfo");
 final String UPDATE_DAD = getApiPath("/api/DadInfo/UpdateDadInfo/");
 final String DELETE_DAD = getApiPath("/api/DadInfo/DeleteDadInfo/");
 
-final String ADD_CHILD = getApiPath("/api/Childrens/AddChildren");
-final String GET_CHILD_BY_ID = getApiPath("/api/Childrens/GetChildrenBy/");
-final String GET_CHILD_BY_MOM = getApiPath("/api/Childrens/GetChildrenByMom/");
-final String UPDATE_CHILD_INFO = getApiPath("/api/Childrens/updateChildrenInformation/");
-final String DELETE_CHILD = getApiPath("/api/Childrens/DeleteChildren/");
+final String ADD_CHILD = getApiPath("/api/ChildInfo/AddChildInfo");
+final String GET_CHILD_BY_ID = getApiPath("/api/ChildInfo/GetChildInfoById/");
+final String GET_CHILD_BY_MOM = getApiPath("/api/ChildInfo/GetChildInfoByMomId/");
+final String UPDATE_CHILD_INFO = getApiPath("/api/ChildInfo/UpdateChildInfo/");
+final String DELETE_CHILD = getApiPath("/api/ChildInfo/DeleteChildInfo/");
 
+final String GET_ALL_NEWS = getApiPath("/api/News/GetAllNews");
+
+final String GET_ALL_DIARY_OF_CHILD = getApiPath("/api/Diaries/GetDiaryOfChildren/");
+final String GET_ALL_PUBLIC_DIARY = getApiPath("/api/Diaries/GetDiaryPublic");
+final String DELETE_DIARY = getApiPath("/api/Diaries/DeleteDiary/");
 
 final String GET_TOOTH_BY_ID = getApiPath("/api/ToothInfo/GetToothInfoBy/");
 final String UPDATE_TOOTH_BY_ID = getApiPath("/api/ToothInfo/GetToothByChildId/");

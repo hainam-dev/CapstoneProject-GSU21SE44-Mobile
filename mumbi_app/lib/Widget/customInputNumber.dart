@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 
 class CustomInputNumber extends StatefulWidget {
   final title;
-  final phoneNumber;
+  final number;
   final function;
-  const CustomInputNumber(this.title, this.phoneNumber, {this.function});
+  final checkValidation;
+  const CustomInputNumber(this.title, this.number, {this.function, this.checkValidation});
   @override
-  _CustomInputNumberState createState() => _CustomInputNumberState(title, phoneNumber);
+  _CustomInputNumberState createState() => _CustomInputNumberState(title, number);
 }
 
 class _CustomInputNumberState extends State<CustomInputNumber> {
   String title;
-  String phoneNumber = '';
-  _CustomInputNumberState(this.title, this.phoneNumber);
+  String number = '';
+  _CustomInputNumberState(this.title, this.number);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class _CustomInputNumberState extends State<CustomInputNumber> {
   Widget _buildPhoneNumber(String title) => Container(
         height: SizeConfig.blockSizeVertical * 8,
         child: TextFormField(
-          initialValue: phoneNumber,
+          initialValue: number,
           decoration: InputDecoration(
             labelStyle: TextStyle(color: PINK_COLOR),
             labelText: title,
@@ -39,19 +41,32 @@ class _CustomInputNumberState extends State<CustomInputNumber> {
             ),
           ),
           validator: (value) {
-            final pattern = r'(84|0[3|5|7|8|9])+([0-9]{8})\b';
-            final regExp = RegExp(pattern);
+            final phonePattern = r'(84|0[3|5|7|8|9])+([0-9]{8})\b';
+            final regPho = RegExp(phonePattern);
             if (value.isEmpty) {
               return null;
-            } else if (!regExp.hasMatch(value)) {
+            } else if (title == 'Số điện thoại' && !regPho.hasMatch(value)) {
               return 'Định dạng Số điện thoại không đúng.';
+            } else if (title == 'Xoáy đầu' && !isBetween(int.parse(value), 0, 4 ) ) {
+              return 'Số xoáy đầu từ 0 đến 4.';
+            } else if (title == 'Số vân tay' && !isBetween(int.parse(value), 0, 10) ) {
+              return 'Số vân tay từ 0 đến 10.';
             } else {
               return null;
             }
           },
-          onSaved: (value) => setState(() => phoneNumber = value),
           onChanged: widget.function,
-          keyboardType: TextInputType.phone,
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         ),
       );
+
+  bool isBetween(int value, int min, int max){
+    if(value <= max && value >= min){
+      return true;
+    }
+    return false;
+  }
+
+
 }

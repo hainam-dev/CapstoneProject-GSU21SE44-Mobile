@@ -36,8 +36,6 @@ class _ParentInfoState extends State<ParentInfo> {
   String momTitle = "Thông tin mẹ";
   DadModel dadModel;
 
-  get actions => null;
-
   @override
   void initState() {
     if(widget.action != update){
@@ -98,7 +96,8 @@ class _ParentInfoState extends State<ParentInfo> {
                             });
                           },),
                           const SizedBox(height: 12),
-                          CalendarBirthday('Ngày sinh', widget.action == update ? widget.model.birthday : "",function: (value) {
+                          CalendarBirthday('Ngày sinh', widget.action == update ? widget.model.birthday : "",
+                            function: (value) {
                             /*if (value.isEmpty) {
                               return "Vui lòng nhập ngày sinh";
                             } else {*/
@@ -111,7 +110,8 @@ class _ParentInfoState extends State<ParentInfo> {
                               });
                               return null;
                             /*}*/
-                          },),
+                          },
+                          ),
                           const SizedBox(height: 17),
                           CustomInputNumber('Số điện thoại', widget.action == update ? widget.model.phoneNumber : "", function: (value){
                             setState(() {
@@ -160,6 +160,10 @@ class _ParentInfoState extends State<ParentInfo> {
                               ),
                             ],
                           ),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  bottom: MediaQuery.of(context).viewInsets.bottom / 2)
+                          ),
                         ],
                       ),
                     ),
@@ -189,6 +193,10 @@ class _ParentInfoState extends State<ParentInfo> {
                 result = await DadViewModel().updateDad(widget.model);
               }else{
                 result = await DadViewModel().addDad(dadModel);
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => MyFamily()));
               }
             }
             showResult(context,result);
@@ -204,6 +212,10 @@ class _ParentInfoState extends State<ParentInfo> {
         bool result = false;
         result = await DadViewModel().deleteDad(widget.model.id);
         Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MyFamily()));
+        showResult(context, result);
         break;
     }
   }

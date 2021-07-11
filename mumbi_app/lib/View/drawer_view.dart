@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
@@ -10,7 +11,8 @@ import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'contact_view.dart';
-import 'listBabyDiary_view.dart';
+import 'guideBook_save.dart';
+import 'diary_view.dart';
 import 'myFamily_view.dart';
 
 Widget getDrawer(BuildContext context) {
@@ -50,7 +52,7 @@ Widget getDrawer(BuildContext context) {
                         leading: CircleAvatar(
                           backgroundColor: Colors.transparent,
                           backgroundImage:
-                              NetworkImage(model.momModel.imageURL),
+                          CachedNetworkImageProvider(model.momModel.imageURL),
                         ),
                         title: Text(
                           model.momModel.fullName,
@@ -91,7 +93,7 @@ Widget getDrawer(BuildContext context) {
           SizedBox(
             height: 1,
           ),
-          createListTileNavigator(context, saved, 'Đã lưu', MyFamily()),
+          createListTileNavigator(context, saved, 'Đã lưu', GuidebookSave()),
           SizedBox(
             height: 1,
           ),

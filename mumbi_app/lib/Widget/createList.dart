@@ -1,6 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Model/diary_model.dart';
+import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/babyDiaryDetails_view.dart';
 import 'package:mumbi_app/View/bottomNavBar_view.dart';
@@ -125,13 +129,12 @@ Widget createButtonTextImageLink(
       color: Colors.transparent,
       padding: EdgeInsets.all(10.0),
       child: Column(
-        // Replace with a Row for horizontal icon + text
         children: <Widget>[
-          Image(image: AssetImage(_image)),
+          Image(image: AssetImage(_image),filterQuality: FilterQuality.high,),
           SizedBox(height: 8),
           Text(
             _text,
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600),
           )
         ],
       ),
@@ -315,109 +318,116 @@ Widget createListTileNavigatorNoTrailing(
 Widget createEmptyDiary(BuildContext context) {
   return Align(
     alignment: Alignment.topCenter,
-    child: Column(
-      children: [
-        SizedBox(
-          height: 10,
-        ),
-        Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-          elevation: 0,
-          child: Container(
-            decoration: BoxDecoration(
+    child: Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: [
+          Card(
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
-              color: Colors.white,
             ),
-            height: MediaQuery.of(context).size.height * 0.3,
-            width: MediaQuery.of(context).size.width * 0.9,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(
-                  image: AssetImage(emptyDiary),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Chưa có bài nhật ký nào",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-                ),
-              ],
+            elevation: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.white,
+              ),
+              height: MediaQuery.of(context).size.height * 0.3,
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(
+                    image: AssetImage(emptyDiary),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Chưa có bài nhật ký nào",
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          elevation: 0,
-          child: Container(
-            decoration: BoxDecoration(
+          SizedBox(height: 8,),
+          Card(
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
-              color: Colors.white,
             ),
-            height: MediaQuery.of(context).size.height * 0.1,
-            width: MediaQuery.of(context).size.width * 0.9,
-            padding: EdgeInsets.all(10.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "- Nhật ký là dữ liệu cá nhân của bạn, và những người khác không thể xem được",
-                  style: TextStyle(fontSize: 14),
-                ),
-              ],
+            elevation: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "- Nhật ký là dữ liệu cá nhân của bạn, và những người khác không thể xem được",
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
             ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     ),
   );
 }
 
-Widget createDiaryItem(BuildContext context, String _time, String _content) {
+Widget createDiaryItem(BuildContext context, DiaryModel diaryModel) {
   return GestureDetector(
     onTap: () => Navigator.push(
-        context, MaterialPageRoute(builder: (context) => BabyDiaryDetails())),
-    child: Container(
-      padding: EdgeInsets.all(30),
-      constraints: BoxConstraints(
-        maxHeight: double.infinity,
-      ),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(diaryFrame),
-          fit: BoxFit.fill,
+        context, MaterialPageRoute(builder: (context) => BabyDiaryDetails(diaryModel))),
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(10, 3, 10, 7),
+      child: Card(
+        elevation: 1,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if(diaryModel.imageURL != null)
+              Container(
+                color: BLACK_COLOR,
+                child: Center(
+                  child: CachedNetworkImage(imageUrl: diaryModel.imageURL),
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        DateTimeConvert.getDayOfWeek(diaryModel.createTime)
+                            + DateTimeConvert.convertDatetimeFullFormat(diaryModel.createTime),
+                        style: TextStyle(color: LIGHT_DARK_GREY_COLOR,fontSize: 18,fontWeight: FontWeight.w600),),
+                      SizedBox(width: 3,),
+                      if(diaryModel.publicFlag == true)
+                        Icon(Icons.fiber_manual_record,color: LIGHT_DARK_GREY_COLOR,size: 6,),
+                      SizedBox(width: 3,),
+                      if(diaryModel.publicFlag == true)
+                        Text("Đã chia sẻ",style: TextStyle(color: LIGHT_DARK_GREY_COLOR,),)
+                    ],
+                  ),
+                  SizedBox(height: 5,),
+                  Text(
+                    diaryModel.diaryContent,
+                    maxLines: 5,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: BLACK_COLOR,fontSize: 15
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Ngày " + _time,
-            style: TextStyle(
-              color: PINK_COLOR,
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-            _content,
-            style: TextStyle(
-              color: LIGHT_DARK_GREY_COLOR,
-              fontSize: 16,
-            ),
-          ),
-        ],
       ),
     ),
   );

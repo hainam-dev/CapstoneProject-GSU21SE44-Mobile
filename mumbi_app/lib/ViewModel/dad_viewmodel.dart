@@ -29,7 +29,6 @@ class DadViewModel extends Model{
       if(data != null){
         data = jsonDecode(data);
         dadModel = DadModel.fromJson(data);
-        getInstance();
         notifyListeners();
       }
     }catch (e){
@@ -42,6 +41,7 @@ class DadViewModel extends Model{
     dadModel.momID = momId;
     try {
       String data = await DadRepository.apiAddDad(dadModel);
+      notifyListeners();
       return true;
     } catch (e) {
       print("error: " + e.toString());

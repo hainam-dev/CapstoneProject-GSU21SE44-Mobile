@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,7 +10,6 @@ import 'package:mumbi_app/Model/teeth_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:mumbi_app/Model/playlist_model.dart';
-import 'package:mumbi_app/View/example.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/View/teethDetail_view.dart';
 
@@ -222,8 +222,7 @@ Widget createFamilyCard(
                     CircleAvatar(
                       radius: 39,
                       backgroundColor: PINK_COLOR,
-                      backgroundImage: NetworkImage(_imageURL),
-                    ),
+                      backgroundImage: CachedNetworkImageProvider(_imageURL)),
                     Positioned(
                       top: -2,
                       right: -2,
