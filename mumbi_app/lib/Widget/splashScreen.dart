@@ -28,7 +28,7 @@ class SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     animationController = new AnimationController(
-        vsync: this, duration: new Duration(seconds: 2));
+        vsync: this, duration: new Duration(milliseconds: 1));
     animation =
         new CurvedAnimation(parent: animationController, curve: Curves.easeOut);
 

@@ -1,34 +1,28 @@
-// import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
+import 'package:mumbi_app/Constant/saveKey.dart';
+import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/View/teethDetail_view.dart';
 import 'package:mumbi_app/View/teethProcess.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 import 'package:mumbi_app/helper/data.dart';
 import 'package:mumbi_app/Model/teeth_model.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:mumbi_app/ViewModel/teeth_viewmodel.dart';
+import 'package:mumbi_app/main.dart';
 
 
-class TrackTeeth extends StatefulWidget {
-  const TrackTeeth({Key key}) : super(key: key);
+class TeethTrack extends StatefulWidget {
+  const TeethTrack({Key key}) : super(key: key);
 
   @override
-  _TrackTeethState createState() => _TrackTeethState();
+  _TeethTrackState createState() => _TeethTrackState();
 }
 
-class _TrackTeethState extends State<TrackTeeth> {
+class _TeethTrackState extends State<TeethTrack> {
   // List<CustomerModel> customers = <CustomerModel>[];
   bool _choose =false;
-  bool _flag1 =false;
-  bool _flag2 =false;
-  bool _flag3 =true;
-  bool _flag4 =true;
-  bool _flag5 =true;
-  bool _flag6 =true;
-  bool _flag7 =true;
-  bool _flag8 =true;
-  bool _flag9 =true;
   bool original = true;
   bool original_and_present = true;
 
@@ -41,154 +35,136 @@ class _TrackTeethState extends State<TrackTeeth> {
   String ht_teeth7= ic_teeth7_ht;
   String ht_teeth8= ic_teeth8_ht;
 
-  int positon;
-  int lastPress = 0;
-  List<bool> chooseDate = List.generate(10, (index) => false);
-  List<int> _list = List.generate(10, (index) => index);
-  List<TeethModel> listTeeth = <TeethModel>[];
+  int lastPositon = 0;
+  List<bool> _flag = List.generate(20, (index) => false);
+  List<int> _list = List.generate(20, (index) => index);
+  bool isChose = false;
+  int position;
 
-  void chooseTeeth(){
+  List<TeethModel> listTeeth;
 
-  }
-  // List<Widget> listTeeth(int index){
-  //   return selectedWidget[(index==0) && []];
-  // }
+  final children = Widget;
+  final listChid = <Widget>[];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     listTeeth = getListTeeth();
+    print("ds rang:" +listTeeth.length.toString());
 
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Theo dõi mọc răng'),
-        actions: [
-          Container(
-            child: IconButton(
-              icon: SvgPicture.asset(ic_tooth),
-              onPressed: () => {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TeethProcess()),
-                ),
-              },),
-          )
-        ],
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: GestureDetector(
-        onTap: () => {
-          _choose = !_choose
-        },
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Container(
-                // margin: EdgeInsets.all(10),
-                decoration: new BoxDecoration(
-                  color: Colors.white,
-                ),
-                child: createListTile('Nguyễn Thị Bống')
-              ),
-              Stack(
-                children: <Widget>[
-
-                  // Răng hàm trên
-                  Container(child: SvgPicture.asset(img_hamtren, width: 302, height: 189)),
-                  //stateless
-                  createTeeth(ic_teeth1_ht,ic_teeth1_ht_choose,!_choose)
-
-
-
-                ],
-              ),
-              // Răng hàm dưới
-              Container(child: SvgPicture.asset(img_hamduoi, width: 302, height: 189)),
-              //
-
-              //Thông tin
-              Container(
-                padding: EdgeInsets.all(8),
-                margin: EdgeInsets.all(16),
-                decoration: new BoxDecoration(
-                 color: Colors.white
-                ),
-                    child: Column(
-                      children: <Widget> [
-                        Align(
-                            alignment: Alignment.topLeft,
-                            child: Text("Thông tin", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600))),
-                        Align(
-                            alignment: Alignment.topLeft,
-                            child: Text("Răng số 10", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400))),
-                        Align(
-                            alignment: Alignment.topLeft,
-                            child: Text("Thời gian mọc: 25 - 33 tháng tuổi", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),)),
-                      ],
-                    ),
-              ),
-
-              //Bé của bạn
-              Container(
-                padding: EdgeInsets.all(8),
-                margin: EdgeInsets.only(left: 16,right: 16),
-                decoration: new BoxDecoration(
-                    color: Colors.white
-                ),
-                child: Row(
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Align(
-                            alignment: Alignment.topLeft,
-                            child: Text("Bé của bạn (Bé Bông):", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),)),
-                        Align(
-                            alignment: Alignment.topLeft,
-                            child: Text("Trạng thái: Chưa mọc", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),)),
-                        Align(
-                            alignment: Alignment.topLeft,
-                            child: Text("Ngày mọc: --", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),)),
-                      ],
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 16),
-                      child: SizedBox(
-                        width: 120,
-                        height: 50,
-                        child: ElevatedButton(onPressed: () => {
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => TeethDetail()),
-                        )
-                        },
-                          style: ButtonStyle(
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                  )
-                              )
-                          ),
-                          child: Text('Cập nhật'),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
+        appBar: AppBar(
+          title: Text('Theo dõi mọc răng'),
+          actions: [
+            Container(
+              child: IconButton(
+                icon: SvgPicture.asset(ic_tooth),
+                onPressed: () => {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TeethProcess()),
+                  ),
+                },),
+            )
+          ],
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-      )
+        body:
+    SingleChildScrollView(
+          child: ScopedModel(
+            model: TeethViewModel.getInstance(),
+            child: ScopedModelDescendant(
+              builder: (BuildContext context,Widget child,TeethViewModel model)
+              {
+                return Column(
+                  children: <Widget>[
+                    Container(
+                      // margin: EdgeInsets.all(18),
+                        decoration: new BoxDecoration(
+                          color: Colors.white,
+                        ),
+                        child: createListTile('Nguyễn Thị Bống')
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(18),
+                    child: Stack(
+                        children:
+                        <Widget>[
+                          Container(child: SvgPicture.asset(img_hamtren, width: 302, height: 189)),
+                          for(int index = 0; index < _list.length /2; index++)
+                            createTeeth(listTeeth[index], _flag[index], () async {
+                                  _flag[index] = !_flag[index];
+                                  if(isChose && lastPositon != index){
+                                    _flag[lastPositon] = !_flag[lastPositon];
+                                    lastPositon = index;
+                                  } else if (isChose && lastPositon == index){
+                                    lastPositon = null;
+                                    isChose = false;
+                                  } else{
+                                    lastPositon= index;
+                                    isChose = true;
+                                  }
+                                  position = index;
+                                     storage.write(key: teethKey, value: (position+1).toString());
+                                     await model.getTeethById();
+                                  setState(()  {});
+                                }
+                            )
+                        ],
+                      ),
+                    ),
+                    // Răng hàm dưới
+
+                    Stack(
+                      children:
+                      <Widget>[
+                        Container(child: SvgPicture.asset(img_hamduoi, width: 302, height: 189)),
+                        for(int index = 10; index < _list.length; index++)
+                          createTeeth(listTeeth[index], _flag[index], () async{
+                            _flag[index] = !_flag[index];
+                            if(isChose && lastPositon != index){
+                              _flag[lastPositon] = !_flag[lastPositon];
+                              lastPositon = index;
+                            } else if (isChose && lastPositon == index){
+                              lastPositon = null;
+                              isChose = false;
+                            } else{
+                              lastPositon= index;
+                              isChose = true;
+                            }
+                            position = index;
+                            storage.write(key: teethKey, value: (position+1).toString());
+                            await model.getTeethById();
+                            setState(()  {});
+                          }
+                          )
+                      ],
+                    ),
+
+                    !isChose ? Container()
+                      :Column(
+                      children: <Widget>[
+                        //Thông tin
+                        createTextAlignInformation(model.teethModel.position.toString(),model.teethModel.name,model.teethModel.growTime),
+                        //Bé của bạn
+                        createTextAlignUpdate(context, model.teethModel.position.toString(),model.teethModel.name,model.teethModel.growTime, TeethDetail("Thông tin","Create")),
+                      ],
+                    )
+                  ],
+                );
+              }
+            ),
+          ),
+        )
     );
   }
 }

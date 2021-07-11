@@ -23,6 +23,8 @@ class _PregnancyUpdateState extends State<PregnancyUpdate> {
       ),
       body: SingleChildScrollView(
         child: Container(
+          padding: EdgeInsets.only( left: 16, right: 16),
+
           child: Update(),
         ),
       ),
@@ -34,22 +36,24 @@ class Update extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Column(children: <Widget>[
-      createTextFeild('Tuần thai'),
-      createTextFeild('Cân nặng của mẹ (kg)'),
-      createTextFeild('Cân nặng thai nhi (kg)'),
-      createTextFeild('Đường kính vòng đầu (cm)'),
-      createTextFeild('Nhịp tim thai ( /phút)'),
-      createTextFeild('Chiều dài xương đùi (cm)'),
-      Container(
-        margin: EdgeInsets.only(top: 200, left: 16),
-        child: Row(
-          children: <Widget>[
-            createButtonCancel(context,'Hủy', context.widget),
-            createButtonConfirm('Lưu thông tin')
-          ],
-        ),
-      )
-    ]);
+    return Form(
+      child: Column(children: <Widget>[
+        createTextFeild('Tuần thai',"","",(){}),
+        createTextFeild('Cân nặng của mẹ (kg)',"","",(){}),
+        createTextFeild('Cân nặng thai nhi (kg)',"","",(){}),
+        createTextFeild('Đường kính vòng đầu (cm)',"","",(){}),
+        createTextFeild('Nhịp tim thai ( /phút)',"","",(){}),
+        createTextFeild('Chiều dài xương đùi (cm)',"","",(){}),
+        Container(
+          margin: EdgeInsets.only(top: 200, left: 16),
+          child: Row(
+            children: <Widget>[
+              createButtonCancel(context,'Hủy', context.widget),
+              createButtonConfirm('Lưu thông tin',(){})
+            ],
+          ),
+        )
+      ]),
+    );
   }
 }

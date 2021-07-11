@@ -18,6 +18,10 @@ final String UPDATE_CHILD_INFO = getApiPath("/api/Childrens/updateChildrenInform
 final String DELETE_CHILD = getApiPath("/api/Childrens/DeleteChildren/");
 
 
+final String GET_TOOTH_BY_ID = getApiPath("/api/ToothInfo/GetToothInfoBy/");
+final String UPDATE_TOOTH_BY_ID = getApiPath("/api/ToothInfo/GetToothByChildId/");
+
+
 String getApiPath(String path){
   return HOST_ADDRESS + path;
 }

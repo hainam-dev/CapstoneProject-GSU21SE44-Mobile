@@ -30,8 +30,7 @@ class _CustomStatusDropdownState extends State<CustomStatusDropdown> {
 
   Widget _buildStatus(String title, List<DropdownMenuItem> listItems) =>
       Container(
-        height: SizeConfig.blockSizeVertical * 7.5,
-        width: SizeConfig.blockSizeHorizontal * 90,
+
         child: new DropdownButtonFormField<String>(
           value: widget.status,
           decoration: InputDecoration(

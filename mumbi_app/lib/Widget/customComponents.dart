@@ -5,31 +5,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Model/teeth_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:mumbi_app/Model/playlist_model.dart';
 import 'package:mumbi_app/View/example.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
+import 'package:mumbi_app/View/teethDetail_view.dart';
 
-Widget createTextFeild(String title) {
+Widget createTextFeild(String title,String hintText, String value, ontap) {
   return Container(
-    padding: EdgeInsets.only(left: 16, right: 16, top: 12),
-    child: TextField(
+    padding: EdgeInsets.only( top: 12),
+    child: TextFormField(
+      maxLength: 200,
+      onChanged: (text){
+        text = value;
+      },
       decoration:
-          InputDecoration(border: OutlineInputBorder(), labelText: title),
+          InputDecoration(
+            labelStyle: SEMIBOLDPINK_16,
+            border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              width: 1,
+            ),
+          ), labelText: title,
+              hintText: hintText
+          ),
     ),
   );
 }
 
-Widget createButtonConfirm(String title) {
+Widget createButtonConfirm(String title, ontap) {
   return SingleChildScrollView(
     child: Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       child: SizedBox(
-        width: 190,
+        width: 170,
         height: 50,
         child: ElevatedButton(
-          onPressed: () => {},
+          onPressed: ontap,
           style: ButtonStyle(
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
@@ -407,22 +422,151 @@ Widget getButtonUpload(BuildContext context) {
   );
 }
 
-// Widget createDataMenuItem(String name,int i){
-//   return DropdownMenuItem(
-//     child: createData(name),
-//     value: i,
-//   );
-// }
-Widget createTeeth(String icon, String iconChoose, bool choose) {
+Widget createTeeth(TeethModel teethModel, bool choose, ontap) {
   return Positioned(
-    height: 85,
-    width: 85,
-    top: 100,
-    left: -2,
+    height: teethModel.height,
+    width: teethModel.width,
+    top: teethModel.top,
+    left: teethModel.left,
     child: Container(
       child: IconButton(
-        icon: SvgPicture.asset(choose ? iconChoose : icon),
-        // onPressed: ontap,
+        icon: SvgPicture.asset(choose ? teethModel.iconChoose : teethModel.icon),
+        onPressed: ontap,
+      ),
+    ),
+  );
+}
+
+Widget createTextAlign(String text, TextStyle textStyle) {
+  return Container(
+    margin: EdgeInsets.only(top: 8,),
+    child: Align(
+        alignment: Alignment.topLeft,
+        child: Text(text, style: textStyle)),
+  );
+}
+
+Widget createTextAlignInformation(String position, String name, String growTime) {
+  return  Container(
+    padding: EdgeInsets.only(left: 16,right: 16,bottom: 16),
+    margin: EdgeInsets.only(left: 16,right: 16,bottom: 16, top: 16),
+    decoration: new BoxDecoration(
+        color: Colors.white
+    ),
+    child: Column(
+      children: <Widget> [
+        createTextAlign("Thông tin", SEMIBOLD_18),
+        createTextAlign("Răng số "+position, SEMIBOLD_16),
+        createTextAlign("Tên gọi: "+ name, SEMIBOLD_16),
+        createTextAlign("Thời gian mọc: "+ growTime, SEMIBOLD_16),
+
+      ],
+    ),
+  );
+}
+
+Widget createTextAlignUpdate(BuildContext context,String position, String name, String growTime, Widget screen) {
+  return  Container(
+    padding: EdgeInsets.only(left: 16,right: 16,bottom: 16),
+    margin: EdgeInsets.only(left: 16,right: 16,bottom: 16),
+    decoration: new BoxDecoration(
+        color: Colors.white
+    ),
+    child: Row(
+      children: <Widget>[
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget> [
+            createTextAlign("Bé của bạn (Bé Bông):", SEMIBOLD_18),
+            createTextAlign("Trạng thái: "+position, SEMIBOLD_16),
+            createTextAlign("Ngày mọc: "+ position, SEMIBOLD_16),
+
+          ],
+        ),
+        Container(
+          padding: EdgeInsets.only(left: 16),
+          child: SizedBox(
+            width: 120,
+            height: 50,
+            child: ElevatedButton(onPressed: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => screen),
+              )
+            },
+              style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      )
+                  )
+              ),
+              child: Text('Cập nhật',style: BOLD_16,),
+            ),
+          ),
+        )
+      ],
+    ),
+  );
+}
+
+Widget createBottomNavigationBar(BuildContext context, String stringCancel, String stringUpdate , ontap){
+  return Container(
+    padding: EdgeInsets.only(left: 16, right: 16, bottom: 32),
+    child: Row(
+      children: <Widget>[
+        createButtonCancel(context, stringCancel, context.widget),
+        createButtonConfirm(stringUpdate,ontap)
+      ],
+    ),
+  );
+}
+
+Widget createTextFormFeild(String title,String hintText, String value, ontap) {
+  return Container(
+    padding: EdgeInsets.only( top: 12),
+    child: TextFormField(
+      onChanged: (text){
+        text = value;
+      },
+      validator: (string){
+        if (value == "" && string.length == 0) {
+          return 'Vui lòng nhập họ và tên';
+        } else {
+          return null;
+        }
+      },
+      decoration:
+      InputDecoration(
+          labelStyle: SEMIBOLDPINK_16,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              width: 1,
+            ),
+          ), labelText: title,
+          hintText: hintText
+      ),
+    ),
+  );
+}
+
+Widget createTextFeildDisable(String title, String value, ontap) {
+  return Container(
+    padding: EdgeInsets.only( top: 12),
+    child: TextFormField(
+     // controller: ontap,
+      enabled: false,
+      decoration:
+      InputDecoration(
+          labelStyle: SEMIBOLDPINK_16,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              width: 1,
+            ),
+          ), labelText: title,
+        prefixText: "aaa"
       ),
     ),
   );

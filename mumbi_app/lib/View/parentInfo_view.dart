@@ -220,8 +220,8 @@ class _ParentInfoState extends State<ParentInfo> {
   Widget _buildBloodGroup(String labelText, String hinText,
       List<String> items,String selectedValue, Function function) =>
       Container(
-        height: SizeConfig.blockSizeVertical * 7,
-        width: SizeConfig.blockSizeHorizontal * 45,
+        height: 70,
+        width: 100,
         child:  DropdownButtonFormField<String>(
           value: selectedValue,
           decoration: InputDecoration(
