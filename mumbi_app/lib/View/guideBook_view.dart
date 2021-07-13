@@ -50,7 +50,6 @@ class _GuideBookState extends State<GuideBook> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     categories = getCategories();
 

@@ -6,11 +6,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:intl/intl.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
-import 'package:mumbi_app/Model/teeth_model.dart';
-import 'package:mumbi_app/ViewModel/teeth_viewmodel.dart';
+import 'package:mumbi_app/Model/tooth_model.dart';
+import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/tooth_viewmodel.dart';
 
 import 'package:mumbi_app/Widget/calendarBirthday.dart';
 import 'package:mumbi_app/Widget/customBottomButton.dart';
@@ -19,6 +21,7 @@ import 'package:mumbi_app/Widget/customText.dart';
 import 'package:mumbi_app/Widget/imagePicker.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:mumbi_app/Widget/customDialog.dart';
 
 class TeethDetail extends StatefulWidget {
   final model;
@@ -33,7 +36,15 @@ class _TeethDetailState extends State<TeethDetail> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   File _image;
   final _picker = ImagePicker();
-  TeethModel teethModel;
+  // ToothInfoModel teethInforModel;
+  ToothModel toothModel;
+  ToothModel currentTooth;
+  String growTime;
+  String status;
+  String note;
+  String image;
+  bool result = false;
+
   String update = "Update";
 
   _imgFromCamera() async {
@@ -95,7 +106,7 @@ class _TeethDetailState extends State<TeethDetail> {
   @override
   void initState() {
     if(widget.action != update){
-      teethModel = TeethModel();
+      toothModel = ToothModel();
     }
     super.initState();
   }
@@ -115,60 +126,87 @@ class _TeethDetailState extends State<TeethDetail> {
       ),
       body: SingleChildScrollView(
         child: ScopedModel(
-        model: TeethViewModel.getInstance(),
-          child: Form(
-            key: formKey,
-            child: Container(
-              padding: EdgeInsets.only(left: 16, right: 16, top: 12),
-              child: Column(
-                // mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  CalendarBirthday('Ngày', widget.action == update ? widget.model.birthday : "",function: (value) {
-                    /*if (value.isEmpty) {
-                                              return "Vui lòng nhập ngày sinh";
-                                            } else {*/
-                    setState(() {
-                    if(widget.action == update){
-                    widget.model.growTime = value;
-                    }else{
-                    teethModel.growTime = value;
-                    }
-                    });
-                    return null;},),
-                  createTextFeildDisable("Răng","ahihi", (hhhh){
+        model: ToothViewModel.getInstance(),
+          child: ScopedModel(
+            model: ChildViewModel.getInstance(),
+            child: ScopedModelDescendant(
+              builder: (BuildContext context,Widget child,ToothViewModel model){
+                model.getToothByChildId();
+                toothModel = model.toothModel;
+                if(toothModel != null){
 
-                  }),
-                  Container(
-                    padding: EdgeInsets.only(top: 12),
-                    child: new CustomStatusDropdown(
-                      'Trạng thái (*)',
-                      itemsStatus,
-                      widget.action == update ? widget.model.grownFlag : null,
-                      function: (value) {
-                        setState(() {
-                          if(widget.action == update){
-                            widget.model.grownFlag = value;
-                          }else{
-                            teethModel.grownFlag = value;
-                          }
-                          },
-                        );
-                      },
+                  //todo: //SET TOOTH TỪ DB LÊN
+                  DateTime oDate = DateTime.parse(toothModel.grownDate.toString());
+                  print("DATETIME: "+ oDate.toString());
+                  growTime = oDate.day.toString()+"/"+oDate.month.toString() +"/"+ oDate.year.toString();
+                  note = toothModel.note;
+
+                  if(toothModel.grownFlag){
+                    status = "Đã mọc";
+                  } else status = "Chưa mọc";
+                } else{
+                   growTime = "";
+                   status = "";
+                   note= "";
+                   image= "";
+                }
+
+
+
+                return  Form(
+                  key: formKey,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 16, right: 16, top: 12),
+                    child: Column(
+                      // mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        CalendarBirthday('Ngày', growTime,function: (DateTime value) {
+                          setState(() {
+                            // if(widget.action == update){
+                            //   widget.model.grownDate = value;
+                            // }else{
+
+                              //todo: //SET TOOTH TỪ NHẬP VÀO
+                              print("VALUE: " +value.toString());
+                              print("DATETIME NE:" +DateFormat('d/M/yyyy').parse(value.toString()).toString());
+                              // DateTime oDate = ;
+                              toothModel.grownDate = DateFormat('d/M/yyyy').parse(value.toString());
+                              print("Ngay can UPDATE: "+ DateFormat.yMd().format(value));
+                            // }
+                          });
+                          return null;},),
+                        ScopedModelDescendant(
+                            builder: (BuildContext context,Widget child,ToothViewModel modelInfo){
+                              modelInfo.getToothInfoById();
+                              return createTextFeildDisable("Răng",modelInfo.toothInforModel.name);
+                            }),
+                        Container(
+                          padding: EdgeInsets.only(top: 12),
+                          // child: new CustomStatusDropdown(
+                          //   'Trạng thái (*)',
+                          //   itemsStatus,
+                          //   widget.action == update ? widget.model.grownFlag : null,
+                          //   function: (value) {
+                          //     setState(() {
+                          //       // if(widget.action == update){
+                          //       //   widget.model.grownFlag = value;
+                          //       // }else{
+                          //       //   // teethInforModel.grownFlag = value;
+                          //       // }
+                          //       widget.model.status = status;
+                          //     },
+                          //     );
+                          //   },
+                          // ),
+                        ),
+                        createTextFeild("Ghi chú (nếu có)", "",
+                            note,""),
+                        _pickerAvartar(context),
+                      ],
                     ),
                   ),
-                  createTextFeild("Ghi chú (nếu có)", "Nhập ghi chú cho răng",widget.action == update ? widget.model.note : "",
-                          (value){
-                        setState(() {
-                          if(widget.action == update){
-                            widget.model.note = value;
-                          }else{
-                            teethModel.name = value;
-                          }
-                        });
-                      }),
-                  _pickerAvartar(context),
-                ],
-              ),
+                );
+              }
             ),
           ),
         ),
@@ -177,7 +215,7 @@ class _TeethDetailState extends State<TeethDetail> {
           () async {
           if(formKey.currentState.validate()){
           print("OK");
-          bool result = false;
+          result = await ToothViewModel().upsertTooth(toothModel);
 
           // if(appbarTitle == momTitle){
           //   result = await TeethViewModel().updateTeeth(chi, widget.model);
@@ -188,8 +226,10 @@ class _TeethDetailState extends State<TeethDetail> {
             //   result = await DadViewModel().addDad(dadModel);
             // }
           }
+          showResult(context, result);
 
-        }
+
+          }
 
       ),
     );

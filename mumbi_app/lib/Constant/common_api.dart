@@ -23,8 +23,9 @@ final String GET_ALL_DIARY_OF_CHILD = getApiPath("/api/Diaries/GetDiaryOfChildre
 final String GET_ALL_PUBLIC_DIARY = getApiPath("/api/Diaries/GetDiaryPublic");
 final String DELETE_DIARY = getApiPath("/api/Diaries/DeleteDiary/");
 
-final String GET_TOOTH_BY_ID = getApiPath("/api/ToothInfo/GetToothInfoBy/");
-final String UPDATE_TOOTH_BY_ID = getApiPath("/api/ToothInfo/GetToothByChildId/");
+final String GET_TOOTHINFO_BY_ID = getApiPath("/api/ToothInfo/GetToothInfoBy/");
+final String GET_TOOTH_BY_CHILD_ID = getApiPath("/api/Tooth/GetToothByChildId/");
+final String UPSERT_TOOTH_BY_TOOTH_ID = getApiPath("/api/Tooth/UpsertTooth/");
 
 
 String getApiPath(String path){

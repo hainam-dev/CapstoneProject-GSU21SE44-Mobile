@@ -31,7 +31,6 @@ class _GuidebookSaveState extends State<GuidebookSave> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async{
       // await storage.deleteAll();
@@ -40,7 +39,6 @@ class _GuidebookSaveState extends State<GuidebookSave> {
       if(savePost != null && savePost.isNotEmpty){
         final listcart = json.decode(savePost) as List;
         // final listCartParsed = context.read(saveListProvider);
-        //todo
         final listCartParsed = listcart.map((model) => ArticleModel.fromJson(model)).toList();
         if(listCartParsed != null && listCartParsed.length >0)
           context.read(saveListProvider).state.state = listCartParsed;

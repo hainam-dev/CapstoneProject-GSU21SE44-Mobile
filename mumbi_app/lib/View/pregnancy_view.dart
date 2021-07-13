@@ -82,7 +82,6 @@ class _HomePregnancyState extends State<HomePregnancy> {
 
   @override
   void initState() {
-    // TODO: implement initState
     selectedEvents = getEvents();
     super.initState();
     listTile = listTilePregnancy();

@@ -121,7 +121,6 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
 //
 //   @override
 //   Widget build(BuildContext context) {
-//     // TODO: implement build
 //     return  Container(
 //       padding: EdgeInsets.all(20.0),
 //       child: DropdownButton(
@@ -156,7 +155,6 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
 class InjectTable extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return GestureDetector(
         onTap: () {
 

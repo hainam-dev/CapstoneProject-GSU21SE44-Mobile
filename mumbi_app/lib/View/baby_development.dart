@@ -39,7 +39,6 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
 class DrawProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
         margin: EdgeInsets.only(top: 16),
         color: Colors.white,
@@ -73,7 +72,6 @@ class DrawProgress extends StatelessWidget {
 class DrawChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       padding: EdgeInsets.only(top: 16, left: 16, right: 16),
       color: Colors.white,
@@ -144,7 +142,6 @@ class DrawChart extends StatelessWidget {
 //   StackedAreaLineChart(this.seriesList, {this.animate});
 //   @override
 //   Widget build(BuildContext context) {
-//     // TODO: implement build
 //     return new charts.LineChart(seriesList,
 //         defaultRenderer:
 //         new charts.LineRendererConfig(includeArea: true, stacked: true),
@@ -157,7 +154,6 @@ class DrawChart extends StatelessWidget {
 class BabyDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Column(
       children: <Widget>[
         createListTileDetail('Nguyễn Thị Bé Bông', '24 tháng 12 ngày'),

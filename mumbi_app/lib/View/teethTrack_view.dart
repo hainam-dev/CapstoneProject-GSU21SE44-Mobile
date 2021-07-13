@@ -3,13 +3,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/saveKey.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
+import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/View/teethDetail_view.dart';
 import 'package:mumbi_app/View/teethProcess.dart';
+import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 import 'package:mumbi_app/helper/data.dart';
-import 'package:mumbi_app/Model/teeth_model.dart';
+import 'package:mumbi_app/Model/tooth_model.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:mumbi_app/ViewModel/teeth_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/tooth_viewmodel.dart';
 import 'package:mumbi_app/main.dart';
 
 
@@ -26,29 +28,22 @@ class _TeethTrackState extends State<TeethTrack> {
   bool original = true;
   bool original_and_present = true;
 
-  String ht_teeth1= ic_teeth1_ht;
-  String ht_teeth2= ic_teeth2_ht;
-  String ht_teeth3= ic_teeth3_ht;
-  String ht_teeth4= ic_teeth4_ht;
-  String ht_teeth5= ic_teeth5_ht;
-  String ht_teeth6= ic_teeth6_ht;
-  String ht_teeth7= ic_teeth7_ht;
-  String ht_teeth8= ic_teeth8_ht;
-
   int lastPositon = 0;
   List<bool> _flag = List.generate(20, (index) => false);
   List<int> _list = List.generate(20, (index) => index);
   bool isChose = false;
   int position;
+  String name;
+  String status;
+  String growTime;
 
-  List<TeethModel> listTeeth;
+  List<ToothInfoModel> listTeeth;
 
   final children = Widget;
   final listChid = <Widget>[];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     listTeeth = getListTeeth();
     print("ds rang:" +listTeeth.length.toString());
@@ -80,90 +75,151 @@ class _TeethTrackState extends State<TeethTrack> {
         ),
         body:
     SingleChildScrollView(
-          child: ScopedModel(
-            model: TeethViewModel.getInstance(),
-            child: ScopedModelDescendant(
-              builder: (BuildContext context,Widget child,TeethViewModel model)
-              {
-                return Column(
-                  children: <Widget>[
-                    Container(
-                      // margin: EdgeInsets.all(18),
-                        decoration: new BoxDecoration(
-                          color: Colors.white,
-                        ),
-                        child: createListTile('Nguyễn Thị Bống')
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(18),
-                    child: Stack(
-                        children:
-                        <Widget>[
-                          Container(child: SvgPicture.asset(img_hamtren, width: 302, height: 189)),
-                          for(int index = 0; index < _list.length /2; index++)
-                            createTeeth(listTeeth[index], _flag[index], () async {
-                                  _flag[index] = !_flag[index];
-                                  if(isChose && lastPositon != index){
-                                    _flag[lastPositon] = !_flag[lastPositon];
-                                    lastPositon = index;
-                                  } else if (isChose && lastPositon == index){
-                                    lastPositon = null;
-                                    isChose = false;
-                                  } else{
-                                    lastPositon= index;
-                                    isChose = true;
-                                  }
-                                  position = index;
-                                     storage.write(key: teethKey, value: (position+1).toString());
-                                     await model.getTeethById();
-                                  setState(()  {});
-                                }
-                            )
-                        ],
+          child: Column(
+                children: <Widget>[
+                  Container(
+                    // margin: EdgeInsets.all(18),
+                      decoration: new BoxDecoration(
+                        color: Colors.white,
                       ),
-                    ),
-                    // Răng hàm dưới
+                      child: ScopedModel(
+                        model: ChildViewModel.getInstance(),
+                        child: ScopedModelDescendant(
+                          builder: (BuildContext context,Widget child,ChildViewModel modelChild){
+                            modelChild.getChildByMom();
+                            name = modelChild.childListModel[0].fullName;
+                            storage.write(key: childId, value: modelChild.childListModel[0].id);
+                            return createListTile(modelChild.childListModel[0].imageURL, modelChild.childListModel[0].fullName);
+                          },
+                        )
+                      )
+                  ),
 
-                    Stack(
-                      children:
-                      <Widget>[
-                        Container(child: SvgPicture.asset(img_hamduoi, width: 302, height: 189)),
-                        for(int index = 10; index < _list.length; index++)
-                          createTeeth(listTeeth[index], _flag[index], () async{
-                            _flag[index] = !_flag[index];
-                            if(isChose && lastPositon != index){
-                              _flag[lastPositon] = !_flag[lastPositon];
-                              lastPositon = index;
-                            } else if (isChose && lastPositon == index){
-                              lastPositon = null;
-                              isChose = false;
-                            } else{
-                              lastPositon= index;
-                              isChose = true;
-                            }
-                            position = index;
-                            storage.write(key: teethKey, value: (position+1).toString());
-                            await model.getTeethById();
-                            setState(()  {});
-                          }
-                          )
-                      ],
-                    ),
 
-                    !isChose ? Container()
-                      :Column(
-                      children: <Widget>[
-                        //Thông tin
-                        createTextAlignInformation(model.teethModel.position.toString(),model.teethModel.name,model.teethModel.growTime),
-                        //Bé của bạn
-                        createTextAlignUpdate(context, model.teethModel.position.toString(),model.teethModel.name,model.teethModel.growTime, TeethDetail("Thông tin","Create")),
-                      ],
-                    )
-                  ],
-                );
-              }
+      // modelTooth.getToothByChildId();
+
+    // setState(() {
+    //
+    // });
+
+    Column(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.all(18),
+            child: Stack(
+              children:
+              <Widget>[
+                Container(child: SvgPicture.asset(img_hamtren, width: 302, height: 189)),
+                for(int index = 0; index < _list.length /2; index++)
+                  createTeeth(listTeeth[index], _flag[index], () async {
+                    _flag[index] = !_flag[index];
+                    if(isChose && lastPositon != index){
+                      _flag[lastPositon] = !_flag[lastPositon];
+                      lastPositon = index;
+                    } else if (isChose && lastPositon == index){
+                      lastPositon = null;
+                      isChose = false;
+                    } else{
+                      lastPositon= index;
+                      isChose = true;
+                    }
+                    position = index;
+                    String valuePosition = (position+1).toString();
+                    storage.write(key: toothInforKey, value: valuePosition);
+                    setState(()  {});
+
+                  }
+                  )
+              ],
             ),
           ),
+          // Răng hàm dưới
+          Stack(
+            children:
+            <Widget>[
+              Container(child: SvgPicture.asset(img_hamduoi, width: 302, height: 189)),
+              for(int index = 10; index < _list.length; index++)
+                createTeeth(listTeeth[index], _flag[index], () async{
+                  _flag[index] = !_flag[index];
+                  if(isChose && lastPositon != index){
+                    _flag[lastPositon] = !_flag[lastPositon];
+                    lastPositon = index;
+                  } else if (isChose && lastPositon == index){
+                    lastPositon = null;
+                    isChose = false;
+                  } else{
+                    lastPositon= index;
+                    isChose = true;
+                  }
+                  position = index;
+                  String valuePosition = (position+1).toString();
+                  storage.write(key: toothInforKey, value: valuePosition);
+                  print("vi tri rang, toothInforkey: "+ (position+1).toString());
+                  setState(()  {});
+                }
+                )
+            ],
+          ),
+
+          !isChose ? Container(
+            // child: ScopedModel(
+            //   model: ToothViewModel.getInstance(),
+            //   child: ScopedModelDescendant(
+            //       builder: (BuildContext context,Widget child,ToothViewModel model){
+            //         model.getToothByChildId();
+            //         return createTextAlignUpdate(context,model.toothModel.grownFlag.toString(),model.toothInforModel.growTime, TeethDetail("Thông tin","Create"));
+            //
+            //       }
+            //
+            //   ),
+            // )
+          )
+
+              :Column(
+            children: <Widget>[
+              // Thông tin
+              ScopedModel(
+                model: ToothViewModel.getInstance(),
+                  child: ScopedModelDescendant(
+                    builder: (BuildContext context,Widget child,ToothViewModel modelTooth){
+                      modelTooth.getToothInfoById();
+                      return createTextAlignInformation(modelTooth.toothInforModel.position.toString(),
+                          modelTooth.toothInforModel.name,modelTooth.toothInforModel.growTime);
+                    }
+                  )
+              ),
+              // Bé của bạn
+              ScopedModel(
+                  model: ToothViewModel.getInstance(),
+                  child: ScopedModelDescendant(
+                      builder: (BuildContext context,Widget child,ToothViewModel modelTooth){
+                        modelTooth.getToothByChildId();
+                        ToothModel tooth = modelTooth.toothModel;
+                        if( tooth != null) {
+                          status  = "Đã mọc";
+                          // print('ahihj'+ DateTime.tryParse(tooth.grownDate).toString());
+                          DateTime oDate = DateTime.tryParse(tooth.grownDate.toString());
+                          growTime = oDate.day.toString()+"/"+oDate.month.toString() +"/"+ oDate.year.toString();
+
+                        } else{
+                          status = "Chưa mọc";
+                          growTime = "--";
+                        }
+                        return createTextAlignUpdate(context,name, status,growTime,
+                            TeethDetail("Thông tin","Create"));
+                      }
+                  )
+              ),
+
+            ],
+          )
+        ])
+    // }),
+
+    ],
+              )
+
+
         )
     );
   }
