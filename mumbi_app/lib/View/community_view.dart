@@ -26,29 +26,33 @@ class _CommunityState extends State<Community> {
       appBar: AppBar(
         title: Text("Cộng đồng"),
       ),
-      body: ScopedModel(
-        model: CommunityViewModel.getInstance(),
-        child: ScopedModelDescendant(
-          builder: (BuildContext context, Widget child, CommunityViewModel model) {
-            model.getPublicDiary();
-            return model.publicDiaryListModel == null
-                ? loadingProgress()
-                : ListView.builder(
-                    itemCount: model.publicDiaryListModel.length,
-                    itemBuilder: (context, index) {
-                      DiaryModel diaryModel = model.publicDiaryListModel[index];
-                      return showCommunityPost(diaryModel.imageURL,
-                          diaryModel.createdBy, diaryModel.createTime, diaryModel.diaryContent);
-                    },
-                  );
-          },
-        ),
+      body: listCommunityPost(),
+    );
+  }
+
+  Widget listCommunityPost(){
+    return ScopedModel(
+      model: CommunityViewModel.getInstance(),
+      child: ScopedModelDescendant(
+        builder: (BuildContext context, Widget child, CommunityViewModel model) {
+          model.getPublicDiary();
+          return model.publicDiaryListModel == null
+              ? loadingProgress()
+              : ListView.builder(
+            itemCount: model.publicDiaryListModel.length,
+            itemBuilder: (context, index) {
+              DiaryModel diaryModel = model.publicDiaryListModel[index];
+              return showCommunityPost(diaryModel.avatarUser,
+                  diaryModel.createdByName, diaryModel.publicDate, diaryModel.diaryContent, diaryModel.imageURL);
+            },
+          );
+        },
       ),
     );
   }
 
   Widget showCommunityPost(
-      String _avatarImageURL, String _username, String _createTime, String _content) {
+      String _avatarImageURL, String _username, String _createTime, String _content, String _imageContent) {
     return Padding(
       padding: EdgeInsets.only(bottom: 14),
       child: Container(
@@ -57,7 +61,7 @@ class _CommunityState extends State<Community> {
           children: [
             ListTile(
               leading: CircleAvatar(
-                radius: 22,
+                radius: 23,
                 backgroundColor: Colors.transparent,
                 backgroundImage: NetworkImage(_avatarImageURL),
               ),
@@ -72,26 +76,24 @@ class _CommunityState extends State<Community> {
               color: BLACK_COLOR,
               width: SizeConfig.blockSizeHorizontal * 100,
               child: CachedNetworkImage(
-                imageUrl: _avatarImageURL,
+                imageUrl: _imageContent,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ReadMoreText(
-                    _content,
-                    trimLength: 250,
-                    colorClickableText: BLACK_COLOR,
-                    delimiter: "",
-                    trimCollapsedText: '... Xem thêm',
-                    trimExpandedText: ' Thu gọn',
-                    moreStyle: TextStyle(fontWeight: FontWeight.w600),
-                    lessStyle: TextStyle(fontWeight: FontWeight.w600),
-                    style: TextStyle(color: BLACK_COLOR,fontSize: 15),
-                  ),
-                ],
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(14, 10, 14, 18),
+                child: ReadMoreText(
+                  _content,
+                  trimLength: 250,
+                  colorClickableText: BLACK_COLOR,
+                  delimiter: "",
+                  trimCollapsedText: '... Xem thêm',
+                  trimExpandedText: ' Thu gọn',
+                  moreStyle: TextStyle(fontWeight: FontWeight.w600),
+                  lessStyle: TextStyle(fontWeight: FontWeight.w600),
+                  style: TextStyle(color: BLACK_COLOR,fontSize: 15),
+                ),
               ),
             ),
           ],

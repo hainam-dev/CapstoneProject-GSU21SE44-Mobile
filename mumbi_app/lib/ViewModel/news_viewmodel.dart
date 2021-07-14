@@ -34,4 +34,18 @@ class NewsViewModel extends Model{
       print("error: " + e.toString());
     }
   }
+
+  void getNewsById(String id) async{
+    try{
+      String data = await NewsRepository.apiGetNewsById(id);
+      //lam tiep cho nay
+      Map<String, dynamic> jsonList = json.decode(data);
+      newsList = jsonList['data'];
+      newsListModel = newsList.map((e) => NewsModel.fromJson(e)).toList();
+      newsListModel.sort((a,b) => b.createTime.compareTo(a.createTime));
+      notifyListeners();
+    }catch(e){
+      print("error: " + e.toString());
+    }
+  }
 }

@@ -321,6 +321,9 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                 if(childModel.fingertips == null) childModel.fingertips = 0;
                 if(childModel.headVortex == null) childModel.headVortex = 0;
                 result = await ChildViewModel().addChild(childModel);
+                if(result == true){
+                  Navigator.pop(context);
+                }
               }
               showResult(context, result);
             }

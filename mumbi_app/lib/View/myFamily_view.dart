@@ -89,9 +89,9 @@ class _MyFamilyState extends State<MyFamily> {
                       : Flexible(
                        child: GridView.builder(
                            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                               maxCrossAxisExtent: SizeConfig.safeBlockVertical * 30,
-                               crossAxisSpacing: 5,
-                               mainAxisSpacing: 5),
+                               maxCrossAxisExtent: 250,
+                               crossAxisSpacing: 0,
+                               mainAxisSpacing: 0),
                            itemCount: model.childListModel != null ? model.childListModel.length + 1 : 1,
                            itemBuilder: (BuildContext context, index) {
                              if(index == model.childListModel.length){

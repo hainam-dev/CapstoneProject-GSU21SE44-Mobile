@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:mumbi_app/Model/diary_model.dart';
 import 'package:mumbi_app/Repository/diary_repository.dart';
+import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class DiaryViewModel extends Model{
@@ -35,7 +36,20 @@ class DiaryViewModel extends Model{
     }
   }
 
-  Future<bool> deleteDiary(String id) async {
+  Future<bool> addDiary(DiaryModel diaryModel) async {
+    String createByID = await UserViewModel.getUserID();
+    diaryModel.createdByID = createByID;
+    try {
+      String data = await DiaryRepository.apiAddDiary(diaryModel);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print("error: " + e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> deleteDiary(num id) async {
     try {
       String data = await DiaryRepository.apiDeleteDiary(id);
       destroyInstance();

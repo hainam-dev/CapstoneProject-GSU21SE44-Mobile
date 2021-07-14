@@ -64,10 +64,7 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
         break;
     }
   }
-
 }
-
-
 
 Widget getDiaryImage(String _image){
   return Padding(

@@ -17,8 +17,14 @@ final String GET_CHILD_BY_MOM = getApiPath("/api/ChildInfo/GetChildInfoByMomId/"
 final String UPDATE_CHILD_INFO = getApiPath("/api/ChildInfo/UpdateChildInfo/");
 final String DELETE_CHILD = getApiPath("/api/ChildInfo/DeleteChildInfo/");
 
+final String GET_NEWS_BY_ID = getApiPath("/api/News/GetNewsBy/");
 final String GET_ALL_NEWS = getApiPath("/api/News/GetAllNews");
+final String GET_SAVED_NEWS_BY_MOM_ID = getApiPath("/api/NewsMom/GetNewsMomBy/");
 
+final String GET_ALL_GUIDEBOOK = getApiPath("/api/Guidebooks/GetAllGuidebook");
+final String GET_SAVED_GUIDEBOOK_BY_MOM_ID = getApiPath("/api/GuidebookMom/GetGuidebookMomBy/");
+
+final String ADD_DIARY = getApiPath("/api/Diaries/AddDiary");
 final String GET_ALL_DIARY_OF_CHILD = getApiPath("/api/Diaries/GetDiaryOfChildren/");
 final String GET_ALL_PUBLIC_DIARY = getApiPath("/api/Diaries/GetDiaryPublic");
 final String DELETE_DIARY = getApiPath("/api/Diaries/DeleteDiary/");

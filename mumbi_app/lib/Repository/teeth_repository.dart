@@ -20,7 +20,7 @@ class TeethRepository{
 
   static Future<dynamic> apiUpdateTeeth(ChildModel childModel, TeethModel teethModel) async {
     var response = await http.put(
-        Uri.parse("${UPDATE_TOOTH_BY_ID}${childModel.childID}/${teethModel.toothId}"),
+        Uri.parse("${UPDATE_TOOTH_BY_ID}${childModel.id}/${teethModel.toothId}"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
