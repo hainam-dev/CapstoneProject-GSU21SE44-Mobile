@@ -591,3 +591,52 @@ Widget createTextFeildDisable(String title, String value) {
     ),
   );
 }
+
+Widget createTextTitle(String title){
+  return Container(
+    child: Text(title, style: SEMIBOLD_16,),
+  );
+}
+
+Widget createTextBlueHyperlink(BuildContext context, String title, Widget screen){
+  return GestureDetector(
+      child: Text(title, style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => screen),
+        );
+      }
+  );
+}
+Widget createTextBlue(BuildContext context, String title, ontap){
+  return GestureDetector(
+      child: Text(title, style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
+      onTap:
+        ontap,
+  );
+}
+
+Widget createFormPhone(BuildContext context,String hintText, String phone, onChange){
+  return Container(
+    padding: EdgeInsets.all(16),
+    child: TextFormField(
+      onChanged: onChange,
+      keyboardType: TextInputType.phone,
+      decoration:
+      InputDecoration(
+          labelStyle: SEMIBOLDPINK_16,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              width: 1,
+            ),
+          ),
+          hintText: hintText
+      ),
+    ),
+  );
+}
+
+
