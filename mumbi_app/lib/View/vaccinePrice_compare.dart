@@ -29,7 +29,6 @@ class _VaccinePriceState extends State<VaccinePrice> {
 class VaccinePriceTable extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       padding: EdgeInsets.all(16),
       child: Column(

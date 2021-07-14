@@ -9,6 +9,7 @@ import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/baby_development.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/View/community_view.dart';
+import 'package:mumbi_app/View/injectionSchedule.dart';
 import 'package:mumbi_app/View/newsDetails_view.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/View/vaccinePrice_compare.dart';
@@ -181,7 +182,7 @@ class _DashBoardState extends State<DashBoard> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         createButtonTextImageLink(
-            context, "Tiêm chủng", injection, VaccinePrice()),
+            context, "Tiêm chủng", injection, InjectionSchedule()),
         createButtonTextImageLink(context, "Cộng đồng", community, Community()),
         createButtonTextImageLink(
             context, "Mốc phát triển", developmentMilestone, BabyDevelopment()),

@@ -35,7 +35,6 @@ class _PregnancyUpdateState extends State<PregnancyUpdate> {
 class Update extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Form(
       child: Column(children: <Widget>[
         createTextFeild('Tuần thai',"","",(){}),

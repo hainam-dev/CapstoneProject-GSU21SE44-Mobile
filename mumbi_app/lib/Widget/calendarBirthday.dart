@@ -84,8 +84,8 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
               ),
               suffixIcon: Icon(Icons.calendar_today),
             ),
-            validator:
-              widget.function
+            // validator:
+            //   widget.function
           ),
         ),
       ),

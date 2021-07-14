@@ -1,4 +1,4 @@
-class TeethModel{
+class ToothInfoModel{
   String icon;
   String iconChoose;
   int position;
@@ -7,17 +7,10 @@ class TeethModel{
   String name;
   String growTime;
 
-  String toothId;
-  String childId;
-  String grownDate;
-  String note;
-  String imageURL;
-  bool grownFlag;
+  ToothInfoModel({this.position, this.name, this.growTime});
 
-  TeethModel({this.position, this.name, this.growTime});
-
-  factory TeethModel.fromJson(dynamic json) {
-    return TeethModel( position : json['data']['position'],
+  factory ToothInfoModel.fromJson(dynamic json) {
+    return ToothInfoModel( position : json['data']['position'],
       name : json['data']['name'],
       growTime : json['data']['growTime'],);
   }
@@ -31,23 +24,27 @@ class TeethModel{
   }
 }
 
-class TeethInfo {
+class ToothModel {
   String toothId;
   String childId;
-  String grownDate;
+  DateTime grownDate;
   String note;
   String imageURL;
   bool grownFlag;
 
-  TeethInfo({this.toothId, this.childId, this.grownDate, this.note, this.imageURL, this.grownFlag});
+  ToothModel({this.toothId, this.childId, this.grownDate, this.note, this.imageURL, this.grownFlag});
 
-  TeethInfo.fromJson(Map<String, dynamic> json) {
-    toothId = json['toothId'];
-    childId = json['childId'];
-    grownDate = json['grownDate'];
-    note = json['note'];
-    imageURL = json['imageURL'];
-    grownFlag = json['grownFlag'];
+  factory ToothModel.fromJson(dynamic json) {
+    return ToothModel(
+        toothId : json['data']['toothId'],
+        childId : json['data']['childId'],
+        grownDate : DateTime.parse(json['data']['grownDate']),
+    note : json['data']['note'],
+    imageURL : json['data']['imageURL'],
+    grownFlag : json['data']['grownFlag'],
+
+    );
+
   }
 
   Map<String, dynamic> toJson() {

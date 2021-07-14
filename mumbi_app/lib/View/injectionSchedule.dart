@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
+import 'package:mumbi_app/View/bottomNavBar_view.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 import 'package:mumbi_app/View/vaccinePrice_compare.dart';
 import 'package:mumbi_app/View/injectiondetail_view.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
+import 'injectionUpdatePhone_view.dart';
 
 
 class InjectionSchedule extends StatefulWidget {
@@ -28,7 +30,11 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
         leading: IconButton(
           icon: Icon(Icons.keyboard_backspace),
           onPressed: () => {
-            Navigator.pop(context)
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BotNavBar()),
+            )
           },
         ),
       ),
@@ -101,10 +107,11 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                       },
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
+              createTextBlueHyperlink(context,"Cập nhật lịch sử tiêm chủng",InjectionUpdatePhone()),
               InjectTable(),
               //InjectTable()
             ],
@@ -115,48 +122,11 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
     );
   }
 }
-//
-// class BabyOption  extends StatelessWidget{
-//   int _value = 1;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     // TODO: implement build
-//     return  Container(
-//       padding: EdgeInsets.all(20.0),
-//       child: DropdownButton(
-//           value: _value,
-//           items: [
-//             DropdownMenuItem(
-//               child: Text("First Item"),
-//               value: 1,
-//             ),
-//             DropdownMenuItem(
-//               child: Text("Second Item"),
-//               value: 2,
-//             ),
-//             DropdownMenuItem(
-//                 child: Text("Third Item"),
-//                 value: 3
-//             ),
-//             DropdownMenuItem(
-//                 child: Text("Fourth Item"),
-//                 value: 4
-//             )
-//           ],
-//           onChanged: (value) {
-//             setState(() {
-//               _value = value;
-//             });
-//           }),
-//     );
-//   }
-// }
+
 
 class InjectTable extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return GestureDetector(
         onTap: () {
 

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Model/teeth_model.dart';
+import 'package:mumbi_app/Model/tooth_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:mumbi_app/Model/playlist_model.dart';
@@ -17,10 +17,11 @@ Widget createTextFeild(String title,String hintText, String value, ontap) {
   return Container(
     padding: EdgeInsets.only( top: 12),
     child: TextFormField(
+      initialValue: value,
       maxLength: 200,
-      onChanged: (text){
-        text = value;
-      },
+      // onChanged: (text){
+      //   text = value;
+      // },
       decoration:
           InputDecoration(
             labelStyle: SEMIBOLDPINK_16,
@@ -81,15 +82,21 @@ Widget createButtonCancel(BuildContext context, String title, Widget _screen) {
   );
 }
 
-Widget createListTile(String name) {
+Widget createListTile(String imageUrl, String name) {
   return Container(
     decoration: new BoxDecoration(
       color: Colors.white,
     ),
     child: ListTile(
-      leading: CircleAvatar(
-          backgroundColor: Colors.grey,
-          child: Icon(Icons.assignment_ind_sharp)),
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(65),
+        child: Image.network(
+          imageUrl,
+          height: 40,
+          width: 40,
+          fit: BoxFit.cover,
+        ),
+      ),
       title: Text(name),
       onTap: () => {},
     ),
@@ -421,7 +428,7 @@ Widget getButtonUpload(BuildContext context) {
   );
 }
 
-Widget createTeeth(TeethModel teethModel, bool choose, ontap) {
+Widget createTeeth(ToothInfoModel teethModel, bool choose, ontap) {
   return Positioned(
     height: teethModel.height,
     width: teethModel.width,
@@ -464,47 +471,61 @@ Widget createTextAlignInformation(String position, String name, String growTime)
   );
 }
 
-Widget createTextAlignUpdate(BuildContext context,String position, String name, String growTime, Widget screen) {
+Widget createTextAlignUpdate(BuildContext context, String name,String status, String growTime, Widget screen) {
   return  Container(
     padding: EdgeInsets.only(left: 16,right: 16,bottom: 16),
     margin: EdgeInsets.only(left: 16,right: 16,bottom: 16),
     decoration: new BoxDecoration(
         color: Colors.white
     ),
-    child: Row(
-      children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget> [
-            createTextAlign("Bé của bạn (Bé Bông):", SEMIBOLD_18),
-            createTextAlign("Trạng thái: "+position, SEMIBOLD_16),
-            createTextAlign("Ngày mọc: "+ position, SEMIBOLD_16),
+    child: Container(
+      child: Column(
+        children: <Widget>[
+          createTextAlign("Bé của bạn ("+ name + "):", SEMIBOLD_18),
+          Container(
+            margin: EdgeInsets.only(top: 8),
+            child: Row(
+              children: <Widget>[
+                Container(
+                  width: SizeConfig.safeBlockHorizontal*50,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget> [
+                      createTextAlign("Trạng thái: "+status, SEMIBOLD_16),
+                      createTextAlign("Ngày mọc: "+ growTime, SEMIBOLD_16),
 
-          ],
-        ),
-        Container(
-          padding: EdgeInsets.only(left: 16),
-          child: SizedBox(
-            width: 120,
-            height: 50,
-            child: ElevatedButton(onPressed: () => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => screen),
-              )
-            },
-              style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      )
-                  )
-              ),
-              child: Text('Cập nhật',style: BOLD_16,),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: SizeConfig.safeBlockHorizontal*30,
+                  child: Center(
+                    child: SizedBox(
+                      width: 120,
+                      height: 50,
+                      child: ElevatedButton(onPressed: () => {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => screen),
+                        )
+                      },
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                )
+                            )
+                        ),
+                        child: Text('Cập nhật',style: BOLD_16,),
+                      ),
+                    ),
+                  ),
+                )
+              ],
             ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     ),
   );
 }
@@ -550,11 +571,11 @@ Widget createTextFormFeild(String title,String hintText, String value, ontap) {
   );
 }
 
-Widget createTextFeildDisable(String title, String value, ontap) {
+Widget createTextFeildDisable(String title, String value) {
   return Container(
     padding: EdgeInsets.only( top: 12),
     child: TextFormField(
-     // controller: ontap,
+      initialValue: value,
       enabled: false,
       decoration:
       InputDecoration(
@@ -565,8 +586,90 @@ Widget createTextFeildDisable(String title, String value, ontap) {
               width: 1,
             ),
           ), labelText: title,
-        prefixText: "aaa"
+        // prefixText: value
       ),
     ),
   );
 }
+
+Widget createTextTitle(String title){
+  return Container(
+    child: Text(title, style: SEMIBOLD_16,),
+  );
+}
+
+Widget createTextBlueHyperlink(BuildContext context, String title, Widget screen){
+  return GestureDetector(
+      child: Text(title, style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => screen),
+        );
+      }
+  );
+}
+Widget createTextBlue(BuildContext context, String title, ontap){
+  return GestureDetector(
+      child: Text(title, style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
+      onTap:
+        ontap,
+  );
+}
+
+Widget createFormPhone(BuildContext context,String hintText, String phone, onChange){
+  return Container(
+    padding: EdgeInsets.all(16),
+    child: TextFormField(
+      onChanged: onChange,
+      keyboardType: TextInputType.phone,
+      decoration:
+      InputDecoration(
+          labelStyle: SEMIBOLDPINK_16,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              width: 1,
+            ),
+          ),
+          hintText: hintText
+      ),
+    ),
+  );
+}
+Widget backButton(BuildContext context, Widget screen){
+  return IconButton(
+    icon: Icon(Icons.keyboard_backspace),
+    onPressed: () => {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => screen),
+      )
+    },
+  );
+}
+
+Widget createFieldPassword(String title, String hintText, bool isHidePassword, passwordView){
+  return Container(
+    padding: EdgeInsets.only(top:16),
+    child: TextFormField(
+      obscureText: isHidePassword,
+      decoration: InputDecoration(
+          labelText: title,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              width: 1,
+            ),
+          ),
+          hintText: hintText,
+          suffixIcon: InkWell(
+              onTap: passwordView,
+              child: isHidePassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off))
+      ),
+    ),
+  );
+}
+
