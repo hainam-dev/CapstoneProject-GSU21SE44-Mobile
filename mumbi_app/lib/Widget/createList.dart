@@ -48,21 +48,31 @@ Widget createListTileWithBlueTextTrailing(
   );
 }
 
-Widget createListTileDiaryPost(String _imageName, String _title, String _time) {
+Widget createListTileDiaryPost(String _imageURL, String _name, bool publicFlag) {
   return Card(
     elevation: 0,
     margin: EdgeInsets.zero,
     child: ListTile(
       leading: CircleAvatar(
-        backgroundColor: Colors.white,
-        radius: 23,
-        child: CircleAvatar(
-          radius: 22,
-          backgroundImage: AssetImage(_imageName),
-        ),
+        radius: 20,
+        backgroundColor: LIGHT_GREY_COLOR,
+        backgroundImage: CachedNetworkImageProvider(_imageURL),
       ),
-      title: Text(_title),
-      subtitle: Text(_time),
+      title: Text(_name,style: TextStyle(fontWeight: FontWeight.w600),),
+      subtitle: Row(
+        children: [
+          Text(DateTimeConvert.getCurrentDay(),style: TextStyle(color: LIGHT_DARK_GREY_COLOR),),
+          SizedBox(width: 6),
+          if(publicFlag == true)
+          Icon(
+            Icons.fiber_manual_record,
+            color: GREY_COLOR,
+            size: 6,
+          ),
+          SizedBox(width: 6),
+          if(publicFlag == true) Text("Chia sẻ cộng đồng: Đã bật"),
+        ],
+      )
     ),
   );
 }
@@ -144,57 +154,61 @@ Widget createButtonTextImageLink(
 
 Widget createListTileHome(BuildContext context, Color _color, String _imageName,
     String _text, String _subText, Widget _screen) {
-  return Card(
-    elevation: 0,
-    color: _color,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12.0),
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        ListTile(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          leading: Image(
-            image: AssetImage(_imageName),
-            height: SizeConfig.blockSizeVertical * 20,
-            width: SizeConfig.blockSizeHorizontal * 20,
-          ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                _text,
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16.0),
+  return Padding(
+    padding: const EdgeInsets.all(12.0),
+    child: Card(
+      elevation: 0,
+      color: _color,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
               ),
-              SizedBox(height: 8.0),
-              Text(
-                _subText,
-                style: TextStyle(color: GREY_COLOR, fontSize: 14.0),
+              leading: Image(
+                image: AssetImage(_imageName),
               ),
-              SizedBox(height: 10.0),
-              /*LinearPercentIndicator(
-                backgroundColor: WHITE_COLOR,
-                width: SizeConfig.blockSizeHorizontal * 50,
-                lineHeight: 8.0,
-                percent: 0.6,
-                progressColor: PINK_COLOR,
-              ),*/
-              // Text(
-              //   "Tìm hiểu thêm",
-              //   style: TextStyle(color: BLUE_COLOR, fontSize: 13.0),
-              // ),
-            ],
-          ),
-          onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => _screen));
-          },
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _text,
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16.0),
+                  ),
+                  SizedBox(height: 8.0),
+                  Text(
+                    _subText,
+                    style: TextStyle(color: GREY_COLOR, fontSize: 14.0),
+                  ),
+                  SizedBox(height: 10.0),
+                  /*LinearPercentIndicator(
+                    backgroundColor: WHITE_COLOR,
+                    width: SizeConfig.blockSizeHorizontal * 50,
+                    lineHeight: 8.0,
+                    percent: 0.6,
+                    progressColor: PINK_COLOR,
+                  ),*/
+                  // Text(
+                  //   "Tìm hiểu thêm",
+                  //   style: TextStyle(color: BLUE_COLOR, fontSize: 13.0),
+                  // ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => _screen));
+              },
+            ),
+          ],
         ),
-      ],
+      ),
     ),
   );
 }
@@ -407,11 +421,14 @@ Widget createDiaryItem(BuildContext context, DiaryModel diaryModel) {
                             + DateTimeConvert.convertDatetimeFullFormat(diaryModel.createTime),
                         style: TextStyle(color: LIGHT_DARK_GREY_COLOR,fontSize: 18,fontWeight: FontWeight.w600),),
                       SizedBox(width: 3,),
-                      if(diaryModel.publicFlag == true)
-                        Icon(Icons.fiber_manual_record,color: LIGHT_DARK_GREY_COLOR,size: 6,),
+                      if(diaryModel.publicFlag == true && diaryModel.approvedFlag == true
+                      || diaryModel.publicFlag == true && diaryModel.approvedFlag == false)
+                        Icon(Icons.fiber_manual_record,color: LIGHT_DARK_GREY_COLOR,size: 5,),
                       SizedBox(width: 3,),
-                      if(diaryModel.publicFlag == true)
-                        Text("Đã chia sẻ",style: TextStyle(color: LIGHT_DARK_GREY_COLOR,),)
+                      if(diaryModel.publicFlag == true && diaryModel.approvedFlag == true)
+                        Text("Đã chia sẻ",style: TextStyle(color: LIGHT_DARK_GREY_COLOR,),),
+                      if(diaryModel.publicFlag == true && diaryModel.approvedFlag == false)
+                        Text("Đang chờ duyệt",style: TextStyle(color: LIGHT_DARK_GREY_COLOR,),)
                     ],
                   ),
                   SizedBox(height: 5,),

@@ -1,6 +1,12 @@
 import 'package:intl/intl.dart';
 
 class DateTimeConvert{
+
+  static String getCurrentDay(){
+    DateTime now = DateTime.now();
+    return DateFormat('dd/MM/yyyy').format(now);
+  }
+
   static String getDayOfWeek(String date){
     date = (DateFormat('EEEE').format(DateTime.parse(date)));
     switch (date){
@@ -15,8 +21,13 @@ class DateTimeConvert{
     }
   }
 
+  static String convertDatetimeDMY(String date){
+    date = DateFormat('d/M/yyyy').format(DateTime.parse(date));
+    return date;
+  }
+
   static String convertDatetimeFullFormat(String date){
-    date = DateFormat(', d/M/yyyy hh:mm').format(DateTime.parse(date));
+    date = DateFormat(', d/M/yyyy HH:mm').format(DateTime.parse(date));
     return date;
   }
 
@@ -28,7 +39,7 @@ class DateTimeConvert{
     String dateOfMonth = DateFormat('d').format(date);
     String month = DateFormat('M').format(date);
     String year = DateFormat('yyyy').format(date);
-    String time = DateFormat('hh:mm').format(date);
+    String time = DateFormat('HH:mm').format(date);
 
     if (difference.inDays > 1){
       return '${dateOfMonth} tháng ${month}, ${year} ${time}';
@@ -54,7 +65,7 @@ class DateTimeConvert{
     String dateOfMonth = DateFormat('d').format(date);
     String month = DateFormat('M').format(date);
     String year = DateFormat('yyyy').format(date);
-    String time = DateFormat('hh:mm').format(date);
+    String time = DateFormat('HH:mm').format(date);
 
     if (difference.inDays > 1){
       return '${dateOfWeek}, ${dateOfMonth} tháng ${month}, ${year} ${time}';

@@ -5,22 +5,22 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 
-class NewsDetail extends StatefulWidget {
+class GuidebookDetail extends StatefulWidget {
   final model;
 
-  const NewsDetail(this.model);
+  const GuidebookDetail(this.model);
 
   @override
-  _NewsDetailState createState() => _NewsDetailState();
+  _GuidebookDetailState createState() => _GuidebookDetailState();
 }
 
-class _NewsDetailState extends State<NewsDetail> {
+class _GuidebookDetailState extends State<GuidebookDetail> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Tin tức"),
+          title: Text("Cẩm nang"),
         ),
         body: Stack(
           children: [
@@ -76,7 +76,7 @@ class _NewsDetailState extends State<NewsDetail> {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 8, 16),
                     child: Html(
-                      data: widget.model.newsContent,
+                      data: widget.model.guidebookContent,
                     ),
                   ),
                 ],

@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:mumbi_app/Constant/common_api.dart';
+import 'package:mumbi_app/Model/diary_model.dart';
 
 class DiaryRepository{
 
@@ -23,7 +26,19 @@ class DiaryRepository{
     }
   }
 
-  static Future<dynamic> apiDeleteDiary(String id) async {
+  static Future<dynamic> apiAddDiary(DiaryModel diaryModel) async{
+    var response = await http.post(
+        Uri.parse("${ADD_DIARY}"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(diaryModel.toJson()));
+    if (response.statusCode == 200) {
+      return response.body;
+    }
+  }
+
+  static Future<dynamic> apiDeleteDiary(num id) async {
     var response = await http.put(
       Uri.parse("${DELETE_DIARY}${id}"),
       headers: <String, String>{

@@ -81,7 +81,7 @@ class _ParentInfoState extends State<ParentInfo> {
                 widget.action == update ? widget.model.imageURL : defaultImage),
             const SizedBox(height: 8),
             new Container(
-              height: SizeConfig.blockSizeVertical * 60,
+              height: SizeConfig.blockSizeVertical * 50,
               width: SizeConfig.blockSizeHorizontal * 93,
               child: Form(
                 key: formKey,
