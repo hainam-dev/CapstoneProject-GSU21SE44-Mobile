@@ -8,9 +8,11 @@ class CustomInputNumber extends StatefulWidget {
   final number;
   final function;
   final checkValidation;
-  const CustomInputNumber(this.title, this.number, {this.function, this.checkValidation});
+  const CustomInputNumber(this.title, this.number,
+      {this.function, this.checkValidation});
   @override
-  _CustomInputNumberState createState() => _CustomInputNumberState(title, number);
+  _CustomInputNumberState createState() =>
+      _CustomInputNumberState(title, number);
 }
 
 class _CustomInputNumberState extends State<CustomInputNumber> {
@@ -24,7 +26,7 @@ class _CustomInputNumberState extends State<CustomInputNumber> {
   }
 
   Widget _buildPhoneNumber(String title) => Container(
-        height: SizeConfig.blockSizeVertical * 8,
+        height: SizeConfig.blockSizeVertical * 7,
         child: TextFormField(
           initialValue: number,
           decoration: InputDecoration(
@@ -47,9 +49,11 @@ class _CustomInputNumberState extends State<CustomInputNumber> {
               return null;
             } else if (title == 'Số điện thoại' && !regPho.hasMatch(value)) {
               return 'Định dạng Số điện thoại không đúng.';
-            } else if (title == 'Xoáy đầu' && !isBetween(int.parse(value), 0, 4 ) ) {
+            } else if (title == 'Xoáy đầu' &&
+                !isBetween(int.parse(value), 0, 4)) {
               return 'Số xoáy đầu từ 0 đến 4.';
-            } else if (title == 'Số vân tay' && !isBetween(int.parse(value), 0, 10) ) {
+            } else if (title == 'Số vân tay' &&
+                !isBetween(int.parse(value), 0, 10)) {
               return 'Số vân tay từ 0 đến 10.';
             } else {
               return null;
@@ -61,12 +65,10 @@ class _CustomInputNumberState extends State<CustomInputNumber> {
         ),
       );
 
-  bool isBetween(int value, int min, int max){
-    if(value <= max && value >= min){
+  bool isBetween(int value, int min, int max) {
+    if (value <= max && value >= min) {
       return true;
     }
     return false;
   }
-
-
 }
