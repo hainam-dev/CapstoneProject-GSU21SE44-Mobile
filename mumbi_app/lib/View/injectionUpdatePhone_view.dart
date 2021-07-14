@@ -24,16 +24,7 @@ class _InjectionUpdatePhoneState extends State<InjectionUpdatePhone> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Lịch Tiêm chủng"),
-        leading: IconButton(
-          icon: Icon(Icons.keyboard_backspace),
-          onPressed: () => {
-            Navigator.push(
-            context,
-            MaterialPageRoute(
-            builder: (context) => InjectionSchedule()),
-            )
-          },
-        ),
+        leading: backButton(context,InjectionSchedule())
       ),
       body: Container(
           padding: EdgeInsets.all(16),

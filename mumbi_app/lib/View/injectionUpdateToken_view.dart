@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
+import 'package:mumbi_app/View/injectionUpdatePassword.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 import 'injectionUpdatePhone_view.dart';
 import 'package:otp_text_field/otp_text_field.dart';
@@ -22,6 +23,7 @@ class _InjectionUpdateTokenState extends State<InjectionUpdateToken> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Xác nhận số điện thoại"),
+        leading: backButton(context,InjectionUpdatePhone()),
       ),
       body: Container(
         padding: EdgeInsets.all(16),
@@ -64,7 +66,7 @@ class _InjectionUpdateTokenState extends State<InjectionUpdateToken> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => InjectionSchedule()),
+                    builder: (context) => InectionUpdatePassword()),
               );
             })
           ],

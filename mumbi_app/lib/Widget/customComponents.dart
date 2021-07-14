@@ -638,5 +638,38 @@ Widget createFormPhone(BuildContext context,String hintText, String phone, onCha
     ),
   );
 }
+Widget backButton(BuildContext context, Widget screen){
+  return IconButton(
+    icon: Icon(Icons.keyboard_backspace),
+    onPressed: () => {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => screen),
+      )
+    },
+  );
+}
 
+Widget createFieldPassword(String title, String hintText, bool isHidePassword, passwordView){
+  return Container(
+    padding: EdgeInsets.only(top:16),
+    child: TextFormField(
+      obscureText: isHidePassword,
+      decoration: InputDecoration(
+          labelText: title,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              width: 1,
+            ),
+          ),
+          hintText: hintText,
+          suffixIcon: InkWell(
+              onTap: passwordView,
+              child: isHidePassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off))
+      ),
+    ),
+  );
+}
 

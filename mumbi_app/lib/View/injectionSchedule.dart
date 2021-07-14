@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
+import 'package:mumbi_app/View/bottomNavBar_view.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 import 'package:mumbi_app/View/vaccinePrice_compare.dart';
 import 'package:mumbi_app/View/injectiondetail_view.dart';
@@ -29,7 +30,11 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
         leading: IconButton(
           icon: Icon(Icons.keyboard_backspace),
           onPressed: () => {
-            Navigator.pop(context)
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BotNavBar()),
+            )
           },
         ),
       ),

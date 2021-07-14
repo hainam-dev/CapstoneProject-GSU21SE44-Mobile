@@ -52,6 +52,7 @@ final String bookmark_choose = _getImagePath('bookmark_choose.svg');
 final String ic_tooth = _getImagePath('ic_tooth.svg');
 final String ic_needle = _getImagePath('needle.svg');
 final String btn_plus = _getImagePath('btn_plus.svg');
+final String emptyPhone = _getImagePath('empty.svg');
 
 final String chooseImage = "https://firebasestorage.googleapis.com/v0/b/mumbi-app-84d15.appspot.com/o/DefautImage%2FImage.png?alt=media&token=a50383eb-c411-4747-8fa3-0fa9916cd70c";
 final String defaultImage = "https://firebasestorage.googleapis.com/v0/b/mumbi-app-84d15.appspot.com/o/DefautImage%2FdefaultAvatar.png?alt=media&token=7b5bedcc-5330-48af-a317-9e846cc65a58";
