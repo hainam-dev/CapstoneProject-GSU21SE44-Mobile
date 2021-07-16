@@ -1,5 +1,5 @@
 //final String HOST_ADDRESS = "https://192.168.97.6:45455";
-final String HOST_ADDRESS = "http://mumbicapstone-dev.ap-southeast-1.elasticbeanstalk.com";
+final String HOST_ADDRESS = "https://service.mumbi.xyz"; //"http://mumbicapstone-dev.ap-southeast-1.elasticbeanstalk.com";
 
 final String LOGIN = getApiPath("/api/Authentication/Authenticate");
 
