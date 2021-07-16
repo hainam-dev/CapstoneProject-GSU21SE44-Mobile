@@ -1,10 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:mumbi_app/Repository/vaccination_respository.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
 import 'package:mumbi_app/View/phoneEmpty.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 
 class InectionUpdatePassword extends StatefulWidget {
-  const InectionUpdatePassword({Key key}) : super(key: key);
+  final bool isRecovery;
+  final String phoneNo;
+  const InectionUpdatePassword(
+      {Key key, @required this.phoneNo, this.isRecovery = false})
+      : super(key: key);
 
   @override
   _InectionUpdatePasswordState createState() => _InectionUpdatePasswordState();
@@ -12,40 +19,66 @@ class InectionUpdatePassword extends StatefulWidget {
 
 class _InectionUpdatePasswordState extends State<InectionUpdatePassword> {
   bool isHidePassword = true;
+  final TextEditingController passController = TextEditingController();
+  final TextEditingController passConfirmController = TextEditingController();
+
+  void updatePass() async {
+    if (passController.text != passConfirmController.text) {
+      showCustomProgressDialog(context, null, (data) {
+        return Pair(false, "Xác nhận mật khẩu không khớp");
+      });
+      return;
+    }
+    showCustomProgressDialog(
+        context,
+        widget.isRecovery
+            ? VaccinationRespository.changePassByToken(
+                widget.phoneNo, passController.text)
+            : VaccinationRespository.createPassByToken(
+                widget.phoneNo, passController.text), (data) {
+      var json = jsonDecode(data);
+      print(json);
+      var success = json['code'] == 1;
+      if (success) {
+        VaccinationRespository.setTokenValue(json["data"]["token"]);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PhoneEmpty()),
+        );
+      }
+      return Pair(success, json['message']);
+    });
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => PhoneEmpty()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Cập nhật mật khẩu"),
-        leading: backButton(context,InjectionSchedule()),
+        leading: backButton(context, InjectionSchedule()),
       ),
       body: Container(
         padding: EdgeInsets.only(left: 16, right: 16),
         child: Column(
           children: <Widget>[
-            createFieldPassword("Nhập mật khẩu sử dụng truy cập hệ thống (*)","Mật khẩu",isHidePassword, passwordView),
-            createFieldPassword("Nhập lại mật khẩu","Mật khẩu",isHidePassword, passwordView),
+            createFieldPassword("Nhập mật khẩu sử dụng truy cập hệ thống (*)",
+                "Mật khẩu", isHidePassword, passController, passwordView),
+            createFieldPassword("Nhập lại mật khẩu", "Mật khẩu", isHidePassword,
+                passConfirmController, passwordView),
             Container(
               padding: EdgeInsets.all(16),
-              child: createButtonConfirm("Hoàn tất", (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PhoneEmpty()),
-                );
-              }),
+              child: createButtonConfirm("Hoàn tất", updatePass),
             )
           ],
         ),
       ),
     );
   }
-  void passwordView(){
-   isHidePassword = !isHidePassword;
-   setState(() {
 
-   });
+  void passwordView() {
+    isHidePassword = !isHidePassword;
+    setState(() {});
   }
 }
-
-
