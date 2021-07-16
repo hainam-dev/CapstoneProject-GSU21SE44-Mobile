@@ -12,27 +12,27 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:mumbi_app/Model/playlist_model.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/View/teethDetail_view.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
-Widget createTextFeild(String title,String hintText, String value, ontap) {
+Widget createTextFeild(String title, String hintText, String value, ontap) {
   return Container(
-    padding: EdgeInsets.only( top: 12),
+    padding: EdgeInsets.only(top: 12),
     child: TextFormField(
       initialValue: value,
       maxLength: 200,
       // onChanged: (text){
       //   text = value;
       // },
-      decoration:
-          InputDecoration(
-            labelStyle: SEMIBOLDPINK_16,
-            border: OutlineInputBorder(
+      decoration: InputDecoration(
+          labelStyle: SEMIBOLDPINK_16,
+          border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(
               width: 1,
             ),
-          ), labelText: title,
-              hintText: hintText
           ),
+          labelText: title,
+          hintText: hintText),
     ),
   );
 }
@@ -227,9 +227,9 @@ Widget createFamilyCard(
                 child: Stack(
                   children: [
                     CircleAvatar(
-                      radius: 39,
-                      backgroundColor: PINK_COLOR,
-                      backgroundImage: CachedNetworkImageProvider(_imageURL)),
+                        radius: 39,
+                        backgroundColor: PINK_COLOR,
+                        backgroundImage: CachedNetworkImageProvider(_imageURL)),
                     Positioned(
                       top: -2,
                       right: -2,
@@ -436,7 +436,8 @@ Widget createTeeth(ToothInfoModel teethModel, bool choose, ontap) {
     left: teethModel.left,
     child: Container(
       child: IconButton(
-        icon: SvgPicture.asset(choose ? teethModel.iconChoose : teethModel.icon),
+        icon:
+            SvgPicture.asset(choose ? teethModel.iconChoose : teethModel.icon),
         onPressed: ontap,
       ),
     ),
@@ -445,78 +446,77 @@ Widget createTeeth(ToothInfoModel teethModel, bool choose, ontap) {
 
 Widget createTextAlign(String text, TextStyle textStyle) {
   return Container(
-    margin: EdgeInsets.only(top: 8,),
+    margin: EdgeInsets.only(
+      top: 8,
+    ),
     child: Align(
-        alignment: Alignment.topLeft,
-        child: Text(text, style: textStyle)),
+        alignment: Alignment.topLeft, child: Text(text, style: textStyle)),
   );
 }
 
-Widget createTextAlignInformation(String position, String name, String growTime) {
-  return  Container(
-    padding: EdgeInsets.only(left: 16,right: 16,bottom: 16),
-    margin: EdgeInsets.only(left: 16,right: 16,bottom: 16, top: 16),
-    decoration: new BoxDecoration(
-        color: Colors.white
-    ),
+Widget createTextAlignInformation(
+    String position, String name, String growTime) {
+  return Container(
+    padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+    margin: EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 16),
+    decoration: new BoxDecoration(color: Colors.white),
     child: Column(
-      children: <Widget> [
+      children: <Widget>[
         createTextAlign("Thông tin", SEMIBOLD_18),
-        createTextAlign("Răng số "+position, SEMIBOLD_16),
-        createTextAlign("Tên gọi: "+ name, SEMIBOLD_16),
-        createTextAlign("Thời gian mọc: "+ growTime, SEMIBOLD_16),
-
+        createTextAlign("Răng số " + position, SEMIBOLD_16),
+        createTextAlign("Tên gọi: " + name, SEMIBOLD_16),
+        createTextAlign("Thời gian mọc: " + growTime, SEMIBOLD_16),
       ],
     ),
   );
 }
 
-Widget createTextAlignUpdate(BuildContext context, String name,String status, String growTime, Widget screen) {
-  return  Container(
-    padding: EdgeInsets.only(left: 16,right: 16,bottom: 16),
-    margin: EdgeInsets.only(left: 16,right: 16,bottom: 16),
-    decoration: new BoxDecoration(
-        color: Colors.white
-    ),
+Widget createTextAlignUpdate(BuildContext context, String name, String status,
+    String growTime, Widget screen) {
+  return Container(
+    padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+    margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+    decoration: new BoxDecoration(color: Colors.white),
     child: Container(
       child: Column(
         children: <Widget>[
-          createTextAlign("Bé của bạn ("+ name + "):", SEMIBOLD_18),
+          createTextAlign("Bé của bạn (" + name + "):", SEMIBOLD_18),
           Container(
             margin: EdgeInsets.only(top: 8),
             child: Row(
               children: <Widget>[
                 Container(
-                  width: SizeConfig.safeBlockHorizontal*50,
+                  width: SizeConfig.safeBlockHorizontal * 50,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget> [
-                      createTextAlign("Trạng thái: "+status, SEMIBOLD_16),
-                      createTextAlign("Ngày mọc: "+ growTime, SEMIBOLD_16),
-
+                    children: <Widget>[
+                      createTextAlign("Trạng thái: " + status, SEMIBOLD_16),
+                      createTextAlign("Ngày mọc: " + growTime, SEMIBOLD_16),
                     ],
                   ),
                 ),
                 Container(
-                  width: SizeConfig.safeBlockHorizontal*30,
+                  width: SizeConfig.safeBlockHorizontal * 30,
                   child: Center(
                     child: SizedBox(
                       width: 120,
                       height: 50,
-                      child: ElevatedButton(onPressed: () => {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => screen),
-                        )
-                      },
+                      child: ElevatedButton(
+                        onPressed: () => {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => screen),
+                          )
+                        },
                         style: ButtonStyle(
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                )
-                            )
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ))),
+                        child: Text(
+                          'Cập nhật',
+                          style: BOLD_16,
                         ),
-                        child: Text('Cập nhật',style: BOLD_16,),
                       ),
                     ),
                   ),
@@ -530,102 +530,34 @@ Widget createTextAlignUpdate(BuildContext context, String name,String status, St
   );
 }
 
-Widget createBottomNavigationBar(BuildContext context, String stringCancel, String stringUpdate , ontap){
+Widget createBottomNavigationBar(
+    BuildContext context, String stringCancel, String stringUpdate, ontap) {
   return Container(
     padding: EdgeInsets.only(left: 16, right: 16, bottom: 32),
     child: Row(
       children: <Widget>[
         createButtonCancel(context, stringCancel, context.widget),
-        createButtonConfirm(stringUpdate,ontap)
+        createButtonConfirm(stringUpdate, ontap)
       ],
     ),
   );
 }
 
-Widget createTextFormFeild(String title,String hintText, String value, ontap) {
+Widget createTextFormFeild(String title, String hintText, String value, ontap) {
   return Container(
-    padding: EdgeInsets.only( top: 12),
+    padding: EdgeInsets.only(top: 12),
     child: TextFormField(
-      onChanged: (text){
+      onChanged: (text) {
         text = value;
       },
-      validator: (string){
+      validator: (string) {
         if (value == "" && string.length == 0) {
           return 'Vui lòng nhập họ và tên';
         } else {
           return null;
         }
       },
-      decoration:
-      InputDecoration(
-          labelStyle: SEMIBOLDPINK_16,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(
-              width: 1,
-            ),
-          ), labelText: title,
-          hintText: hintText
-      ),
-    ),
-  );
-}
-
-Widget createTextFeildDisable(String title, String value) {
-  return Container(
-    padding: EdgeInsets.only( top: 12),
-    child: TextFormField(
-      initialValue: value,
-      enabled: false,
-      decoration:
-      InputDecoration(
-          labelStyle: SEMIBOLDPINK_16,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(
-              width: 1,
-            ),
-          ), labelText: title,
-        // prefixText: value
-      ),
-    ),
-  );
-}
-
-Widget createTextTitle(String title){
-  return Container(
-    child: Text(title, style: SEMIBOLD_16,),
-  );
-}
-
-Widget createTextBlueHyperlink(BuildContext context, String title, Widget screen){
-  return GestureDetector(
-      child: Text(title, style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => screen),
-        );
-      }
-  );
-}
-Widget createTextBlue(BuildContext context, String title, ontap){
-  return GestureDetector(
-      child: Text(title, style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
-      onTap:
-        ontap,
-  );
-}
-
-Widget createFormPhone(BuildContext context,String hintText, String phone, onChange){
-  return Container(
-    padding: EdgeInsets.all(16),
-    child: TextFormField(
-      onChanged: onChange,
-      keyboardType: TextInputType.phone,
-      decoration:
-      InputDecoration(
+      decoration: InputDecoration(
           labelStyle: SEMIBOLDPINK_16,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -633,28 +565,103 @@ Widget createFormPhone(BuildContext context,String hintText, String phone, onCha
               width: 1,
             ),
           ),
-          hintText: hintText
+          labelText: title,
+          hintText: hintText),
+    ),
+  );
+}
+
+Widget createTextFeildDisable(String title, String value) {
+  return Container(
+    padding: EdgeInsets.only(top: 12),
+    child: TextFormField(
+      initialValue: value,
+      enabled: false,
+      decoration: InputDecoration(
+        labelStyle: SEMIBOLDPINK_16,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            width: 1,
+          ),
+        ),
+        labelText: title,
+        // prefixText: value
       ),
     ),
   );
 }
-Widget backButton(BuildContext context, Widget screen){
+
+Widget createTextTitle(String title) {
+  return Container(
+    child: Text(
+      title,
+      style: SEMIBOLD_16,
+    ),
+  );
+}
+
+Widget createTextBlueHyperlink(
+    BuildContext context, String title, Widget screen) {
+  return GestureDetector(
+      child: Text(title,
+          style: TextStyle(
+              decoration: TextDecoration.underline, color: Colors.blue)),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => screen),
+        );
+      });
+}
+
+Widget createTextBlue(BuildContext context, String title, ontap) {
+  return GestureDetector(
+    child: Text(title,
+        style: TextStyle(
+            decoration: TextDecoration.underline, color: Colors.blue)),
+    onTap: ontap,
+  );
+}
+
+Widget createFormPhone(
+    BuildContext context, String hintText, String phone, onChange) {
+  return Container(
+    padding: EdgeInsets.all(16),
+    child: TextFormField(
+      onChanged: onChange,
+      keyboardType: TextInputType.phone,
+      decoration: InputDecoration(
+          labelStyle: SEMIBOLDPINK_16,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              width: 1,
+            ),
+          ),
+          hintText: hintText),
+    ),
+  );
+}
+
+Widget backButton(BuildContext context, Widget screen) {
   return IconButton(
     icon: Icon(Icons.keyboard_backspace),
     onPressed: () => {
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => screen),
+        MaterialPageRoute(builder: (context) => screen),
       )
     },
   );
 }
 
-Widget createFieldPassword(String title, String hintText, bool isHidePassword, passwordView){
+Widget createFieldPassword(String title, String hintText, bool isHidePassword,
+    TextEditingController controller, passwordView) {
   return Container(
-    padding: EdgeInsets.only(top:16),
+    padding: EdgeInsets.only(top: 16),
     child: TextFormField(
+      controller: controller,
       obscureText: isHidePassword,
       decoration: InputDecoration(
           labelText: title,
@@ -667,9 +674,73 @@ Widget createFieldPassword(String title, String hintText, bool isHidePassword, p
           hintText: hintText,
           suffixIcon: InkWell(
               onTap: passwordView,
-              child: isHidePassword ? Icon(Icons.visibility) : Icon(Icons.visibility_off))
-      ),
+              child: isHidePassword
+                  ? Icon(Icons.visibility)
+                  : Icon(Icons.visibility_off))),
     ),
   );
 }
 
+class Pair<T, E> {
+  T first;
+  E second;
+  Pair(T first, E second) {
+    this.first = first;
+    this.second = second;
+  }
+}
+
+///[Pair] with [Pair.first] is true if success else false, [Pair.second] is error message if [Pair.first] is false
+void showCustomProgressDialog(BuildContext context, Future<dynamic> future,
+    Pair<bool, String> Function(dynamic) onHasData) async {
+  ProgressDialog dialog = ProgressDialog(context,
+      type: ProgressDialogType.Normal, isDismissible: false);
+  dialog.style(message: "Vui lòng đợi");
+  if(future != null){
+    dialog.show();
+  } 
+  Pair<bool, String> p;
+  var error;
+  try {
+    var data = await future;
+    dialog.hide();
+    p = onHasData(data);
+  } catch (e) {
+    dialog.hide();
+    print("error: $e");
+    error = "Có lỗi xảy ra, vui lòng thử lại";
+  }
+  Future.delayed(Duration(milliseconds: 300)).then((_) {
+    if (dialog.isShowing()) {
+      dialog.hide();
+    }
+  });
+  if (p == null || !p.first) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              content: Wrap(
+                runSpacing: 16,
+                alignment: WrapAlignment.center,
+                children: [Text(error == null ? p.second : error)],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'OK'),
+                  child: const Text('OK'),
+                ),
+              ],
+            ));
+  }
+}
+
+///
+/// Convert a color hex-string to a Color object.
+///
+Color getColorFromHex(String hexColor) {
+  hexColor = hexColor.toUpperCase().replaceAll('#', '');
+  if (hexColor.length == 6) {
+    hexColor = 'FF' + hexColor;
+  }
+  return Color(int.parse(hexColor, radix: 16));
+}

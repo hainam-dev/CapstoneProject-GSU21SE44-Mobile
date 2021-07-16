@@ -8,6 +8,7 @@ import 'package:mumbi_app/View/vaccinePrice_compare.dart';
 import 'package:mumbi_app/View/injectiondetail_view.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'injectionUpdatePhone_view.dart';
+import 'injectionVaccinationLogin_view.dart';
 
 class InjectionSchedule extends StatefulWidget {
   const InjectionSchedule({Key key}) : super(key: key);
@@ -111,7 +112,7 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                 ),
               ),
               createTextBlueHyperlink(context, "Cập nhật lịch sử tiêm chủng",
-                  InjectionUpdatePhone()),
+                  InectionVaccinationLogin()),
               InjectTable(),
               //InjectTable()
             ],

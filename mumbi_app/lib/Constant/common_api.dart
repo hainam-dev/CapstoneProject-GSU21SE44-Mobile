@@ -1,5 +1,5 @@
 //final String HOST_ADDRESS = "https://192.168.97.6:45455";
-final String HOST_ADDRESS = "http://mumbicapstone-dev.ap-southeast-1.elasticbeanstalk.com";
+final String HOST_ADDRESS = "https://service.mumbi.xyz"; //"http://mumbicapstone-dev.ap-southeast-1.elasticbeanstalk.com";
 
 final String LOGIN = getApiPath("/api/Authentication/Authenticate");
 
@@ -32,6 +32,10 @@ final String DELETE_DIARY = getApiPath("/api/Diaries/DeleteDiary/");
 final String GET_TOOTHINFO_BY_ID = getApiPath("/api/ToothInfo/GetToothInfoBy/");
 final String GET_TOOTH_BY_CHILD_ID = getApiPath("/api/Tooth/GetToothByChildId/");
 final String UPSERT_TOOTH_BY_TOOTH_ID = getApiPath("/api/Tooth/UpsertTooth/");
+
+//post vaccination info
+final String POST_PERSONAL_INFO_AddInjectedPerson = getApiPath("/api/InjectedPerson/AddInjectedPerson");
+final String POST_HISTORY_VACCIN_AddInjectionSchedule = getApiPath("/api/InjectionSchedule/AddInjectionSchedule");
 
 
 String getApiPath(String path){
