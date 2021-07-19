@@ -19,9 +19,7 @@ Widget createTextFeild(String title,String hintText, String value, ontap) {
     child: TextFormField(
       initialValue: value,
       maxLength: 200,
-      // onChanged: (text){
-      //   text = value;
-      // },
+      onFieldSubmitted: ontap,
       decoration:
           InputDecoration(
             labelStyle: SEMIBOLDPINK_16,

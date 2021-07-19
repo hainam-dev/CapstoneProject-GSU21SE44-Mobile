@@ -1,4 +1,4 @@
 final saveKey = "save";
-final toothInforKey = "toothInfo";
-final toothKey = "tooth";
-final childId = "childId";
+final toothPosInfo = "toothPosInfo";
+final toothIdKey = "tooth";
+final childIdKey = "childId";

@@ -24,94 +24,59 @@ class ToothViewModel extends Model{
   ToothInfoModel toothInforModel;
   ToothModel toothModel;
 
-  void getToothInfoById() async{
-    int id;
-    dynamic toothId = await storage.read(key: toothInforKey);
-    if (toothId == null)
-      return null;
-    else {
-      toothId = jsonDecode(toothId);
-      id = toothId;
-    }
+  Future<void> getToothInfoById() async{
     try{
-      var data = await ToothRepository.apiGetToothInfoByToothId(id);
+      dynamic position = await storage.read(key: toothPosInfo);
+      // if (position == null)
+      //   return null;
+      // else {
+      position = jsonDecode(position);
+      // }
+      var data = await ToothRepository.apiGetToothInfoByToothId(position);
       if(data != null){
-        data = jsonDecode(data);
-
-        toothInforModel = ToothInfoModel.fromJson(data);
-        getInstance();
+        Map<String, dynamic> jsonData = jsonDecode(data);
+        toothInforModel = ToothInfoModel.fromJson(jsonData);
+        var toothId = storage.write(key: toothIdKey, value: toothInforModel.id);
         notifyListeners();
       }
     }catch (e){
       print("Error getToothInfoById: " + e.toString());
-
     }
   }
 
   Future<bool> upsertTooth(ToothModel childModel) async {
     try {
       String data = await ToothRepository.apiUpsertToothById(childModel);
+      print("Update thành công");
       return true;
     } catch (e) {
       print("error upsert tooth: " + e.toString());
     }
-    return false;
   }
 
-  void getToothByChildId() async{
-    int idTooth;
-    var idChild;
-    var childID = await storage.read(key: childId);
-    // print("Mang child:" +childID.toString());
-    dynamic toothID = await storage.read(key: toothInforKey);
-    // print("Mang tooth:" +toothID.toString());
-
-
-    if (toothID == null && childID == null)
-      return null;
-    else {
-      toothID = jsonDecode(toothID);
-      idTooth = toothID;
-      idChild = childID;
-    }
+  Future<void> getToothByChildId() async{
     try{
-      var data = await ToothRepository.apiGetToothByChildId(idChild, idTooth);
+      var childID = await storage.read(key: childIdKey);
+
+      dynamic toothID = await storage.read(key: toothIdKey);
+
+      if (toothID == null && childID == null)
+        return null;
+      //todo
+      var data = await ToothRepository.apiGetToothByChildId(childID, toothID);
       if(data != null){
-        data = jsonDecode(data);
-
-        toothModel = ToothModel.fromJson(data);
-        // getInstance();
+        Map<String, dynamic> jsonData = jsonDecode(data);
+        if(jsonData['data'] == null){
+          toothModel = new ToothModel();
+        } else{
+          toothModel = ToothModel.fromJson(jsonData);
+        }
         notifyListeners();
+      } else{
+        toothModel = new ToothModel();
       }
-
     }catch (e){
-      print("Error getToothByChildId:  " + e.toString());
-      toothModel = null;
+      print("ERROR getToothByChildId:  " + e.toString());
     }
   }
-
-  // Future<bool> updateChildInfo(ChildModel childModel) async {
-  //   try {
-  //     String data = await ChildRepository.apiUpdateChildInfo(childModel);
-  //     return true;
-  //   } catch (e) {
-  //     print("error: " + e.toString());
-  //   }
-  //   return false;
-  // }
-
-  // Future<bool> upserTooth(ToothModel toothModel) async {
-  //   int idTooth;
-  //   dynamic toothID = await storage.read(key: toothInforKey);
-  //   String momId = await ToothRepository.apiUpsertToothById(toothModel, toothID);
-  //   childModel.momID = momId;
-  //   try {
-  //     String data = await ChildRepository.apiAddChild(childModel);
-  //     notifyListeners();
-  //     return true;
-  //   } catch (e) {
-  //     print("error: " + e.toString());
-  //   }
-  //   return false;
-  // }
 }
