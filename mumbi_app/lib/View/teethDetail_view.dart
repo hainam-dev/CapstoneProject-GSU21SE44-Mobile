@@ -4,24 +4,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:intl/intl.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Constant/saveKey.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Model/tooth_model.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/tooth_viewmodel.dart';
+import 'package:cross_file/cross_file.dart';
+
 
 import 'package:mumbi_app/Widget/calendarBirthday.dart';
 import 'package:mumbi_app/Widget/customBottomButton.dart';
+import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:mumbi_app/Widget/customStatusDropdown.dart';
 import 'package:mumbi_app/Widget/customText.dart';
 import 'package:mumbi_app/Widget/imagePicker.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
+import 'package:mumbi_app/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
+
+
 
 class TeethDetail extends StatefulWidget {
   final model;
@@ -35,80 +43,91 @@ class TeethDetail extends StatefulWidget {
 class _TeethDetailState extends State<TeethDetail> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   File _image;
-  final _picker = ImagePicker();
+  // final ImagePicker _picker = ImagePicker();
   // ToothInfoModel teethInforModel;
+  List<Asset> images = List<Asset>();
   ToothModel toothModel;
   ToothModel currentTooth;
-  String growTime;
+  String growTimeCu;
+  String growTimeUp;
   String status;
+  bool growFlag;
   String note;
+  String note2;
   String image;
   bool result = false;
+  bool isShow = false;
 
   String update = "Update";
 
-  _imgFromCamera() async {
-    final image =
-        await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
+  // _imgFromCamera() async {
+  //   final image =
+  //       await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
+  //
+  //   setState(() {
+  //     if (image != null) {
+  //       _image = File(image.path);
+  //     } else {
+  //       print('No image selected.');
+  //     }
+  //   });
+  // }
 
-    setState(() {
-      if (image != null) {
-        _image = File(image.path);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
+
 
   _imgFromGallery() async {
-    final image =
-        await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
 
-    setState(() {
-      if (image != null) {
-        _image = File(image.path);
-      } else {
-        print('No image selected.');
-      }
-    });
+    // final image = await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+    // final List<XFile> image = await _picker.pickMultiImage(source: ImageSource.gallery);
+    // setState(() {
+    //   if (image != null) {
+    //     _image = File(image.path);
+    //   } else {
+    //     print('No image selected.');
+    //   }
+    // });
+
   }
 
-  void _showPicker(context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Thêm từ albums'),
-                      onTap: () {
-                        _imgFromGallery();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Chụp hình'),
-                    onTap: () {
-                      _imgFromCamera();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
+  // void _showPicker(context) {
+  //   showModalBottomSheet(
+  //       context: context,
+  //       builder: (BuildContext bc) {
+  //         return SafeArea(
+  //           child: Container(
+  //             child: new Wrap(
+  //               children: <Widget>[
+  //                 new ListTile(
+  //                     leading: new Icon(Icons.photo_library),
+  //                     title: new Text('Thêm từ albums'),
+  //                     onTap: () {
+  //                       _imgFromGallery();
+  //                       Navigator.of(context).pop();
+  //                     }),
+  //                 new ListTile(
+  //                   leading: new Icon(Icons.photo_camera),
+  //                   title: new Text('Chụp hình'),
+  //                   onTap: () {
+  //                     _imgFromCamera();
+  //                     Navigator.of(context).pop();
+  //                   },
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         );
+  //       });
+  // }
+
+
 
   @override
   void initState() {
-    if(widget.action != update){
-      toothModel = ToothModel();
-    }
+    // if(widget.action != update){
+    //   toothModel = ToothModel();
+    // }
     super.initState();
+    getToothModel();
   }
 
   @override
@@ -133,25 +152,8 @@ class _TeethDetailState extends State<TeethDetail> {
               builder: (BuildContext context,Widget child,ToothViewModel model){
                 model.getToothByChildId();
                 toothModel = model.toothModel;
-                if(toothModel != null){
-
-                  //todo: //SET TOOTH TỪ DB LÊN
-                  DateTime oDate = DateTime.parse(toothModel.grownDate.toString());
-                  print("DATETIME: "+ oDate.toString());
-                  growTime = oDate.day.toString()+"/"+oDate.month.toString() +"/"+ oDate.year.toString();
-                  note = toothModel.note;
-
-                  if(toothModel.grownFlag){
-                    status = "Đã mọc";
-                  } else status = "Chưa mọc";
-                } else{
-                   growTime = "";
-                   status = "";
-                   note= "";
-                   image= "";
-                }
-
-
+                print("TOOTH MODEL: " +toothModel.grownDate.toString());
+                getToothModel();
 
                 return  Form(
                   key: formKey,
@@ -160,21 +162,15 @@ class _TeethDetailState extends State<TeethDetail> {
                     child: Column(
                       // mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
-                        CalendarBirthday('Ngày', growTime,function: (DateTime value) {
-                          setState(() {
-                            // if(widget.action == update){
-                            //   widget.model.grownDate = value;
-                            // }else{
+                        growTimeCu == null
+                        ? loadingProgress()
+                        : CalendarBirthday('Ngày', growTimeCu,function: (value) {
 
-                              //todo: //SET TOOTH TỪ NHẬP VÀO
-                              print("VALUE: " +value.toString());
-                              print("DATETIME NE:" +DateFormat('d/M/yyyy').parse(value.toString()).toString());
-                              // DateTime oDate = ;
-                              toothModel.grownDate = DateFormat('d/M/yyyy').parse(value.toString());
-                              print("Ngay can UPDATE: "+ DateFormat.yMd().format(value));
-                            // }
+                          setState(() {
+                            growTimeUp = value;
+                            print(value.toString()+"DATE...");
                           });
-                          return null;},),
+                          },),
                         ScopedModelDescendant(
                             builder: (BuildContext context,Widget child,ToothViewModel modelInfo){
                               modelInfo.getToothInfoById();
@@ -182,26 +178,54 @@ class _TeethDetailState extends State<TeethDetail> {
                             }),
                         Container(
                           padding: EdgeInsets.only(top: 12),
-                          // child: new CustomStatusDropdown(
-                          //   'Trạng thái (*)',
-                          //   itemsStatus,
-                          //   widget.action == update ? widget.model.grownFlag : null,
-                          //   function: (value) {
-                          //     setState(() {
-                          //       // if(widget.action == update){
-                          //       //   widget.model.grownFlag = value;
-                          //       // }else{
-                          //       //   // teethInforModel.grownFlag = value;
-                          //       // }
-                          //       widget.model.status = status;
-                          //     },
-                          //     );
-                          //   },
-                          // ),
+                          child: new CustomStatusDropdown(
+                            'Trạng thái (*)',
+                            itemsStatus,
+                            widget.action == update ? widget.model.status : null,
+                            function: (value) {
+                              setState(() {
+                                if(widget.action == update){
+                                  widget.model.status = value;
+                                }else{
+                                  // toothModel.grownFlag = value;
+                                  // status = value;
+                                  value == "Chưa mọc" ? growFlag = false
+                                  : growFlag = true;
+                                }
+                                // widget.model.status = value;
+                              },
+                              );
+                            },
+                          ),
                         ),
                         createTextFeild("Ghi chú (nếu có)", "",
-                            note,""),
-                        _pickerAvartar(context),
+                            note,(value){
+                          print("NOTE: " +value.toString());
+                            note2 = value;
+                            }),
+                        // _pickerAvartar(context),
+                        // _pickerAvartar2(context),
+                        // Column(
+                        //   children: <Widget>[
+                        //     RaisedButton(
+                        //       child: Text("Pick images"),
+                        //       onPressed: pickImages,
+                        //     ),
+                        //     Expanded(
+                        //       child: GridView.count(
+                        //         crossAxisCount: 3,
+                        //         children: List.generate(images.length, (index) {
+                        //           Asset asset = images[index];
+                        //           return AssetThumb(
+                        //             asset: asset,
+                        //             width: 50,
+                        //             height: 50,
+                        //           );
+                        //         }),
+                        //       ),
+                        //     )
+                        //   ],
+                        // )
                       ],
                     ),
                   ),
@@ -210,29 +234,53 @@ class _TeethDetailState extends State<TeethDetail> {
             ),
           ),
         ),
-      ),
+      ) ,
       bottomNavigationBar: createBottomNavigationBar(context, "Hủy", "Cập nhật",
           () async {
           if(formKey.currentState.validate()){
-          print("OK");
-          result = await ToothViewModel().upsertTooth(toothModel);
+            toothModel.grownDate = DateFormat('dd/M/yyyy').parse(growTimeUp);
+            toothModel.note = note2;
+            toothModel.grownFlag = growFlag;
+            print("TOOTH UPDATE: " + toothModel.toothId.toString() +"child:" +
+                toothModel.childId.toString() + " " + toothModel.grownDate.toString() + toothModel.note.toString());
+            result = await ToothViewModel().upsertTooth(toothModel);
 
-          // if(appbarTitle == momTitle){
-          //   result = await TeethViewModel().updateTeeth(chi, widget.model);
           }else{
-            // if(widget.action == update){
-            //   result = await DadViewModel().updateDad(widget.model);
-            // }else{
-            //   result = await DadViewModel().addDad(dadModel);
-            // }
+
           }
           showResult(context, result);
-
 
           }
 
       ),
     );
+  }
+
+  void getToothModel() async{
+    if(toothModel != null){
+      //todo: //SET TOOTH TỪ DB LÊN
+      DateTime oDate = await toothModel.grownDate;
+      // print("DATETIME: "+ oDate.day.toString());
+      if(oDate == null){
+        growTimeCu = "--";
+      } else growTimeCu = await oDate.day.toString()+"/"+oDate.month.toString() +"/"+ oDate.year.toString();
+      // print("GROW TIME:" + growTimeCu.toString());
+      note = toothModel.note;
+
+      if(toothModel.grownFlag == true){
+        status = "Đã mọc";
+      } else status = "Chưa mọc";
+    } else{
+      var toothID = storage.read(key: toothIdKey);
+      var childId = storage.read(key: childIdKey);
+      toothModel = new ToothModel();
+      toothModel.toothId = toothID.toString();
+      toothModel.childId = childId.toString();
+      // toothModel.grownDate = DateTime.now();
+      status = "";
+      note= "";
+      image= "";
+    }
   }
 
   final List<DropdownMenuItem<String>> itemsStatus = [
@@ -268,45 +316,115 @@ class _TeethDetailState extends State<TeethDetail> {
     ),
   ];
 
-  Widget _pickerAvartar(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        _showPicker(context);
-      },
-      child: Container(
-        padding: EdgeInsets.only(top: 12),
-        child: Column(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                'Hình ảnh',
-                style: SEMIBOLDPINK_16,
-              ),
-            ),
-            _image != null
-                ? Container(
-                    padding: EdgeInsets.only(top: 8),
-                    child: Row(children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.only(right: 16),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.file(
-                            _image,
-                            height: 80,
-                            width: 80,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      getButtonUpload(context)
-                    ]),
-                  )
-                : getButtonUpload(context),
-          ],
-        ),
+  // Widget _pickerAvartar(BuildContext context) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       _showPicker(context);
+  //     },
+  //     child: Container(
+  //       padding: EdgeInsets.only(top: 12),
+  //       child: Column(
+  //         children: <Widget>[
+  //           Align(
+  //             alignment: Alignment.topLeft,
+  //             child: Text(
+  //               'Hình ảnh',
+  //               style: SEMIBOLDPINK_16,
+  //             ),
+  //           ),
+  //           _image != null
+  //               ? Container(
+  //                   padding: EdgeInsets.only(top: 8),
+  //                   child: Row(children: <Widget>[
+  //                     Container(
+  //                       padding: EdgeInsets.only(right: 16),
+  //                       child: ClipRRect(
+  //                         borderRadius: BorderRadius.circular(8),
+  //                         child: Image.file(
+  //                           _image,
+  //                           height: 80,
+  //                           width: 80,
+  //                           fit: BoxFit.cover,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     getButtonUpload(context)
+  //                   ]),
+  //                 )
+  //               : getButtonUpload(context),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+  // Widget _pickerAvartar2(BuildContext context) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       _showPicker(context);
+  //     },
+  //     child: Container(
+  //       padding: EdgeInsets.only(top: 12),
+  //       child: Column(
+  //         children: <Widget>[
+  //           Align(
+  //             alignment: Alignment.topLeft,
+  //             child: Text(
+  //               'Hình ảnh',
+  //               style: SEMIBOLDPINK_16,
+  //             ),
+  //           ),
+  //           _image != null
+  //               ? Container(
+  //                   padding: EdgeInsets.only(top: 8),
+  //                   child: Row(children: <Widget>[
+  //                     Container(
+  //                       padding: EdgeInsets.only(right: 16),
+  //                       child: ClipRRect(
+  //                         borderRadius: BorderRadius.circular(8),
+  //                         child: Image.file(
+  //                           _image,
+  //                           height: 80,
+  //                           width: 80,
+  //                           fit: BoxFit.cover,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     getButtonUpload(context)
+  //                   ]),
+  //                 )
+  //               : getButtonUpload(context),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Future<void> pickImages() async {
+    List<Asset> resultList = List<Asset>();
+    MultiImagePicker.pickImages(
+      maxImages: 300,
+      enableCamera: true,
+      selectedAssets: images,
+      materialOptions: MaterialOptions(
+        actionBarTitle: "FlutterCorner.com",
       ),
     );
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 300,
+        enableCamera: true,
+        selectedAssets: images,
+        materialOptions: MaterialOptions(
+          actionBarTitle: "FlutterCorner.com",
+        ),
+      );
+    } on Exception catch (e) {
+      print(e);
+    }
+    setState(() {
+      images = resultList;
+    });
+
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +19,7 @@ Widget createTextFeild(String title, String hintText, String value, ontap) {
     child: TextFormField(
       initialValue: value,
       maxLength: 200,
-      // onChanged: (text){
-      //   text = value;
-      // },
+      onFieldSubmitted: ontap,
       decoration: InputDecoration(
           labelStyle: SEMIBOLDPINK_16,
           border: OutlineInputBorder(
@@ -696,13 +693,9 @@ void showCustomProgressDialog(BuildContext context, Future<dynamic> future,
   ProgressDialog dialog = ProgressDialog(context,
       type: ProgressDialogType.Normal, isDismissible: false);
   dialog.style(message: "Vui lòng đợi");
-<<<<<<< HEAD
-  dialog.show();
-=======
-  if(future != null){
+  if (future != null) {
     dialog.show();
-  } 
->>>>>>> dev-tu/vaccination-feature
+  }
   Pair<bool, String> p;
   var error;
   try {
@@ -714,11 +707,7 @@ void showCustomProgressDialog(BuildContext context, Future<dynamic> future,
     print("error: $e");
     error = "Có lỗi xảy ra, vui lòng thử lại";
   }
-<<<<<<< HEAD
-  Future.delayed(Duration(milliseconds: 50)).then((_) {
-=======
   Future.delayed(Duration(milliseconds: 300)).then((_) {
->>>>>>> dev-tu/vaccination-feature
     if (dialog.isShowing()) {
       dialog.hide();
     }

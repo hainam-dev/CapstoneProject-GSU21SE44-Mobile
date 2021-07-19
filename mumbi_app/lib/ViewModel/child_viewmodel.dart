@@ -49,7 +49,7 @@ class ChildViewModel extends Model {
     }
   }
 
-  void getChildByMom() async{
+  Future<void> getChildByMom() async{
     String momID = await UserViewModel.getUserID();
     try{
       String data = await ChildRepository.apiGetChildByMom(momID);

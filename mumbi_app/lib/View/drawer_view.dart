@@ -6,6 +6,7 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/menuRemind.dart';
 import 'package:mumbi_app/View/parentInfo_view.dart';
+import 'package:mumbi_app/View/pickImage_view.dart';
 import 'package:mumbi_app/View/teethTrack_view.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
