@@ -33,6 +33,10 @@ final String GET_TOOTHINFO_BY_ID = getApiPath("/api/ToothInfo/GetToothInfoBy/");
 final String GET_TOOTH_BY_CHILD_ID = getApiPath("/api/Tooth/GetToothByChildId/");
 final String UPSERT_TOOTH_BY_TOOTH_ID = getApiPath("/api/Tooth/UpsertTooth/");
 
+//post vaccination info
+final String POST_PERSONAL_INFO_AddInjectedPerson = getApiPath("/api/InjectedPerson/AddInjectedPerson");
+final String POST_HISTORY_VACCIN_AddInjectionSchedule = getApiPath("/api/InjectionSchedule/AddInjectionSchedule");
+
 
 String getApiPath(String path){
   return HOST_ADDRESS + path;

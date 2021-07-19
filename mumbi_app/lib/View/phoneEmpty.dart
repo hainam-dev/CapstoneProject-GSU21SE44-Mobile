@@ -49,7 +49,11 @@ class _PhoneEmptyState extends State<PhoneEmpty> {
       showCustomProgressDialog(context, VaccinationRespository.getHistoryList(),
           (data) {
         var jsonObject = jsonDecode(data);
+<<<<<<< HEAD
         //print(jsonObject);
+=======
+        //print("getHistoryList: $jsonObject");
+>>>>>>> dev-tu/vaccination-feature
         var succ = false;
         if (jsonObject["code"] == 401) {
           VaccinationRespository.setTokenValue(null);
@@ -68,6 +72,12 @@ class _PhoneEmptyState extends State<PhoneEmpty> {
             list = listData
                 .map((model) => HistoryVaccination.fromJson(model))
                 .toList();
+<<<<<<< HEAD
+=======
+            VaccinationRespository.sendHistoryList(list).then((value) {
+              print("sendHistoryList: $value");
+            });
+>>>>>>> dev-tu/vaccination-feature
             setState(() {});
           }
         }

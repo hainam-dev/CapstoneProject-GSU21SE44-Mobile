@@ -39,6 +39,12 @@ class _InectionVaccinationLoginState extends State<InectionVaccinationLogin> {
             context, VaccinationRespository.getMemberList(), (value1) {
           var json1 = jsonDecode(value1);
           print(json1);
+<<<<<<< HEAD
+=======
+          VaccinationRespository.sendPersonalInfo(json1).then((value) {
+            print("sendPersonalInfo: $value");
+          });
+>>>>>>> dev-tu/vaccination-feature
           var succ = json1["code"] == 1;
           if (succ) {
             handleMemerList(json1);
