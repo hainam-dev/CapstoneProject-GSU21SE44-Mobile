@@ -6,8 +6,6 @@ class MomModel{
   String phoneNumber;
   String bloodGroup;
   String rhBloodGroup;
-  num weight;
-  num height;
   String dadID;
 
   MomModel(
@@ -18,8 +16,6 @@ class MomModel{
       this.phoneNumber,
       this.bloodGroup,
       this.rhBloodGroup,
-      this.weight,
-      this.height,
       this.dadID});
 
   factory MomModel.fromJson(dynamic json){
@@ -31,8 +27,6 @@ class MomModel{
       phoneNumber : json['data']['phonenumber'],
       bloodGroup : json['data']['bloodGroup'],
       rhBloodGroup : json['data']['rhBloodGroup'],
-      weight : json['data']['weight'],
-      height : json['data']['height'],
       dadID : json['data']['dad_Id'],
     );
   }
@@ -46,8 +40,6 @@ class MomModel{
     'phonenumber' : phoneNumber,
     'bloodGroup' : bloodGroup,
     'rhBloodGroup' : rhBloodGroup,
-    'weight' : weight,
-    'height' : height,
   };
 
 }

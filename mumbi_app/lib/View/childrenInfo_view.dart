@@ -120,7 +120,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                       'Trạng thái (*)',
                       itemsStatus,
                       widget.action == update
-                          ? getStatus(widget.model.bornFlag)
+                          ? showStatus(widget.model.bornFlag)
                           : null,
                       function: (value) {
                         setState(
@@ -174,14 +174,14 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     CustomStatusDropdown(
                       'Giới tính (*)',
                       itemsGender,
-                      widget.action == update ? widget.model.gender : null,
+                      widget.action == update ? showGender(widget.model.gender) : null,
                       function: (value) {
                         setState(
                           () {
                             if (widget.action == update) {
-                              widget.model.gender = value;
+                              widget.model.gender = getGender(value);
                             }else{
-                              childModel.gender = value;
+                              childModel.gender = getGender(value);
                             }
                           },
                         );
@@ -331,7 +331,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
     );
   }
 
-  String getStatus(bool value) {
+  String showStatus(bool value) {
     if (value) {
       return born;
     } else {
@@ -347,6 +347,24 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
         Navigator.pop(context);
         showResult(context, result);
         break;
+    }
+  }
+
+  String showGender(int num){
+    switch (num){
+      case 0: return "Chưa biết"; break;
+      case 1: return "Bé trai"; break;
+      case 2: return "Bé gái"; break;
+      default: return "";
+    }
+  }
+
+  int getGender(String gender){
+    switch (gender){
+      case "Chưa biết": return 0; break;
+      case "Bé trai": return 1; break;
+      case "Bé gái": return 2; break;
+      default: return null;
     }
   }
 
