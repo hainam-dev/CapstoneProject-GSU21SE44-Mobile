@@ -3,7 +3,7 @@ class ChildModel {
   String fullName;
   String nickname;
   String imageURL;
-  String gender;
+  num gender;
   String estimatedBornDate;
   String birthday;
   String bloodGroup;

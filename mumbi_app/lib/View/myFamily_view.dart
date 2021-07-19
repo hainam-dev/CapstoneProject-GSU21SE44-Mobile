@@ -102,9 +102,9 @@ class _MyFamilyState extends State<MyFamily> {
                                    context,
                                    childModel.imageURL,
                                    childModel.fullName,
-                                   childModel.gender == "Bé trai" ? LIGHT_BLUE_COLOR : LIGHT_PINK_COLOR,
-                                   childModel.gender == "Bé trai" ? "Con trai" : "Con gái",
-                                   childModel.gender == "Bé trai" ? BLUE_COLOR : PINK_COLOR,
+                                   childModel.gender == "1" ? LIGHT_BLUE_COLOR : LIGHT_PINK_COLOR,
+                                   childModel.gender == "1" ? "Con trai" : "Con gái",
+                                   childModel.gender == "1" ? BLUE_COLOR : PINK_COLOR,
                                    ChildrenInfo(childModel,"Update"));
                              }
                            }),
