@@ -1,11 +1,8 @@
 import 'dart:convert';
 import 'package:get/get_connect/http/src/response/response.dart';
 import 'package:http/http.dart' as http;
-<<<<<<< HEAD
-=======
 import 'package:mumbi_app/Constant/common_api.dart';
 import 'package:mumbi_app/Model/history_vaccination.dart';
->>>>>>> dev-tu/vaccination-feature
 import 'package:shared_preferences/shared_preferences.dart';
 
 class VaccinationRespository {
@@ -49,9 +46,6 @@ class VaccinationRespository {
   static void setTokenValue(String token) async {
     _tokenValue = token == null ? "" : token;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-<<<<<<< HEAD
-    sharedPreferences.setString(_KEY_TOKEN, token);
-=======
     sharedPreferences.setString(_KEY_TOKEN, _tokenValue);
   }
 
@@ -151,7 +145,6 @@ class VaccinationRespository {
     if (response.statusCode == 200) {
       return response.body;
     }
->>>>>>> dev-tu/vaccination-feature
   }
 
   static Future<dynamic> getHistoryList() async {
@@ -201,13 +194,9 @@ class VaccinationRespository {
   static Future<dynamic> get(String url) {
     var res = http.get(Uri.parse("$url"), headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
-<<<<<<< HEAD
-      'Authorization': (_tokenValue != null && _tokenValue.isNotEmpty) ? 'Bearer $_tokenValue' : ''
-=======
       'Authorization': (_tokenValue != null && _tokenValue.isNotEmpty)
           ? 'Bearer $_tokenValue'
           : ''
->>>>>>> dev-tu/vaccination-feature
     });
     return handleResponse(res);
   }
@@ -216,13 +205,9 @@ class VaccinationRespository {
     var post = http.post(Uri.parse("$url"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-<<<<<<< HEAD
-          'Authorization': (_tokenValue != null && _tokenValue.isNotEmpty) ? 'Bearer $_tokenValue' : ''
-=======
           'Authorization': (_tokenValue != null && _tokenValue.isNotEmpty)
               ? 'Bearer $_tokenValue'
               : ''
->>>>>>> dev-tu/vaccination-feature
         },
         body: body);
     return handleResponse(post);
@@ -231,20 +216,12 @@ class VaccinationRespository {
   static Future<dynamic> handleResponse(Future<dynamic> response) async {
     try {
       final res = await response;
-<<<<<<< HEAD
-      if (res.statusCode == 200) {
-        return res.body;
-      } else if (res.statusCode == 401) {
-        res.body["code"] = 401;
-        return res.body;
-=======
       print(res.body);
       print(res.statusCode);
       if (res.statusCode == 200) {
         return res.body;
       } else if (res.statusCode == 401) {
         return '{"code": 401, "message": "${jsonDecode(res.body)["message"]}"}';
->>>>>>> dev-tu/vaccination-feature
       }
     } catch (e) {
       print("error: $e");
