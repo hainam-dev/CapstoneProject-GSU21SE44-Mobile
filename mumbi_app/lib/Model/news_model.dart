@@ -1,5 +1,5 @@
 class NewsModel{
-  String id;
+  String newsId;
   String title;
   String newsContent;
   String imageURL;
@@ -9,7 +9,7 @@ class NewsModel{
 
 
   NewsModel(
-      {this.id,
+      {this.newsId,
       this.title,
       this.newsContent,
       this.imageURL,
@@ -19,11 +19,11 @@ class NewsModel{
 
   factory NewsModel.fromJson(dynamic json){
     return NewsModel(
-      id: json['id'],
+      newsId: json['id'],
       title: json['title'],
       newsContent: json['newsContent'],
       imageURL: json['imageURL'],
-      estimatedFinishTime: json['estimateFinishTime'],
+      estimatedFinishTime: json['estimatedFinishTime'],
       createTime: json['createdTime'],
       typeId: json['typeId'],
     );

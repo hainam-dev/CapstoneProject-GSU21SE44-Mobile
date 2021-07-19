@@ -27,7 +27,7 @@ class DateTimeConvert{
   }
 
   static String convertDatetimeFullFormat(String date){
-    date = DateFormat(', d/M/yyyy HH:mm').format(DateTime.parse(date));
+    date = DateFormat(', d/M/yyyy H:mm').format(DateTime.parse(date));
     return date;
   }
 
@@ -39,7 +39,7 @@ class DateTimeConvert{
     String dateOfMonth = DateFormat('d').format(date);
     String month = DateFormat('M').format(date);
     String year = DateFormat('yyyy').format(date);
-    String time = DateFormat('HH:mm').format(date);
+    String time = DateFormat('H:mm').format(date);
 
     if (difference.inDays > 1){
       return '${dateOfMonth} tháng ${month}, ${year} ${time}';
@@ -65,7 +65,7 @@ class DateTimeConvert{
     String dateOfMonth = DateFormat('d').format(date);
     String month = DateFormat('M').format(date);
     String year = DateFormat('yyyy').format(date);
-    String time = DateFormat('HH:mm').format(date);
+    String time = DateFormat('H:mm').format(date);
 
     if (difference.inDays > 1){
       return '${dateOfWeek}, ${dateOfMonth} tháng ${month}, ${year} ${time}';

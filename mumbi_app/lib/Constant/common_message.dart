@@ -1,0 +1,1 @@
+final String ERROR_MESSAGE = "Có lỗi xảy ra vui lòng thử lại sau";
