@@ -11,14 +11,4 @@ class GuidebookRepository{
       return response.body;
     }
   }
-
-  static Future<dynamic> apiGetSavedGuidebookByMom() async{
-    var response = await http.get(Uri.parse("${GET_SAVED_GUIDEBOOK_BY_MOM_ID}"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8'
-      },);
-    if(response.statusCode == 200){
-      return response.body;
-    }
-  }
 }

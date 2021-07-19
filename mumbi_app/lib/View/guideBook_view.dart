@@ -3,9 +3,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:mumbi_app/Model/diary_model.dart';
 import 'package:mumbi_app/Model/guidebook_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/View/guidebookDetails_view.dart';
@@ -13,7 +11,6 @@ import 'package:mumbi_app/ViewModel/guidebook_viewmodel.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'drawer_view.dart';
-import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/savedPost_view.dart';
 
 class GuideBook extends StatefulWidget {

@@ -1,5 +1,5 @@
 class GuidebookModel{
-  String id;
+  String guidebookId;
   String title;
   String guidebookContent;
   String imageURL;
@@ -8,7 +8,7 @@ class GuidebookModel{
   num typeId;
 
   GuidebookModel(
-      {this.id,
+      {this.guidebookId,
         this.title,
         this.guidebookContent,
         this.imageURL,
@@ -18,11 +18,11 @@ class GuidebookModel{
 
   factory GuidebookModel.fromJson(dynamic json){
     return GuidebookModel(
-      id: json['id'],
+      guidebookId: json['id'],
       title: json['title'],
       guidebookContent: json['guidebookContent'],
       imageURL: json['imageURL'],
-      estimatedFinishTime: json['estimateFinishTime'],
+      estimatedFinishTime: json['estimatedFinishTime'],
       createTime: json['createdTime'],
       typeId: json['typeId'],
     );

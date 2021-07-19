@@ -81,7 +81,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
             PickerImage(
                 widget.action == update ? widget.model.imageURL : defaultImage),
             new Container(
-              height: SizeConfig.blockSizeVertical * 60,
+              height: SizeConfig.blockSizeVertical * 58,
               width: SizeConfig.blockSizeHorizontal * 93,
               child: Form(
                 key: formKey,

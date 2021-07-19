@@ -1,4 +1,3 @@
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
@@ -159,7 +158,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
       onTap: () {},
       splashColor: LIGHT_PINK_COLOR,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 10),
         child: Row(
           children: [
             Icon(
@@ -185,15 +184,15 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
         setState(() {
           publicFlag = !publicFlag;
           if (publicFlag == true) {
-            getFlushBar(context, "Cộng đồng", "Tính năng chia sẻ đã bật");
+            getFlushBar(context, "Cộng đồng: Tính năng chia sẻ đã bật");
           } else {
-            getFlushBar(context, "Cộng đồng", "Tính năng chia sẻ đã tắt");
+            getFlushBar(context, "Cộng đồng: Tính năng chia sẻ đã tắt");
           }
         });
       },
       splashColor: LIGHT_PINK_COLOR,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 10),
         child: Row(
           children: [
             Image(

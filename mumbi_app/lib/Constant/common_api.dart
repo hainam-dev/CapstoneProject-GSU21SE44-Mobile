@@ -1,5 +1,5 @@
 //final String HOST_ADDRESS = "https://192.168.97.6:45455";
-final String HOST_ADDRESS = "http://mumbicapstone-dev.ap-southeast-1.elasticbeanstalk.com";
+final String HOST_ADDRESS = "https://service.mumbi.xyz";
 
 final String LOGIN = getApiPath("/api/Authentication/Authenticate");
 
@@ -19,9 +19,14 @@ final String DELETE_CHILD = getApiPath("/api/ChildInfo/DeleteChildInfo/");
 
 final String GET_NEWS_BY_ID = getApiPath("/api/News/GetNewsBy/");
 final String GET_ALL_NEWS = getApiPath("/api/News/GetAllNews");
+final String SAVE_NEWS = getApiPath("/api/NewsMom/AddNewsMom");
+final String UNSAVED_NEWS = getApiPath("/api/NewsMom/DeleteNewsMom/");
 final String GET_SAVED_NEWS_BY_MOM_ID = getApiPath("/api/NewsMom/GetNewsMomBy/");
 
+final String GET_GUIDEBOOK_BY_ID = getApiPath("/api​/Guidebooks​/GetGuidebookBy​/");
 final String GET_ALL_GUIDEBOOK = getApiPath("/api/Guidebooks/GetAllGuidebook");
+final String SAVE_GUIDEBOOK = getApiPath("/api/GuidebookMom/AddGuidebookMom");
+final String UNSAVED_GUIDEBOOK = getApiPath("/api/GuidebookMom/DeleteGuidebookMom/");
 final String GET_SAVED_GUIDEBOOK_BY_MOM_ID = getApiPath("/api/GuidebookMom/GetGuidebookMomBy/");
 
 final String ADD_DIARY = getApiPath("/api/Diaries/AddDiary");
