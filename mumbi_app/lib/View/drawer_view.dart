@@ -103,7 +103,7 @@ Widget getDrawer(BuildContext context) {
           SizedBox(
             height: 1,
           ),
-          createListTileNavigator(context, teethGrow, 'Mọc răng', TeethTrack()),
+          createListTileNavigator(context, teethGrow, 'Mọc răng', PickImage()),
           SizedBox(
             height: 1,
           ),

@@ -66,15 +66,16 @@ class ToothViewModel extends Model{
       var data = await ToothRepository.apiGetToothByChildId(childID, toothID);
       if(data != null){
         Map<String, dynamic> jsonData = jsonDecode(data);
-        if(jsonData['data'] == null){
+        // print("JSON " +jsonData.toString());
+        if(jsonData['succeeded'] == false){
           toothModel = new ToothModel();
+          toothModel.toothId = toothID;
+          toothModel.childId = childID;
         } else{
           toothModel = ToothModel.fromJson(jsonData);
         }
         notifyListeners();
-      } else{
-        toothModel = new ToothModel();
-      }
+      } else toothModel = new ToothModel();
     }catch (e){
       print("ERROR getToothByChildId:  " + e.toString());
     }

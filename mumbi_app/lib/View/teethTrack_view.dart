@@ -45,7 +45,6 @@ class _TeethTrackState extends State<TeethTrack> {
   void initState() {
     super.initState();
     listTeeth = getListTeeth();
-    print("ds rang:" +listTeeth.length.toString());
   }
 
   @override
@@ -181,7 +180,7 @@ class _TeethTrackState extends State<TeethTrack> {
                           modelTooth.getToothByChildId();
                           ToothModel tooth = modelTooth.toothModel;
                           // print("TOOTH TRACK: "+tooth.childId.toString()+tooth.grownDate.toString());
-                          if( tooth != null && tooth.toothId != null) {
+                          if( tooth != null && tooth.toothId != null && tooth.grownFlag == true) {
                             status  = "Đã mọc";
                             DateTime oDate = DateTime.tryParse(tooth.grownDate.toString());
                             growTime = oDate.day.toString()+"/"+oDate.month.toString() +"/"+ oDate.year.toString();
@@ -189,6 +188,8 @@ class _TeethTrackState extends State<TeethTrack> {
                             status = "Chưa mọc";
                             growTime = "--";
                           }
+                          if(tooth == null || name == null)
+                            return loadingProgress();
                           return createTextAlignUpdate(context,name, status,growTime,
                               TeethDetail("Thông tin","Create"));
                         }

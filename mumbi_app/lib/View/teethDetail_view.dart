@@ -152,7 +152,7 @@ class _TeethDetailState extends State<TeethDetail> {
               builder: (BuildContext context,Widget child,ToothViewModel model){
                 model.getToothByChildId();
                 toothModel = model.toothModel;
-                print("TOOTH MODEL: " +toothModel.grownDate.toString());
+                // print("TOOTH MODEL: " +toothModel.grownDate.toString());
                 getToothModel();
 
                 return  Form(
@@ -181,7 +181,7 @@ class _TeethDetailState extends State<TeethDetail> {
                           child: new CustomStatusDropdown(
                             'Trạng thái (*)',
                             itemsStatus,
-                            widget.action == update ? widget.model.status : null,
+                            showStatus(status == "Chưa mọc"),
                             function: (value) {
                               setState(() {
                                 if(widget.action == update){
@@ -256,30 +256,30 @@ class _TeethDetailState extends State<TeethDetail> {
     );
   }
 
+  String showStatus(bool value) {
+    if (value) {
+      return "Chưa mọc";
+    } else {
+      return "Đã mọc";
+    }
+  }
+
   void getToothModel() async{
-    if(toothModel != null){
-      //todo: //SET TOOTH TỪ DB LÊN
+    if(toothModel != null && toothModel.grownFlag == true){
+      //SET TOOTH TỪ DB LÊN
       DateTime oDate = await toothModel.grownDate;
-      // print("DATETIME: "+ oDate.day.toString());
       if(oDate == null){
         growTimeCu = "--";
       } else growTimeCu = await oDate.day.toString()+"/"+oDate.month.toString() +"/"+ oDate.year.toString();
-      // print("GROW TIME:" + growTimeCu.toString());
-      note = toothModel.note;
-
-      if(toothModel.grownFlag == true){
         status = "Đã mọc";
-      } else status = "Chưa mọc";
+        note = toothModel.note;
+
     } else{
-      var toothID = storage.read(key: toothIdKey);
-      var childId = storage.read(key: childIdKey);
-      toothModel = new ToothModel();
-      toothModel.toothId = toothID.toString();
-      toothModel.childId = childId.toString();
-      // toothModel.grownDate = DateTime.now();
-      status = "";
+      status = "Chưa mọc";
+      growTimeCu = "--";
       note= "";
       image= "";
+
     }
   }
 
