@@ -36,36 +36,18 @@ class _InectionVaccinationLoginState extends State<InectionVaccinationLogin> {
       if (success) {
         VaccinationRespository.setTokenValue(json["data"]["token"]);
         showCustomProgressDialog(
-            context, VaccinationRespository.getMemberList(), (value1) {
-          var json1 = jsonDecode(value1);
-          print(json1);
-          VaccinationRespository.sendPersonalInfo(json1).then((value) {
-            print("sendPersonalInfo: $value");
-          });
-          var succ = json1["code"] == 1;
-          if (succ) {
-            handleMemerList(json1);
-          }
-          return Pair(succ, json1["message"]);
+            context, VaccinationRespository.personListSynchronization(),
+            (value1) {
+          ///do something
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PhoneEmpty()),
+          );
+          return Pair(success, json["message"]);
         });
       }
       return Pair(success, json["message"]);
     });
-  }
-
-  void handleMemerList(json) {
-    List data = json["data"];
-    for (final i in data) {
-      if (i["dien_thoai"] == phoneNoController.text) {
-        VaccinationRespository.setDoi_tuong_id(
-            (i["doi_tuong_id"] as double).toInt());
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => PhoneEmpty()),
-        );
-        break;
-      }
-    }
   }
 
   @override
@@ -74,34 +56,10 @@ class _InectionVaccinationLoginState extends State<InectionVaccinationLogin> {
     super.initState();
     VaccinationRespository.getToken().then((value) {
       if (value != null && value.isNotEmpty) {
-        VaccinationRespository.getDoi_tuong_id().then((value1) {
-          if (value1 == null) {
-            VaccinationRespository.getMemberList().then((value2) {
-              var json1 = jsonDecode(value2);
-              if (json1["code"] == 401) {
-                VaccinationRespository.setTokenValue(null);
-                showCustomProgressDialog(context, null, (_) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => InectionVaccinationLogin()),
-                  );
-                  return Pair(false, json1["message"]);
-                });
-              } else {
-                var succ = json1["code"] == 1;
-                if (succ) {
-                  handleMemerList(json1);
-                }
-              }
-            });
-          } else {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PhoneEmpty()),
-            );
-          }
-        });
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PhoneEmpty()),
+        );
       } else {
         isLogin = false;
         setState(() {});
@@ -146,28 +104,31 @@ class _InectionVaccinationLoginState extends State<InectionVaccinationLogin> {
             ),
             createFieldPassword("Mật khẩu", "Mật khẩu", isHidePassword,
                 passController, passwordView),
+            Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: createTextBlueHyperlink(
+                        context, "Đăng ký", InjectionUpdatePhone()),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: createTextBlueHyperlink(
+                        context,
+                        "Quên mật khẩu?",
+                        InjectionUpdatePhone(
+                          isRecover: true,
+                        )),
+                  )
+                ],
+              ),
+            ),
             Container(
               padding: EdgeInsets.all(16),
               child: createButtonConfirm("Đăng nhập", login),
             ),
-            Stack(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: createTextBlueHyperlink(
-                      context, "Đăng ký", InjectionUpdatePhone()),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: createTextBlueHyperlink(
-                      context,
-                      "Quên mật khẩu?",
-                      InjectionUpdatePhone(
-                        isRecover: true,
-                      )),
-                )
-              ],
-            )
           ],
         ),
       ),
