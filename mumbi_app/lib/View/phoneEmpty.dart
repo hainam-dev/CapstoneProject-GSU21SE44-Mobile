@@ -46,35 +46,12 @@ class _PhoneEmptyState extends State<PhoneEmpty> {
     //   }
     // }));
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      showCustomProgressDialog(context, VaccinationRespository.getHistoryList(),
-          (data) {
-        var jsonObject = jsonDecode(data);
-        //print("getHistoryList: $jsonObject");
-        var succ = false;
-        if (jsonObject["code"] == 401) {
-          VaccinationRespository.setTokenValue(null);
-          showCustomProgressDialog(context, null, (_) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => InectionVaccinationLogin()),
-            );
-            return Pair(succ, jsonObject["message"]);
-          });
-        } else {
-          succ = jsonObject["code"] == 1;
-          if (succ) {
-            Iterable listData = jsonObject['data'];
-            list = listData
-                .map((model) => HistoryVaccination.fromJson(model))
-                .toList();
-            VaccinationRespository.sendHistoryList(list).then((value) {
-              print("sendHistoryList: $value");
-            });
-            setState(() {});
-          }
-        }
-        return Pair(succ, jsonObject["message"]);
+      showCustomProgressDialog(
+          context, VaccinationRespository.historyListSynchronization(),
+          (value) {
+        //do something...............
+
+        return Pair(true, "");
       });
     });
   }
