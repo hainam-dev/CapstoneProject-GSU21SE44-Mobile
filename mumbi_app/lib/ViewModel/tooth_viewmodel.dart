@@ -98,21 +98,25 @@ class ToothViewModel extends Model{
     try{
       //todo
       var data = await ToothRepository.apiGetAllToothByChildId(childID);
+      // print("DATA: "+ data);
       if(data != null){
         Map<String, dynamic> jsonData = jsonDecode(data);
         // print("jsonData " +jsonData.toString());
         if(jsonData['data'] == null){
-
+          listTooth = <ToothModel>[];
         } else{
-          // toothModel = ToothModel.fromJson(jsonData);
           list = jsonData['data'];
-          listTooth = list.map((e) => ToothModel.fromJson(e));
+          // print("list: "+list.toString());
+          listTooth = list.map((e) => ToothModel.fromJsonModel(e)).toList();
+          // print("listTooth: " + listTooth.toString());
+
           listTooth.sort((a,b) => a.grownDate.toString().compareTo(b.grownDate.toString()));
+          // print("listTooth: " + listTooth.first.toString());
         }
         notifyListeners();
       } else {
-        toothModel = new ToothModel();
-        print("NULL TOOTH");
+        listTooth = <ToothModel>[];
+        // print("NULL TOOTH");
       }
       // print("toothModel" +toothModel.note.toString());
     }catch (e){

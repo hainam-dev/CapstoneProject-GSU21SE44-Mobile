@@ -3,8 +3,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
+import 'package:mumbi_app/Model/tooth_model.dart';
+import 'package:mumbi_app/ViewModel/tooth_viewmodel.dart';
+import 'package:mumbi_app/Widget/customLoading.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 // import 'package:timelines/timelines.dart';
+import 'package:mumbi_app/Widget/customTimeLineTile.dart';
+
 
 
 
@@ -16,120 +22,51 @@ class TeethProcess extends StatefulWidget {
 }
 
 class _TeethProcessState extends State<TeethProcess> {
+  List<ToothModel> listTooth;
+  List<ToothInfoModel> listInfo;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Quá trình mọc răng'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            TimelineTile(
-              isFirst: true,
-              // axis: TimelineAxis.horizontal,
-              alignment: TimelineAlign.manual,
-              lineXY: 0.25,
-              startChild: Container(
-                padding: EdgeInsets.only(top: 20, left: 8, right: 8),
-                constraints: const BoxConstraints(
-                  minHeight:80,
-                ),
-                child: Text("30/07/2010", style: SEMIBOLD_16,),
-                // color: PINK_COLOR,
-              ),
-              indicatorStyle: IndicatorStyle(
-                width: 30,
-                height:30,
-                color: PINK_COLOR,
-                padding: const EdgeInsets.all(5),
-                indicator: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blue
-                  ),
-                  child: SvgPicture.asset(ic_tooth_color, fit: BoxFit.cover),
-                )
-              ),
-              // leftChild: Text('ahihi'),
-              endChild: Container(
-                padding: EdgeInsets.only(top:20, left: 8),
-                child: Column(
-                  children: <Widget>[
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: Text("Răng cửa giữa",style: SEMIBOLD_16,textAlign: TextAlign.start)),
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white
-                            ),
-                            child: Text("12 tháng 4 ngày", style: REG_13,)),
-                        Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                color: Colors.white
-                            ),
-                            child: Text("Răng thứ mấy", style: REG_13,)),
-                      ],
-                    )
-                  ],
-                ),
+      body: ScopedModel(
+        model: ToothViewModel.getInstance(),
+        child: ScopedModelDescendant(
+          builder: (BuildContext context, Widget child, ToothViewModel model){
+            model.getAllToothByChildId();
+            listTooth = model.listTooth;
+            // print("list lèng:" +listTooth.toString());
+            return listTooth == null
+            ? loadingProgress()
+            : ScopedModelDescendant(
+              builder: (BuildContext context, Widget child, ToothViewModel model){
+                // listInfo = model.toothInforModel;
+                return ListView.builder(
+                  itemCount: listTooth.length,
+                  itemBuilder: (BuildContext context, index){
+                    print(index);
+                    print("Leng: " +listTooth.length.toString());
+                    if (index == 0){
+                      return firstTimeLineTile(listTooth.first);
+                    }
+                    if (index == listTooth.length -1){
+                      return lastTimeLineTile(listTooth.last);
+                    }
+                      return customTimeLineTile(listTooth[index]);
 
-              ),
-            ),
-            TimelineTile(
-              // isFirst: true,
-              // axis: TimelineAxis.horizontal,
-              alignment: TimelineAlign.manual,
-              lineXY: 0.25,
-              startChild: Container(
-                padding: EdgeInsets.only(top:20, left: 8, right: 8),
-                constraints: const BoxConstraints(
-                  minHeight:80,
-                ),
-                child: Text("30/07/2010",style: SEMIBOLD_16),
-                // color: PINK_COLOR,
-              ),
-              indicatorStyle: IndicatorStyle(
-                  width: 30,
-                  color: PINK_COLOR,
-                  padding: const EdgeInsets.all(5),
-                  iconStyle: IconStyle(
-                    color: Colors.white,
-                    iconData: (Icons.event),
-                  )
-              ),
-              // leftChild: Text('ahihi'),
-              endChild: Container(
-                padding: EdgeInsets.only(top:20, left: 8),
-                child: Column(
-                  children: <Widget>[
-                    Align(
-                        alignment: Alignment.topLeft,
-                        child: Text("Răng cửa giữa",style: SEMIBOLD_16,textAlign: TextAlign.start)),
-                    Row(
-                      children: <Widget>[
-                        Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                color: Colors.white
-                            ),
-                            child: Text("12 tháng 4 ngày", style: REG_13,)),
-                        Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                color: Colors.white
-                            ),
-                            child: Text("Răng thứ mấy", style: REG_13,)),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ]),
+                    return null;
+
+                  },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

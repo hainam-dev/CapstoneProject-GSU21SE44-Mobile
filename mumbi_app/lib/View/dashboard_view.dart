@@ -6,7 +6,7 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/news_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/View/baby_development.dart';
+import 'package:mumbi_app/View/babyDevelopment_view.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/View/community_view.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';

@@ -55,6 +55,17 @@ class ToothModel {
     );
   }
 
+  factory ToothModel.fromJsonModel(dynamic json) {
+    return ToothModel(
+      toothId : json['toothId'],
+      childId : json['childId'],
+      grownDate : DateTime.tryParse(json['grownDate']),
+      note : json['note'],
+      imageURL : json['imageURL'],
+      grownFlag : json['grownFlag'],
+    );
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['toothId'] = this.toothId;

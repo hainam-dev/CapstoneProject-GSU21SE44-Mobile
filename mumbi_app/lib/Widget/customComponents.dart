@@ -100,16 +100,22 @@ Widget createListTile(String imageUrl, String name) {
   );
 }
 
-Widget createListTileDetail(String name, String detail) {
+Widget createListTileDetail(String name, String detail, String image) {
   return Container(
     decoration: new BoxDecoration(
       color: Colors.white,
     ),
     child: ListTile(
-      leading: CircleAvatar(
-          backgroundColor: Colors.grey,
-          child: Icon(Icons.assignment_ind_sharp)),
-      subtitle: Text(name),
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(65),
+          child: Image.network(
+            image,
+            height: 40,
+            width: 40,
+            fit: BoxFit.cover,
+          ),
+        ),
+      subtitle: Text(name, style: SEMIBOLDPINK_16,),
       title: Text(detail),
       onTap: () => {},
       trailing: Icon(Icons.keyboard_arrow_down_outlined),
@@ -459,7 +465,7 @@ Widget createTextAlignInformation(
     decoration: new BoxDecoration(color: Colors.white),
     child: Column(
       children: <Widget>[
-        createTextAlign("Thông tin", SEMIBOLD_18),
+        createTextAlign("Thông tin", BOLD_18),
         createTextAlign("Răng số " + position, SEMIBOLD_16),
         createTextAlign("Tên gọi: " + name, SEMIBOLD_16),
         createTextAlign("Thời gian mọc: " + growTime, SEMIBOLD_16),
@@ -477,7 +483,7 @@ Widget createTextAlignUpdate(BuildContext context, String name, String status,
     child: Container(
       child: Column(
         children: <Widget>[
-          createTextAlign("Bé của bạn (" + name + "):", SEMIBOLD_18),
+          createTextAlign("Bé của bạn (" + name + "):", BOLD_18),
           Container(
             margin: EdgeInsets.only(top: 8),
             child: Row(
