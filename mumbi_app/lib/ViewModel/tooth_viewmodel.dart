@@ -23,6 +23,8 @@ class ToothViewModel extends Model{
 
   ToothInfoModel toothInforModel;
   ToothModel toothModel;
+  List<dynamic> list;
+  List<ToothModel> listTooth;
 
   Future<void> getToothInfoById() async{
     try{
@@ -44,6 +46,7 @@ class ToothViewModel extends Model{
     }
   }
 
+
   Future<bool> upsertTooth(ToothModel childModel) async {
     try {
       String data = await ToothRepository.apiUpsertToothById(childModel);
@@ -51,33 +54,69 @@ class ToothViewModel extends Model{
       return true;
     } catch (e) {
       print("error upsert tooth: " + e.toString());
+      return false;
     }
   }
 
   Future<void> getToothByChildId() async{
+    var childID = await storage.read(key: childIdKey);
+
+    dynamic toothID = await storage.read(key: toothIdKey);
+
     try{
-      var childID = await storage.read(key: childIdKey);
-
-      dynamic toothID = await storage.read(key: toothIdKey);
-
       if (toothID == null && childID == null)
         return null;
-      //todo
       var data = await ToothRepository.apiGetToothByChildId(childID, toothID);
       if(data != null){
         Map<String, dynamic> jsonData = jsonDecode(data);
-        // print("JSON " +jsonData.toString());
+        // print("jsonData " +jsonData.toString());
         if(jsonData['succeeded'] == false){
           toothModel = new ToothModel();
           toothModel.toothId = toothID;
           toothModel.childId = childID;
+          toothModel.note = " ";
         } else{
           toothModel = ToothModel.fromJson(jsonData);
         }
         notifyListeners();
-      } else toothModel = new ToothModel();
+      } else {
+        toothModel = new ToothModel();
+        print("NULL TOOTH");
+
+      }
+      // print("toothModel" +toothModel.note.toString());
     }catch (e){
       print("ERROR getToothByChildId:  " + e.toString());
+    }
+  }
+
+  Future<void> getAllToothByChildId() async{
+    var childID = await storage.read(key: childIdKey);
+    dynamic toothID = await storage.read(key: toothIdKey);
+    if (toothID == null && childID == null)
+      return null;
+    try{
+      //todo
+      var data = await ToothRepository.apiGetAllToothByChildId(childID);
+      if(data != null){
+        Map<String, dynamic> jsonData = jsonDecode(data);
+        // print("jsonData " +jsonData.toString());
+        if(jsonData['data'] == null){
+
+        } else{
+          // toothModel = ToothModel.fromJson(jsonData);
+          list = jsonData['data'];
+          listTooth = list.map((e) => ToothModel.fromJson(e));
+          listTooth.sort((a,b) => a.grownDate.toString().compareTo(b.grownDate.toString()));
+        }
+        notifyListeners();
+      } else {
+        toothModel = new ToothModel();
+        print("NULL TOOTH");
+      }
+      // print("toothModel" +toothModel.note.toString());
+    }catch (e){
+      print("ERROR getAllToothByChildId:  " + e.toString());
     }
   }
 }

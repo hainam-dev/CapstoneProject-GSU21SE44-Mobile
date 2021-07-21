@@ -191,7 +191,7 @@ class _TeethTrackState extends State<TeethTrack> {
                           if(tooth == null || name == null)
                             return loadingProgress();
                           return createTextAlignUpdate(context,name, status,growTime,
-                              TeethDetail("Thông tin","Create"));
+                              TeethDetail());
                         }
                     )
                 ),
