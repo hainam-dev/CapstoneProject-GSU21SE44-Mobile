@@ -48,14 +48,11 @@ class ToothModel {
     return ToothModel(
         toothId : json['data']['toothId'],
         childId : json['data']['childId'],
-        // grownDate : json['data']['grownDate'],
         grownDate : DateTime.tryParse(json['data']['grownDate']),
-    note : json['data']['note'],
-    imageURL : json['data']['imageURL'],
-    grownFlag : json['data']['grownFlag'],
-
+        note : json['data']['note'],
+        imageURL : json['data']['imageURL'],
+        grownFlag : json['data']['grownFlag'],
     );
-
   }
 
   Map<String, dynamic> toJson() {
@@ -64,19 +61,9 @@ class ToothModel {
     data['childId'] = this.childId;
     String formattedDate = DateFormat('yyyy-MM-dd').format(this.grownDate);
     data['grownDate'] = formattedDate;
-
-    // data['grownDate'] = json.encode(this.grownDate, toEncodable: DateTimeEncoder);
     data['note'] = this.note;
     data['imageURL'] = this.imageURL;
     data['grownFlag'] = this.grownFlag;
     return data;
   }
-  // dynamic DateTimeEncoder(dynamic item) {
-  //   if(item is DateTime) {
-  //
-  //
-  //     return formattedDate;
-  //   }
-  //   return item;
-  // }
 }
