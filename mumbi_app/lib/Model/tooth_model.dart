@@ -41,8 +41,9 @@ class ToothModel {
   String note;
   String imageURL;
   bool grownFlag;
+  String toothName;
 
-  ToothModel({this.toothId, this.childId, this.grownDate, this.note, this.imageURL, this.grownFlag});
+  ToothModel({this.toothId, this.childId, this.grownDate, this.note, this.imageURL, this.grownFlag, this.toothName});
 
   factory ToothModel.fromJson(dynamic json) {
     return ToothModel(
@@ -63,6 +64,7 @@ class ToothModel {
       note : json['note'],
       imageURL : json['imageURL'],
       grownFlag : json['grownFlag'],
+      toothName : json['toothName'],
     );
   }
 

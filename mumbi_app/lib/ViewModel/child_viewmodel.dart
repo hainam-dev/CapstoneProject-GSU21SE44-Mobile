@@ -53,6 +53,7 @@ class ChildViewModel extends Model {
     String momID = await UserViewModel.getUserID();
     try{
       String data = await ChildRepository.apiGetChildByMom(momID);
+      print("DATA CHILD"+data);
       Map<String, dynamic> jsonList = json.decode(data);
       childList = jsonList['data'];
       childListModel = childList.map((e) => ChildModel.fromJson(e)).toList();

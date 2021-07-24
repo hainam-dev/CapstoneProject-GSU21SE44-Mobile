@@ -51,6 +51,7 @@ class _CustomStatusDropdownState extends State<CustomStatusDropdown> {
           ),
           items: widget.listItems,
           onChanged: widget.function,
+          onSaved: widget.function,
           validator: (value) {
             if (value == null) {
               if (title == "Trạng thái (*)") {

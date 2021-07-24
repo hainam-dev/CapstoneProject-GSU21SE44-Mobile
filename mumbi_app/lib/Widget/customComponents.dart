@@ -10,6 +10,7 @@ import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:mumbi_app/Model/playlist_model.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
+import 'package:mumbi_app/View/injectionSchedule.dart';
 import 'package:mumbi_app/View/teethDetail_view.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
@@ -19,7 +20,7 @@ Widget createTextFeild(String title, String hintText, String value, ontap) {
     child: TextFormField(
       initialValue: value,
       maxLength: 200,
-      onFieldSubmitted: ontap,
+      onChanged: ontap,
       decoration: InputDecoration(
           labelStyle: SEMIBOLDPINK_16,
           border: OutlineInputBorder(
@@ -110,35 +111,41 @@ Widget createListTileDetail(String name, String detail, String image) {
         borderRadius: BorderRadius.circular(65),
           child: Image.network(
             image,
-            height: 40,
-            width: 40,
+            height: 50,
+            width: 50,
             fit: BoxFit.cover,
           ),
         ),
-      subtitle: Text(name, style: SEMIBOLDPINK_16,),
-      title: Text(detail),
+      subtitle:Text(detail, style: SEMIBOLD_14_6,),
+      title:  Text(name, style: SEMIBOLDPINK_16_6,),
       onTap: () => {},
-      trailing: Icon(Icons.keyboard_arrow_down_outlined),
+      // trailing: Icon(Icons.keyboard_arrow_down_outlined),
     ),
   );
 }
 
-Widget createListTileNext(String name, String detail) {
-  return Container(
-    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-    decoration: new BoxDecoration(
-      color: LIGHT_BLUE_COLOR,
-    ),
-    child: ListTile(
-      leading: CircleAvatar(
-          backgroundColor: Colors.grey, child: SvgPicture.asset(ic_needle)),
-      subtitle: Text(name,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-      title: Text(
-        detail,
+Widget createListTileNext(BuildContext context, String day, String title, Widget screen) {
+  return GestureDetector(
+    onTap: (){
+      print("ahihi");
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => screen),
+      );
+    },
+    child: Container(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: new BoxDecoration(
+        color: LIGHT_BLUE_COLOR,
       ),
-      onTap: () => {},
-      trailing: Icon(Icons.navigate_next),
+      child: ListTile(
+        leading: CircleAvatar(
+            backgroundColor: Colors.grey, child: SvgPicture.asset(ic_needle)),
+        subtitle: Text(day, style: BOLD_16),
+        title: Text(title, style: SEMIBOLD_16,),
+        // onTap: () => {},
+        trailing: Icon(Icons.navigate_next),
+      ),
     ),
   );
 }
@@ -437,11 +444,15 @@ Widget createTeeth(ToothInfoModel teethModel, bool choose, ontap) {
     width: teethModel.width,
     top: teethModel.top,
     left: teethModel.left,
-    child: Container(
-      child: IconButton(
-        icon:
-            SvgPicture.asset(choose ? teethModel.iconChoose : teethModel.icon),
-        onPressed: ontap,
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(50.0),
+      child: Container(
+        // color: Colors.blue,
+        child: IconButton(
+          icon:
+              SvgPicture.asset(choose ? teethModel.iconChoose : teethModel.icon),
+          onPressed: ontap,
+        ),
       ),
     ),
   );
@@ -483,7 +494,7 @@ Widget createTextAlignUpdate(BuildContext context, String name, String status,
     child: Container(
       child: Column(
         children: <Widget>[
-          createTextAlign("Bé của bạn (" + name + "):", BOLD_18),
+          createTextAlign("Bé của bạn ( Bé " + name + "):", BOLD_18),
           Container(
             margin: EdgeInsets.only(top: 8),
             child: Row(

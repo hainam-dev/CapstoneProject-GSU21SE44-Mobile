@@ -49,8 +49,8 @@ class _TeethProcessState extends State<TeethProcess> {
                 return ListView.builder(
                   itemCount: listTooth.length,
                   itemBuilder: (BuildContext context, index){
-                    print(index);
-                    print("Leng: " +listTooth.length.toString());
+                    // print(index);
+                    // print("Leng: " +listTooth.length.toString());
                     if (index == 0){
                       return firstTimeLineTile(listTooth.first);
                     }
