@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/diary_model.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
@@ -66,7 +67,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
 
   void handlePost() async {
     bool result = false;
-    diaryModel.childId = "0a60af7b-754f-4b78-830c-0c551bb4ead7";
+    diaryModel.childId = CurrentMember.id;
     diaryModel.publicFlag = publicFlag;
     result = await DiaryViewModel().addDiary(diaryModel);
     Navigator.pop(context);

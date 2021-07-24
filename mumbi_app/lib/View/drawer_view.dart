@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/menuRemind.dart';
 import 'package:mumbi_app/View/parentInfo_view.dart';
-import 'package:mumbi_app/View/pickImage_view.dart';
-import 'package:mumbi_app/View/teethDetail_view.dart';
 import 'package:mumbi_app/View/teethTrack_view.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'changeAccount_view.dart';
 import 'contact_view.dart';
 import 'savedPost_view.dart';
 import 'diary_view.dart';
@@ -53,8 +53,8 @@ Widget getDrawer(BuildContext context) {
                       child: ListTile(
                         leading: CircleAvatar(
                           backgroundColor: Colors.transparent,
-                          backgroundImage:
-                          CachedNetworkImageProvider(model.momModel.imageURL),
+                          backgroundImage: CachedNetworkImageProvider(
+                              model.momModel.imageURL),
                         ),
                         title: Text(
                           model.momModel.fullName,
@@ -95,12 +95,12 @@ Widget getDrawer(BuildContext context) {
           SizedBox(
             height: 1,
           ),
-          createListTileNavigator(context, saved, 'Đã lưu', SavedPost()),
+          createListTileNavigator(context, saved, 'Đã lưu', SavedPost(0)),
           SizedBox(
             height: 1,
           ),
-          createListTileNavigator(
-              context, babyDiary, 'Nhật ký của bé', BabyDiary()),
+          createListTileNavigator(context, babyDiary, 'Nhật ký của bé',
+              CurrentMember.role == "Con" ? BabyDiary() : ChangeAccount()),
           SizedBox(
             height: 1,
           ),

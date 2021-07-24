@@ -5,8 +5,6 @@ import 'package:mumbi_app/Repository/child_repository.dart';
 import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import '../main.dart';
-
 class ChildViewModel extends Model {
 
   static ChildViewModel _instance;
@@ -22,7 +20,9 @@ class ChildViewModel extends Model {
     _instance = null;
   }
 
+  ChildModel childModel;
   List<dynamic> childList;
+  bool loadingChildListModel;
   List<ChildModel> childListModel;
 
   Future<bool> addChild(ChildModel childModel) async {
@@ -38,11 +38,11 @@ class ChildViewModel extends Model {
     return false;
   }
 
-  void getChildByID(ChildModel childModel) async{
+  void getChildByID(String id) async{
     try{
-      String data = await ChildRepository.apiGetChildByID(childModel);
-      var a = json.decode(data);
-      childModel = a.map((e) => ChildModel.fromJson(e));
+      var data = await ChildRepository.apiGetChildByID(id);
+      data = json.decode(data);
+      childModel = ChildModel.fromJson(data,true);
       notifyListeners();
     }catch (e){
       print("error: " + e.toString());
@@ -50,15 +50,19 @@ class ChildViewModel extends Model {
   }
 
   Future<void> getChildByMom() async{
-    String momID = await UserViewModel.getUserID();
-    try{
-      String data = await ChildRepository.apiGetChildByMom(momID);
-      Map<String, dynamic> jsonList = json.decode(data);
-      childList = jsonList['data'];
-      childListModel = childList.map((e) => ChildModel.fromJson(e)).toList();
-      notifyListeners();
-    }catch (e){
-      print("error: " + e.toString());
+    if(_instance != null){
+      String momID = await UserViewModel.getUserID();
+      try{
+        String data = await ChildRepository.apiGetChildByMom(momID);
+        Map<String, dynamic> jsonList = json.decode(data);
+        childList = jsonList['data'];
+        if(childList != null){
+          childListModel = childList.map((e) => ChildModel.fromJson(e,false)).toList();
+        }
+        notifyListeners();
+      }catch (e){
+        print("error: " + e.toString());
+      }
     }
   }
 

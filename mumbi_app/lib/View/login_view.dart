@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/teethDetail_view.dart';
 import 'package:mumbi_app/View/teethProcess.dart';
@@ -149,9 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
   void _loginGoogle() async {
-    setState(() {
-      _isLoading = true;
-    });
+    _isLoading = true;
 
     LoginViewModel loginViewModel = LoginViewModel();
     var userInfo;
@@ -164,6 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
       String roleID = jsonDecode(userInfo)['data']['role'];
       if (roleID.toString() == "role01") {
         pr.hide();
+        CurrentMember().getMomID();
         await Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => new BotNavBar()),
@@ -175,8 +175,6 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       // _showMsg(context, "Please sign in with FPT Education mail");
     }
-    setState(() {
       _isLoading = false;
-    });
   }
 }

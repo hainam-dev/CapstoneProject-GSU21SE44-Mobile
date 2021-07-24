@@ -24,15 +24,19 @@ class DiaryViewModel extends Model{
   List<DiaryModel> childDiaryListModel;
 
   void getChildDiary(String id) async {
-    try{
-      var data = await DiaryRepository.apiGetChildDiary(id);
-      Map<String, dynamic> jsonList = json.decode(data);
-      diaryList = jsonList['data'];
-      childDiaryListModel = diaryList.map((e) => DiaryModel.fromJson(e)).toList();
-      childDiaryListModel.sort((a,b) => b.createTime.compareTo(a.createTime));
-      notifyListeners();
-    }catch (e){
-      print("error: " + e.toString());
+    if(_instance != null){
+      try{
+        var data = await DiaryRepository.apiGetChildDiary(id);
+        Map<String, dynamic> jsonList = json.decode(data);
+        diaryList = jsonList['data'];
+        if(diaryList != null){
+          childDiaryListModel = diaryList.map((e) => DiaryModel.fromJson(e)).toList();
+          childDiaryListModel.sort((a,b) => b.createTime.compareTo(a.createTime));
+        }
+        notifyListeners();
+      }catch (e){
+        print("error: " + e.toString());
+      }
     }
   }
 
@@ -42,6 +46,16 @@ class DiaryViewModel extends Model{
     try {
       String data = await DiaryRepository.apiAddDiary(diaryModel);
       notifyListeners();
+      return true;
+    } catch (e) {
+      print("error: " + e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> updateDiary(DiaryModel diaryModel) async {
+    try {
+      String data = await DiaryRepository.apiUpdateDiary(diaryModel);
       return true;
     } catch (e) {
       print("error: " + e.toString());

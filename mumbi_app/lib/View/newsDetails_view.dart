@@ -101,7 +101,7 @@ class _NewsDetailState extends State<NewsDetail> {
                 if (SavedFlag == true) {
                   result = await SavedNewsViewModel().unsavedNews(SavedID);
                 } else {
-                  result = await SavedNewsViewModel().saveNews(widget.model.id);
+                  result = await SavedNewsViewModel().saveNews(widget.model.newsId);
                 }
                 Navigator.pop(context);
                 if (result) {

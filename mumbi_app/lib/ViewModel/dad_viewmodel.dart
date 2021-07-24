@@ -23,16 +23,18 @@ class DadViewModel extends Model{
   DadModel dadModel;
 
   void getDadByMom() async{
-    String momID = await UserViewModel.getUserID();
-    try{
-      var data = await DadRepository.apiGetDadByMomID(momID);
-      if(data != null){
-        data = jsonDecode(data);
-        dadModel = DadModel.fromJson(data);
-        notifyListeners();
+    if(_instance != null){
+      String momID = await UserViewModel.getUserID();
+      try{
+        var data = await DadRepository.apiGetDadByMomID(momID);
+        if(data != null){
+          data = jsonDecode(data);
+          dadModel = DadModel.fromJson(data);
+          notifyListeners();
+        }
+      }catch (e){
+        print("error: " + e.toString());
       }
-    }catch (e){
-      print("error: " + e.toString());
     }
   }
 

@@ -47,8 +47,32 @@ class ChildModel {
       this.pregnancyWeek,
       this.motherWeight});
 
-  factory ChildModel.fromJson(dynamic json){
-    return ChildModel(
+  factory ChildModel.fromJson(dynamic json, bool single){
+    return single
+        ? ChildModel(
+      id : json['data']['id'],
+      fullName : json['data']['fullName'],
+      nickname : json['data']['nickname'],
+      imageURL : json['data']['imageURL'],
+      gender : json['data']['gender'],
+      estimatedBornDate : json['data']['estimatedBornDate'],
+      birthday : json['data']['birthday'],
+      bloodGroup : json['data']['bloodGroup'],
+      rhBloodGroup : json['data']['rhBloodGroup'],
+      fingertips : json['data']['fingertips'],
+      headVortex: json['data']['headVortex'],
+      momID : json['data']['momId'],
+      bornFlag : json['data']['bornFlag'],
+      weight : json['data']['weight'],
+      height : json['data']['height'],
+      headCircumference : json['data']['headCircumference'],
+      hourSleep : json['data']['hourSleep'],
+      avgMilk : json['data']['avgMilk'],
+      femurLength : json['data']['femurLength'],
+      fetalHeartRate : json['data']['fetalHeartRate'],
+      pregnancyWeek : json['data']['pregnancyWeek'],
+      motherWeight : json['data']['motherWeight'],)
+    : ChildModel(
       id : json['id'],
       fullName : json['fullName'],
       nickname : json['nickname'],
@@ -70,8 +94,7 @@ class ChildModel {
       femurLength : json['femurLength'],
       fetalHeartRate : json['fetalHeartRate'],
       pregnancyWeek : json['pregnancyWeek'],
-      motherWeight : json['motherWeight'],
-    );
+      motherWeight : json['motherWeight'],);
   }
 
   /*ChildModel.fromJson(Map<String,dynamic> json):

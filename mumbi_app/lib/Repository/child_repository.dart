@@ -28,9 +28,9 @@ class ChildRepository{
     }
   }
 
-  static Future<dynamic> apiGetChildByID(ChildModel childModel) async{
+  static Future<dynamic> apiGetChildByID(String id) async{
     var response = await http.get(
-      Uri.parse("${UPDATE_CHILD_INFO}${childModel.id}"),
+      Uri.parse("${GET_CHILD_BY_ID}${id}"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },);

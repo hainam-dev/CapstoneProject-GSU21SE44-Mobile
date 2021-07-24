@@ -21,6 +21,7 @@ class SavedNewsViewModel extends Model{
   }
 
   List<dynamic> savedNewsList;
+  bool loadingSavedNewsListModel;
   List<SavedNewsModel> savedNewsListModel;
 
   Future<bool> saveNews(String newsId) async {
@@ -31,7 +32,6 @@ class SavedNewsViewModel extends Model{
     savedNewsModel.newsId = newsId;
     try {
       String data = await SavedNewsRepository.apiSaveNews(savedNewsModel);
-      notifyListeners();
       return true;
     } catch (e) {
       print("error: " + e.toString());
@@ -42,7 +42,7 @@ class SavedNewsViewModel extends Model{
   Future<bool> unsavedNews(num id) async {
     try {
       String data = await SavedNewsRepository.apiUnsavedNews(id);
-      notifyListeners();
+      destroyInstance();
       return true;
     } catch (e) {
       print("error: " + e.toString());
@@ -51,16 +51,22 @@ class SavedNewsViewModel extends Model{
   }
 
   void getSavedNewsByMom() async{
-    String momId = await UserViewModel.getUserID();
-    try{
-      String data = await SavedNewsRepository.apiGetSavedNewsByMom(momId);
-      Map<String, dynamic> jsonList = json.decode(data);
-      savedNewsList = jsonList['data'];
-      savedNewsListModel = savedNewsList.map((e) => SavedNewsModel.fromJson(e)).toList();
-      savedNewsListModel.sort((a,b) => b.id.compareTo(a.id));
-      notifyListeners();
-    }catch(e){
-      print("error: " + e.toString());
+    if(_instance != null){
+      String momId = await UserViewModel.getUserID();
+      loadingSavedNewsListModel = true;
+      try{
+        String data = await SavedNewsRepository.apiGetSavedNewsByMom(momId);
+        Map<String, dynamic> jsonList = json.decode(data);
+        savedNewsList = jsonList['data'];
+        if(savedNewsList != null){
+          savedNewsListModel = savedNewsList.map((e) => SavedNewsModel.fromJson(e)).toList();
+          savedNewsListModel.sort((a,b) => b.id.compareTo(a.id));
+        }
+        notifyListeners();
+        loadingSavedNewsListModel = false;
+      }catch(e){
+        print("error: " + e.toString());
+      }
     }
   }
 

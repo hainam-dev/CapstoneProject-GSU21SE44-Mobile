@@ -90,14 +90,19 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
               }
             }
             return ListTile(
-              leading: Icon(Icons.bookmark_border),
+              leading: Icon(
+                SavedFlag == true
+                    ? Icons.bookmark_remove_outlined
+                    : Icons.bookmark_add_outlined,
+                color: BLACK_COLOR,
+              ),
               title: Text(SavedFlag == true ? 'Bỏ lưu bài viết' : "Lưu bài viết"),
               onTap: () async {
                 bool result = false;
                 if(SavedFlag == true){
                   result = await SavedGuidebookViewModel().unsavedGuidebook(SavedID);
                 }else{
-                  result = await SavedGuidebookViewModel().saveGuidebook(widget.model.id);
+                  result = await SavedGuidebookViewModel().saveGuidebook(widget.model.guidebookId);
                 }
                 Navigator.pop(context);
                 if (result) {
