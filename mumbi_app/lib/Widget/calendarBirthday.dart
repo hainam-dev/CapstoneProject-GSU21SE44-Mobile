@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/dateTime_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
@@ -41,9 +42,7 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        var date =
-            "${picked.toLocal().day}/${picked.toLocal().month}/${picked.toLocal().year}";
-        _dateController.text = date;
+        _dateController.text = DateFormat('dd/MM/yyyy').format(picked);
       });
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('GetBirthday', _dateController.text);

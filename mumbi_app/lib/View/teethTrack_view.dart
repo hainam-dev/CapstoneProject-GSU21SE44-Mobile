@@ -28,6 +28,7 @@ class _TeethTrackState extends State<TeethTrack> {
   bool original_and_present = true;
 
   int lastPositon = 0;
+  List<bool> listGrow = List.generate(20, (index) => false);
   List<bool> _flag = List.generate(20, (index) => false);
   List<int> _list = List.generate(20, (index) => index);
   bool isChose = false;
@@ -36,15 +37,23 @@ class _TeethTrackState extends State<TeethTrack> {
   String status;
   String growTime;
 
+
   List<ToothInfoModel> listTeeth;
 
   final children = Widget;
   final listChid = <Widget>[];
+  int indexTooth = 3;
 
   @override
   void initState() {
     super.initState();
     listTeeth = getListTeeth();
+    ChildViewModel.getInstance();
+
+    // checkGrow() async{
+    //   List<ToothModel>
+    //
+    // }
   }
 
   @override
@@ -117,6 +126,7 @@ class _TeethTrackState extends State<TeethTrack> {
                         isChose = true;
                       }
                       getPosition(index);
+                      checkGrow(index);
                       setState(() {
 
                       });
@@ -207,5 +217,8 @@ class _TeethTrackState extends State<TeethTrack> {
     position = index;
     String valuePosition = (position+1).toString();
     storage.write(key: toothPosInfo, value: valuePosition);
+  }
+  void checkGrow(int index) async{
+
   }
 }

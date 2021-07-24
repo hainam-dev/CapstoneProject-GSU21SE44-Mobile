@@ -59,6 +59,7 @@ final String defaultImage = "https://firebasestorage.googleapis.com/v0/b/mumbi-a
 
 final String checked = _getImagePath("checked.png");
 final String unchecked = _getImagePath("uncheck.png");
+final String teethIcon = _getImagePath("teeth_icon.png");
 
 final String img_beco = _getImagePath('conco.svg');
 final String ic_playlist = _getImagePath('ic_playlist.svg');

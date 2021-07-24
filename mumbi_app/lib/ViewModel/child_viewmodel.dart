@@ -6,7 +6,6 @@ import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ChildViewModel extends Model {
-
   static ChildViewModel _instance;
 
   static ChildViewModel getInstance() {
@@ -38,34 +37,34 @@ class ChildViewModel extends Model {
     return false;
   }
 
-  void getChildByID(String id) async{
-    try{
+  void getChildByID(String id) async {
+    try {
       var data = await ChildRepository.apiGetChildByID(id);
       data = json.decode(data);
-      childModel = ChildModel.fromJson(data,true);
+      childModel = ChildModel.fromJson(data, true);
       notifyListeners();
-    }catch (e){
+    } catch (e) {
       print("error: " + e.toString());
     }
   }
 
-  Future<void> getChildByMom() async{
-    if(_instance != null){
+  Future<void> getChildByMom() async {
+    if (_instance != null) {
       String momID = await UserViewModel.getUserID();
-      try{
+      try {
         String data = await ChildRepository.apiGetChildByMom(momID);
         Map<String, dynamic> jsonList = json.decode(data);
         childList = jsonList['data'];
-        if(childList != null){
-          childListModel = childList.map((e) => ChildModel.fromJson(e,false)).toList();
+        if (childList != null) {
+          childListModel =
+              childList.map((e) => ChildModel.fromJson(e, false)).toList();
         }
         notifyListeners();
-      }catch (e){
+      } catch (e) {
         print("error: " + e.toString());
       }
     }
   }
-
 
   Future<bool> updateChildInfo(ChildModel childModel) async {
     try {

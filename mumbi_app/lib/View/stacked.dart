@@ -20,16 +20,19 @@ import 'dart:math';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 
+
+//TODO
 class StackedAreaLineChart extends StatelessWidget {
   final String nameChart;
+  final String desciption;
   final List<charts.Series> seriesList;
   final bool animate;
 
-  StackedAreaLineChart(this.nameChart, this.seriesList, {this.animate});
+  StackedAreaLineChart(this.nameChart, this.desciption,this.seriesList, {this.animate});
 
   /// Creates a [LineChart] with sample data and no transition.
-  factory StackedAreaLineChart.withSampleData() {
-    return new StackedAreaLineChart('Cân nặng',
+  factory StackedAreaLineChart.withSampleData(String name, String perscent) {
+    return new StackedAreaLineChart(name, perscent,
       _createSampleData(),
       // Disable animations for image tests.
       animate: true,
@@ -38,65 +41,117 @@ class StackedAreaLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String _formaterMonth(num year) {
+      int value = year.toInt();
+      return '$value th';
+    }
     return new charts.LineChart(
-        seriesList,
-        defaultRenderer: new charts.LineRendererConfig(includeArea: true, stacked: true),
-        animate: animate,
+      seriesList,
+      animate: animate,
+      //số trục đo dọc
+      primaryMeasureAxis: new charts.NumericAxisSpec(
+        tickProviderSpec:
+        new charts.BasicNumericTickProviderSpec(desiredTickCount: 5),
+      ),
+
+      // số trục đo ngang
+      domainAxis: new charts.NumericAxisSpec(
+        // viewport: new charts.NumericExtents(2017, 2021),
+          tickProviderSpec: new charts.BasicNumericTickProviderSpec(
+            zeroBound: false,
+            dataIsInWholeNumbers: false,
+            desiredTickCount: 8,
+          ),
+          tickFormatterSpec: charts.BasicNumericTickFormatterSpec(
+            _formaterMonth,
+          ),
+
+          //sọc vuông
+          renderSpec: charts.GridlineRendererSpec( // 交叉轴刻度水平线
+            tickLengthPx: 0,
+            labelOffsetFromAxisPx: 12,
+          )
+      ),
+      behaviors: [
+        new charts.ChartTitle(nameChart,
+            subTitle: desciption,
+            behaviorPosition: charts.BehaviorPosition.top,
+            titleOutsideJustification: charts.OutsideJustification.start,
+            innerPadding: 18),
+            // chú thích
+            new charts.SeriesLegend(
+              position: charts.BehaviorPosition.bottom,
+              outsideJustification: charts.OutsideJustification.endDrawArea,
+              // desiredMaxRows: 2,
+              cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
+              entryTextStyle: charts.TextStyleSpec(fontSize: 11),
+            )
+      ],
+      defaultRenderer: new charts.LineRendererConfig(includeArea: true, stacked: true),
+
     );
   }
 
   /// Create one series with sample hard coded data.
   static List<charts.Series<LinearSales, int>> _createSampleData() {
     final nguongTren = [
-      new LinearSales(0, 2,null),
+      new LinearSales(1, 2,null),
       new LinearSales(2, 4,null),
-      new LinearSales(4, 6,null),
-      new LinearSales(6, 7,null),
-      new LinearSales(8, 8,null),
-      new LinearSales(10, 9,null),
-      new LinearSales(12, 10,null),
+      new LinearSales(3, 6,null),
+      new LinearSales(4, 7,null),
+      new LinearSales(5, 8,null),
+      new LinearSales(6, 9,null),
+      new LinearSales(7, 10,null),
     ];
 
     var nguongDuoi = [
       new LinearSales(0, 4,null),
+      new LinearSales(1, 4,null),
       new LinearSales(2, 5,null),
-      new LinearSales(4, 6, null),
-      new LinearSales(6, 7, null),
-      new LinearSales(8, 8, null),
-      new LinearSales(10, 10, null),
-      new LinearSales(12, 12, null),
+      new LinearSales(3, 6, null),
+      new LinearSales(4, 7, null),
+      new LinearSales(5, 8, null),
+      new LinearSales(6, 10, null),
+      new LinearSales(7, 12, null),
     ];
 
     var dataBaby = [
-      new LinearSales(4, 0, [2,2]),
-      new LinearSales(8, 2, [3,3]),
-      new LinearSales(10, 3,[4,4]),
-      new LinearSales(11, 4, [5,5]),
+      new LinearSales(1, 1, [2,2]),
+      new LinearSales(5, 2, [3,3]),
+      new LinearSales(6, 3,[4,4]),
+      new LinearSales(7, 4, [5,5]),
+      // new LinearSales(0, 4,null),
+      // new LinearSales(1, 4,null),
+      // new LinearSales(2, 5,null),
+      // new LinearSales(3, 6, null),
+      // new LinearSales(4, 7, null),
     ];
 
     return [
       new charts.Series<LinearSales, int>(
-        id: 'Desktop',
+        id: 'lowerThreshold',
         colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
         dashPatternFn: (LinearSales sales, _) => sales.dashPattern,
-        domainFn: (LinearSales sales, _) => sales.year,
+        domainFn: (LinearSales sales, _) => sales.month,
         measureFn: (LinearSales sales, _) => sales.sales,
         data: nguongDuoi,
+        displayName: 'Ngưỡng dưới',
       ),
-      new charts.Series<LinearSales, int>(
-        id: 'Tablet',
+        new charts.Series<LinearSales, int>(
+        id: 'upperThreshold',
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-        dashPatternFn: (LinearSales sales, _) => sales.dashPattern,
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
+        dashPatternFn: (dynamic sales, _) => sales.dashPattern,
+        domainFn: (dynamic sales, _) => sales.month,
+        measureFn: (dynamic sales, _) => sales.sales,
         data: nguongTren,
+          displayName: 'Ngưỡng trên',
       ),
 
       new charts.Series<LinearSales, int>(
         id: 'Baby',
         dashPatternFn: (LinearSales sales, _) => sales.dashPattern,
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (LinearSales sales, _) => sales.year,
+        domainFn: (LinearSales sales, _) => sales.month,
         measureFn: (LinearSales sales, _) => sales.sales,
         displayName: 'Bé',
         data: dataBaby,
@@ -107,9 +162,9 @@ class StackedAreaLineChart extends StatelessWidget {
 
 /// Sample linear data type.
 class LinearSales {
-  final int year;
+  final int month;
   final int sales;
   final List<int> dashPattern;
 
-  LinearSales(this.year, this.sales, this.dashPattern);
+  LinearSales(this.month, this.sales, this.dashPattern);
 }

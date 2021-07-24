@@ -29,12 +29,9 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
         title: Text('Lịch tiêm chủng'),
         leading: IconButton(
           icon: Icon(Icons.keyboard_backspace),
-          onPressed: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => BotNavBar()),
-            )
-          },
+            onPressed: () {
+              Navigator.pop(context);
+            }
         ),
       ),
       body: SingleChildScrollView(

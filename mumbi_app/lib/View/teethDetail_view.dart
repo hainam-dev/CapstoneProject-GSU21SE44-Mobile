@@ -58,7 +58,10 @@ class _TeethDetailState extends State<TeethDetail> {
   bool result = false;
   bool isShow = false;
 
+
   String update = "Update";
+  String notGrow = "Chưa mọc";
+  String grow = "Đã mọc";
 
   _imgFromCamera() async {
     final image =
@@ -180,10 +183,10 @@ class _TeethDetailState extends State<TeethDetail> {
                           child: new CustomStatusDropdown(
                             'Trạng thái (*)',
                             itemsStatus,
-                            showStatus(status == "Chưa mọc"),
+                            showStatus(status == notGrow),
                             function: (value) {
                               setState(() {
-                                  value == "Chưa mọc" ? growFlag = false
+                                  value == notGrow ? growFlag = false
                                   : growFlag = true;
                               },
                               );
@@ -192,32 +195,9 @@ class _TeethDetailState extends State<TeethDetail> {
                         ),
                         createTextFeild("Ghi chú (nếu có)", "",
                             noteDB,(value){
-                          print("NOTE: " +value.toString());
                             noteInput = value;
                             }),
-                        _pickerAvartar(context),
-                        // _pickerAvartar2(context),
-                        // Column(
-                        //   children: <Widget>[
-                        //     RaisedButton(
-                        //       child: Text("Pick images"),
-                        //       onPressed: pickImages,
-                        //     ),
-                        //     Expanded(
-                        //       child: GridView.count(
-                        //         crossAxisCount: 3,
-                        //         children: List.generate(images.length, (index) {
-                        //           Asset asset = images[index];
-                        //           return AssetThumb(
-                        //             asset: asset,
-                        //             width: 50,
-                        //             height: 50,
-                        //           );
-                        //         }),
-                        //       ),
-                        //     )
-                        //   ],
-                        // )
+                        // _pickerAvartar(context),
                       ],
                     ),
                   ),
@@ -243,16 +223,15 @@ class _TeethDetailState extends State<TeethDetail> {
           }
           showResult(context, result);
           }
-
       ),
     );
   }
 
   String showStatus(bool value) {
     if (value) {
-      return "Chưa mọc";
+      return notGrow;
     } else {
-      return "Đã mọc";
+      return grow;
     }
   }
 
@@ -262,13 +241,18 @@ class _TeethDetailState extends State<TeethDetail> {
         if(oDate == null){
           growTimeDB = "--";
         } else growTimeDB = oDate.day.toString()+"/"+oDate.month.toString() +"/"+ oDate.year.toString();
-        status = "Đã mọc";
+        status = grow;
+        if(status == notGrow){
+          growFlag = false;
+        } else growFlag = true;
+
       if(toothModel.note == null){
         noteDB = "";
       } else noteDB = toothModel.note;
 
+
     } else{
-      status = "Chưa mọc";
+      status = notGrow;
       growTimeDB = "--";
       image= "";
       noteDB="";
