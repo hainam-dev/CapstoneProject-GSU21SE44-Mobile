@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
@@ -62,15 +61,15 @@ class _GuideBookState extends State<GuideBook> {
 
 Widget GotoSavePostButton(context) {
   return Container(
-    padding: EdgeInsets.only(left: 10, right: 10),
+    padding: EdgeInsets.only(left: 10, right: 12),
     child: CircleAvatar(
       backgroundColor: Colors.white,
       child: IconButton(
-          icon: SvgPicture.asset(bookmark),
+          icon: Icon(Icons.bookmark_border_outlined,color: BLACK_COLOR,),
           onPressed: () => {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SavedPost()),
+                  MaterialPageRoute(builder: (context) => SavedPost(1)),
                 )
               }),
     ),
@@ -91,7 +90,7 @@ Widget GuidebookFirstItem(context, GuidebookModel guidebookModel) {
         Container(
           color: WHITE_COLOR,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 5),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
             child: Column(
               children: [
                 ClipRRect(
@@ -159,7 +158,7 @@ Widget GuidebookItem(context, GuidebookModel guidebookModel) {
         children: <Widget>[
           Container(
             color: Colors.white,
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(8.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -180,6 +179,8 @@ Widget GuidebookItem(context, GuidebookModel guidebookModel) {
                         alignment: Alignment.topLeft,
                         child: Text(
                           guidebookModel.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18.0,

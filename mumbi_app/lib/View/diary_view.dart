@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/diary_model.dart';
+import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -20,11 +22,15 @@ class _BabyDiaryState extends State<BabyDiary> {
     return ScopedModel(
       model: DiaryViewModel.getInstance(),
       child: ScopedModelDescendant(builder: (BuildContext context, Widget child, DiaryViewModel model) {
-        model.getChildDiary("0a60af7b-754f-4b78-830c-0c551bb4ead7");
+        model.getChildDiary(CurrentMember.id);
         return Scaffold(
           backgroundColor: LIGHT_GREY_COLOR,
           appBar: AppBar(
-            title: Text("Nhật ký"),
+            title: ScopedModel(
+                model: ChildViewModel.getInstance(),
+                child: ScopedModelDescendant(builder: (BuildContext context, Widget child, ChildViewModel model) {
+                  return Text("Nhật ký của ${model.childModel.fullName}",maxLines: 1,overflow: TextOverflow.ellipsis,);
+                },)),
           ),
           body: model.childDiaryListModel == null
               ? createEmptyDiary(context)

@@ -69,49 +69,48 @@ class _MyFamilyState extends State<MyFamily> {
                       },))
                 ],
               ),
-                 ScopedModel(
-                   model: ChildViewModel.getInstance(),
-                   child: ScopedModelDescendant(builder: (BuildContext context, Widget child, ChildViewModel model) {
-                     model.getChildByMom();
-                     if(model.childListModel != null){
-                       for(int i = model.childListModel.length - 1; i >= 0 ; i--){
-                         ChildModel childModel = model.childListModel[i];
-                         if(childModel.bornFlag == false){
-                           model.childListModel.removeAt(i);
-                         }
-                       }
-                     }
-                     return   model.childListModel == null
+              ScopedModel(
+                model: ChildViewModel.getInstance(),
+                child: ScopedModelDescendant(builder: (BuildContext context, Widget child, ChildViewModel model) {
+                  model.getChildByMom();
+                  if(model.childListModel != null){
+                    for(int i = model.childListModel.length - 1; i >= 0 ; i--){
+                      ChildModel childModel = model.childListModel[i];
+                      if(childModel.bornFlag == false){
+                        model.childListModel.removeAt(i);
+                      }
+                    }
+                  }
+                  return   model.childListModel == null
                       ? Align(
-                          alignment: Alignment.topLeft,
-                          child: createAddFamilyCard(context,
-                              "Thêm bé / thai kì", ChildrenInfo("", "Create")))
+                      alignment: Alignment.topLeft,
+                      child: createAddFamilyCard(context,
+                          "Thêm bé / thai kì", ChildrenInfo("", "Create")))
                       : Flexible(
-                       child: GridView.builder(
-                           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                               maxCrossAxisExtent: 250,
-                               crossAxisSpacing: 0,
-                               mainAxisSpacing: 0),
-                           itemCount: model.childListModel != null ? model.childListModel.length + 1 : 1,
-                           itemBuilder: (BuildContext context, index) {
-                             if(index == model.childListModel.length){
-                               return createAddFamilyCard(context, "Thêm bé / thai kì", ChildrenInfo("","Create"));
-                             }else{
-                               ChildModel childModel = model.childListModel[index];
-                               return createFamilyCard(
-                                   context,
-                                   childModel.imageURL,
-                                   childModel.fullName,
-                                   childModel.gender == "1" ? LIGHT_BLUE_COLOR : LIGHT_PINK_COLOR,
-                                   childModel.gender == "1" ? "Con trai" : "Con gái",
-                                   childModel.gender == "1" ? BLUE_COLOR : PINK_COLOR,
-                                   ChildrenInfo(childModel,"Update"));
-                             }
-                           }),
-                     );
-                   }),
-                 ),
-              SizedBox(height: 20,)
+                    child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 250,
+                            crossAxisSpacing: 0,
+                            mainAxisSpacing: 0),
+                        itemCount: model.childListModel.length + 1,
+                        itemBuilder: (BuildContext context, index) {
+                          if(index == model.childListModel.length){
+                            return createAddFamilyCard(context, "Thêm bé / thai kì", ChildrenInfo("","Create"));
+                          }else{
+                            ChildModel childModel = model.childListModel[index];
+                            return createFamilyCard(
+                                context,
+                                childModel.imageURL,
+                                childModel.fullName,
+                                childModel.gender == 1 ? LIGHT_BLUE_COLOR : LIGHT_PINK_COLOR,
+                                childModel.gender == 1 ? "Con trai" : "Con gái",
+                                childModel.gender == 1 ? BLUE_COLOR : PINK_COLOR,
+                                ChildrenInfo(childModel,"Update"));
+                          }
+                        }),
+                  );
+                }),
+              ),
             ],
           ),
         ));

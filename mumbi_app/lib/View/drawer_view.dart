@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/menuRemind.dart';
 import 'package:mumbi_app/View/parentInfo_view.dart';
-import 'package:mumbi_app/View/pickImage_view.dart';
 import 'package:mumbi_app/View/teethTrack_view.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'changeAccount_view.dart';
 import 'contact_view.dart';
 import 'savedPost_view.dart';
 import 'diary_view.dart';
@@ -94,12 +95,12 @@ Widget getDrawer(BuildContext context) {
           SizedBox(
             height: 1,
           ),
-          createListTileNavigator(context, saved, 'Đã lưu', SavedPost()),
+          createListTileNavigator(context, saved, 'Đã lưu', SavedPost(0)),
           SizedBox(
             height: 1,
           ),
           createListTileNavigator(
-              context, babyDiary, 'Nhật ký của bé', BabyDiary()),
+              context, babyDiary, 'Nhật ký của bé', CurrentMember.role == "Con" ? BabyDiary() : ChangeAccount()),
           SizedBox(
             height: 1,
           ),

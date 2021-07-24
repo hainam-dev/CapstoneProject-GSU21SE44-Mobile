@@ -141,7 +141,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                             widget.model.bornFlag == true ||
                         selectedStatusValue.toString() == born)
                       CalendarBirthday(
-                        'Ngày sinh',
+                        'Ngày sinh (*)',
                         widget.action == update ? widget.model.birthday : "",
                         function: (value) {
                           if (value.isEmpty) {

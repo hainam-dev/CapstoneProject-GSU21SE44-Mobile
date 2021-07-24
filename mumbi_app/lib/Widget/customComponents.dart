@@ -200,22 +200,25 @@ Widget createFamilyCard(
     String _labelText,
     Color _labelTextColor,
     Widget _screen) {
-  return Container(
-    height: SizeConfig.blockSizeVertical * 22,
-    width: SizeConfig.blockSizeHorizontal * 50,
-    child: Padding(
-      padding: EdgeInsets.fromLTRB(15, 20, 15, 5),
-      child: RaisedButton(
-        color: WHITE_COLOR,
-        elevation: 0,
-        hoverElevation: 0,
-        focusElevation: 0,
-        highlightElevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-        ),
-        child: Container(
-          height: SizeConfig.safeBlockVertical * 20,
+  return ConstrainedBox(
+    constraints: BoxConstraints(
+      minHeight: 200,
+      minWidth: 200,
+    ),
+    child: Container(
+      height: SizeConfig.blockSizeVertical * 22,
+      width: SizeConfig.blockSizeHorizontal * 50,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(15, 20, 15, 5),
+        child: RaisedButton(
+          color: WHITE_COLOR,
+          elevation: 0,
+          hoverElevation: 0,
+          focusElevation: 0,
+          highlightElevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -264,9 +267,9 @@ Widget createFamilyCard(
               )
             ],
           ),
+          onPressed: () => Navigator.push(
+              context, MaterialPageRoute(builder: (context) => _screen)),
         ),
-        onPressed: () => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => _screen)),
       ),
     ),
   );

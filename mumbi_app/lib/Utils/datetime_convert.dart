@@ -2,6 +2,25 @@ import 'package:intl/intl.dart';
 
 class DateTimeConvert{
 
+  static String calculateAge(String birthday) {
+    DateTime now = DateTime.now();
+    DateTime dob = DateFormat("yyyy-MM-dd").parse(birthday.split('/').reversed.join("-"));
+    String month = ((now.difference(dob).inDays / 30).round()).toString();
+    String dayOfMonth = (((((now.difference(dob).inDays / 30)) - (now.difference(dob).inDays / 30).round()) * 30)).round().toString();
+    if(month == "0"){
+      return "Bé đã $dayOfMonth ngày tuổi";
+    }else{
+      return "Bé đã $month tháng $dayOfMonth ngày tuổi";
+    }
+  }
+
+  static String dayUntil(String estimatedDoB) {
+    DateTime now = DateTime.now();
+    DateTime dob = DateFormat("yyyy-MM-dd").parse(estimatedDoB.split('/').reversed.join("-"));
+    String day = (dob.difference(now).inDays).toString();
+    return "Bạn còn ${day} ngày nữa để được gặp bé";
+  }
+
   static String getCurrentDay(){
     DateTime now = DateTime.now();
     return DateFormat('dd/MM/yyyy').format(now);
@@ -49,7 +68,7 @@ class DateTimeConvert{
       return '${difference.inHours} giờ trước';
     } else if (difference.inMinutes >= 1) {
       return '${difference.inMinutes} phút trước';
-    } else if (difference.inSeconds >= 2) {
+    } else if (difference.inSeconds == 3 || difference.inSeconds == 10 || difference.inSeconds == 30) {
       return '${difference.inSeconds} giây trước';
     } else {
       return 'Vừa xong';

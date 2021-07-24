@@ -38,6 +38,18 @@ class DiaryRepository{
     }
   }
 
+  static Future<dynamic> apiUpdateDiary(DiaryModel diaryModel) async {
+    var response = await http.put(
+        Uri.parse("${UPDATE_DAD}${diaryModel.id}"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(diaryModel.toJson()));
+    if (response.statusCode == 200) {
+      return response.body;
+    }
+  }
+
   static Future<dynamic> apiDeleteDiary(num id) async {
     var response = await http.put(
       Uri.parse("${DELETE_DIARY}${id}"),

@@ -8,10 +8,14 @@ import 'package:mumbi_app/View/guidebookDetails_view.dart';
 import 'package:mumbi_app/View/newsDetails_view.dart';
 import 'package:mumbi_app/ViewModel/savedGuidebook_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/savedNews_viewmodel.dart';
+import 'package:mumbi_app/Widget/customEmpty.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class SavedPost extends StatefulWidget {
+  final num tabIndex;
+  const SavedPost(this.tabIndex);
+
   @override
   _SavedPostState createState() => _SavedPostState();
 }
@@ -24,7 +28,7 @@ class _SavedPostState extends State<SavedPost> {
 
   @override
   void initState() {
-    _initialIndex = 0;
+    _initialIndex = widget.tabIndex;
     super.initState();
   }
 
@@ -34,60 +38,91 @@ class _SavedPostState extends State<SavedPost> {
       length: 2,
       initialIndex: _initialIndex,
       child: Scaffold(
+        backgroundColor: WHITE_COLOR,
         appBar: AppBar(
           title: Text('Bài viết đã lưu'),
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          bottom: TabBar(
-            tabs: [
-              Tab(text: "Tin tức"),
-              Tab(text: "Cẩm nang"),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Container(
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(
+                    25.0,
+                  ),
+                ),
+                child: TabBar(
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      25.0,
+                    ),
+                    color: PINK_COLOR,
+                  ),
+                  labelColor: WHITE_COLOR,
+                  unselectedLabelColor: BLACK_COLOR,
+                  tabs: [
+                    Tab(text: 'Tin Tức',),
+                    Tab(text: 'Cẩm Nang',),
+                  ],
+                ),
+              ),
+              // tab bar view here
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    SavedNewsList(),
+                    SavedGuidebookList(),
+                  ],
+                ),
+              ),
             ],
           ),
-        ),
-        body: TabBarView(
-          children: [
-            SavedNewsList(),
-            SavedGuidebookList(),
-          ],
         ),
       ),
     );
   }
 }
 
-
-Widget SavedNewsList(){
+Widget SavedNewsList() {
   return ScopedModel(
       model: SavedNewsViewModel.getInstance(),
       child: ScopedModelDescendant(
         builder:
             (BuildContext context, Widget child, SavedNewsViewModel model) {
           model.getSavedNewsByMom();
-          return model.savedNewsListModel == null
+          return model.loadingSavedNewsListModel == true
               ? loadingProgress()
+              : model.savedNewsListModel == null
+              ? EmptyWithText("Chưa có tin tức được lưu")
               : ListView.builder(
             itemCount: model.savedNewsListModel.length,
             itemBuilder: (BuildContext context, index) {
-              SavedNewsModel savedNewsModel = model.savedNewsListModel[index];
-              return NewsItem(context, savedNewsModel);
+                SavedNewsModel savedNewsModel = model.savedNewsListModel[index];
+                return NewsItem(context, savedNewsModel);
             },
           );
         },
       ));
 }
 
-Widget SavedGuidebookList(){
+Widget SavedGuidebookList() {
   return ScopedModel(
       model: SavedGuidebookViewModel.getInstance(),
       child: ScopedModelDescendant(
-        builder:
-            (BuildContext context, Widget child, SavedGuidebookViewModel model) {
+        builder: (BuildContext context, Widget child,
+            SavedGuidebookViewModel model) {
           model.getSavedGuidebookByMom();
-          return model.savedGuidebookListModel == null
+          return model.loadingSavedGuidebookListModel == true
               ? loadingProgress()
+              : model.savedGuidebookListModel == null
+              ? EmptyWithText("Chưa có cẩm nang được lưu")
               : ListView.builder(
             itemCount: model.savedGuidebookListModel.length,
             itemBuilder: (BuildContext context, index) {
@@ -113,7 +148,7 @@ Widget NewsItem(context, SavedNewsModel savedNewsModel) {
         children: <Widget>[
           Container(
             color: Colors.white,
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(8.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -134,30 +169,41 @@ Widget NewsItem(context, SavedNewsModel savedNewsModel) {
                         alignment: Alignment.topLeft,
                         child: Text(
                           savedNewsModel.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18.0,
                           ),
                         ),
                       ),
-                      SizedBox(height: 4,),
+                      SizedBox(
+                        height: 4,
+                      ),
                       Row(
                         children: [
                           Text(
                               DateTimeConvert.convertDatetimeDMY(
                                   savedNewsModel.createTime),
-                              style: TextStyle(fontSize: 15.0, color: LIGHT_DARK_GREY_COLOR)),
-                          SizedBox(width: 6,),
+                              style: TextStyle(
+                                  fontSize: 15.0,
+                                  color: LIGHT_DARK_GREY_COLOR)),
+                          SizedBox(
+                            width: 6,
+                          ),
                           Icon(
                             Icons.fiber_manual_record,
                             color: GREY_COLOR,
                             size: 6,
                           ),
-                          SizedBox(width: 6,),
+                          SizedBox(
+                            width: 6,
+                          ),
                           Text(
-                            savedNewsModel.estimatedFinishTime
-                                .toString() +
-                                " phút đọc",style: TextStyle(fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
+                            savedNewsModel.estimatedFinishTime.toString() +
+                                " phút đọc",
+                            style: TextStyle(
+                                fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
                           ),
                         ],
                       ),
@@ -187,7 +233,7 @@ Widget GuidebookItem(context, SavedGuidebookModel savedGuidebookModel) {
         children: <Widget>[
           Container(
             color: Colors.white,
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(8.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -208,30 +254,41 @@ Widget GuidebookItem(context, SavedGuidebookModel savedGuidebookModel) {
                         alignment: Alignment.topLeft,
                         child: Text(
                           savedGuidebookModel.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18.0,
                           ),
                         ),
                       ),
-                      SizedBox(height: 4,),
+                      SizedBox(
+                        height: 4,
+                      ),
                       Row(
                         children: [
                           Text(
                               DateTimeConvert.convertDatetimeDMY(
                                   savedGuidebookModel.createTime),
-                              style: TextStyle(fontSize: 15.0, color: LIGHT_DARK_GREY_COLOR)),
-                          SizedBox(width: 6,),
+                              style: TextStyle(
+                                  fontSize: 15.0,
+                                  color: LIGHT_DARK_GREY_COLOR)),
+                          SizedBox(
+                            width: 6,
+                          ),
                           Icon(
                             Icons.fiber_manual_record,
                             color: GREY_COLOR,
                             size: 6,
                           ),
-                          SizedBox(width: 6,),
+                          SizedBox(
+                            width: 6,
+                          ),
                           Text(
-                            savedGuidebookModel.estimatedFinishTime
-                                .toString() +
-                                " phút đọc",style: TextStyle(fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
+                            savedGuidebookModel.estimatedFinishTime.toString() +
+                                " phút đọc",
+                            style: TextStyle(
+                                fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
                           ),
                         ],
                       ),
@@ -246,3 +303,4 @@ Widget GuidebookItem(context, SavedGuidebookModel savedGuidebookModel) {
     ),
   );
 }
+

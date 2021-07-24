@@ -4,15 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Global/CurrentMember.dart';
+import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/news_model.dart';
+import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/baby_development.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/View/community_view.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
 import 'package:mumbi_app/View/newsDetails_view.dart';
+import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
-import 'package:mumbi_app/View/vaccinePrice_compare.dart';
 import 'package:mumbi_app/ViewModel/news_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
@@ -26,6 +29,9 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
+
+  ChildModel pregnancyModel;
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -33,7 +39,7 @@ class _DashBoardState extends State<DashBoard> {
       backgroundColor: WHITE_COLOR,
       appBar: AppBar(
         actions: [
-          Avatar(context),
+          ChangeAccountButton(context),
         ],
       ),
       drawer: getDrawer(context),
@@ -42,27 +48,52 @@ class _DashBoardState extends State<DashBoard> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            /*createListTileHome(
-                context,
-                LIGHT_PINK_COLOR,
-                pregnancy,
-                "Tuần thứ 3 của thai kì",
-                "Bạn còn 259 ngày để gặp được bé",
-                ChildrenInfo("", "")),
-            createListTileHome(
-                context,
-                LIGHT_BLUE_COLOR,
-                embe,
-                "Bé đã 6 tháng 3 ngày tuổi",
-                "Bạn có thể bắt đầu cho bé ăn dậm",
-                ChildrenInfo("", "")),*/
-            createListTileHome(
-                context,
-                LIGHT_GREY_COLOR,
-                empty,
-                "Chưa có thông tin",
-                "Nhấp vào để thêm thông tin bé/thai kì.",
-                ChildrenInfo("", "")),
+            if(CurrentMember.role == "Mẹ")
+              ScopedModel(
+                  model: ChildViewModel.getInstance(),
+                  child: ScopedModelDescendant(builder: (BuildContext context, Widget child, ChildViewModel model) {
+                    model.getChildByMom();
+                    if(model.childListModel != null){
+                      for(int i = model.childListModel.length - 1; i >= 0 ; i--){
+                        ChildModel childModel = model.childListModel[i];
+                        if(childModel.bornFlag == false){
+                          pregnancyModel = childModel;
+                          break;
+                        }
+                      }
+                    }
+                    return pregnancyModel == null
+                        ? createListTileHome(
+                        context,
+                        LIGHT_GREY_COLOR,
+                        empty,
+                        "Chưa có thông tin",
+                        "Nhấp vào để thêm thông tin bé/thai kì.",
+                        ChildrenInfo("", "Create"))
+                        : createListTileHome(
+                        context,
+                        LIGHT_PINK_COLOR,
+                        pregnancy,
+                        DateTimeConvert.dayUntil(pregnancyModel.estimatedBornDate),
+                        "",
+                        ChildrenInfo(pregnancyModel, "Update"));
+              },)),
+
+            if(CurrentMember.role == "Con")
+              ScopedModel(
+                model: ChildViewModel.getInstance(),
+                child: ScopedModelDescendant(builder: (context, child, ChildViewModel model) {
+                  model.getChildByID(CurrentMember.id);
+                  return model.childModel == null
+                      ? loadingProgress()
+                      : createListTileHome(
+                      context,
+                      LIGHT_BLUE_COLOR,
+                      embe,
+                      DateTimeConvert.calculateAge(model.childModel.birthday),
+                      "",
+                      ChildrenInfo(model.childModel, "Update"));
+                },),),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Align(
@@ -144,37 +175,68 @@ class _DashBoardState extends State<DashBoard> {
     );
   }
 
-  Widget Avatar(BuildContext context) {
+  Widget ChangeAccountButton(BuildContext context) {
+    return FlatButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ChangeAccount()));
+          },
+        child: Row(
+          children: [
+            MomAvatar(),
+            if(CurrentMember.role == "Con")
+              Row(
+                children: [
+                  Icon(Icons.all_inclusive,color: WHITE_COLOR,size: 19,),
+                  ChildAvatar(),
+                ],
+              )
+          ],
+        ));
+  }
+
+  Widget MomAvatar(){
     return ScopedModel(
       model: MomViewModel.getInstance(),
       child: ScopedModelDescendant(builder:
           (BuildContext buildContext, Widget child, MomViewModel model) {
         model.getMomByID();
-        return FlatButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ChangeAccount()));
-            },
-            child: Stack(
-              children: [
-                model.momModel == null
-                    ? Center(child: CircularProgressIndicator())
-                    : Padding(
-                        padding: const EdgeInsets.only(right: 0),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 18,
-                          child: CircleAvatar(
-                            radius: 17,
-                            backgroundImage: CachedNetworkImageProvider(
-                                model.momModel.imageURL),
-                          ),
-                        ),
-                      )
-              ],
-            ));
+        return model.momModel == null
+                    ? CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 18,)
+                    : CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 18,
+                      child: CircleAvatar(
+                        radius: 17,
+                        backgroundImage: CachedNetworkImageProvider(
+                            model.momModel.imageURL),
+                      ),
+                    );
       }),
     );
+  }
+
+  Widget ChildAvatar(){
+    return ScopedModel(
+        model: ChildViewModel.getInstance(),
+        child: ScopedModelDescendant(builder: (BuildContext context, Widget child, ChildViewModel model) {
+          model.getChildByID(CurrentMember.id);
+           return model.childModel == null
+               ? CircleAvatar(
+                 backgroundColor: Colors.white,
+                 radius: 18,)
+               : CircleAvatar(
+                 backgroundColor: Colors.white,
+                 radius: 18,
+                 child: CircleAvatar(
+                   radius: 17,
+                   backgroundImage: CachedNetworkImageProvider(
+                       model.childModel.imageURL),
+                 ),
+               );
+    },));
   }
 
   Widget SalientFeatures() {
@@ -204,7 +266,7 @@ class _DashBoardState extends State<DashBoard> {
                           maxCrossAxisExtent: 250,
                           crossAxisSpacing: 5,
                           mainAxisSpacing: 5),
-                      itemCount: model.newsListModel.length,
+                      itemCount: model.newsListModel != null ? model.newsListModel.length : 0,
                       itemBuilder: (BuildContext context, index) {
                         NewsModel newsModel = model.newsListModel[index];
                         return createNewsItem(

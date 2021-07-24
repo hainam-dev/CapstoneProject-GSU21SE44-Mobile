@@ -84,7 +84,7 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
                   decoration: InputDecoration(
                     labelStyle:
                         TextStyle(color: PINK_COLOR, fontWeight: FontWeight.w600),
-                    labelText: 'Ngày dự sinh',
+                    labelText: 'Ngày dự sinh (*)',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide(

@@ -35,6 +35,7 @@ final String GET_SAVED_GUIDEBOOK_BY_MOM_ID =
     getApiPath("/api/GuidebookMom/GetGuidebookMomBy/");
 
 final String ADD_DIARY = getApiPath("/api/Diaries/AddDiary");
+final String UPDATE_DIARY = getApiPath("/api/Diaries/UpdateDiary/");
 final String GET_ALL_DIARY_OF_CHILD =
     getApiPath("/api/Diaries/GetDiaryOfChildren/");
 final String GET_ALL_PUBLIC_DIARY = getApiPath("/api/Diaries/GetDiaryPublic");

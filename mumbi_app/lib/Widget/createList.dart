@@ -1,15 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/diary_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/babyDiaryDetails_view.dart';
 import 'package:mumbi_app/View/bottomNavBar_view.dart';
+import 'package:mumbi_app/View/dashboard_view.dart';
+import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/logout_viewmodel.dart';
+import 'package:mumbi_app/Widget/customFlushBar.dart';
 
 import '../app.dart';
 
@@ -154,64 +158,64 @@ Widget createButtonTextImageLink(
 
 Widget createListTileHome(BuildContext context, Color _color, String _imageName,
     String _text, String _subText, Widget _screen) {
-  return Padding(
-    padding: const EdgeInsets.all(12.0),
-    child: Card(
-      elevation: 0,
-      color: _color,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              leading: Image(
-                image: AssetImage(_imageName),
-              ),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _text,
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16.0),
-                  ),
-                  SizedBox(height: 8.0),
-                  Text(
-                    _subText,
-                    style: TextStyle(color: GREY_COLOR, fontSize: 14.0),
-                  ),
-                  SizedBox(height: 10.0),
-                  /*LinearPercentIndicator(
-                    backgroundColor: WHITE_COLOR,
-                    width: SizeConfig.blockSizeHorizontal * 50,
-                    lineHeight: 8.0,
-                    percent: 0.6,
-                    progressColor: PINK_COLOR,
-                  ),*/
-                  // Text(
-                  //   "Tìm hiểu thêm",
-                  //   style: TextStyle(color: BLUE_COLOR, fontSize: 13.0),
-                  // ),
-                ],
-              ),
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => _screen));
-              },
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => _screen));
+    },
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+      child: Card(
+        elevation: 0,
+        color: _color,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
             ),
-          ],
+            leading: Image(
+              image: AssetImage(_imageName),
+            ),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _text,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
+                ),
+                SizedBox(height: 8.0),
+                if(_subText != "")
+                Text(
+                  _subText,
+                  style: TextStyle(color: GREY_COLOR, fontSize: 14.0),
+                ),
+                //SizedBox(height: 10.0),
+                /*LinearPercentIndicator(
+                  backgroundColor: WHITE_COLOR,
+                  width: SizeConfig.blockSizeHorizontal * 50,
+                  lineHeight: 8.0,
+                  percent: 0.6,
+                  progressColor: PINK_COLOR,
+                ),*/
+                // Text(
+                //   "Tìm hiểu thêm",
+                //   style: TextStyle(color: BLUE_COLOR, fontSize: 13.0),
+                // ),
+              ],
+            ),
+          ),
         ),
       ),
     ),
   );
 }
+
 
 item(
   Icon _icon,
@@ -227,60 +231,80 @@ item(
 }
 
 Widget createListTileSelectedAccount(
-    BuildContext context, String _imageName, String _title, String _subtitle) {
-  return Card(
-    elevation: 0,
-    margin: EdgeInsets.zero,
-    child: ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Colors.white,
-        radius: 23,
-        child: CircleAvatar(
-          radius: 22,
-          backgroundImage: AssetImage(_imageName),
+    BuildContext context, String _imageURL, String _title,String id ,String role) {
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+    child: Card(
+      elevation: 2,
+      margin: EdgeInsets.zero,
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: Colors.transparent,
+          radius: 23,
+          child: CircleAvatar(
+            radius: 22,
+            backgroundImage: CachedNetworkImageProvider(_imageURL),
+          ),
         ),
+        title: Row(
+          children: [
+            Text(
+                _title
+            ),
+            if(CurrentMember.id == id)
+            Text(
+              " (Đang chọn)",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: PINK_COLOR),
+            ),
+          ],
+        ),
+        subtitle: Text(
+          role
+        ),
+        trailing: CurrentMember.id == id
+          ? Icon(
+          Icons.check,
+          size: 25,
+          color: PINK_COLOR,
+          )
+        :SizedBox.shrink(),
+        onTap: () async{
+          CurrentMember.id = id;
+          CurrentMember.role = role;
+          DiaryViewModel.destroyInstance();
+          await Future.delayed(Duration(seconds: 1));
+          Navigator.pop(context);
+          Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => BotNavBar(),));
+        },
       ),
-      title: Text(_title),
-      subtitle: Text(
-        _subtitle,
-        style: TextStyle(color: PINK_COLOR),
-      ),
-      trailing: Icon(
-        Icons.check,
-        size: 25,
-        color: PINK_COLOR,
-      ),
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => BotNavBar()));
-      },
     ),
   );
 }
 
 Widget createListTileUnselectedAccount(
-    BuildContext context, String _imageName, String _title, String _subtitle) {
-  return Card(
-    elevation: 0,
-    margin: EdgeInsets.zero,
-    child: ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Colors.white,
-        radius: 19,
-        child: CircleAvatar(
-          radius: 19,
-          backgroundImage: AssetImage(_imageName),
+    BuildContext context, String _imageURL, String _title, String _subtitle) {
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+      child: Card(
+        color: LIGHT_GREY_COLOR,
+        elevation: 2,
+        margin: EdgeInsets.zero,
+        child: ListTile(
+          leading: CircleAvatar(
+            radius: 22,
+            backgroundImage: CachedNetworkImageProvider(_imageURL),
+            child: CircleAvatar(
+              radius: 22,
+              backgroundColor: GREY_COLOR.withOpacity(0.4),
+            ),
+          ),
+          title: Text(_title, style: TextStyle(color: GREY_COLOR.withOpacity(0.8)),),
+          subtitle: Text(_subtitle, style: TextStyle(color: GREY_COLOR.withOpacity(0.8)),),
         ),
       ),
-      title: Text(_title),
-      subtitle: Text(
-        _subtitle,
-      ),
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => BotNavBar()));
-      },
-    ),
   );
 }
 
