@@ -92,8 +92,8 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
             return ListTile(
               leading: Icon(
                 SavedFlag == true
-                    ? Icons.bookmark_remove_outlined
-                    : Icons.bookmark_add_outlined,
+                    ? Icons.bookmark_outline_rounded
+                    : Icons.bookmark,
                 color: BLACK_COLOR,
               ),
               title: Text(SavedFlag == true ? 'Bỏ lưu bài viết' : "Lưu bài viết"),

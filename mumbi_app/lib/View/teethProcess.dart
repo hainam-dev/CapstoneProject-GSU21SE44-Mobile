@@ -40,17 +40,13 @@ class _TeethProcessState extends State<TeethProcess> {
           builder: (BuildContext context, Widget child, ToothViewModel model){
             model.getAllToothByChildId();
             listTooth = model.listTooth;
-            // print("list lèng:" +listTooth.toString());
             return listTooth == null
             ? loadingProgress()
             : ScopedModelDescendant(
               builder: (BuildContext context, Widget child, ToothViewModel model){
-                // listInfo = model.toothInforModel;
                 return ListView.builder(
                   itemCount: listTooth.length,
                   itemBuilder: (BuildContext context, index){
-                    // print(index);
-                    // print("Leng: " +listTooth.length.toString());
                     if (index == 0){
                       return firstTimeLineTile(listTooth.first);
                     }

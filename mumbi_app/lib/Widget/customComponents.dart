@@ -109,12 +109,14 @@ Widget createListTileDetail(String name, String detail, String image) {
     child: ListTile(
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(65),
-          child: Image.network(
+          child: image.isNotEmpty
+              ? Image.network(
             image,
             height: 50,
             width: 50,
             fit: BoxFit.cover,
-          ),
+            )
+            : null
         ),
       subtitle:Text(detail, style: SEMIBOLD_14_6,),
       title:  Text(name, style: SEMIBOLDPINK_16_6,),

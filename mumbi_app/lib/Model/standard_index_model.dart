@@ -1,13 +1,13 @@
-class StandardIndex {
+class StandardIndexModel {
   int id;
   int month;
   String type;
   int gender;
   String unit;
   double minValue;
-  int maxValue;
+  double maxValue;
 
-  StandardIndex(
+  StandardIndexModel(
       {this.id,
         this.month,
         this.type,
@@ -16,15 +16,15 @@ class StandardIndex {
         this.minValue,
         this.maxValue});
 
-  factory StandardIndex.fromJson(Map<String, dynamic> json) {
-    return StandardIndex(
-        id : json['data']['id'],
-        month : json['data']['month'],
-        type : json['data']['type'],
-        gender : json['data']['gender'],
-        unit : json['data']['unit'],
-        minValue: json['data']['minValue'],
-            maxValue : json['data']['maxValue'],
+  factory StandardIndexModel.fromJson(dynamic json) {
+    return StandardIndexModel(
+        id : json['id'],
+        month : json['month'],
+        type : json['type'],
+        gender : json['gender'],
+        unit : json['unit'],
+        minValue: json['minValue'].toDouble(),
+        maxValue : json['maxValue'].toDouble(),
     );
   }
 
@@ -40,3 +40,19 @@ class StandardIndex {
     return data;
   }
 }
+
+class HeadModel extends StandardIndexModel{
+  double minValue;
+  double maxValue;
+  HeadModel({this.maxValue,this.minValue});
+}
+class WeightModel {
+  double minValue;
+  double maxValue;
+  WeightModel({this.maxValue,this.minValue});
+}
+// class HeadModel {
+//   double minValue;
+//   double maxValue;
+//   HeadModel({this.maxValue,this.minValue});
+// }
