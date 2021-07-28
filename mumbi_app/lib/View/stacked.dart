@@ -18,7 +18,14 @@
 import 'dart:math';
 // EXCLUDE_FROM_GALLERY_DOCS_END
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:mumbi_app/Model/standard_index_model.dart';
+import 'package:charts_flutter/src/text_style.dart' as style;
+import 'package:charts_flutter/src/text_element.dart' as TextElement;
+
+
+
 
 
 //TODO
@@ -31,16 +38,18 @@ class StackedAreaLineChart extends StatelessWidget {
   StackedAreaLineChart(this.nameChart, this.desciption,this.seriesList, {this.animate});
 
   /// Creates a [LineChart] with sample data and no transition.
-  factory StackedAreaLineChart.withSampleData(String name, String perscent) {
+  factory StackedAreaLineChart.withSampleData(String name, String perscent, Iterable<StandardIndexModel> model) {
     return new StackedAreaLineChart(name, perscent,
-      _createSampleData(),
+      _createSampleData(model),
       // Disable animations for image tests.
       animate: true,
+
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     String _formaterMonth(num year) {
       int value = year.toInt();
       return '$value th';
@@ -85,53 +94,76 @@ class StackedAreaLineChart extends StatelessWidget {
               // desiredMaxRows: 2,
               cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
               entryTextStyle: charts.TextStyleSpec(fontSize: 11),
-            )
+            ),
+        charts.SlidingViewport(),
+        charts.PanAndZoomBehavior(),
+        // charts.LinePointHighlighter()
+        charts.SelectNearest(
+            eventTrigger: charts.SelectionTrigger.tapAndDrag
+        ),
+        //import value point
+        charts.LinePointHighlighter(
+          symbolRenderer: CustomCircleSymbolRenderer(value: size),
+        ),
       ],
-      defaultRenderer: new charts.LineRendererConfig(includeArea: true, stacked: true),
+
+      //set value của point ở đây
+      selectionModels: [
+        SelectionModelConfig(
+            changedListener: (SelectionModel model) {
+              if(model.hasDatumSelection)
+                print(model.selectedSeries[0].measureFn(model.selectedDatum[0].index));
+            }
+        )
+      ],
+      //vẽ chart
+      defaultRenderer: new charts.LineRendererConfig(
+        includeArea: true,
+        stacked: false,
+        includeLine: true,
+      ),
+
 
     );
   }
 
+
   /// Create one series with sample hard coded data.
-  static List<charts.Series<LinearSales, int>> _createSampleData() {
+  static List<charts.Series<LinearSales, int>> _createSampleData( Iterable<StandardIndexModel> model) {
+    // print(model.toString());
+    // Iterable<StandardIndexModel> modelWeight = model['Weight'];
+    // Iterable<StandardIndexModel> modelHeight = model['Height'];
+    // Iterable<StandardIndexModel> modelHead = model['Head'];
+    List<LinearSales> listLinearMax = <LinearSales>[];
+    List<LinearSales> listLinearMin = <LinearSales>[];
+    List<LinearSales> listLinearBaby = <LinearSales>[];
+    for( int i = 0; i <= model.length -1; i++){
+      listLinearMax.add(LinearSales(model.elementAt(i).month, model.elementAt(i).maxValue));
+      print("Tháng"+ listLinearMax[i].month.toString()+ ", Max: "+ listLinearMax[i].sales.toString());
+      listLinearMin.add(LinearSales(model.elementAt(i).month, model.elementAt(i).minValue));
+    }
     final nguongTren = [
-      new LinearSales(1, 2,null),
-      new LinearSales(2, 4,null),
-      new LinearSales(3, 6,null),
-      new LinearSales(4, 7,null),
-      new LinearSales(5, 8,null),
-      new LinearSales(6, 9,null),
-      new LinearSales(7, 10,null),
+      for( int i = 0; i <= listLinearMax.length -1; i++)
+        listLinearMax[i]
     ];
 
     var nguongDuoi = [
-      new LinearSales(0, 4,null),
-      new LinearSales(1, 4,null),
-      new LinearSales(2, 5,null),
-      new LinearSales(3, 6, null),
-      new LinearSales(4, 7, null),
-      new LinearSales(5, 8, null),
-      new LinearSales(6, 10, null),
-      new LinearSales(7, 12, null),
+      for( int i = 0; i <= listLinearMax.length -1; i++)
+        listLinearMin[i]
     ];
 
     var dataBaby = [
-      new LinearSales(1, 1, [2,2]),
-      new LinearSales(5, 2, [3,3]),
-      new LinearSales(6, 3,[4,4]),
-      new LinearSales(7, 4, [5,5]),
-      // new LinearSales(0, 4,null),
-      // new LinearSales(1, 4,null),
-      // new LinearSales(2, 5,null),
-      // new LinearSales(3, 6, null),
-      // new LinearSales(4, 7, null),
+      new LinearSales(4, 3),
+      // new LinearSales(1, 2),
+      new LinearSales(10, 6),
     ];
+
 
     return [
       new charts.Series<LinearSales, int>(
         id: 'lowerThreshold',
         colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-        dashPatternFn: (LinearSales sales, _) => sales.dashPattern,
+        // dashPatternFn: (LinearSales sales, _) => sales.dashPattern,
         domainFn: (LinearSales sales, _) => sales.month,
         measureFn: (LinearSales sales, _) => sales.sales,
         data: nguongDuoi,
@@ -140,31 +172,65 @@ class StackedAreaLineChart extends StatelessWidget {
         new charts.Series<LinearSales, int>(
         id: 'upperThreshold',
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-        dashPatternFn: (dynamic sales, _) => sales.dashPattern,
-        domainFn: (dynamic sales, _) => sales.month,
-        measureFn: (dynamic sales, _) => sales.sales,
+        // dashPatternFn: (LinearSales sales, _) => sales.dashPattern,
+        domainFn: (LinearSales sales, _) => sales.month,
+        measureFn: (LinearSales sales, _) => sales.sales,
         data: nguongTren,
           displayName: 'Ngưỡng trên',
       ),
 
       new charts.Series<LinearSales, int>(
         id: 'Baby',
-        dashPatternFn: (LinearSales sales, _) => sales.dashPattern,
+        // dashPatternFn: (LinearSales sales, _) => sales.dashPattern,
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
         domainFn: (LinearSales sales, _) => sales.month,
         measureFn: (LinearSales sales, _) => sales.sales,
         displayName: 'Bé',
         data: dataBaby,
+
       ),
     ];
+  }
+  // void _infoSelectionModelUpdated(charts.SelectionModel<String> model) {
+  //   // If you want to allow the chart to continue to respond to select events
+  //   // that update the selection, add an updatedListener that saves off the
+  //   // selection model each time the selection model is updated, regardless of
+  //   // if there are changes.
+  //   //
+  //   // This also allows you to listen to the selection model update events and
+  //   // alter the selection.
+  //   _myState.selectionModels[charts.SelectionModelType.info] =
+  //   new charts.UserManagedSelectionModel(model: model);
+  // }
+
+}
+
+class CustomCircleSymbolRenderer extends CircleSymbolRenderer {
+  final Size value;
+  CustomCircleSymbolRenderer({this.value});
+  @override
+  void paint(ChartCanvas canvas, Rectangle<num> bounds, {List<int> dashPattern, Color fillColor, FillPatternType fillPattern, Color strokeColor, double strokeWidthPx}) {
+    super.paint(canvas, bounds, dashPattern: dashPattern, fillColor: fillColor, strokeColor: strokeColor, strokeWidthPx: strokeWidthPx);
+    canvas.drawRect(
+        Rectangle(bounds.left - 5, bounds.top - 30, bounds.width + 10, bounds.height + 10),
+        fill: Color.white
+    );
+    var textStyle = style.TextStyle();
+    textStyle.color = Color.black;
+    textStyle.fontSize = 15;
+    canvas.drawText(
+        TextElement.TextElement("$value", style: textStyle),
+        (bounds.left).round(),
+        (bounds.top - 28).round()
+    );
   }
 }
 
 /// Sample linear data type.
-class LinearSales {
+ class LinearSales {
   final int month;
-  final int sales;
-  final List<int> dashPattern;
+  final double sales;
+  // final List<int> dashPattern;
 
-  LinearSales(this.month, this.sales, this.dashPattern);
+  LinearSales(this.month, this.sales);
 }

@@ -41,7 +41,7 @@ class StandardIndexViewModel extends Model{
           listStandIndex = listDynamic.map((e) => StandardIndexModel.fromJson(e)).toList();
           // print('listStandIndex' +listStandIndex[1].gender.toString());
         }
-        notifyListeners();
+        // notifyListeners();
       } else listStandIndex = null;
     }catch (e){
       print("ERROR getAllStandard: " + e.toString());

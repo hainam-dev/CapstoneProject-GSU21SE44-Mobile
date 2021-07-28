@@ -3,9 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/saveKey.dart';
 import 'package:mumbi_app/Model/child_model.dart';
+import 'package:mumbi_app/Model/standard_index_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/standardIndex_viewModel.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 import 'package:mumbi_app/View/stacked.dart';
 import 'package:mumbi_app/View/standard_index_view.dart';
@@ -26,14 +28,39 @@ class BabyDevelopment extends StatefulWidget {
 }
 
 class _BabyDevelopmentState extends State<BabyDevelopment> {
+  String name = "", birthday = "", imageUrl = "", day = "", status = "";
+  var curentBMI = null;
+  var result;
+  Future<StandardIndexModel> futureStandard;
+
+  ChildModel childModel;
+  ChildViewModel childViewModel;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    childViewModel = ChildViewModel.getInstance();
+    childViewModel.getChildByMom();
+
+    // double weight = childModel.weight = 60.0;
+    // double height = childModel.height = 1.53;
+
+    double weight = 60.0;
+    double height = 1.53;
+    num data= weight/(height*height);
+    curentBMI = data.floor();
+    if (curentBMI < 5) {
+      status = "Thiếu cân";
+    } else if (curentBMI >= 5 && curentBMI <= 95) {
+      status = "Bình thường";
+    } else
+      status = "Béo phì";
+    getChild();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Theo dõi bé'),
@@ -46,12 +73,135 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
         child: Container(
           child: Column(
             children: <Widget>[
-              DrawChart(),
-              DrawProgress()],
+              Column(
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Container(
+                          // margin: EdgeInsets.all(18),
+                          decoration: new BoxDecoration(
+                            color: Colors.white,
+                          ),
+                          child: ScopedModel(
+                              model: childViewModel,
+                              child: ScopedModelDescendant(
+                                builder: (BuildContext context, Widget child,
+                                    ChildViewModel modelChild) {
+                                  childModel = modelChild.childListModel[0];
+                                  if (childModel == null) {
+                                    return loadingProgress();
+                                  }
+                                  getChild();
+                                  return createListTileDetail(
+                                      name, day.toString(), imageUrl);
+                                },
+                              ))),
+                      ScopedModel(
+                          //todo
+                          model: ChildViewModel.getInstance(),
+                          child: ScopedModelDescendant(
+                            builder: (BuildContext context, Widget child,
+                                ChildViewModel model) {
+                              return createListTileNext(
+                                  context,
+                                  ' 21/05/2021',
+                                  'Ngày tiêm chủng sắp tới:',
+                                  InjectionSchedule());
+                            },
+                          )),
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+                    color: Colors.white,
+                    child: ScopedModel(
+                      model: StandardIndexViewModel.getInstance(),
+                      child: ScopedModelDescendant(
+                        builder: (BuildContext context, Widget child,
+                            StandardIndexViewModel model) {
+                          model.getAllStandard();
+                          List<StandardIndexModel> list = model.listStandIndex;
+                          List<String> listType = ["Weight", "Height", "Head"];
+                          result = { for (var type in listType) type: list.where((data) => data.type == type) };
+                          return Column(
+                            children: <Widget>[
+
+                              //Thể trạng của bé
+                              curentBMI == null || status == ""
+                                  ? loadingProgress()
+                                  : createBabyCondition(context,
+                                      curentBMI.toString(), status),
+                              Container(
+                                  child: new Column(children: <Widget>[
+                                new SizedBox(
+                                    height: 350.0,
+                                    child: StackedAreaLineChart.withSampleData(
+                                        "Cân nặng", "Bé nặng hơn 30% trẻ ",result["Weight"])),
+                              ])),
+                              new SizedBox(
+                                  height: 350.0,
+                                  child: StackedAreaLineChart.withSampleData(
+                                      "Chiều cao", "Bé cao hơn 30% trẻ ", result["Height"])),
+                              new SizedBox(
+                                  height: 350.0,
+                                  child: StackedAreaLineChart.withSampleData(
+                                      "Chu vi đầu",
+                                      "Bé có chu vi đầu lớn hơn 30% trẻ cùng lứa",  result["Head"])),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              // DrawProgress()
+            ],
           ),
         ),
       ),
     );
+  }
+
+  getChild() async {
+    if (imageUrl == null) {
+      imageUrl = "";
+    }
+    if(childModel.gender != null)
+    var childGender = await storage.write(
+        key: childGenderKey, value: childModel.gender.toString());
+    name = childModel.fullName;
+    birthday = childModel.birthday;
+    DateTime dayCurrent = DateTime.parse(birthday.split('/').reversed.join());
+    Duration dur = DateTime.now().difference(dayCurrent);
+    double durInMoth = dur.inDays / 30;
+    double durInDay = dur.inDays / 30 - 12 * dur.inDays / 30 / 12;
+    if (durInMoth < 12 && durInMoth >= 1) {
+      day = durInMoth.floor().toString() +
+          " tháng " +
+          (DateTime.now().day - dayCurrent.day).toString() +
+          " ngày";
+    } else if (durInMoth > 12) {
+      day = (durInMoth / 12).floor().toString() +
+          " năm " +
+          durInDay.floor().toString() +
+          " tháng " +
+          (DateTime.now().day - dayCurrent.day).toString() +
+          " ngày";
+    } else if (durInMoth > 0) {
+      day = (DateTime.now().day - dayCurrent.day).toString() + " ngày";
+    } else if (durInMoth < 0) {
+      durInMoth *= -1;
+      day = "Còn " +
+          durInMoth.floor().toString() +
+          " tháng " +
+          (DateTime.now().day - dayCurrent.day).toString() +
+          " ngày bé ra đời";
+    }
+    imageUrl = childModel.imageURL;
+
+
+
   }
 }
 
@@ -84,227 +234,6 @@ class DrawProgress extends StatelessWidget {
                 child: createFlatButton(
                     context, 'Cập nhật sự vận động của bé', ActivityDetail())),
           ],
-        )
-    );
+        ));
   }
 }
-
-class DrawChart extends StatelessWidget {
-  String name = "",
-      birthday = "",
-      imageUrl = "",
-      day = "";
-  var curentBMI = null;
-  getBIM() async{
-    curentBMI = await storage.read(key: childBMI);
-  }
-  ChildModel childModel;
-
-  // if(curentBMI. < 5%)
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Column(
-          children: <Widget>[
-            Container(
-              // margin: EdgeInsets.all(18),
-                decoration: new BoxDecoration(
-                  color: Colors.white,
-                ),
-                child: ScopedModel(
-                    model: ChildViewModel.getInstance(),
-                    child: ScopedModelDescendant(
-                      builder: (BuildContext context, Widget child,
-                          ChildViewModel modelChild) {
-                        modelChild.getChildByMom();
-                        childModel = modelChild.childListModel[0];
-                        if (childModel == null) {
-                          return loadingProgress();
-                        }
-                        getChild();
-                        return createListTileDetail(
-                            name, day.toString(), imageUrl);
-                      },
-                    )
-                )
-            ),
-            ScopedModel(
-              //todo
-                model: ChildViewModel.getInstance(),
-                child: ScopedModelDescendant(
-                  builder: (BuildContext context, Widget child,
-                      ChildViewModel model) {
-                    return createListTileNext(
-                        context, ' 21/05/2021', 'Ngày tiêm chủng sắp tới:',
-                        InjectionSchedule());
-                  },
-                )),
-          ],
-        ),
-        Container(
-          padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-          color: Colors.white,
-          child: Column(
-            children: <Widget>[
-              // curentBMI == null
-              // ? loadingProgress() : createBabyCondition(context, curentBMI.toString(), "Béo phì"),
-              createBabyCondition(context, "20", "Béo phì"),
-              Container(
-                  child: new Column(
-                      children: <Widget>[
-                        new SizedBox(
-                            height: 350.0,
-                            child: StackedAreaLineChart.withSampleData(
-                                "Cân nặng", "Bé nặng hơn 30% trẻ ")),
-                      ])),
-              new SizedBox(
-                  height: 350.0,
-                  child: StackedAreaLineChart.withSampleData(
-                      "Chiều cao", "Bé cao hơn 30% trẻ ")),
-              new SizedBox(
-                  height: 350.0,
-                  child: StackedAreaLineChart.withSampleData("Chu vi đầu",
-                      "Bé có chu vi đầu lớn hơn 30% trẻ cùng lứa")),
-            ],
-          ),
-        )
-      ],
-    );
-  }
-
-  void getChild() async {
-    if (imageUrl == null) {
-      imageUrl = "";
-    }
-    var childGender = await storage.write(
-        key: childGenderKey, value: childModel.gender.toString());
-    name = childModel.fullName;
-    birthday = childModel.birthday;
-    DateTime dayCurrent = DateTime.parse(birthday
-        .split('/')
-        .reversed
-        .join());
-    Duration dur = DateTime.now().difference(dayCurrent);
-    double durInMoth = dur.inDays / 30;
-    double durInDay = dur.inDays / 30 - 12 * dur.inDays / 30 / 12;
-    if (durInMoth < 12 && durInMoth >= 1) {
-      day = durInMoth.floor().toString() + " tháng " + (DateTime
-          .now()
-          .day - dayCurrent.day).toString() + " ngày";
-    }
-    else if (durInMoth > 12) {
-      day = (durInMoth / 12).floor().toString() + " năm " +
-          durInDay.floor().toString() + " tháng " + (DateTime
-          .now()
-          .day - dayCurrent.day).toString() + " ngày";
-    } else if (durInMoth > 0) {
-      day = (DateTime
-          .now()
-          .day - dayCurrent.day).toString() + " ngày";
-    } else if (durInMoth < 0) {
-      durInMoth *= -1;
-      day = "Còn " + durInMoth.floor().toString() + " tháng " + (DateTime
-          .now()
-          .day - dayCurrent.day).toString() + " ngày bé ra đời";
-    }
-    imageUrl = childModel.imageURL;
-    double weight = childModel.weight = 50.0;
-    double height = childModel.height = 1.53;
-
-    double caculateBMI = weight / (height * height);
-    await storage.write(key: childBMI, value: caculateBMI.toString());
-  }
-}
-
-// class BabyDetail extends StatelessWidget {
-//   String name = "",
-//       birthday = "",
-//       imageUrl = "",
-//       day = "";
-//   ChildModel childModel;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: <Widget>[
-//         Container(
-//           // margin: EdgeInsets.all(18),
-//             decoration: new BoxDecoration(
-//               color: Colors.white,
-//             ),
-//             child: ScopedModel(
-//                 model: ChildViewModel.getInstance(),
-//                 child: ScopedModelDescendant(
-//                   builder: (BuildContext context, Widget child,
-//                       ChildViewModel modelChild) {
-//                     modelChild.getChildByMom();
-//                     childModel = modelChild.childListModel[0];
-//                     if (childModel == null) {
-//                       return loadingProgress();
-//                     }
-//                     getChild();
-//                     return createListTileDetail(name, day.toString(), imageUrl);
-//                   },
-//                 )
-//             )
-//         ),
-//         ScopedModel(
-//           //todo
-//             model: ChildViewModel.getInstance(),
-//             child: ScopedModelDescendant(
-//               builder: (BuildContext context, Widget child,
-//                   ChildViewModel model) {
-//                 return createListTileNext(
-//                     context, ' 21/05/2021', 'Ngày tiêm chủng sắp tới:',
-//                     InjectionSchedule());
-//               },
-//             )),
-//       ],
-//     );
-//   }
-//
-//   void getChild() async {
-//     if (imageUrl == null) {
-//       imageUrl = "";
-//     }
-//     var childGender = await storage.write(
-//         key: childGenderKey, value: childModel.gender.toString());
-//     name = childModel.fullName;
-//     birthday = childModel.birthday;
-//     DateTime dayCurrent = DateTime.parse(birthday
-//         .split('/')
-//         .reversed
-//         .join());
-//     Duration dur = DateTime.now().difference(dayCurrent);
-//     double durInMoth = dur.inDays / 30;
-//     double durInDay = dur.inDays / 30 - 12 * dur.inDays / 30 / 12;
-//     if (durInMoth < 12 && durInMoth >= 1) {
-//       day = durInMoth.floor().toString() + " tháng " + (DateTime
-//           .now()
-//           .day - dayCurrent.day).toString() + " ngày";
-//     }
-//     else if (durInMoth > 12) {
-//       day = (durInMoth / 12).floor().toString() + " năm " +
-//           durInDay.floor().toString() + " tháng " + (DateTime
-//           .now()
-//           .day - dayCurrent.day).toString() + " ngày";
-//     } else if (durInMoth > 0) {
-//       day = (DateTime
-//           .now()
-//           .day - dayCurrent.day).toString() + " ngày";
-//     } else if (durInMoth < 0) {
-//       durInMoth *= -1;
-//       day = "Còn " + durInMoth.floor().toString() + " tháng " + (DateTime
-//           .now()
-//           .day - dayCurrent.day).toString() + " ngày bé ra đời";
-//     }
-//     imageUrl = childModel.imageURL;
-//     double weight = childModel.weight = 50.0;
-//     double height = childModel.height = 1.53;
-//
-//     num caculateBMI = weight / (height * height);
-//     await storage.write(key: childBMI, value: caculateBMI.toString());
-//   }
-//
-// }
