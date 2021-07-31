@@ -48,7 +48,11 @@ class _BotNavBarState extends State<BotNavBar> {
       ),
       items: [
         item(Icon(Icons.home_outlined), "Trang Chủ"),
-        item(Icon(Icons.article_outlined,), "Cẩm Nang"),
+        item(
+            Icon(
+              Icons.article_outlined,
+            ),
+            "Cẩm Nang"),
         item(Icon(Icons.equalizer_outlined), "Theo Dõi"),
       ],
       onTap: (int index) {

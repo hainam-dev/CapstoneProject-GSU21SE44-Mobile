@@ -1,70 +1,102 @@
 import 'dart:convert';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:mumbi_app/View/bottomNavBar_view.dart';
-import 'package:mumbi_app/View/teethProcess.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Constant/colorTheme.dart';
-import 'Constant/progress_bar.dart';
+import 'Utils/message.dart';
 import 'View/login_view.dart';
 import 'Widget/splashScreen.dart';
+import 'main.dart';
 
 class MyApp extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _MyApp createState() => _MyApp();
 }
 
-class _MyAppState extends State<MyApp> {
-  FirebaseMessaging messaging;
+class _MyApp extends State<MyApp> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    messaging = FirebaseMessaging.instance;
-    messaging.getToken().then((value) {
-      print(value);
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage message) {
+      if (message != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MessageView(),
+            settings: RouteSettings(
+              arguments: MessageArguments(message, true),
+            ),
+          ),
+        );
+      }
     });
-    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-      print("message recieved");
-      print(event.notification.body);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.data.length > 0) {
+        flutterLocalNotificationsPlugin.show(
+            message.data.hashCode,
+            message.data['Title'],
+            message.data['Body'],
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                  channel.id, channel.name, channel.description,
+                  largeIcon: DrawableResourceAndroidBitmap('@mipmap/logo'),
+                  color: PINK_COLOR,
+                  icon: 'logo_notification'),
+            ));
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(message.data['Title']),
+                content: Text(message.data['Body']),
+                actions: [
+                  TextButton(
+                    child: Text("Ok"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              );
+            });
+      }
     });
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      print('Message clicked!');
-    });
-    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
-      print("message recieved");
-      print(event.notification.body);
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Notification"),
-              content: Text(event.notification.body),
-              actions: [
-                TextButton(
-                  child: Text("Ok"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-          });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MessageView(),
+          settings: RouteSettings(
+            arguments: MessageArguments(message, true),
+          ),
+        ),
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: ColorTheme,
-          fontFamily: 'Lato',
-          iconTheme: new IconThemeData(color: Colors.white, size: 24.0),
-        ),
-        home: MainScreen());
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: ColorTheme,
+        fontFamily: 'Lato',
+        iconTheme: new IconThemeData(color: Colors.white, size: 24.0),
+      ),
+      home: MainScreen(),
+      routes: {
+        '/LoginScreen': (context) => LoginScreen(),
+      },
+    );
   }
 }
 
