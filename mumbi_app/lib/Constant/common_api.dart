@@ -48,6 +48,9 @@ final String UPSERT_TOOTH_BY_TOOTH_ID = getApiPath("/api/Tooth/UpsertTooth/");
 
 final String GET_STAND_INDEX_BY_GENDER = getApiPath("/api/StandardIndex/GetStandardIndexBy/");
 
+final String GET_ACTION_BY_TYPE = getApiPath("/api/Action/GetActionBy/");
+final String GET_ACTION_ID_BY_CHILDID = getApiPath("/api/ActionChild/GetActionChildBy/");
+
 //post vaccination info
 final String POST_PERSONAL_INFO_AddInjectedPerson =
     getApiPath("/api/InjectedPerson/AddInjectedPerson");

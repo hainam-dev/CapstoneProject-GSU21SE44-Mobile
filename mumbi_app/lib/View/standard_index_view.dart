@@ -71,59 +71,62 @@ class DrawTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        PaginatedDataTable(
-          header: Text('Bảng chỉ sổ tiêu chuẩn'),
-          rowsPerPage: 10,
-          columnSpacing: 10.0,
-          headingRowHeight: 40.0,
-          columns: [
-            DataColumn(label: Container(
-              width: width * .15,
-              child: Column(children: <Widget>[
-                Text('Tháng',style: SEMIBOLD_13),
-                Text('',style: SEMIBOLD_13)
-              ],),
-            ),),
-            DataColumn(label: Container(
-              width: width * .25,
-              child: Column(children: <Widget>[
-                Text('Chiều cao (cm)',style: SEMIBOLD_13),
-                Text('Chỉ số trên',style: SEMIBOLD_13)
-              ],),
-            ),),
-            DataColumn(label: Column(children: <Widget>[
-              Text('',style: SEMIBOLD_13),
-              Text('Chỉ số dưới',style: SEMIBOLD_13)
-            ],),),
-            DataColumn(label: Container(
-              width: width * .25,
-              child: Column(children: <Widget>[
-                Text('Cân nặng (kg)',style: SEMIBOLD_13),
-                Text('Chỉ số trên',style: SEMIBOLD_13)
-              ],),
-            ),),
-            DataColumn(label: Column(children: <Widget>[
-              Text('',style: SEMIBOLD_13),
-              Text('Chỉ số dưới',style: SEMIBOLD_13)
-            ],),),
-            DataColumn(label: Container(
-              width: width * .25,
-              child: Column(children: <Widget>[
-                Text('Vòng đầu (cm)',style: SEMIBOLD_13),
-                Text('Chỉ số trên',style: SEMIBOLD_13)
-              ],),
-            ),),
-            DataColumn(label: Column(children: <Widget>[
-              Text('',style: SEMIBOLD_13),
-              Text('Chỉ số dưới',style: SEMIBOLD_13)
-            ],),),
-          ],
-          source: _DataSource(context, standarData: list),
-        ),
-      ],
+    return Theme(
+      data: Theme.of(context)
+          .copyWith(cardColor: GREY_COLOR, dividerColor: WHITE_COLOR),
+      child: ListView(
+        children: [
+          PaginatedDataTable(
+            header: Text('Bảng chỉ sổ tiêu chuẩn'),
+            rowsPerPage: 10,
+            columnSpacing: 10.0,
+            headingRowHeight: 40.0,
+            columns: [
+              DataColumn(label: Container(
+                width: width * .15,
+                child: Column(children: <Widget>[
+                  Text('Tháng',style: SEMIBOLD_13),
+                  Text('',style: SEMIBOLD_13)
+                ],),
+              ),),
+              DataColumn(label: Container(
+                width: width * .25,
+                child: Column(children: <Widget>[
+                  Text('Chiều cao (cm)',style: SEMIBOLD_13),
+                  Text('Chỉ số trên',style: SEMIBOLD_13)
+                ],),
+              ),),
+              DataColumn(label: Column(children: <Widget>[
+                Text('',style: SEMIBOLD_13),
+                Text('Chỉ số dưới',style: SEMIBOLD_13)
+              ],),),
+              DataColumn(label: Container(
+                width: width * .25,
+                child: Column(children: <Widget>[
+                  Text('Cân nặng (kg)',style: SEMIBOLD_13),
+                  Text('Chỉ số trên',style: SEMIBOLD_13)
+                ],),
+              ),),
+              DataColumn(label: Column(children: <Widget>[
+                Text('',style: SEMIBOLD_13),
+                Text('Chỉ số dưới',style: SEMIBOLD_13)
+              ],),),
+              DataColumn(label: Container(
+                width: width * .25,
+                child: Column(children: <Widget>[
+                  Text('Vòng đầu (cm)',style: SEMIBOLD_13),
+                  Text('Chỉ số trên',style: SEMIBOLD_13)
+                ],),
+              ),),
+              DataColumn(label: Column(children: <Widget>[
+                Text('',style: SEMIBOLD_13),
+                Text('Chỉ số dưới',style: SEMIBOLD_13)
+              ],),),
+            ],
+            source: _DataSource(context, standarData: list),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -169,13 +172,13 @@ class _DataSource extends DataTableSource {
       }),
       index: index,
       cells: <DataCell>[
-        DataCell(Center(child: Text('Tháng ${_data.elementAt(0).month}'))),
+        DataCell(Center(child: Text('Tháng ${_data.elementAt(0).month}', style: SEMIBOLDWHITE_13,))),
         DataCell(Center(child: Text('${_data.elementAt(1).maxValue.toString()}'))),
-        DataCell(Center(child: Text('${_data.elementAt(1).minValue.toString()}'))) ,
+        DataCell(Center(child: Text('${_data.elementAt(1).minValue.toString()}', style: SEMIBOLDWHITE_13,))) ,
         DataCell(Center(child: Text('${_data.elementAt(0).maxValue.toString()}'))),
-        DataCell(Center(child: Text('${_data.elementAt(0).minValue.toString()}'))),
+        DataCell(Center(child: Text('${_data.elementAt(0).minValue.toString()}', style: SEMIBOLDWHITE_13,))),
         DataCell(Center(child: Text('${_data.elementAt(2).maxValue.toString()}'))),
-        DataCell(Center(child: Text('${_data.elementAt(2).minValue.toString()}'))),
+        DataCell(Center(child: Text('${_data.elementAt(2).minValue.toString()}', style: SEMIBOLDWHITE_13,))),
       ],
     );
   }

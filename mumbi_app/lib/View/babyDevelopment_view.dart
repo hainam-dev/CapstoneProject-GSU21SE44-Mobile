@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/saveKey.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/standard_index_model.dart';
-import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/standardIndex_viewModel.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 import 'package:mumbi_app/View/stacked.dart';
-import 'package:mumbi_app/View/standard_index_view.dart';
 import 'package:mumbi_app/View/activityDetailBaby_update.dart';
-import 'package:mumbi_app/Constant/textStyle.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:mumbi_app/Widget/customBabyDevelopment.dart';
@@ -41,6 +35,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
     super.initState();
     childViewModel = ChildViewModel.getInstance();
     childViewModel.getChildByMom();
+
 
     // double weight = childModel.weight = 60.0;
     // double height = childModel.height = 1.53;
@@ -88,6 +83,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                                 builder: (BuildContext context, Widget child,
                                     ChildViewModel modelChild) {
                                   childModel = modelChild.childListModel[0];
+                                  var childKey = storage.write(key: childIdKey, value: childModel.id);
                                   if (childModel == null) {
                                     return loadingProgress();
                                   }
@@ -155,7 +151,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                   )
                 ],
               ),
-              // DrawProgress()
+              DrawProgress()
             ],
           ),
         ),
@@ -227,7 +223,7 @@ class DrawProgress extends StatelessWidget {
                   'Bé của bạn đã có tiến bộ gì hơn chưa? ',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                 )),
-            createLinear("Vận động thô", 0.7, Colors.green),
+            createLinear("Vận động thô", 1, Colors.green),
             createLinear("Vận động tinh", 0.5, Colors.orange),
             Container(
                 padding: EdgeInsets.only(top: 16),
