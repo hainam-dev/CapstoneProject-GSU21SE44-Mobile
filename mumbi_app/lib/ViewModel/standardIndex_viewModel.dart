@@ -23,10 +23,13 @@ class StandardIndexViewModel extends Model{
   }
 
   StandardIndexModel standardIndex;
-  List<StandardIndexModel> listStandIndex;
+  List<StandardIndexModel> _listStandIndex;
+  List<StandardIndexModel> get listStandIndex => _listStandIndex;
   List<dynamic> listDynamic;
+  var gender;
 
   Future<StandardIndexModel> getAllStandard() async{
+    // setState();
     var gender = await storage.read(key: childGenderKey);
     // print('gender'+gender.toString());
     try{
@@ -34,15 +37,17 @@ class StandardIndexViewModel extends Model{
       if(data != null){
         Map<String, dynamic> jsonData = jsonDecode(data);
         if(jsonData['data'] == null)
-          listStandIndex = null;
+          _listStandIndex = null;
         else{
           listDynamic = jsonData['data'];
-          // print('listDynamic'+listDynamic.toString());
-          listStandIndex = listDynamic.map((e) => StandardIndexModel.fromJson(e)).toList();
-          // print('listStandIndex' +listStandIndex[1].gender.toString());
+          print('listDynamic'+listDynamic.toString());
+          _listStandIndex = listDynamic.map((e) => StandardIndexModel.fromJson(e)).toList();
+          print('listStandIndex ' +listStandIndex[1].gender.toString());
         }
-        // notifyListeners();
-      } else listStandIndex = null;
+        print("alo2");
+
+        notifyListeners();
+      } else _listStandIndex = null;
     }catch (e){
       print("ERROR getAllStandard: " + e.toString());
     }
@@ -51,5 +56,11 @@ class StandardIndexViewModel extends Model{
   // Future<http.Response> getAllStandard() {
   //   return http.get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
   // }
+
+void setState(){
+  var gender = storage.read(key: childGenderKey);
+  print("alo1");
+  notifyListeners();
+}
 
 }

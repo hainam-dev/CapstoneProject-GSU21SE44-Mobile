@@ -18,10 +18,14 @@ class StandardIndex extends StatefulWidget {
 
 class _StandardIndexState extends State<StandardIndex> {
   Future<StandardIndexModel> futureStand;
+  StandardIndexViewModel standardIndexViewModel;
+  List<StandardIndexModel> listStandard;
 
   @override
   void initState() {
     super.initState();
+    standardIndexViewModel = StandardIndexViewModel.getInstance();
+    standardIndexViewModel.getAllStandard();
   }
 
   @override
@@ -37,10 +41,9 @@ class _StandardIndexState extends State<StandardIndex> {
         ),
       ),
       body: ScopedModel(
-        model: StandardIndexViewModel.getInstance(),
-        child: ScopedModelDescendant(
-          builder: (BuildContext context,Widget child, StandardIndexViewModel standrardModel) {
-            standrardModel.getAllStandard();
+        model: standardIndexViewModel,
+        child: ScopedModelDescendant<StandardIndexViewModel>(
+          builder: (context, child, standrardModel) {
             List<StandardIndexModel> list = standrardModel.listStandIndex;
             List<int> listMonth = [];
             var result;

@@ -29,6 +29,8 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
 
   ChildModel childModel;
   ChildViewModel childViewModel;
+  StandardIndexViewModel standardIndexViewModel;
+  List<StandardIndexModel> listStandard;
 
   @override
   void initState() {
@@ -36,6 +38,8 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
     childViewModel = ChildViewModel.getInstance();
     childViewModel.getChildByMom();
 
+    standardIndexViewModel = StandardIndexViewModel.getInstance();
+    standardIndexViewModel.getAllStandard();
 
     // double weight = childModel.weight = 60.0;
     // double height = childModel.height = 1.53;
@@ -51,6 +55,13 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
     } else
       status = "Béo phì";
     getChild();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
   }
 
   @override
@@ -94,7 +105,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                               ))),
                       ScopedModel(
                           //todo
-                          model: ChildViewModel.getInstance(),
+                          model: childViewModel,
                           child: ScopedModelDescendant(
                             builder: (BuildContext context, Widget child,
                                 ChildViewModel model) {
@@ -111,14 +122,14 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                     padding: EdgeInsets.only(top: 16, left: 16, right: 16),
                     color: Colors.white,
                     child: ScopedModel(
-                      model: StandardIndexViewModel.getInstance(),
-                      child: ScopedModelDescendant(
-                        builder: (BuildContext context, Widget child,
-                            StandardIndexViewModel model) {
-                          model.getAllStandard();
-                          List<StandardIndexModel> list = model.listStandIndex;
+                      model: standardIndexViewModel,
+                      child: ScopedModelDescendant<StandardIndexViewModel>(
+                        builder: (context, child, modelStand) {
+                          List<StandardIndexModel> list = modelStand.listStandIndex;
                           List<String> listType = ["Weight", "Height", "Head"];
-                          result = { for (var type in listType) type: list.where((data) => data.type == type) };
+                          list == null
+                          ? loadingProgress()
+                          : result = { for (var type in listType) type: list.where((data) => data.type == type) };
                           return Column(
                             children: <Widget>[
 
@@ -127,18 +138,24 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                                   ? loadingProgress()
                                   : createBabyCondition(context,
                                       curentBMI.toString(), status),
-                              Container(
+                              result == null
+                                  ? loadingProgress()
+                                  : Container(
                                   child: new Column(children: <Widget>[
-                                new SizedBox(
+                                  new SizedBox(
                                     height: 350.0,
                                     child: StackedAreaLineChart.withSampleData(
                                         "Cân nặng", "Bé nặng hơn 30% trẻ ",result["Weight"])),
                               ])),
-                              new SizedBox(
+                              result == null
+                                  ? loadingProgress()
+                                  : new SizedBox(
                                   height: 350.0,
                                   child: StackedAreaLineChart.withSampleData(
                                       "Chiều cao", "Bé cao hơn 30% trẻ ", result["Height"])),
-                              new SizedBox(
+                              result == null
+                                  ? loadingProgress()
+                                  : new SizedBox(
                                   height: 350.0,
                                   child: StackedAreaLineChart.withSampleData(
                                       "Chu vi đầu",
@@ -163,38 +180,52 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
     if (imageUrl == null) {
       imageUrl = "";
     }
-    if(childModel.gender != null)
-    var childGender = await storage.write(
-        key: childGenderKey, value: childModel.gender.toString());
-    name = childModel.fullName;
-    birthday = childModel.birthday;
-    DateTime dayCurrent = DateTime.parse(birthday.split('/').reversed.join());
-    Duration dur = DateTime.now().difference(dayCurrent);
-    double durInMoth = dur.inDays / 30;
-    double durInDay = dur.inDays / 30 - 12 * dur.inDays / 30 / 12;
-    if (durInMoth < 12 && durInMoth >= 1) {
-      day = durInMoth.floor().toString() +
-          " tháng " +
-          (DateTime.now().day - dayCurrent.day).toString() +
-          " ngày";
-    } else if (durInMoth > 12) {
-      day = (durInMoth / 12).floor().toString() +
-          " năm " +
-          durInDay.floor().toString() +
-          " tháng " +
-          (DateTime.now().day - dayCurrent.day).toString() +
-          " ngày";
-    } else if (durInMoth > 0) {
-      day = (DateTime.now().day - dayCurrent.day).toString() + " ngày";
-    } else if (durInMoth < 0) {
-      durInMoth *= -1;
-      day = "Còn " +
-          durInMoth.floor().toString() +
-          " tháng " +
-          (DateTime.now().day - dayCurrent.day).toString() +
-          " ngày bé ra đời";
+    if(childModel != null) {
+      if (childModel.gender != null)
+        var childGender = await storage.write(
+            key: childGenderKey, value: childModel.gender.toString());
+      name = childModel.fullName;
+      birthday = childModel.birthday;
+      imageUrl = childModel.imageURL;
+
+      DateTime dayCurrent = DateTime.parse(birthday
+          .split('/')
+          .reversed
+          .join());
+      Duration dur = DateTime.now().difference(dayCurrent);
+      double durInMoth = dur.inDays / 30;
+      double durInDay = dur.inDays / 30 - 12 * dur.inDays / 30 / 12;
+      if (durInMoth < 12 && durInMoth >= 1) {
+        day = durInMoth.floor().toString() +
+            " tháng " +
+            (DateTime
+                .now()
+                .day - dayCurrent.day).toString() +
+            " ngày";
+      } else if (durInMoth > 12) {
+        day = (durInMoth / 12).floor().toString() +
+            " năm " +
+            durInDay.floor().toString() +
+            " tháng " +
+            (DateTime
+                .now()
+                .day - dayCurrent.day).toString() +
+            " ngày";
+      } else if (durInMoth > 0) {
+        day = (DateTime
+            .now()
+            .day - dayCurrent.day).toString() + " ngày";
+      } else if (durInMoth < 0) {
+        durInMoth *= -1;
+        day = "Còn " +
+            durInMoth.floor().toString() +
+            " tháng " +
+            (DateTime
+                .now()
+                .day - dayCurrent.day).toString() +
+            " ngày bé ra đời";
+      }
     }
-    imageUrl = childModel.imageURL;
 
 
 
