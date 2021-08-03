@@ -82,6 +82,7 @@ class VaccinationRespository {
 
   static Future<dynamic> sendPersonalInfo(List data) async {
     List<dynamic> list = [];
+    String momId = await UserViewModel.getUserID();
     data.forEach((e) {
       var homeAddress = "";
       if (e["ho_khau_dia_chi"] != null && e["ho_khau_dia_chi"] != "") {
@@ -125,6 +126,7 @@ class VaccinationRespository {
         temporaryAddress += e["tam_tru_tinh"];
       }
       list.add({
+        "momId": momId,
         "id": (e["doi_tuong_id"] as double).toInt(),
         "fullName": e["ho_ten"],
         "birthday": e["ngay_sinh"],
