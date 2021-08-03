@@ -24,9 +24,7 @@ class ActionViewModel extends Model {
   List<dynamic> listdynamic;
   List<ActionModel> _listAction;
 
-  List<ActionModel> get list{ //returns a copy of list
-    return [..._listAction];
-  }
+  List<ActionModel> get list =>_listAction;
 
   Future<void> getActionByType(String type) async{
     try{

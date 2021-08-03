@@ -47,7 +47,7 @@ class _StandardIndexState extends State<StandardIndex> {
             List<StandardIndexModel> list = standrardModel.listStandIndex;
             List<int> listMonth = [];
             var result;
-            for(int i = 0; i < list.length;i++){
+            if(list != null) for(int i = 0; i < list.length;i++){
               for(int j = i; j < list.length; j++)
               {
                 if(j == i){
