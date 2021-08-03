@@ -105,12 +105,14 @@ Widget createListTileDetail(String name, String detail, String image) {
     child: ListTile(
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(65),
-          child: Image.network(
+          child: image.isNotEmpty
+              ? Image.network(
             image,
             height: 50,
             width: 50,
             fit: BoxFit.cover,
-          ),
+            )
+            : null
         ),
       subtitle:Text(detail, style: SEMIBOLD_14_6,),
       title:  Text(name, style: SEMIBOLDPINK_16_6,),
@@ -316,7 +318,7 @@ Widget createLinear(String _name, double _value, Color _color) {
     child: Row(
       children: <Widget>[
         Container(
-            width: 100,
+            width: SizeConfig.safeBlockHorizontal*30,
             child: Text(
               _name,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
@@ -324,7 +326,7 @@ Widget createLinear(String _name, double _value, Color _color) {
         Container(
           padding: EdgeInsets.only(left: 16),
           child: SizedBox(
-            width: 200,
+            width: SizeConfig.safeBlockHorizontal*40,
             child: LinearProgressIndicator(
               minHeight: 16,
               value: _value,
@@ -335,6 +337,7 @@ Widget createLinear(String _name, double _value, Color _color) {
           ),
         ),
         Container(
+          width: SizeConfig.safeBlockHorizontal*15,
           padding: EdgeInsets.only(left: 4),
           child: Text(
             (_value * 100).round().toString() + "%",

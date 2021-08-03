@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/View/fineMotorSkills.dart';
-import 'package:mumbi_app/View/grossMotorSkills.dart';
+import 'package:mumbi_app/View/babyFineMotorSkills.dart';
+import 'package:mumbi_app/View/babyGrossMotorSkills.dart';
 
 
 class ActivityDetail extends StatefulWidget {

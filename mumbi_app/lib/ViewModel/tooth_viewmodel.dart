@@ -21,24 +21,25 @@ class ToothViewModel extends Model{
     _instance = null;
   }
 
-  ToothInfoModel toothInforModel;
-  ToothModel toothModel;
-  List<dynamic> list;
-  List<ToothModel> listTooth;
+  ToothInfoModel _toothInforModel;
+  ToothModel _toothModel;
+  List<dynamic> _list;
+  List<ToothModel> _listTooth;
+
+  ToothInfoModel get  toothInforModel => _toothInforModel;
+  ToothModel get toothModel => _toothModel;
+  List<dynamic> get list => _list;
+  List<ToothModel> get listTooth => _listTooth;
 
   Future<void> getToothInfoById() async{
     try{
       dynamic position = await storage.read(key: toothPosInfo);
-      // if (position == null)
-      //   return null;
-      // else {
       position = jsonDecode(position);
-      // }
       var data = await ToothRepository.apiGetToothInfoByToothId(position);
       if(data != null){
         Map<String, dynamic> jsonData = jsonDecode(data);
-        toothInforModel = ToothInfoModel.fromJson(jsonData);
-        var toothId = storage.write(key: toothIdKey, value: toothInforModel.id);
+        _toothInforModel = ToothInfoModel.fromJson(jsonData);
+        var toothId = storage.write(key: toothIdKey, value: _toothInforModel.id);
         notifyListeners();
       }
     }catch (e){
@@ -51,6 +52,7 @@ class ToothViewModel extends Model{
     try {
       String data = await ToothRepository.apiUpsertToothById(childModel);
       print("Update thành công");
+      notifyListeners();
       return true;
     } catch (e) {
       print("error upsert tooth: " + e.toString());
@@ -60,8 +62,9 @@ class ToothViewModel extends Model{
 
   Future<void> getToothByChildId() async{
     var childID = await storage.read(key: childIdKey);
+    dynamic toothID = await storage.read(key: toothPosInfo);
 
-    dynamic toothID = await storage.read(key: toothIdKey);
+    print('toothID '+toothID.toString());
 
     try{
       if (toothID == null && childID == null)
@@ -69,21 +72,20 @@ class ToothViewModel extends Model{
       var data = await ToothRepository.apiGetToothByChildId(childID, toothID);
       if(data != null){
         Map<String, dynamic> jsonData = jsonDecode(data);
-        // print("jsonData " +jsonData.toString());
         if(jsonData['succeeded'] == false){
-          toothModel = new ToothModel();
-          toothModel.toothId = toothID;
-          toothModel.childId = childID;
-          toothModel.note = " ";
+          _toothModel = new ToothModel();
+          _toothModel.toothId = toothID;
+          _toothModel.childId = childID;
+          _toothModel.note = " ";
         } else{
-          toothModel = ToothModel.fromJson(jsonData);
+          _toothModel = ToothModel.fromJson(jsonData);
         }
-        notifyListeners();
       } else {
-        toothModel = new ToothModel();
+        _toothModel = new ToothModel();
         print("NULL TOOTH");
-
       }
+      notifyListeners();
+
       // print("toothModel" +toothModel.note.toString());
     }catch (e){
       print("ERROR getToothByChildId:  " + e.toString());
@@ -98,28 +100,20 @@ class ToothViewModel extends Model{
       return null;
     try{
       var data = await ToothRepository.apiGetAllToothByChildId(childID);
-      print("DATA: "+ data);
+      print("DATA3: "+ data);
       if(data != null){
         Map<String, dynamic> jsonData = jsonDecode(data);
         print("jsonData " +jsonData.toString());
         if(jsonData['data'] == null){
-          listTooth = <ToothModel>[];
+          _listTooth = <ToothModel>[];
         } else{
-          list = jsonData['data'];
-          // print("list: "+list.toString());
-          listTooth = list.map((e) => ToothModel.fromJsonModel(e)).toList();
-          // print("listTooth: " + listTooth.toString());
-
-          listTooth.sort((a,b) => b.grownDate.toString().compareTo(a.grownDate.toString()));
-          listTooth.reversed;
-          // print("listTooth: " + listTooth.first.toString());
+          _list = jsonData['data'];
+          _listTooth = _list.map((e) => ToothModel.fromJsonModel(e)).toList();
         }
-        notifyListeners();
       } else {
-        listTooth = <ToothModel>[];
-        // print("NULL TOOTH");
+        _listTooth = <ToothModel>[];
       }
-      // print("toothModel" +toothModel.note.toString());
+      notifyListeners();
     }catch (e){
       print("ERROR getAllToothByChildId:  " + e.toString());
     }

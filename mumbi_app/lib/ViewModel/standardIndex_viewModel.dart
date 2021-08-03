@@ -5,6 +5,8 @@ import 'package:mumbi_app/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:mumbi_app/Model/standard_index_model.dart';
 import 'package:mumbi_app/Repository/standard_index_repository.dart';
+import 'package:http/http.dart' as http;
+
 
 class StandardIndexViewModel extends Model{
   static StandardIndexViewModel _instance;
@@ -20,28 +22,45 @@ class StandardIndexViewModel extends Model{
     _instance = null;
   }
 
-  StandardIndex standardIndex;
-  List<StandardIndex> listStandIndex;
+  StandardIndexModel standardIndex;
+  List<StandardIndexModel> _listStandIndex;
+  List<StandardIndexModel> get listStandIndex => _listStandIndex;
   List<dynamic> listDynamic;
+  var gender;
 
-  Future<void> getAllStandard() async{
-    dynamic gender = await storage.read(key: childGenderKey);
+  Future<StandardIndexModel> getAllStandard() async{
+    // setState();
+    var gender = await storage.read(key: childGenderKey);
+    // print('gender'+gender.toString());
     try{
       var data = await StandardRespisotory.apiGetStandedIndexByGender(gender);
       if(data != null){
         Map<String, dynamic> jsonData = jsonDecode(data);
-        if(jsonData['data' ==null])
-          listStandIndex == null;
+        if(jsonData['data'] == null)
+          _listStandIndex = null;
         else{
           listDynamic = jsonData['data'];
-          listStandIndex = listDynamic.map((e) => StandardIndex.fromJson(jsonData));
+          print('listDynamic'+listDynamic.toString());
+          _listStandIndex = listDynamic.map((e) => StandardIndexModel.fromJson(e)).toList();
+          print('listStandIndex ' +listStandIndex[1].gender.toString());
         }
+        print("alo2");
+
         notifyListeners();
-      }
+      } else _listStandIndex = null;
     }catch (e){
       print("ERROR getAllStandard: " + e.toString());
     }
   }
 
+  // Future<http.Response> getAllStandard() {
+  //   return http.get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
+  // }
+
+void setState(){
+  var gender = storage.read(key: childGenderKey);
+  print("alo1");
+  notifyListeners();
+}
 
 }

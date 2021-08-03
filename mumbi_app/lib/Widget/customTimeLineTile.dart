@@ -27,7 +27,7 @@ Widget firstTimeLineTile(ToothModel model){
     day = (durInMoth/12).floor().toString()+" năm " + durInDay.floor().toString()+" tháng " + (DateTime.now().day - dayCurrent.day).toString() +" ngày";
   } else if(durInMoth > 0){
     day = (DateTime.now().day - dayCurrent.day).toString() +" ngày";
-  }
+  } else if(durInMoth < 0) day ="Ngày sai";
 
   final str = model.toothName;
   final start = "(";
@@ -122,7 +122,7 @@ Widget customTimeLineTile(ToothModel model){
     day = (durInMoth/12).floor().toString()+" năm " + durInDay.floor().toString()+" tháng " + (DateTime.now().day - dayCurrent.day).toString() +" ngày";
   } else if(durInMoth > 0){
     day = (DateTime.now().day - dayCurrent.day).toString() +" ngày";
-  }
+  }else if(durInMoth < 0) day ="Ngày sai";
 
   final str = model.toothName;
   final start = "(";
@@ -215,7 +215,7 @@ Widget lastTimeLineTile(ToothModel model){
     day = (durInMoth/12).floor().toString()+" năm " + durInDay.floor().toString()+" tháng " + (DateTime.now().day - dayCurrent.day).toString() +" ngày";
   } else if(durInMoth > 0){
     day = (DateTime.now().day - dayCurrent.day).toString() +" ngày";
-  }
+  } else if(durInMoth < 0) day ="Ngày sai";
 
   final str = model.toothName;
   final start = "(";

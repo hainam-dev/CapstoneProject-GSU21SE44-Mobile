@@ -23,7 +23,18 @@ class TeethProcess extends StatefulWidget {
 
 class _TeethProcessState extends State<TeethProcess> {
   List<ToothModel> listTooth;
-  List<ToothInfoModel> listInfo;
+  ToothViewModel toothViewModel;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    toothViewModel = ToothViewModel.getInstance();
+    toothViewModel.getAllToothByChildId();
+    listTooth = toothViewModel.listTooth;
+    listTooth.sort((a,b) => b.grownDate.toString().compareTo(a.grownDate.toString()));
+    listTooth.reversed;
+    print('listTooth'+listTooth.toString());
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,22 +46,19 @@ class _TeethProcessState extends State<TeethProcess> {
         ),
       ),
       body: ScopedModel(
-        model: ToothViewModel.getInstance(),
-        child: ScopedModelDescendant(
-          builder: (BuildContext context, Widget child, ToothViewModel model){
-            model.getAllToothByChildId();
-            listTooth = model.listTooth;
-            // print("list lèng:" +listTooth.toString());
-            return listTooth == null
-            ? loadingProgress()
-            : ScopedModelDescendant(
-              builder: (BuildContext context, Widget child, ToothViewModel model){
-                // listInfo = model.toothInforModel;
-                return ListView.builder(
+        model: toothViewModel,
+        child: ScopedModelDescendant<ToothViewModel>(
+          builder: (context, child, model){
+
+            // listTooth = model.listTooth;
+
+            return listTooth.isEmpty
+            ? Center(
+              child: Text("Chưa có dữ liệu mọc răng của bé.\n"),
+            )
+            : ListView.builder(
                   itemCount: listTooth.length,
                   itemBuilder: (BuildContext context, index){
-                    // print(index);
-                    // print("Leng: " +listTooth.length.toString());
                     if (index == 0){
                       return firstTimeLineTile(listTooth.first);
                     }
@@ -63,8 +71,7 @@ class _TeethProcessState extends State<TeethProcess> {
 
                   },
                 );
-              },
-            );
+
           },
         ),
       ),

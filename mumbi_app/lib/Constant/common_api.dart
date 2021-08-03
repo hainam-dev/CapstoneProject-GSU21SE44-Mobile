@@ -50,6 +50,9 @@ final String GET_ACTIVITY_BY_TYPE = getApiPath("/api/Activity/GetActivityByType/
 
 final String GET_STAND_INDEX_BY_GENDER = getApiPath("/api/StandardIndex/GetStandardIndexBy/");
 
+final String GET_ACTION_BY_TYPE = getApiPath("/api/Action/GetActionBy/");
+final String GET_ACTION_ID_BY_CHILDID = getApiPath("/api/ActionChild/GetActionChildBy/");
+
 //post vaccination info
 final String POST_PERSONAL_INFO_AddInjectedPerson =
     getApiPath("/api/InjectedPerson/AddInjectedPerson");
