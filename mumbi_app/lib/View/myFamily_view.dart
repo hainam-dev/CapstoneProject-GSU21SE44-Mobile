@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
@@ -19,6 +20,25 @@ class MyFamily extends StatefulWidget {
 
 class _MyFamilyState extends State<MyFamily> {
 
+  MomViewModel _momViewModel;
+  DadViewModel _dadViewModel;
+  ChildViewModel _childViewModel;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    _momViewModel = MomViewModel.getInstance();
+    _momViewModel.getMomByID();
+
+    _dadViewModel = DadViewModel.getInstance();
+    _dadViewModel.getDadByMom();
+
+    _childViewModel = ChildViewModel.getInstance();
+    _childViewModel.getChildByMom();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -36,13 +56,18 @@ class _MyFamilyState extends State<MyFamily> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   ScopedModel(
-                      model: DadViewModel.getInstance(),
+                      model: _dadViewModel,
                       child: ScopedModelDescendant(builder: (BuildContext context, Widget child, DadViewModel model) {
-                        model.getDadByMom();
                         return model.dadModel == null
                             ? createAddFamilyCard(
                             context, "Thêm cha",
-                            ParentInfo("Thông tin cha", "", "Create"))
+                            onClick:()  async{
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ParentInfo(DAD_APP_BAR_TITLE, "", CREATE_STATE)),
+                              );
+                              await _dadViewModel.getDadByMom();
+                            })
                             : createFamilyCard(
                             context,
                             model.dadModel.imageURL,
@@ -50,29 +75,39 @@ class _MyFamilyState extends State<MyFamily> {
                             LIGHT_BLUE_COLOR,
                             "Cha",
                             BLUE_COLOR,
-                            ParentInfo(
-                                "Thông tin cha", model.dadModel, "Update"));
+                            onClick:() async{
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ParentInfo(DAD_APP_BAR_TITLE, model.dadModel, UPDATE_STATE)),
+                              );
+                              await _dadViewModel.getDadByMom();
+                            });
                       },)),
                   ScopedModel(
-                      model: MomViewModel.getInstance(),
+                      model: _momViewModel,
                       child: ScopedModelDescendant(builder: (BuildContext context, Widget child, MomViewModel model) {
-                        model.getMomByID();
-                        return createFamilyCard(
+                        return model.momModel == null
+                          ? loadingProgress()
+                        : createFamilyCard(
                             context,
                             model.momModel.imageURL,
                             model.momModel.fullName,
                             LIGHT_PINK_COLOR,
                             "Mẹ",
                             PINK_COLOR,
-                            ParentInfo("Thông tin mẹ", model.momModel, "Update")
-                        );
+                            onClick:() async{
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ParentInfo(MOM_APP_BAR_TITLE, model.momModel, UPDATE_STATE)),
+                              );
+                              await _momViewModel.getMomByID();
+                            });
                       },))
                 ],
               ),
               ScopedModel(
-                model: ChildViewModel.getInstance(),
+                model: _childViewModel,
                 child: ScopedModelDescendant(builder: (BuildContext context, Widget child, ChildViewModel model) {
-                  model.getChildByMom();
                   if(model.childListModel != null){
                     for(int i = model.childListModel.length - 1; i >= 0 ; i--){
                       ChildModel childModel = model.childListModel[i];
@@ -81,11 +116,18 @@ class _MyFamilyState extends State<MyFamily> {
                       }
                     }
                   }
-                  return   model.childListModel == null
+                  return model.childListModel == null
                       ? Align(
                       alignment: Alignment.topLeft,
                       child: createAddFamilyCard(context,
-                          "Thêm bé / thai kì", ChildrenInfo("", "Create")))
+                          "Thêm bé / thai kì",
+                          onClick:() async{
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ChildrenInfo("", CREATE_STATE)),
+                            );
+                            await _childViewModel.getChildByMom();
+                          } ))
                       : Flexible(
                     child: GridView.builder(
                         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -95,7 +137,13 @@ class _MyFamilyState extends State<MyFamily> {
                         itemCount: model.childListModel.length + 1,
                         itemBuilder: (BuildContext context, index) {
                           if(index == model.childListModel.length){
-                            return createAddFamilyCard(context, "Thêm bé / thai kì", ChildrenInfo("","Create"));
+                            return createAddFamilyCard(context, "Thêm bé / thai kì", onClick:() async{
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ChildrenInfo("", CREATE_STATE)),
+                              );
+                              await _childViewModel.getChildByMom();
+                            } );
                           }else{
                             ChildModel childModel = model.childListModel[index];
                             return createFamilyCard(
@@ -105,7 +153,13 @@ class _MyFamilyState extends State<MyFamily> {
                                 childModel.gender == 1 ? LIGHT_BLUE_COLOR : LIGHT_PINK_COLOR,
                                 childModel.gender == 1 ? "Con trai" : "Con gái",
                                 childModel.gender == 1 ? BLUE_COLOR : PINK_COLOR,
-                                ChildrenInfo(childModel,"Update"));
+                                onClick:() async {
+                                  await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => ChildrenInfo(childModel, UPDATE_STATE)),
+                                  );
+                                  await _childViewModel.getChildByMom();
+                                });
                           }
                         }),
                   );

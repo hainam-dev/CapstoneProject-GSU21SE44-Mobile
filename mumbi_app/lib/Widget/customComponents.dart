@@ -7,11 +7,7 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/tooth_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:mumbi_app/Model/playlist_model.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
-import 'package:mumbi_app/View/injectionSchedule.dart';
-import 'package:mumbi_app/View/teethDetail_view.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 Widget createTextFeild(String title, String hintText, String value, ontap) {
@@ -212,7 +208,7 @@ Widget createFamilyCard(
     Color _labelColor,
     String _labelText,
     Color _labelTextColor,
-    Widget _screen) {
+    {Function onClick}) {
   return ConstrainedBox(
     constraints: BoxConstraints(
       minHeight: 200,
@@ -280,8 +276,9 @@ Widget createFamilyCard(
               )
             ],
           ),
-          onPressed: () => Navigator.push(
-              context, MaterialPageRoute(builder: (context) => _screen)),
+          onPressed:()  {
+              onClick();
+          }
         ),
       ),
     ),
@@ -353,7 +350,7 @@ Widget createButtonWhite(
     BuildContext context, String title, double _width, Widget screen) {
   return SizedBox(
     width: _width,
-    height: 50,
+    height: 40,
     child: RaisedButton(
       onPressed: () => {
         Navigator.push(
@@ -374,7 +371,7 @@ Widget createButtonWhite(
 }
 
 Widget createAddFamilyCard(
-    BuildContext context, String _title, Widget _screen) {
+    BuildContext context, String _title, {Function onClick}) {
   return Container(
     height: SizeConfig.blockSizeVertical * 22,
     width: SizeConfig.blockSizeHorizontal * 50,
@@ -409,8 +406,9 @@ Widget createAddFamilyCard(
             ],
           ),
         ),
-        onPressed: () => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => _screen)),
+        onPressed: () {
+          onClick();
+        }
       ),
     ),
   );

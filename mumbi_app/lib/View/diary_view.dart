@@ -3,6 +3,7 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/diary_model.dart';
+import 'package:mumbi_app/View/babyDiaryDetails_view.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
@@ -17,17 +18,29 @@ class BabyDiary extends StatefulWidget {
 }
 
 class _BabyDiaryState extends State<BabyDiary> {
+
+  DiaryViewModel _diaryViewModel;
+  ChildViewModel _childViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _diaryViewModel = DiaryViewModel.getInstance();
+    _diaryViewModel.getChildDiary(CurrentMember.id);
+
+    _childViewModel = ChildViewModel.getInstance();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScopedModel(
-      model: DiaryViewModel.getInstance(),
+      model: _diaryViewModel,
       child: ScopedModelDescendant(builder: (BuildContext context, Widget child, DiaryViewModel model) {
-        model.getChildDiary(CurrentMember.id);
         return Scaffold(
           backgroundColor: LIGHT_GREY_COLOR,
           appBar: AppBar(
             title: ScopedModel(
-                model: ChildViewModel.getInstance(),
+                model: _childViewModel,
                 child: ScopedModelDescendant(builder: (BuildContext context, Widget child, ChildViewModel model) {
                   return Text("Nhật ký của ${model.childModel.fullName}",maxLines: 1,overflow: TextOverflow.ellipsis,);
                 },)),
@@ -38,13 +51,18 @@ class _BabyDiaryState extends State<BabyDiary> {
             itemCount: model.childDiaryListModel.length,
             itemBuilder: (context, index) {
               DiaryModel diaryModel = model.childDiaryListModel[index];
-              return createDiaryItem(context, diaryModel);
+              return createDiaryItem(context, diaryModel,onClick: () async{
+                await Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => BabyDiaryDetails(diaryModel)));
+                await _diaryViewModel.getChildDiary(CurrentMember.id);
+              });
             },
           ),
           floatingActionButton: FloatingActionButton.extended(
-            onPressed: () {
-              Navigator.push(
+            onPressed: () async {
+              await Navigator.push(
                   context, MaterialPageRoute(builder: (context) => AddBabyDiary()));
+              await _diaryViewModel.getChildDiary(CurrentMember.id);
             },
             label: Text('Thêm nhật ký'),
             icon: Image.asset(

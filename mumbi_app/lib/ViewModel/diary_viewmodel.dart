@@ -66,7 +66,6 @@ class DiaryViewModel extends Model{
   Future<bool> deleteDiary(num id) async {
     try {
       String data = await DiaryRepository.apiDeleteDiary(id);
-      destroyInstance();
       return true;
     } catch (e) {
       print("error: " + e.toString());

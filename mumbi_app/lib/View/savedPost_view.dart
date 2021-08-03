@@ -21,6 +21,10 @@ class SavedPost extends StatefulWidget {
 }
 
 class _SavedPostState extends State<SavedPost> {
+
+  SavedNewsViewModel _savedNewsViewModel;
+  SavedGuidebookViewModel _savedGuidebookViewModel;
+
   String SavedNewsId;
   String SavedGuidebookId;
 
@@ -28,8 +32,14 @@ class _SavedPostState extends State<SavedPost> {
 
   @override
   void initState() {
-    _initialIndex = widget.tabIndex;
     super.initState();
+    _initialIndex = widget.tabIndex;
+
+    _savedNewsViewModel = SavedNewsViewModel.getInstance();
+    _savedNewsViewModel.getSavedNewsByMom();
+
+    _savedGuidebookViewModel = SavedGuidebookViewModel.getInstance();
+    _savedGuidebookViewModel.getSavedGuidebookByMom();
   }
 
   @override
@@ -88,219 +98,219 @@ class _SavedPostState extends State<SavedPost> {
       ),
     );
   }
-}
 
-Widget SavedNewsList() {
-  return ScopedModel(
-      model: SavedNewsViewModel.getInstance(),
-      child: ScopedModelDescendant(
-        builder:
-            (BuildContext context, Widget child, SavedNewsViewModel model) {
-          model.getSavedNewsByMom();
-          return model.loadingSavedNewsListModel == true
-              ? loadingProgress()
-              : model.savedNewsListModel == null
-              ? EmptyWithText("Chưa có tin tức được lưu")
-              : ListView.builder(
-            itemCount: model.savedNewsListModel.length,
-            itemBuilder: (BuildContext context, index) {
+  Widget SavedNewsList() {
+    return ScopedModel(
+        model: _savedNewsViewModel,
+        child: ScopedModelDescendant(
+          builder:
+              (BuildContext context, Widget child, SavedNewsViewModel model) {
+            return model.loadingSavedNewsListModel == true
+                ? loadingProgress()
+                : model.savedNewsListModel == null
+                ? EmptyWithText("Chưa có tin tức được lưu")
+                : ListView.builder(
+              itemCount: model.savedNewsListModel.length,
+              itemBuilder: (BuildContext context, index) {
                 SavedNewsModel savedNewsModel = model.savedNewsListModel[index];
                 return NewsItem(context, savedNewsModel);
-            },
-          );
-        },
-      ));
-}
+              },
+            );
+          },
+        ));
+  }
 
-Widget SavedGuidebookList() {
-  return ScopedModel(
-      model: SavedGuidebookViewModel.getInstance(),
-      child: ScopedModelDescendant(
-        builder: (BuildContext context, Widget child,
-            SavedGuidebookViewModel model) {
-          model.getSavedGuidebookByMom();
-          return model.loadingSavedGuidebookListModel == true
-              ? loadingProgress()
-              : model.savedGuidebookListModel == null
-              ? EmptyWithText("Chưa có cẩm nang được lưu")
-              : ListView.builder(
-            itemCount: model.savedGuidebookListModel.length,
-            itemBuilder: (BuildContext context, index) {
-              SavedGuidebookModel savedGuidebookModel = model.savedGuidebookListModel[index];
-              return GuidebookItem(context, savedGuidebookModel);
-            },
-          );
-        },
-      ));
-}
+  Widget SavedGuidebookList() {
+    return ScopedModel(
+        model: _savedGuidebookViewModel,
+        child: ScopedModelDescendant(
+          builder: (BuildContext context, Widget child,
+              SavedGuidebookViewModel model) {
+            return model.loadingSavedGuidebookListModel == true
+                ? loadingProgress()
+                : model.savedGuidebookListModel == null
+                ? EmptyWithText("Chưa có cẩm nang được lưu")
+                : ListView.builder(
+              itemCount: model.savedGuidebookListModel.length,
+              itemBuilder: (BuildContext context, index) {
+                SavedGuidebookModel savedGuidebookModel = model.savedGuidebookListModel[index];
+                return GuidebookItem(context, savedGuidebookModel);
+              },
+            );
+          },
+        ));
+  }
 
-Widget NewsItem(context, SavedNewsModel savedNewsModel) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NewsDetail(savedNewsModel),
-          ));
-    },
-    child: Container(
-      child: Stack(
-        children: <Widget>[
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: CachedNetworkImage(
-                    imageUrl: savedNewsModel.imageURL,
-                    fit: BoxFit.cover,
-                    height: 100,
-                    width: 90,
+  Widget NewsItem(context, SavedNewsModel savedNewsModel) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NewsDetail(savedNewsModel),
+            ));
+      },
+      child: Container(
+        child: Stack(
+          children: <Widget>[
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: CachedNetworkImage(
+                      imageUrl: savedNewsModel.imageURL,
+                      fit: BoxFit.cover,
+                      height: 100,
+                      width: 90,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 15.0),
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          savedNewsModel.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
+                  const SizedBox(width: 15.0),
+                  Expanded(
+                    child: Column(
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            savedNewsModel.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                              DateTimeConvert.convertDatetimeDMY(
-                                  savedNewsModel.createTime),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                                DateTimeConvert.convertDatetimeDMY(
+                                    savedNewsModel.createTime),
+                                style: TextStyle(
+                                    fontSize: 15.0,
+                                    color: LIGHT_DARK_GREY_COLOR)),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Icon(
+                              Icons.fiber_manual_record,
+                              color: GREY_COLOR,
+                              size: 6,
+                            ),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              savedNewsModel.estimatedFinishTime.toString() +
+                                  " phút đọc",
                               style: TextStyle(
-                                  fontSize: 15.0,
-                                  color: LIGHT_DARK_GREY_COLOR)),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Icon(
-                            Icons.fiber_manual_record,
-                            color: GREY_COLOR,
-                            size: 6,
-                          ),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            savedNewsModel.estimatedFinishTime.toString() +
-                                " phút đọc",
-                            style: TextStyle(
-                                fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
+                                  fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-Widget GuidebookItem(context, SavedGuidebookModel savedGuidebookModel) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => GuidebookDetail(savedGuidebookModel),
-          ));
-    },
-    child: Container(
-      child: Stack(
-        children: <Widget>[
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: CachedNetworkImage(
-                    imageUrl: savedGuidebookModel.imageURL,
-                    fit: BoxFit.cover,
-                    height: 100,
-                    width: 90,
+  Widget GuidebookItem(context, SavedGuidebookModel savedGuidebookModel) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GuidebookDetail(savedGuidebookModel),
+            ));
+      },
+      child: Container(
+        child: Stack(
+          children: <Widget>[
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: CachedNetworkImage(
+                      imageUrl: savedGuidebookModel.imageURL,
+                      fit: BoxFit.cover,
+                      height: 100,
+                      width: 90,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 15.0),
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          savedGuidebookModel.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
+                  const SizedBox(width: 15.0),
+                  Expanded(
+                    child: Column(
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            savedGuidebookModel.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                              DateTimeConvert.convertDatetimeDMY(
-                                  savedGuidebookModel.createTime),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                                DateTimeConvert.convertDatetimeDMY(
+                                    savedGuidebookModel.createTime),
+                                style: TextStyle(
+                                    fontSize: 15.0,
+                                    color: LIGHT_DARK_GREY_COLOR)),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Icon(
+                              Icons.fiber_manual_record,
+                              color: GREY_COLOR,
+                              size: 6,
+                            ),
+                            SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              savedGuidebookModel.estimatedFinishTime.toString() +
+                                  " phút đọc",
                               style: TextStyle(
-                                  fontSize: 15.0,
-                                  color: LIGHT_DARK_GREY_COLOR)),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Icon(
-                            Icons.fiber_manual_record,
-                            color: GREY_COLOR,
-                            size: 6,
-                          ),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            savedGuidebookModel.estimatedFinishTime.toString() +
-                                " phút đọc",
-                            style: TextStyle(
-                                fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
+                                  fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
+
+
 

@@ -1,24 +1,29 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mumbi_app/Model/playlist_model.dart';
+import 'package:mumbi_app/Constant/colorTheme.dart';
 
-Widget customActivityPregnancy({String icon, String title, List<PlayListModel> playlists, ontap, Widget widget}){
+Widget customActivity({String icon, String title, Widget widget}){
   return InkWell(
     child: Container(
-      margin: EdgeInsets.only(top: 8),
-      decoration: new BoxDecoration(
-        color: Colors.white,
+      margin: EdgeInsets.only(top: 5,bottom: 5),
+      decoration: BoxDecoration(
+        color: WHITE_COLOR,
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        boxShadow: [
+          BoxShadow(color: GREY_COLOR, spreadRadius: 0, blurRadius: 5),
+        ],
       ),
       child: Column(
         children: <Widget>[
           ExpansionTile(
+            leading: IconButton(
+              icon: SvgPicture.asset(icon), onPressed: null,
+            ),
+            title: Text(title, style: TextStyle(fontSize: 18)),
             trailing:Icon(
               Icons.keyboard_arrow_down,
             ),
-            leading: IconButton(
-              icon: SvgPicture.asset(icon),
-            ),
-            title: Text(title, style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
             children: [
               widget
             ],
@@ -28,35 +33,20 @@ Widget customActivityPregnancy({String icon, String title, List<PlayListModel> p
     ),
   );
 }
-Widget customListTilePlaylist({List<PlayListModel> playlists, ontap,int index}){
-  return ListTile(
-    onTap: ontap,
-    trailing:Icon(
-      Icons.play_circle_outline_rounded,
-    ),
-    leading: Image.network(
-      playlists[index].image,
-      height: 80,
-      width: 80,
-      fit: BoxFit.cover,),
-    subtitle: Text(playlists[index].title),
-    title: Text(playlists[index].singer),
-  );
-}
-
-
-Widget customPlaylist({String title, String singer, String img, ontap}){
-  return InkWell(
-    onTap: ontap,
-    child: ListTile(
-      trailing:Icon(
-        Icons.play_circle_outline_rounded,
+Widget customListTilePlaylist(String _name,String _icon,{Function onClick}){
+  return GestureDetector(
+    onTap: onClick,
+    child: Card(
+      elevation: 0,
+      child: ListTile(
+        title: Text(_name),
+        leading: IconButton(
+          icon: SvgPicture.asset(_icon), onPressed: null,
+        ),
       ),
-      leading: Image.network(img),
-      subtitle: Text(title),
-      title: Text(singer),
     ),
   );
 }
+
 
 

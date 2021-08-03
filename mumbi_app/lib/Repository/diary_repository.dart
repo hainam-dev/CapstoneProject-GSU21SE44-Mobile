@@ -40,7 +40,7 @@ class DiaryRepository{
 
   static Future<dynamic> apiUpdateDiary(DiaryModel diaryModel) async {
     var response = await http.put(
-        Uri.parse("${UPDATE_DAD}${diaryModel.id}"),
+        Uri.parse("${UPDATE_DIARY}${diaryModel.id}"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },

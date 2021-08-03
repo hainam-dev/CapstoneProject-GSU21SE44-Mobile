@@ -1,29 +1,80 @@
 import 'package:intl/intl.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 
 class DateTimeConvert{
 
-  static String calculateAge(String birthday) {
-    DateTime now = DateTime.now();
-    DateTime dob = DateFormat("yyyy-MM-dd").parse(birthday.split('/').reversed.join("-"));
-    String month = ((now.difference(dob).inDays / 30).round()).toString();
-    String dayOfMonth = (((((now.difference(dob).inDays / 30)) - (now.difference(dob).inDays / 30).round()) * 30)).round().toString();
-    if(month == "0"){
-      return "Bé đã $dayOfMonth ngày tuổi";
-    }else{
-      return "Bé đã $month tháng $dayOfMonth ngày tuổi";
+  static String calculateChildAge(String birthday) {
+    try{
+      DateTime now = DateTime.now();
+      DateTime dob = DateFormat("yyyy-MM-dd").parse(birthday.split('/').reversed.join("-"));
+      String month = ((now.difference(dob).inDays / 30).floor()).toString();
+      String dayOfMonth = (((((now.difference(dob).inDays / 30))
+          - (now.difference(dob).inDays / 30).floor()) * 30)).floor().toString();
+      if(month == "0"){
+        return "$dayOfMonth ngày tuổi";
+      }else{
+        return "$month tháng $dayOfMonth ngày tuổi";
+      }
+    }catch(e){
+      print(e);
+      return "...";
     }
   }
 
-  static String dayUntil(String estimatedDoB) {
+  static num calculateChildWeekAge(String birthday) {
+    try{
+      DateTime now = DateTime.now();
+      DateTime dob = DateFormat("yyyy-MM-dd").parse(birthday.split('/').reversed.join("-"));
+      num week = ((now.difference(dob).inDays / 7).floor());
+      return week;
+    }catch(e){
+      print(e);
+      return 0;
+    }
+  }
+
+  static String pregnancyWeekAndDay(String estimatedDoB) {
+    try{
+      DateTime now = DateTime.now();
+      DateTime eDob = DateFormat("yyyy-MM-dd").parse(estimatedDoB.split('/').reversed.join("-"));
+      String week = (PREGNANCY_WEEK - (eDob.difference(now).inDays / 7).floor()).toString();
+      String dayOfWeek = (((PREGNANCY_WEEK - (eDob.difference(now).inDays / 7))
+          - (PREGNANCY_WEEK - (eDob.difference(now).inDays / 7)).floor()) * 7).floor().toString();
+      if(week == "0"){
+        return "$dayOfWeek ngày tuổi";
+      }else{
+        return "$week tuần $dayOfWeek ngày tuổi";
+      }
+    }catch(e){
+      print(e);
+      return "...";
+    }
+  }
+
+
+  static num pregnancyWeek(String estimatedDoB) {
+    DateTime now = DateTime.now();
+    DateTime eDob = DateFormat("yyyy-MM-dd").parse(estimatedDoB.split('/').reversed.join("-"));
+    num week = (eDob.difference(now).inDays / 7).round();
+    return PREGNANCY_WEEK - week;
+  }
+
+
+  static num dayUntil(String estimatedDoB) {
     DateTime now = DateTime.now();
     DateTime dob = DateFormat("yyyy-MM-dd").parse(estimatedDoB.split('/').reversed.join("-"));
     String day = (dob.difference(now).inDays).toString();
-    return "Bạn còn ${day} ngày nữa để được gặp bé";
+    return num.parse(day);
   }
 
   static String getCurrentDay(){
     DateTime now = DateTime.now();
     return DateFormat('dd/MM/yyyy').format(now);
+  }
+
+  static String getCurrentMonth(){
+    DateTime now = DateTime.now();
+    return DateFormat('M').format(now);
   }
 
   static String getDayOfWeek(String date){

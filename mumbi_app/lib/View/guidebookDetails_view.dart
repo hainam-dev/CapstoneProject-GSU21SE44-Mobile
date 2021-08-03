@@ -120,7 +120,6 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
     return Center(
       child: Container(
         width: SizeConfig.blockSizeHorizontal * 100,
-        color: BLACK_COLOR,
         child: ConstrainedBox(
           constraints: new BoxConstraints(
             maxHeight: SizeConfig.blockSizeVertical * 45,

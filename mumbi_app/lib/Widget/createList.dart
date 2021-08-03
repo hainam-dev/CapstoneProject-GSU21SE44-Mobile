@@ -1,19 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/diary_model.dart';
+import 'package:mumbi_app/Utils/calculation.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/View/babyDiaryDetails_view.dart';
 import 'package:mumbi_app/View/bottomNavBar_view.dart';
-import 'package:mumbi_app/View/dashboard_view.dart';
-import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/changeAccount_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/logout_viewmodel.dart';
-import 'package:mumbi_app/Widget/customFlushBar.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../app.dart';
 
@@ -66,15 +66,15 @@ Widget createListTileDiaryPost(String _imageURL, String _name, bool publicFlag) 
       subtitle: Row(
         children: [
           Text(DateTimeConvert.getCurrentDay(),style: TextStyle(color: LIGHT_DARK_GREY_COLOR),),
-          SizedBox(width: 6),
+          SizedBox(width: 2),
           if(publicFlag == true)
           Icon(
             Icons.fiber_manual_record,
             color: GREY_COLOR,
             size: 6,
           ),
-          SizedBox(width: 6),
-          if(publicFlag == true) Text("Chia sẻ cộng đồng: Đã bật"),
+          SizedBox(width: 2),
+          if(publicFlag == true) Text("Cộng đồng: Đã bật"),
         ],
       )
     ),
@@ -157,11 +157,10 @@ Widget createButtonTextImageLink(
 }
 
 Widget createListTileHome(BuildContext context, Color _color, String _imageName,
-    String _text, String _subText, Widget _screen) {
+    String _text, String _subText, num day, String role, {Function onClick}) {
   return GestureDetector(
     onTap: () {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => _screen));
+      onClick();
     },
     child: Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
@@ -183,30 +182,41 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  _text,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    _text,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0),
+                  ),
                 ),
-                SizedBox(height: 8.0),
+
                 if(_subText != "")
-                Text(
-                  _subText,
-                  style: TextStyle(color: GREY_COLOR, fontSize: 14.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
+                  child: Text(
+                    _subText,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: GREY_COLOR, fontSize: 14.0),
+                  ),
                 ),
-                //SizedBox(height: 10.0),
-                /*LinearPercentIndicator(
+
+                if(role == PREGNANCY_ROLE)
+                LinearPercentIndicator(
                   backgroundColor: WHITE_COLOR,
-                  width: SizeConfig.blockSizeHorizontal * 50,
-                  lineHeight: 8.0,
-                  percent: 0.6,
+                  width: SizeConfig.blockSizeHorizontal * 53,
+                  lineHeight: 7.0,
+                  percent: getOpposite(calculatePercent(PREGNANCY_DAY, day)),
                   progressColor: PINK_COLOR,
+                ),
+
+                /*Text(
+                  "Tìm hiểu thêm",
+                  style: TextStyle(color: BLUE_COLOR, fontSize: 13.0),
                 ),*/
-                // Text(
-                //   "Tìm hiểu thêm",
-                //   style: TextStyle(color: BLUE_COLOR, fontSize: 13.0),
-                // ),
               ],
             ),
           ),
@@ -231,7 +241,7 @@ item(
 }
 
 Widget createListTileSelectedAccount(
-    BuildContext context, String _imageURL, String _title,String id ,String role) {
+    BuildContext context, String _imageURL, String _title,String id, String pregnancyId ,String role, num _num) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
     child: Card(
@@ -239,29 +249,31 @@ Widget createListTileSelectedAccount(
       margin: EdgeInsets.zero,
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: CurrentMember.id == id ? PINK_COLOR : Colors.transparent,
           radius: 23,
           child: CircleAvatar(
             radius: 22,
             backgroundImage: CachedNetworkImageProvider(_imageURL),
           ),
         ),
-        title: Row(
+        title: Text(
+            _title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Row(
           children: [
             Text(
-                _title
+              role
             ),
             if(CurrentMember.id == id)
-            Text(
-              " (Đang chọn)",
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: PINK_COLOR),
-            ),
+              Text(
+                " (Đang chọn)",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: PINK_COLOR),
+              ),
           ],
-        ),
-        subtitle: Text(
-          role
         ),
         trailing: CurrentMember.id == id
           ? Icon(
@@ -271,12 +283,26 @@ Widget createListTileSelectedAccount(
           )
         :SizedBox.shrink(),
         onTap: () async{
-          CurrentMember.id = id;
+          if(pregnancyId != ""){
+            CurrentMember.pregnancyFlag = true;
+            CurrentMember.pregnancyID = pregnancyId;
+            CurrentMember.id = id;
+          }else{
+            CurrentMember.pregnancyFlag = false;
+            CurrentMember.pregnancyID = null;
+            CurrentMember.id = id;
+          }
           CurrentMember.role = role;
-          DiaryViewModel.destroyInstance();
-          await Future.delayed(Duration(seconds: 1));
-          Navigator.pop(context);
-          Navigator.pop(context);
+
+          ChangeAccountViewModel().destroyInstance();
+
+          await Future.delayed(Duration(seconds: 2));
+          if(_num == 1){
+            Navigator.pop(context);
+          }else{
+            Navigator.pop(context);
+            Navigator.pop(context);
+          }
           Navigator.push(context, MaterialPageRoute(builder: (context) => BotNavBar(),));
         },
       ),
@@ -345,6 +371,8 @@ Widget createListTileNavigatorNoTrailing(
       onTap: () async {
         await LoginViewModel().signOut();
         LogoutViewModel().destroyInstance();
+        Navigator.pop(context);
+        Navigator.pop(context);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => MyApp()));
         print("Logout");
@@ -415,10 +443,12 @@ Widget createEmptyDiary(BuildContext context) {
   );
 }
 
-Widget createDiaryItem(BuildContext context, DiaryModel diaryModel) {
+Widget createDiaryItem(BuildContext context, DiaryModel diaryModel,
+    {Function onClick}) {
   return GestureDetector(
-    onTap: () => Navigator.push(
-        context, MaterialPageRoute(builder: (context) => BabyDiaryDetails(diaryModel))),
+    onTap: () {
+      onClick();
+    },
     child: Padding(
       padding: const EdgeInsets.fromLTRB(10, 3, 10, 7),
       child: Card(
@@ -443,19 +473,23 @@ Widget createDiaryItem(BuildContext context, DiaryModel diaryModel) {
                       Text(
                         DateTimeConvert.getDayOfWeek(diaryModel.createTime)
                             + DateTimeConvert.convertDatetimeFullFormat(diaryModel.createTime),
-                        style: TextStyle(color: LIGHT_DARK_GREY_COLOR,fontSize: 18,fontWeight: FontWeight.w600),),
+                        style: TextStyle(color: LIGHT_DARK_GREY_COLOR,fontSize: 17,fontWeight: FontWeight.w600),),
                       SizedBox(width: 3,),
+
                       if(diaryModel.publicFlag == true && diaryModel.approvedFlag == true
                       || diaryModel.publicFlag == true && diaryModel.approvedFlag == false)
                         Icon(Icons.fiber_manual_record,color: LIGHT_DARK_GREY_COLOR,size: 5,),
+
                       SizedBox(width: 3,),
+
                       if(diaryModel.publicFlag == true && diaryModel.approvedFlag == true)
                         Text("Đã chia sẻ",style: TextStyle(color: LIGHT_DARK_GREY_COLOR,),),
+
                       if(diaryModel.publicFlag == true && diaryModel.approvedFlag == false)
                         Text("Đang chờ duyệt",style: TextStyle(color: LIGHT_DARK_GREY_COLOR,),)
                     ],
                   ),
-                  SizedBox(height: 5,),
+                  SizedBox(height: 8,),
                   Text(
                     diaryModel.diaryContent,
                     maxLines: 5,

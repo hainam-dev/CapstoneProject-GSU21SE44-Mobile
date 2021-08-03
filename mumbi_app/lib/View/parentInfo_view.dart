@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/dad_model.dart';
@@ -32,13 +33,11 @@ class _ParentInfoState extends State<ParentInfo> {
   final appbarTitle;
   _ParentInfoState(this.appbarTitle);
   String defaultImage = chooseImage;
-  String update = "Update";
-  String momTitle = "Thông tin mẹ";
   DadModel dadModel;
 
   @override
   void initState() {
-    if (widget.action != update) {
+    if (widget.action != UPDATE_STATE) {
       dadModel = DadModel();
     }
     super.initState();
@@ -57,7 +56,7 @@ class _ParentInfoState extends State<ParentInfo> {
           color: WHITE_COLOR,
         ),
         actions: <Widget>[
-          if (widget.appbarTitle != momTitle && widget.action == update)
+          if (widget.appbarTitle != MOM_APP_BAR_TITLE && widget.action == UPDATE_STATE)
             PopupMenuButton<String>(
               onSelected: handleClick,
               itemBuilder: (BuildContext context) {
@@ -78,7 +77,7 @@ class _ParentInfoState extends State<ParentInfo> {
         child: Column(
           children: [
             PickerImage(
-                widget.action == update ? widget.model.imageURL : defaultImage),
+                widget.action == UPDATE_STATE ? widget.model.imageURL : defaultImage),
             const SizedBox(height: 8),
             new Container(
               height: SizeConfig.blockSizeVertical * 50,
@@ -89,10 +88,10 @@ class _ParentInfoState extends State<ParentInfo> {
                   children: [
                     CustomInputText(
                       'Họ & tên (*)',
-                      widget.action == update ? widget.model.fullName : "",
+                      widget.action == UPDATE_STATE ? widget.model.fullName : "",
                       function: (value) {
                         setState(() {
-                          if (widget.action == update) {
+                          if (widget.action == UPDATE_STATE) {
                             widget.model.fullName = value;
                           } else {
                             dadModel.fullName = value;
@@ -103,13 +102,13 @@ class _ParentInfoState extends State<ParentInfo> {
                     const SizedBox(height: 12),
                     CalendarBirthday(
                       'Ngày sinh',
-                      widget.action == update ? widget.model.birthday : "",
+                      widget.action == UPDATE_STATE ? widget.model.birthday : "",
                       function: (value) {
                         /*if (value.isEmpty) {
                               return "Vui lòng nhập ngày sinh";
                             } else {*/
                         setState(() {
-                          if (widget.action == update) {
+                          if (widget.action == UPDATE_STATE) {
                             widget.model.birthday = value;
                           } else {
                             dadModel.birthday = value;
@@ -121,10 +120,10 @@ class _ParentInfoState extends State<ParentInfo> {
                     ),
                     const SizedBox(height: 17),
                     CustomInputNumber('Số điện thoại',
-                        widget.action == update ? widget.model.phoneNumber : "",
+                        widget.action == UPDATE_STATE ? widget.model.phoneNumber : "",
                         function: (value) {
                       setState(() {
-                        if (widget.action == update) {
+                        if (widget.action == UPDATE_STATE) {
                           widget.model.phoneNumber = value;
                         } else {
                           dadModel.phoneNumber = value;
@@ -141,11 +140,11 @@ class _ParentInfoState extends State<ParentInfo> {
                               'Nhóm máu',
                               'Nhóm máu',
                               ['A', 'B', 'O', 'AB'],
-                              widget.action == update
+                              widget.action == UPDATE_STATE
                                   ? widget.model.bloodGroup
                                   : null, (value) {
                             setState(() {
-                              if (widget.action == update) {
+                              if (widget.action == UPDATE_STATE) {
                                 widget.model.bloodGroup = value;
                               } else {
                                 dadModel.bloodGroup = value;
@@ -162,11 +161,11 @@ class _ParentInfoState extends State<ParentInfo> {
                               'Hệ máu (Rh)',
                               'Hệ máu (Rh)',
                               ['RH(D)+', 'RH(D)-'],
-                              widget.action == update
+                              widget.action == UPDATE_STATE
                                   ? widget.model.rhBloodGroup
                                   : null, (value) {
                             setState(() {
-                              if (widget.action == update) {
+                              if (widget.action == UPDATE_STATE) {
                                 widget.model.rhBloodGroup = value;
                               } else {
                                 dadModel.rhBloodGroup = value;
@@ -195,26 +194,23 @@ class _ParentInfoState extends State<ParentInfo> {
         saveFunction: () async {
           if (formKey.currentState.validate()) {
             String url = await uploadImageToFirebase(
-                widget.action == update ? widget.model.id : dadModel.id);
+                widget.action == UPDATE_STATE ? widget.model.id : dadModel.id);
             if (url != null) {
-              if (widget.action == update) {
+              if (widget.action == UPDATE_STATE) {
                 widget.model.imageURL = url;
               } else {
                 dadModel.imageURL = url;
               }
             }
             bool result = false;
-            if (appbarTitle == momTitle) {
+            if (appbarTitle == MOM_APP_BAR_TITLE) {
               result = await MomViewModel().updateMom(widget.model);
             } else {
-              if (widget.action == update) {
+              if (widget.action == UPDATE_STATE) {
                 result = await DadViewModel().updateDad(widget.model);
               } else {
                 result = await DadViewModel().addDad(dadModel);
                 Navigator.pop(context);
-                Navigator.pop(context);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MyFamily()));
               }
             }
             showResult(context, result);
@@ -231,8 +227,7 @@ class _ParentInfoState extends State<ParentInfo> {
         result = await DadViewModel().deleteDad(widget.model.id);
         Navigator.pop(context);
         Navigator.pop(context);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MyFamily()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MyFamily(),));
         showResult(context, result);
         break;
     }

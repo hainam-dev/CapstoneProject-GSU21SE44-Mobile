@@ -2,5 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 Widget loadingProgress(){
-  return Center(child: CircularProgressIndicator());
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Center(child: CircularProgressIndicator()),
+  );
 }

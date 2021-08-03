@@ -90,8 +90,8 @@ class _NewsDetailState extends State<NewsDetail> {
             return ListTile(
               leading: Icon(
                 SavedFlag == true
-                    ? Icons.bookmark_outline_rounded
-                    : Icons.bookmark_outlined,
+                    ? Icons.bookmark_remove_outlined
+                    : Icons.bookmark_add_outlined,
                 color: BLACK_COLOR,
               ),
               title:
@@ -123,7 +123,6 @@ class _NewsDetailState extends State<NewsDetail> {
     return Center(
       child: Container(
         width: SizeConfig.blockSizeHorizontal * 100,
-        color: BLACK_COLOR,
         child: ConstrainedBox(
           constraints: new BoxConstraints(
             maxHeight: SizeConfig.blockSizeVertical * 45,

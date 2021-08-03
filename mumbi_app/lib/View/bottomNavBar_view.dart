@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/View/pregnancy_view.dart';
+import 'package:mumbi_app/Global/CurrentMember.dart';
+import 'package:mumbi_app/View/changeAccount_view.dart';
+import 'package:mumbi_app/View/tracking_view.dart';
 import 'dashboard_view.dart';
 import 'guideBook_view.dart';
 
@@ -13,7 +16,8 @@ class _BotNavBarState extends State<BotNavBar> {
   int selectedIndex = 0;
   Widget _dashBoard = DashBoard();
   Widget _guildBook = GuideBook();
-  Widget _tracking = HomePregnancy();
+  Widget _tracking = Tracking();
+  Widget _changeAccount = ChangeAccount(1);
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +33,21 @@ class _BotNavBarState extends State<BotNavBar> {
     } else if (this.selectedIndex == 1) {
       return this._guildBook;
     } else {
-      return this._tracking;
+      if(CurrentMember.role == MOM_ROLE){
+        if(CurrentMember.pregnancyFlag == true){
+          return this._tracking;
+        }else{
+          return this._changeAccount;
+        }
+      }else{
+        return this._tracking;
+      }
     }
   }
 
   Widget getBotNavBar() {
     return BottomNavigationBar(
+      backgroundColor: WHITE_COLOR,
       type: BottomNavigationBarType.fixed,
       currentIndex: this.selectedIndex,
       unselectedItemColor: GREY_COLOR,

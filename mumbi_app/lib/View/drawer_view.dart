@@ -100,7 +100,7 @@ Widget getDrawer(BuildContext context) {
             height: 1,
           ),
           createListTileNavigator(context, babyDiary, 'Nhật ký của bé',
-              CurrentMember.role == "Con" ? BabyDiary() : ChangeAccount()),
+              CurrentMember.role == "Con" ? BabyDiary() : ChangeAccount(2)),
           SizedBox(
             height: 1,
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
+import 'package:mumbi_app/View/diary_view.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
 
@@ -60,6 +61,11 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
         bool result = false;
         result = await DiaryViewModel().deleteDiary(widget.model.id);
         Navigator.pop(context);
+        if(DiaryViewModel().childDiaryListModel == null){
+          await DiaryViewModel.destroyInstance();
+          Navigator.pop(context);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => BabyDiary(),));
+        }
         showResult(context, result);
         break;
     }

@@ -51,6 +51,7 @@ class ChildViewModel extends Model {
   Future<void> getChildByMom() async {
     if (_instance != null) {
       String momID = await UserViewModel.getUserID();
+      loadingChildListModel = true;
       try {
         String data = await ChildRepository.apiGetChildByMom(momID);
         Map<String, dynamic> jsonList = json.decode(data);
@@ -60,6 +61,7 @@ class ChildViewModel extends Model {
               childList.map((e) => ChildModel.fromJson(e, false)).toList();
         }
         notifyListeners();
+        loadingChildListModel = false;
       } catch (e) {
         print("error: " + e.toString());
       }

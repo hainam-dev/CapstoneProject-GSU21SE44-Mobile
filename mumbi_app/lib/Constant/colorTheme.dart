@@ -13,6 +13,7 @@ const Color LIGHT_GREY_COLOR = Color.fromRGBO(245, 245, 245, 1);
 const Color LIGHT_DARK_GREY_COLOR = Color.fromRGBO(97, 97, 97, 1);
 const Color WHITE_COLOR = Color.fromRGBO(255, 255, 255, 1);
 const Color BLACK_COLOR = Color.fromRGBO(33, 33, 33, 1);
+const Color TRANSPARENT_COLOR = Color.fromRGBO(1, 1, 1, 0);
 
 MaterialColor ColorTheme =
  MaterialColor(0xFFFB678B,  <int, Color>{

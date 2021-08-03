@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
@@ -15,6 +16,7 @@ import 'package:mumbi_app/View/community_view.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
 import 'package:mumbi_app/View/newsDetails_view.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/dad_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/news_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
@@ -31,6 +33,30 @@ class DashBoard extends StatefulWidget {
 class _DashBoardState extends State<DashBoard> {
 
   ChildModel pregnancyModel;
+  NewsViewModel _newsViewModel;
+  MomViewModel _momViewModel;
+  DadViewModel _dadViewModel;
+  ChildViewModel _childViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _newsViewModel = NewsViewModel.getInstance();
+    _newsViewModel.getAllNews();
+
+    _momViewModel = MomViewModel.getInstance();
+    _momViewModel.getMomByID();
+
+    _dadViewModel = DadViewModel.getInstance();
+    _dadViewModel.getDadByMom();
+
+    _childViewModel = ChildViewModel.getInstance();
+    _childViewModel.getChildByMom();
+
+    if(CurrentMember.role == CHILD_ROLE)
+      _childViewModel.getChildByID(CurrentMember.id);
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +64,7 @@ class _DashBoardState extends State<DashBoard> {
     return Scaffold(
       backgroundColor: WHITE_COLOR,
       appBar: AppBar(
+        title: Text("Trang chủ"),
         actions: [
           ChangeAccountButton(context),
         ],
@@ -48,61 +75,19 @@ class _DashBoardState extends State<DashBoard> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if(CurrentMember.role == "Mẹ")
-              ScopedModel(
-                  model: ChildViewModel.getInstance(),
-                  child: ScopedModelDescendant(builder: (BuildContext context, Widget child, ChildViewModel model) {
-                    model.getChildByMom();
-                    if(model.childListModel != null){
-                      for(int i = model.childListModel.length - 1; i >= 0 ; i--){
-                        ChildModel childModel = model.childListModel[i];
-                        if(childModel.bornFlag == false){
-                          pregnancyModel = childModel;
-                          break;
-                        }
-                      }
-                    }
-                    return pregnancyModel == null
-                        ? createListTileHome(
-                        context,
-                        LIGHT_GREY_COLOR,
-                        empty,
-                        "Chưa có thông tin",
-                        "Nhấp vào để thêm thông tin bé/thai kì.",
-                        ChildrenInfo("", "Create"))
-                        : createListTileHome(
-                        context,
-                        LIGHT_PINK_COLOR,
-                        pregnancy,
-                        DateTimeConvert.dayUntil(pregnancyModel.estimatedBornDate),
-                        "",
-                        ChildrenInfo(pregnancyModel, "Update"));
-              },)),
-
-            if(CurrentMember.role == "Con")
-              ScopedModel(
-                model: ChildViewModel.getInstance(),
-                child: ScopedModelDescendant(builder: (context, child, ChildViewModel model) {
-                  model.getChildByID(CurrentMember.id);
-                  return model.childModel == null
-                      ? loadingProgress()
-                      : createListTileHome(
-                      context,
-                      LIGHT_BLUE_COLOR,
-                      embe,
-                      DateTimeConvert.calculateAge(model.childModel.birthday),
-                      "",
-                      ChildrenInfo(model.childModel, "Update"));
-                },),),
+            if (CurrentMember.role == MOM_ROLE)
+              PregnancyInfo(),
+            if (CurrentMember.role == CHILD_ROLE)
+              ChildInfo(),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
               child: Align(
                   alignment: Alignment.topLeft,
                   child: createTitle("Tính năng nổi bật")),
             ),
             SalientFeatures(),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
               child: Align(
                   alignment: Alignment.topLeft,
                   child: createTitle("Tin tức mới nhất")),
@@ -110,6 +95,84 @@ class _DashBoardState extends State<DashBoard> {
             GridViewNews(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget PregnancyInfo(){
+    return ScopedModel(
+        model: _childViewModel,
+        child: ScopedModelDescendant(
+          builder: (BuildContext context, Widget child,
+              ChildViewModel model) {
+            if (model.childListModel != null) {
+              for (int i = model.childListModel.length - 1;
+              i >= 0;
+              i--) {
+                ChildModel childModel = model.childListModel[i];
+                if (childModel.bornFlag == false) {
+                  pregnancyModel = childModel;
+                  CurrentMember.pregnancyID = childModel.id;
+                  CurrentMember.pregnancyFlag = true;
+                  break;
+                }
+              }
+            }
+            return pregnancyModel == null
+                ? createListTileHome(
+                context,
+                LIGHT_GREY_COLOR,
+                empty,
+                "Chưa có thông tin",
+                "Nhấp vào để thêm thông tin bé/thai kì.",
+                0,
+                "",
+                onClick: ()async{
+                  await Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => ChildrenInfo("", CREATE_STATE)));
+                },)
+                : createListTileHome(
+                context,
+                LIGHT_PINK_COLOR,
+                pregnancy,
+                "Tuần thứ ${DateTimeConvert.pregnancyWeek(pregnancyModel.estimatedBornDate)} của thai kì",
+                "Bạn còn ${DateTimeConvert.dayUntil(pregnancyModel.estimatedBornDate)} ngày để gặp được bé",
+                DateTimeConvert.dayUntil(
+                    pregnancyModel.estimatedBornDate),
+                PREGNANCY_ROLE,
+                onClick: ()async{
+                  await Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => ChildrenInfo(pregnancyModel, UPDATE_STATE)));
+                  await _childViewModel.getChildByID(CurrentMember.id);
+                },
+            );
+          },
+        ));
+  }
+
+  Widget ChildInfo(){
+    return ScopedModel(
+      model: _childViewModel,
+      child: ScopedModelDescendant(
+        builder: (BuildContext context, Widget child, ChildViewModel model) {
+          return model.childModel == null
+              ? loadingProgress()
+              : createListTileHome(
+              context,
+              LIGHT_BLUE_COLOR,
+              embe,
+              "Bé đã ${DateTimeConvert.calculateChildAge(
+                  model.childModel.birthday)}",
+              "",
+              0,
+              CHILD_ROLE,
+              onClick: ()async{
+                await Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => ChildrenInfo(model.childModel, UPDATE_STATE)));
+                await _childViewModel.getChildByID(CurrentMember.id);
+              },
+          );
+        },
       ),
     );
   }
@@ -131,7 +194,7 @@ class _DashBoardState extends State<DashBoard> {
               physics: NeverScrollableScrollPhysics(),
               child: ClipRRect(
                   borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(6.0)),
+                      BorderRadius.vertical(top: Radius.circular(6.0),),
                   child: CachedNetworkImage(imageUrl: _imageURL)),
             ),
             bottomNavigationBar: Column(
@@ -179,15 +242,19 @@ class _DashBoardState extends State<DashBoard> {
     return FlatButton(
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ChangeAccount()));
-          },
+              MaterialPageRoute(builder: (context) => ChangeAccount(2)));
+        },
         child: Row(
           children: [
             MomAvatar(),
-            if(CurrentMember.role == "Con")
+            if (CurrentMember.role == CHILD_ROLE)
               Row(
                 children: [
-                  Icon(Icons.all_inclusive,color: WHITE_COLOR,size: 19,),
+                  Icon(
+                    Icons.all_inclusive,
+                    color: WHITE_COLOR,
+                    size: 19,
+                  ),
                   ChildAvatar(),
                 ],
               )
@@ -195,48 +262,50 @@ class _DashBoardState extends State<DashBoard> {
         ));
   }
 
-  Widget MomAvatar(){
+  Widget MomAvatar() {
     return ScopedModel(
-      model: MomViewModel.getInstance(),
+      model: _momViewModel,
       child: ScopedModelDescendant(builder:
-          (BuildContext buildContext, Widget child, MomViewModel model) {
-        model.getMomByID();
+          (BuildContext context, Widget child, MomViewModel model) {
         return model.momModel == null
-                    ? CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 18,)
-                    : CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 18,
-                      child: CircleAvatar(
-                        radius: 17,
-                        backgroundImage: CachedNetworkImageProvider(
-                            model.momModel.imageURL),
-                      ),
-                    );
+            ? CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 18,
+              )
+            : CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 18,
+                child: CircleAvatar(
+                  radius: 17,
+                  backgroundImage:
+                      CachedNetworkImageProvider(model.momModel.imageURL),
+                ),
+              );
       }),
     );
   }
 
-  Widget ChildAvatar(){
+  Widget ChildAvatar() {
     return ScopedModel(
-        model: ChildViewModel.getInstance(),
-        child: ScopedModelDescendant(builder: (BuildContext context, Widget child, ChildViewModel model) {
-          model.getChildByID(CurrentMember.id);
-           return model.childModel == null
-               ? CircleAvatar(
-                 backgroundColor: Colors.white,
-                 radius: 18,)
-               : CircleAvatar(
-                 backgroundColor: Colors.white,
-                 radius: 18,
-                 child: CircleAvatar(
-                   radius: 17,
-                   backgroundImage: CachedNetworkImageProvider(
-                       model.childModel.imageURL),
-                 ),
-               );
-    },));
+        model: _childViewModel,
+        child: ScopedModelDescendant(
+          builder: (BuildContext context, Widget child, ChildViewModel model) {
+            return model.childModel == null
+                ? CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 18,
+                  )
+                : CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 18,
+                    child: CircleAvatar(
+                      radius: 17,
+                      backgroundImage:
+                          CachedNetworkImageProvider(model.childModel.imageURL),
+                    ),
+                  );
+          },
+        ));
   }
 
   Widget SalientFeatures() {
@@ -254,10 +323,9 @@ class _DashBoardState extends State<DashBoard> {
 
   Widget GridViewNews() {
     return ScopedModel(
-      model: NewsViewModel.getInstance(),
+      model: _newsViewModel,
       child: ScopedModelDescendant(
         builder: (BuildContext context, Widget child, NewsViewModel model) {
-          model.getAllNews();
           return model.newsListModel == null
               ? loadingProgress()
               : Expanded(
@@ -266,7 +334,9 @@ class _DashBoardState extends State<DashBoard> {
                           maxCrossAxisExtent: 250,
                           crossAxisSpacing: 5,
                           mainAxisSpacing: 5),
-                      itemCount: model.newsListModel != null ? model.newsListModel.length : 0,
+                      itemCount: model.newsListModel != null
+                          ? model.newsListModel.length
+                          : 0,
                       itemBuilder: (BuildContext context, index) {
                         NewsModel newsModel = model.newsListModel[index];
                         return createNewsItem(
