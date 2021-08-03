@@ -97,7 +97,7 @@ List<PlayListModel> getListMusic(){
 
   //2
   playListModel = new PlayListModel();
-  playListModel.image = 'https://idol.com.vn/wp-content/uploads/2020/12/be-bao-an.png';
+  playListModel.image = 'https://i.ytimg.com/vi/lFxKzXW_64k/maxresdefault.jpg';
   playListModel.url = 'https://nhacchuong123.com/nhac-chuong/nhac-tik-tok/Nhac%20Chuong%20Co%20Doc%20Vuong%20(Diep%20Khuc)%20-%20Thien%20Tu.mp3';
   playListModel.title = 'Chú cún con';
   playListModel.singer = 'Bé Bảo An';

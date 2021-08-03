@@ -162,8 +162,8 @@ class _LoginScreenState extends State<LoginScreen> {
       prefs.setString('UserInfo', userInfo);
       String roleID = jsonDecode(userInfo)['data']['role'];
       if (roleID.toString() == "role01") {
+        await CurrentMember().getMomID();
         pr.hide();
-        CurrentMember().getMomID();
         await Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => new BotNavBar()),

@@ -61,6 +61,8 @@ final String checked = _getImagePath("checked.png");
 final String unchecked = _getImagePath("uncheck.png");
 final String teethIcon = _getImagePath("teeth_icon.png");
 
+final String img_betrai = _getImagePath('betrai.svg');
+final String img_begai = _getImagePath('begai.svg');
 final String img_beco = _getImagePath('conco.svg');
 final String ic_playlist = _getImagePath('ic_playlist.svg');
 final String ic_poet = _getImagePath('ic_poet.svg');

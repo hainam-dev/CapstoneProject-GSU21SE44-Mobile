@@ -17,6 +17,15 @@ class Community extends StatefulWidget {
 
 class _CommunityState extends State<Community> {
 
+  CommunityViewModel _communityViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _communityViewModel = CommunityViewModel.getInstance();
+    _communityViewModel.getPublicDiary();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,10 +39,9 @@ class _CommunityState extends State<Community> {
 
   Widget listCommunityPost(){
     return ScopedModel(
-      model: CommunityViewModel.getInstance(),
+      model: _communityViewModel,
       child: ScopedModelDescendant(
         builder: (BuildContext context, Widget child, CommunityViewModel model) {
-          model.getPublicDiary();
           return model.publicDiaryListModel == null
               ? loadingProgress()
               : ListView.builder(

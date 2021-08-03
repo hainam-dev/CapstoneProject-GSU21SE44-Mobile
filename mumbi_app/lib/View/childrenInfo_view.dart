@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/child_model.dart';
@@ -31,14 +32,13 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
   final formKey = GlobalKey<FormState>();
   String selectedStatusValue;
   String defaultImage = chooseImage;
-  String update = "Update";
   String born = "Bé chào đời";
   String notBorn = "Thai nhi";
   ChildModel childModel;
 
   @override
   void initState() {
-    if (widget.action != update) {
+    if (widget.action == CREATE_STATE) {
       childModel = ChildModel();
     }
     super.initState();
@@ -58,7 +58,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
           color: WHITE_COLOR,
         ),
         actions: <Widget>[
-          if (widget.action == update)
+          if (widget.action == UPDATE_STATE)
             PopupMenuButton<String>(
               onSelected: handleClick,
               itemBuilder: (BuildContext context) {
@@ -78,7 +78,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
         child: Column(
           children: [
             PickerImage(
-                widget.action == update ? widget.model.imageURL : defaultImage),
+                widget.action == UPDATE_STATE ? widget.model.imageURL : defaultImage),
             new Container(
               height: SizeConfig.blockSizeVertical * 58,
               width: SizeConfig.blockSizeHorizontal * 93,
@@ -89,10 +89,10 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     SizedBox(height: SizeConfig.blockSizeVertical * 1),
                     CustomInputText(
                       'Họ & tên (*)',
-                      widget.action == update ? widget.model.fullName : "",
+                      widget.action == UPDATE_STATE ? widget.model.fullName : "",
                       function: (value) {
                         setState(() {
-                          if (widget.action == update) {
+                          if (widget.action == UPDATE_STATE) {
                             widget.model.fullName = value;
                           } else {
                             childModel.fullName = value;
@@ -103,10 +103,10 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     SizedBox(height: SizeConfig.blockSizeVertical * 1),
                     CustomInputText(
                       'Tên ở nhà',
-                      widget.action == update ? widget.model.nickname : "",
+                      widget.action == UPDATE_STATE ? widget.model.nickname : "",
                       function: (value) {
                         setState(() {
-                          if (widget.action == update) {
+                          if (widget.action == UPDATE_STATE) {
                             widget.model.nickname = value;
                           } else {
                             childModel.nickname = value;
@@ -118,14 +118,14 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     CustomStatusDropdown(
                       'Trạng thái (*)',
                       itemsStatus,
-                      widget.action == update
+                      widget.action == UPDATE_STATE
                           ? showStatus(widget.model.bornFlag)
                           : null,
                       function: (value) {
                         setState(
                           () {
                             selectedStatusValue = value;
-                            if (widget.action == update) {
+                            if (widget.action == UPDATE_STATE) {
                               widget.model.bornFlag =
                                   (value == born ? true : false);
                             } else {
@@ -137,18 +137,18 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                       },
                     ),
                     SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
-                    if (widget.action == update &&
+                    if (widget.action == UPDATE_STATE &&
                             widget.model.bornFlag == true ||
                         selectedStatusValue.toString() == born)
                       CalendarBirthday(
                         'Ngày sinh (*)',
-                        widget.action == update ? widget.model.birthday : "",
+                        widget.action == UPDATE_STATE ? widget.model.birthday : "",
                         function: (value) {
                           if (value.isEmpty) {
                             return "Vui lòng chọn ngày sinh cho bé";
                           } else {
                             setState(() {
-                              if (widget.action == update) {
+                              if (widget.action == UPDATE_STATE) {
                                 widget.model.birthday = value;
                               } else {
                                 childModel.birthday = value;
@@ -158,11 +158,11 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                           }
                         },
                       ),
-                    if (widget.action == update &&
+                    if (widget.action == UPDATE_STATE &&
                             widget.model.bornFlag == false ||
                         selectedStatusValue.toString() == notBorn)
                       CalendarCalculate(
-                        widget.action == update
+                        widget.action == UPDATE_STATE
                             ? widget.model.estimatedBornDate
                             : "",
                         function: (value) {
@@ -170,7 +170,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                             return "Vui lòng chọn ngày dự sinh cho bé";
                           } else {
                             setState(() {
-                              if (widget.action == update) {
+                              if (widget.action == UPDATE_STATE) {
                                 widget.model.estimatedBornDate = value;
                               } else {
                                 childModel.estimatedBornDate = value;
@@ -184,13 +184,13 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     CustomStatusDropdown(
                       'Giới tính (*)',
                       itemsGender,
-                      widget.action == update
+                      widget.action == UPDATE_STATE
                           ? showGender(widget.model.gender)
                           : null,
                       function: (value) {
                         setState(
                           () {
-                            if (widget.action == update) {
+                            if (widget.action == UPDATE_STATE) {
                               widget.model.gender = getGender(value);
                             } else {
                               childModel.gender = getGender(value);
@@ -200,7 +200,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                       },
                     ),
                     SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
-                    if (widget.action == update &&
+                    if (widget.action == UPDATE_STATE &&
                             widget.model.bornFlag == true ||
                         selectedStatusValue.toString() == born)
                       Row(
@@ -212,11 +212,11 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                                 'Nhóm máu',
                                 'Nhóm máu',
                                 ['A', 'B', 'O', 'AB'],
-                                widget.action == update
+                                widget.action == UPDATE_STATE
                                     ? widget.model.bloodGroup
                                     : null, (value) {
                               setState(() {
-                                if (widget.action == update) {
+                                if (widget.action == UPDATE_STATE) {
                                   widget.model.bloodGroup = value;
                                 } else {
                                   childModel.bloodGroup = value;
@@ -233,11 +233,11 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                                 'Hệ máu (Rh)',
                                 'Hệ máu (Rh)',
                                 ['RH(D)+', 'RH(D)-'],
-                                widget.action == update
+                                widget.action == UPDATE_STATE
                                     ? widget.model.rhBloodGroup
                                     : null, (value) {
                               setState(() {
-                                if (widget.action == update) {
+                                if (widget.action == UPDATE_STATE) {
                                   widget.model.rhBloodGroup = value;
                                 } else {
                                   childModel.rhBloodGroup = value;
@@ -249,7 +249,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                         ],
                       ),
                     SizedBox(height: SizeConfig.blockSizeVertical * 1.7),
-                    if (widget.action == update &&
+                    if (widget.action == UPDATE_STATE &&
                             widget.model.bornFlag == true ||
                         selectedStatusValue.toString() == born)
                       Row(
@@ -259,11 +259,11 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                           Flexible(
                             child: CustomInputNumber(
                                 'Xoáy đầu',
-                                widget.action == update
+                                widget.action == UPDATE_STATE
                                     ? widget.model.headVortex.toString()
                                     : "", function: (value) {
                               setState(() {
-                                if (widget.action == update) {
+                                if (widget.action == UPDATE_STATE) {
                                   if (value == "") {
                                     widget.model.headVortex = 0;
                                   } else {
@@ -288,11 +288,11 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                           Flexible(
                             child: CustomInputNumber(
                                 'Số vân tay',
-                                widget.action == update
+                                widget.action == UPDATE_STATE
                                     ? widget.model.fingertips.toString()
                                     : "", function: (value) {
                               setState(() {
-                                if (widget.action == update) {
+                                if (widget.action == UPDATE_STATE) {
                                   if (value == "") {
                                     widget.model.fingertips = 0;
                                   } else {
@@ -329,18 +329,18 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
           titleSave: 'Lưu thông tin',
           cancelFunction: () => {Navigator.pop(context)},
           saveFunction: () async {
-            String url = await uploadImageToFirebase(
-                widget.action == update ? widget.model.id : childModel.id);
-            if (url != null) {
-              if (widget.action == update) {
-                widget.model.imageURL = url;
-              } else {
-                childModel.imageURL = url;
-              }
-            }
             if (formKey.currentState.validate()) {
+              String url = await uploadImageToFirebase(
+                  widget.action == UPDATE_STATE ? widget.model.id : childModel.id);
+              if (url != null) {
+                if (widget.action == UPDATE_STATE) {
+                  widget.model.imageURL = url;
+                } else {
+                  childModel.imageURL = url;
+                }
+              }
               bool result = false;
-              if (widget.action == update) {
+              if (widget.action == UPDATE_STATE) {
                 result = await ChildViewModel().updateChildInfo(widget.model);
               } else {
                 if (childModel.fingertips == null) childModel.fingertips = 0;
@@ -377,9 +377,9 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
 
   String showGender(int num) {
     switch (num) {
-      case 0:
+      /*case 0:
         return "Chưa biết";
-        break;
+        break;*/
       case 1:
         return "Bé trai";
         break;
@@ -393,9 +393,9 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
 
   int getGender(String gender) {
     switch (gender) {
-      case "Chưa biết":
+      /*case "Chưa biết":
         return 0;
-        break;
+        break;*/
       case "Bé trai":
         return 1;
         break;
@@ -483,7 +483,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
         ],
       ),
     ),
-    DropdownMenuItem(
+    /*DropdownMenuItem(
       value: 'Chưa biết',
       child: new Row(
         mainAxisSize: MainAxisSize.min,
@@ -501,7 +501,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
           ),
         ],
       ),
-    ),
+    ),*/
   ];
 
   Widget _buildBloodGroup(String labelText, String hinText, List<String> items,

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mumbi_app/Model/guidebook_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/guidebookDetails_view.dart';
 import 'package:mumbi_app/ViewModel/guidebook_viewmodel.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
@@ -18,6 +17,16 @@ class GuideBook extends StatefulWidget {
 }
 
 class _GuideBookState extends State<GuideBook> {
+
+  GuidebookViewModel _guidebookViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _guidebookViewModel = GuidebookViewModel.getInstance();
+    _guidebookViewModel.getAllGuidebook();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,11 +42,10 @@ class _GuideBookState extends State<GuideBook> {
       ),
       drawer: getDrawer(context),
       body: ScopedModel(
-          model: GuidebookViewModel.getInstance(),
+          model: _guidebookViewModel,
           child: ScopedModelDescendant(
             builder:
                 (BuildContext context, Widget child, GuidebookViewModel model) {
-              model.getAllGuidebook();
               return model.guidebookListModel == null
                   ? loadingProgress()
                   : ListView.builder(
@@ -93,27 +101,34 @@ Widget GuidebookFirstItem(context, GuidebookModel guidebookModel) {
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
             child: Column(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: CachedNetworkImage(
-                    imageUrl: guidebookModel.imageURL,
-                    fit: BoxFit.cover,
+                ConstrainedBox(
+                  constraints: new BoxConstraints(
+                    maxHeight: SizeConfig.blockSizeVertical * 30,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: CachedNetworkImage(
+                      imageUrl: guidebookModel.imageURL,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 Align(
-                    alignment: Alignment.topLeft,
+                    alignment: Alignment.center,
                     child: Text(
                       guidebookModel.title,
+                      textAlign: TextAlign.center,
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                          TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
                     )),
                 SizedBox(
                   height: 4,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       DateTimeConvert.convertDatetimeDMY(
@@ -121,7 +136,7 @@ Widget GuidebookFirstItem(context, GuidebookModel guidebookModel) {
                       style:
                           TextStyle(fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
                     ),
-                    SizedBox(width: 6),
+                    SizedBox(width: 5),
                     Icon(
                       Icons.fiber_manual_record,
                       color: GREY_COLOR,
@@ -131,7 +146,7 @@ Widget GuidebookFirstItem(context, GuidebookModel guidebookModel) {
                     Text(
                       guidebookModel.estimatedFinishTime.toString() +
                           " phút đọc",
-                      style: TextStyle(color: LIGHT_DARK_GREY_COLOR),
+                      style: TextStyle(fontSize: 15,color: LIGHT_DARK_GREY_COLOR),
                     ),
                   ],
                 ),
@@ -167,8 +182,8 @@ Widget GuidebookItem(context, GuidebookModel guidebookModel) {
                   child: CachedNetworkImage(
                     imageUrl: guidebookModel.imageURL,
                     fit: BoxFit.cover,
-                    height: 100,
-                    width: 90,
+                    height: 75,
+                    width: 95,
                   ),
                 ),
                 const SizedBox(width: 15.0),
@@ -183,7 +198,7 @@ Widget GuidebookItem(context, GuidebookModel guidebookModel) {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
+                            fontSize: 19.0,
                           ),
                         ),
                       ),
@@ -196,7 +211,7 @@ Widget GuidebookItem(context, GuidebookModel guidebookModel) {
                               DateTimeConvert.convertDatetimeDMY(
                                   guidebookModel.createTime),
                               style: TextStyle(
-                                  fontSize: 15.0,
+                                  fontSize: 14.0,
                                   color: LIGHT_DARK_GREY_COLOR)),
                           SizedBox(
                             width: 6,
@@ -213,7 +228,7 @@ Widget GuidebookItem(context, GuidebookModel guidebookModel) {
                             guidebookModel.estimatedFinishTime.toString() +
                                 " phút đọc",
                             style: TextStyle(
-                                fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
+                                fontSize: 14, color: LIGHT_DARK_GREY_COLOR),
                           ),
                         ],
                       ),
@@ -222,7 +237,7 @@ Widget GuidebookItem(context, GuidebookModel guidebookModel) {
                 )
               ],
             ),
-          )
+          ),
         ],
       ),
     ),
