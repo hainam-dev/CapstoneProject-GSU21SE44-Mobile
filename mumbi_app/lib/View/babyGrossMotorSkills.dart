@@ -26,8 +26,9 @@ class _FineMotorSkillState extends State<GrossMotorSkill> {
     // TODO: implement initState
     super.initState();
    actionViewModel = ActionViewModel.getInstance();
+   if(actionViewModel.list != null)
    actionViewModel.list.clear();
-    actionViewModel.getActionByType("Thô");
+   actionViewModel.getActionByType("Thô");
 
   }
 
@@ -42,6 +43,7 @@ class _FineMotorSkillState extends State<GrossMotorSkill> {
           builder: (context,child,model) {
             list = model.list;
             listMonth.clear();
+            if(list != null)
             for(int i = 0; i < list.length;i++){
                     listMonth.add(list[i].month);
             }

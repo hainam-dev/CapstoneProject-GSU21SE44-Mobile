@@ -6,6 +6,7 @@ import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Model/action_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/ViewModel/action_viewmodel.dart';
+import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class FineMotorSkill extends StatefulWidget {
@@ -27,8 +28,7 @@ class _FineMotorSkillState extends State<FineMotorSkill> {
     // TODO: implement initState
     super.initState();
     actionViewModel = ActionViewModel.getInstance();
-    // actionViewModel.list.clear();
-
+    actionViewModel.list.clear();
     actionViewModel.getActionByType("Tinh");
 
   }
