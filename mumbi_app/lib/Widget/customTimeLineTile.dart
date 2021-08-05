@@ -21,12 +21,15 @@ Widget firstTimeLineTile(ToothModel model){
   Duration dur = DateTime.now().difference(model.grownDate);
   double durInMoth = dur.inDays/30;
   double durInDay = dur.inDays/30 - 12*dur.inDays/30/12;
+  int durDay = (DateTime.now().day - dayCurrent.day);
+  if(durDay < 0)
+    durDay*=-1;
   if(durInMoth < 12 && durInMoth >= 1){
-    day = durInMoth.floor().toString()+" tháng " + (DateTime.now().day - dayCurrent.day).toString() +" ngày";}
+    day = durInMoth.floor().toString()+" tháng " + durDay.toString() +" ngày";}
   else if(durInMoth > 12){
-    day = (durInMoth/12).floor().toString()+" năm " + durInDay.floor().toString()+" tháng " + (DateTime.now().day - dayCurrent.day).toString() +" ngày";
+    day = (durInMoth/12).floor().toString()+" năm " + durInDay.floor().toString()+" tháng " + durDay.toString() +" ngày";
   } else if(durInMoth > 0){
-    day = (DateTime.now().day - dayCurrent.day).toString() +" ngày";
+    day = dur.inDays.toString() +" ngày";
   } else if(durInMoth < 0) day ="Ngày sai";
 
   final str = model.toothName;
@@ -116,13 +119,16 @@ Widget customTimeLineTile(ToothModel model){
   Duration dur = DateTime.now().difference(model.grownDate);
   double durInMoth = dur.inDays/30;
   double durInDay = dur.inDays/30 - 12*dur.inDays/30/12;
+  int durDay = (DateTime.now().day - dayCurrent.day);
+  if(durDay < 0)
+    durDay*=-1;
   if(durInMoth < 12 && durInMoth >= 1){
-    day = durInMoth.floor().toString()+" tháng " + (DateTime.now().day - dayCurrent.day).toString() +" ngày";}
+    day = durInMoth.floor().toString()+" tháng " + durDay.toString() +" ngày";}
   else if(durInMoth > 12){
-    day = (durInMoth/12).floor().toString()+" năm " + durInDay.floor().toString()+" tháng " + (DateTime.now().day - dayCurrent.day).toString() +" ngày";
+    day = (durInMoth/12).floor().toString()+" năm " + durInDay.floor().toString()+" tháng " + durDay.toString() +" ngày";
   } else if(durInMoth > 0){
-    day = (DateTime.now().day - dayCurrent.day).toString() +" ngày";
-  }else if(durInMoth < 0) day ="Ngày sai";
+    day = dur.inDays.toString() +" ngày";
+  } else if(durInMoth < 0) day ="Ngày sai";
 
   final str = model.toothName;
   final start = "(";
@@ -209,12 +215,15 @@ Widget lastTimeLineTile(ToothModel model){
   Duration dur = DateTime.now().difference(model.grownDate);
   double durInMoth = dur.inDays/30;
   double durInDay = dur.inDays/30 - 12*dur.inDays/30/12;
+  int durDay = (DateTime.now().day - dayCurrent.day);
+  if(durDay < 0)
+    durDay*=-1;
   if(durInMoth < 12 && durInMoth >= 1){
-    day = durInMoth.floor().toString()+" tháng " + (DateTime.now().day - dayCurrent.day).toString() +" ngày";}
+    day = durInMoth.floor().toString()+" tháng " + durDay.toString() +" ngày";}
   else if(durInMoth > 12){
-    day = (durInMoth/12).floor().toString()+" năm " + durInDay.floor().toString()+" tháng " + (DateTime.now().day - dayCurrent.day).toString() +" ngày";
+    day = (durInMoth/12).floor().toString()+" năm " + durInDay.floor().toString()+" tháng " + durDay.toString() +" ngày";
   } else if(durInMoth > 0){
-    day = (DateTime.now().day - dayCurrent.day).toString() +" ngày";
+    day = dur.inDays.toString() +" ngày";
   } else if(durInMoth < 0) day ="Ngày sai";
 
   final str = model.toothName;

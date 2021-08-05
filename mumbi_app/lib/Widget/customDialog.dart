@@ -96,8 +96,8 @@ void showResult(BuildContext context, bool result){
     showDialog(
       context: context,
       builder: (BuildContext context) => CustomDialog(
-        title: "Thực hiện thành công",
-        description: "",
+        title: "Thành công",
+        description: "Bạn đã xóa thành viên thành công",
         buttonText: "Nhấn để thoát",
         image: checked,
       ),

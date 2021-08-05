@@ -35,6 +35,8 @@ class _FineMotorSkillState extends State<FineMotorSkill> {
 
   @override
   Widget build(BuildContext context) {
+    int your_number_of_rows = 2;
+    double rowHeight = (MediaQuery.of(context).size.height - 56) / your_number_of_rows;
     final double width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -63,7 +65,7 @@ class _FineMotorSkillState extends State<FineMotorSkill> {
             }
             return DataTable(
               columnSpacing: 0,
-              dataRowHeight: 200,
+              dataRowHeight: rowHeight,
               headingRowColor: MaterialStateColor.resolveWith((
                   states) => BLACK_COLOR),
               dataRowColor: MaterialStateColor.resolveWith((states) =>

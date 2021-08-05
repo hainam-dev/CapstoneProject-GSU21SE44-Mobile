@@ -15,9 +15,9 @@ class ActionRepository{
     }
   }
 
-  static Future<dynamic> apiGetActionIdByChild(String childId, int actionId) async {
+  static Future<dynamic> apiGetAllActionIdByChild(String childId) async {
     var response = await http.get(
-      Uri.parse("${GET_ACTION_ID_BY_CHILDID}${childId}/${actionId}"),
+      Uri.parse("${GET_ACTION_ID_BY_CHILDID}${childId}"),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },

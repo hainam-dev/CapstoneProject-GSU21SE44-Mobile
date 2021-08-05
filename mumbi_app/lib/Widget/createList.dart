@@ -232,53 +232,55 @@ item(
 
 Widget createListTileSelectedAccount(
     BuildContext context, String _imageURL, String _title,String id ,String role) {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-    child: Card(
-      elevation: 2,
-      margin: EdgeInsets.zero,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          radius: 23,
-          child: CircleAvatar(
-            radius: 22,
-            backgroundImage: CachedNetworkImageProvider(_imageURL),
+  return Container(
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+      child: Card(
+        elevation: 2,
+        margin: EdgeInsets.zero,
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            radius: 23,
+            child: CircleAvatar(
+              radius: 22,
+              backgroundImage: CachedNetworkImageProvider(_imageURL),
+            ),
           ),
+          title: Row(
+            children: [
+              Text(
+                  _title
+              ),
+              if(CurrentMember.id == id)
+              Text(
+                " (Đang chọn)",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(color: PINK_COLOR),
+              ),
+            ],
+          ),
+          subtitle: Text(
+            role
+          ),
+          trailing: CurrentMember.id == id
+            ? Icon(
+            Icons.check,
+            size: 25,
+            color: PINK_COLOR,
+            )
+          :SizedBox.shrink(),
+          onTap: () async{
+            CurrentMember.id = id;
+            CurrentMember.role = role;
+            DiaryViewModel.destroyInstance();
+            await Future.delayed(Duration(seconds: 1));
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => BotNavBar(),));
+          },
         ),
-        title: Row(
-          children: [
-            Text(
-                _title
-            ),
-            if(CurrentMember.id == id)
-            Text(
-              " (Đang chọn)",
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: PINK_COLOR),
-            ),
-          ],
-        ),
-        subtitle: Text(
-          role
-        ),
-        trailing: CurrentMember.id == id
-          ? Icon(
-          Icons.check,
-          size: 25,
-          color: PINK_COLOR,
-          )
-        :SizedBox.shrink(),
-        onTap: () async{
-          CurrentMember.id = id;
-          CurrentMember.role = role;
-          DiaryViewModel.destroyInstance();
-          await Future.delayed(Duration(seconds: 1));
-          Navigator.pop(context);
-          Navigator.pop(context);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => BotNavBar(),));
-        },
       ),
     ),
   );

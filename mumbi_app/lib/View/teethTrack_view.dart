@@ -4,6 +4,8 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/saveKey.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Model/child_model.dart';
+import 'package:mumbi_app/View/bottomNavBar_view.dart';
+import 'package:mumbi_app/View/dashboard_view.dart';
 import 'package:mumbi_app/View/teethDetail_view.dart';
 import 'package:mumbi_app/View/teethProcess.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
@@ -57,13 +59,11 @@ class _TeethTrackState extends State<TeethTrack> {
 
     toothViewModel = ToothViewModel.getInstance();
     toothViewModel.getAllToothByChildId();
-    
-    listAllTooth = toothViewModel.listTooth;
-    for(int i = 0; i < listAllTooth.length; i++){
-      if(listAllTooth[i].grownFlag){
-        listGrow[int.tryParse(listAllTooth[i].toothId)-1] = true;
-      }
-    }
+
+
+    setState(() {
+
+    });
   }
 
   @override
@@ -84,10 +84,7 @@ class _TeethTrackState extends State<TeethTrack> {
                 },),
             )
           ],
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+          leading: backButton(context, BotNavBar())
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -115,36 +112,40 @@ class _TeethTrackState extends State<TeethTrack> {
       model: toothViewModel,
       child: ScopedModelDescendant<ToothViewModel>(
         builder: (context, child, model){
+          listAllTooth = toothViewModel.listTooth;
+          if(listAllTooth != null )for(int i = 0; i < listAllTooth.length; i++){
+            if(listAllTooth[i].grownFlag){
+              listGrow[int.tryParse(listAllTooth[i].toothId)-1] = true;
+            }
+          }
           return Column(
               children: <Widget>[
                 // Răng hàm trên
-                Container(
-                  margin: EdgeInsets.all(18),
-                  child: Stack(
-                    children:
-                    <Widget>[
-                      Container(child: SvgPicture.asset(img_hamtren, width: 302, height: 189)),
-                      for(int index = 0; index < _list.length /2; index++)
-                        createTeeth(listTeeth[index], (_flag[index] || listGrow[index]), () async {
-                          _flag[index] = !_flag[index];
-                          if(isChose && lastPositon != index){
-                            _flag[lastPositon] = !_flag[lastPositon];
-                            lastPositon = index;
-                          } else if (isChose && lastPositon == index){
-                            lastPositon = null;
-                            isChose = false;
-                          } else{
-                            lastPositon= index;
-                            isChose = true;
-                          }
-                          getPosition(index);
-                          toothViewModel.getToothByChildId();
-                          toothViewModel.getToothInfoById();
-                          setState(() {});
+                Stack(
+                  children:
+                  <Widget>[
+                    Container(child: SvgPicture.asset(img_hamtren, width: 302, height: 189)),
+                    for(int index = 0; index < _list.length /2; index++)
+                      createTeeth(listTeeth[index], (_flag[index] || listGrow[index]), () async {
+                        _flag[index] = !_flag[index];
+                        if(isChose && lastPositon != index){
+                          _flag[lastPositon] = !_flag[lastPositon];
+                          lastPositon = index;
+                        } else if (isChose && lastPositon == index){
+                          lastPositon = null;
+                          isChose = false;
+                        } else{
+                          lastPositon= index;
+                          isChose = true;
                         }
-                        )
-                    ],
-                  ),
+                        print("Chạy nút");
+                        getPosition(index);
+                        toothViewModel.getToothInfoById();
+                        // toothViewModel.getToothByChildId();
+                        setState(() {});
+                      }
+                      )
+                  ],
                 ),
                 // Răng hàm dưới
                 Stack(
@@ -165,7 +166,6 @@ class _TeethTrackState extends State<TeethTrack> {
                           isChose = true;
                         }
                         getPosition(index);
-                        toothViewModel.getToothByChildId();
                         toothViewModel.getToothInfoById();
 
                         setState(()  {});
@@ -176,43 +176,39 @@ class _TeethTrackState extends State<TeethTrack> {
 
                 !isChose
                     ? Container()
-                    : ScopedModel(
-                  model: toothViewModel,
-                  child: Column(
-                    children: <Widget>[
-                      // Thông tin
-                      ScopedModelDescendant<ToothViewModel>(
-                          builder: (context, child, modelTooth){
-                            if(modelTooth.toothInforModel != null){
-                              // var toothId = storage.write(key: toothIdKey, value: modelTooth.toothInforModel.id);
-                              return createTextAlignInformation(modelTooth.toothInforModel.number.toString(),
-                                  modelTooth.toothInforModel.name,modelTooth.toothInforModel.growTime);
+                    : Column(
+                      children: <Widget>[
+                        // Thông tin
+                        ScopedModelDescendant<ToothViewModel>(
+                            builder: (context, child, modelTooth){
+                              if(modelTooth.toothInforModel != null){
+                                return createTextAlignInformation(modelTooth.toothInforModel.number.toString(),
+                                    modelTooth.toothInforModel.name,modelTooth.toothInforModel.growTime);
+                              }
+                              return createTextAlignInformation("",
+                                  "","");
                             }
-                            return createTextAlignInformation("",
-                                "","");
-                          }
-                      ),
-                      // Bé của bạn
-                      ScopedModelDescendant<ToothViewModel>(
-                          builder: (context,child,modelTooth){
-                            ToothModel tooth = modelTooth.toothModel;
-                            if( tooth != null && tooth.toothId != null && tooth.grownFlag == true) {
-                              status  = "Đã mọc";
-                              DateTime oDate = DateTime.tryParse(tooth.grownDate.toString());
-                              growTime = oDate.day.toString()+"/"+oDate.month.toString() +"/"+ oDate.year.toString();
-                            } else{
-                              status = "Chưa mọc";
-                              growTime = "--";
+                        ),
+                        // Bé của bạn
+                        ScopedModelDescendant<ToothViewModel>(
+                            builder: (context,child,modelTooth){
+                              ToothModel tooth = modelTooth.toothModel;
+                              if( tooth != null && tooth.toothId != null && tooth.grownFlag == true) {
+                                status  = "Đã mọc";
+                                DateTime oDate = DateTime.tryParse(tooth.grownDate.toString());
+                                growTime = oDate.day.toString()+"/"+oDate.month.toString() +"/"+ oDate.year.toString();
+                              } else{
+                                status = "Chưa mọc";
+                                growTime = "--";
+                              }
+                              if(tooth == null || name == null)
+                                return loadingProgress();
+                              return createTextAlignUpdate(context,name, status,growTime,
+                                  TeethDetail());
                             }
-                            if(tooth == null || name == null)
-                              return loadingProgress();
-                            return createTextAlignUpdate(context,name, status,growTime,
-                                TeethDetail());
-                          }
-                      ),
-                    ],
-                  ),
-                )
+                        ),
+                      ],
+                    )
               ]);
             },
           ),

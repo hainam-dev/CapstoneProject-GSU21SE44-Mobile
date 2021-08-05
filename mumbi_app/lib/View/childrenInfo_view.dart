@@ -72,256 +72,258 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
             )
         ],
       ),
-      body: Container(
-        height: SizeConfig.blockSizeVertical * 100,
-        width: SizeConfig.blockSizeHorizontal * 100,
-        child: Column(
-          children: [
-            PickerImage(
-                widget.action == update ? widget.model.imageURL : defaultImage),
-            new Container(
-              height: SizeConfig.blockSizeVertical * 58,
-              width: SizeConfig.blockSizeHorizontal * 93,
-              child: Form(
-                key: formKey,
-                child: ListView(
-                  children: [
-                    SizedBox(height: SizeConfig.blockSizeVertical * 1),
-                    CustomInputText(
-                      'Họ & tên (*)',
-                      widget.action == update ? widget.model.fullName : "",
-                      function: (value) {
-                        setState(() {
-                          if (widget.action == update) {
-                            widget.model.fullName = value;
-                          } else {
-                            childModel.fullName = value;
-                          }
-                        });
-                      },
-                    ),
-                    SizedBox(height: SizeConfig.blockSizeVertical * 1),
-                    CustomInputText(
-                      'Tên ở nhà',
-                      widget.action == update ? widget.model.nickname : "",
-                      function: (value) {
-                        setState(() {
-                          if (widget.action == update) {
-                            widget.model.nickname = value;
-                          } else {
-                            childModel.nickname = value;
-                          }
-                        });
-                      },
-                    ),
-                    SizedBox(height: SizeConfig.blockSizeVertical * 1.2),
-                    CustomStatusDropdown(
-                      'Trạng thái (*)',
-                      itemsStatus,
-                      widget.action == update
-                          ? showStatus(widget.model.bornFlag)
-                          : null,
-                      function: (value) {
-                        setState(
-                          () {
-                            selectedStatusValue = value;
-                            if (widget.action == update) {
-                              widget.model.bornFlag =
-                                  (value == born ? true : false);
-                            } else {
-                              childModel.bornFlag =
-                                  (value == born ? true : false);
-                            }
-                          },
-                        );
-                      },
-                    ),
-                    SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
-                    if (widget.action == update &&
-                            widget.model.bornFlag == true ||
-                        selectedStatusValue.toString() == born)
-                      CalendarBirthday(
-                        'Ngày sinh (*)',
-                        widget.action == update ? widget.model.birthday : "",
+      body: SingleChildScrollView(
+        child: Container(
+          height: SizeConfig.blockSizeVertical * 100,
+          width: SizeConfig.blockSizeHorizontal * 100,
+          child: Column(
+            children: [
+              PickerImage(
+                  widget.action == update ? widget.model.imageURL : defaultImage),
+              new Container(
+                height: SizeConfig.blockSizeVertical * 58,
+                width: SizeConfig.blockSizeHorizontal * 93,
+                child: Form(
+                  key: formKey,
+                  child: ListView(
+                    children: [
+                      SizedBox(height: SizeConfig.blockSizeVertical * 1),
+                      CustomInputText(
+                        'Họ & tên (*)',
+                        widget.action == update ? widget.model.fullName : "",
                         function: (value) {
-                          if (value.isEmpty) {
-                            return "Vui lòng chọn ngày sinh cho bé";
-                          } else {
-                            setState(() {
-                              if (widget.action == update) {
-                                widget.model.birthday = value;
-                              } else {
-                                childModel.birthday = value;
-                              }
-                            });
-                            return null;
-                          }
+                          setState(() {
+                            if (widget.action == update) {
+                              widget.model.fullName = value;
+                            } else {
+                              childModel.fullName = value;
+                            }
+                          });
                         },
                       ),
-                    if (widget.action == update &&
-                            widget.model.bornFlag == false ||
-                        selectedStatusValue.toString() == notBorn)
-                      CalendarCalculate(
+                      SizedBox(height: SizeConfig.blockSizeVertical * 1),
+                      CustomInputText(
+                        'Tên ở nhà',
+                        widget.action == update ? widget.model.nickname : "",
+                        function: (value) {
+                          setState(() {
+                            if (widget.action == update) {
+                              widget.model.nickname = value;
+                            } else {
+                              childModel.nickname = value;
+                            }
+                          });
+                        },
+                      ),
+                      SizedBox(height: SizeConfig.blockSizeVertical * 1.2),
+                      CustomStatusDropdown(
+                        'Trạng thái (*)',
+                        itemsStatus,
                         widget.action == update
-                            ? widget.model.estimatedBornDate
-                            : "",
+                            ? showStatus(widget.model.bornFlag)
+                            : null,
                         function: (value) {
-                          if (value.isEmpty) {
-                            return "Vui lòng chọn ngày dự sinh cho bé";
-                          } else {
-                            setState(() {
+                          setState(
+                            () {
+                              selectedStatusValue = value;
                               if (widget.action == update) {
-                                widget.model.estimatedBornDate = value;
+                                widget.model.bornFlag =
+                                    (value == born ? true : false);
                               } else {
-                                childModel.estimatedBornDate = value;
+                                childModel.bornFlag =
+                                    (value == born ? true : false);
                               }
-                            });
-                            return null;
-                          }
+                            },
+                          );
                         },
                       ),
-                    SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
-                    CustomStatusDropdown(
-                      'Giới tính (*)',
-                      itemsGender,
-                      widget.action == update
-                          ? showGender(widget.model.gender)
-                          : null,
-                      function: (value) {
-                        setState(
-                          () {
-                            if (widget.action == update) {
-                              widget.model.gender = getGender(value);
+                      SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
+                      if (widget.action == update &&
+                              widget.model.bornFlag == true ||
+                          selectedStatusValue.toString() == born)
+                        CalendarBirthday(
+                          'Ngày sinh (*)',
+                          widget.action == update ? widget.model.birthday : "",
+                          function: (value) {
+                            if (value.isEmpty) {
+                              return "Vui lòng chọn ngày sinh cho bé";
                             } else {
-                              childModel.gender = getGender(value);
+                              setState(() {
+                                if (widget.action == update) {
+                                  widget.model.birthday = value;
+                                } else {
+                                  childModel.birthday = value;
+                                }
+                              });
+                              return null;
                             }
                           },
-                        );
-                      },
-                    ),
-                    SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
-                    if (widget.action == update &&
-                            widget.model.bornFlag == true ||
-                        selectedStatusValue.toString() == born)
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Flexible(
-                            child: _buildBloodGroup(
-                                'Nhóm máu',
-                                'Nhóm máu',
-                                ['A', 'B', 'O', 'AB'],
-                                widget.action == update
-                                    ? widget.model.bloodGroup
-                                    : null, (value) {
+                        ),
+                      if (widget.action == update &&
+                              widget.model.bornFlag == false ||
+                          selectedStatusValue.toString() == notBorn)
+                        CalendarCalculate(
+                          widget.action == update
+                              ? widget.model.estimatedBornDate
+                              : "",
+                          function: (value) {
+                            if (value.isEmpty) {
+                              return "Vui lòng chọn ngày dự sinh cho bé";
+                            } else {
                               setState(() {
                                 if (widget.action == update) {
-                                  widget.model.bloodGroup = value;
+                                  widget.model.estimatedBornDate = value;
                                 } else {
-                                  childModel.bloodGroup = value;
+                                  childModel.estimatedBornDate = value;
                                 }
                               });
-                            }),
-                            flex: 2,
-                          ),
-                          const SizedBox(
-                            width: 17,
-                          ),
-                          Flexible(
-                            child: _buildBloodGroup(
-                                'Hệ máu (Rh)',
-                                'Hệ máu (Rh)',
-                                ['RH(D)+', 'RH(D)-'],
-                                widget.action == update
-                                    ? widget.model.rhBloodGroup
-                                    : null, (value) {
-                              setState(() {
-                                if (widget.action == update) {
-                                  widget.model.rhBloodGroup = value;
-                                } else {
-                                  childModel.rhBloodGroup = value;
-                                }
-                              });
-                            }),
-                            flex: 2,
-                          ),
-                        ],
+                              return null;
+                            }
+                          },
+                        ),
+                      SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
+                      CustomStatusDropdown(
+                        'Giới tính (*)',
+                        itemsGender,
+                        widget.action == update
+                            ? showGender(widget.model.gender)
+                            : null,
+                        function: (value) {
+                          setState(
+                            () {
+                              if (widget.action == update) {
+                                widget.model.gender = getGender(value);
+                              } else {
+                                childModel.gender = getGender(value);
+                              }
+                            },
+                          );
+                        },
                       ),
-                    SizedBox(height: SizeConfig.blockSizeVertical * 1.7),
-                    if (widget.action == update &&
-                            widget.model.bornFlag == true ||
-                        selectedStatusValue.toString() == born)
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Flexible(
-                            child: CustomInputNumber(
-                                'Xoáy đầu',
-                                widget.action == update
-                                    ? widget.model.headVortex.toString()
-                                    : "", function: (value) {
-                              setState(() {
-                                if (widget.action == update) {
-                                  if (value == "") {
-                                    widget.model.headVortex = 0;
+                      SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
+                      if (widget.action == update &&
+                              widget.model.bornFlag == true ||
+                          selectedStatusValue.toString() == born)
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Flexible(
+                              child: _buildBloodGroup(
+                                  'Nhóm máu',
+                                  'Nhóm máu',
+                                  ['A', 'B', 'O', 'AB'],
+                                  widget.action == update
+                                      ? widget.model.bloodGroup
+                                      : null, (value) {
+                                setState(() {
+                                  if (widget.action == update) {
+                                    widget.model.bloodGroup = value;
                                   } else {
-                                    widget.model.headVortex =
-                                        num.parse(value.toString());
+                                    childModel.bloodGroup = value;
                                   }
-                                } else {
-                                  if (value == "") {
-                                    childModel.headVortex = 0;
+                                });
+                              }),
+                              flex: 2,
+                            ),
+                            const SizedBox(
+                              width: 17,
+                            ),
+                            Flexible(
+                              child: _buildBloodGroup(
+                                  'Hệ máu (Rh)',
+                                  'Hệ máu (Rh)',
+                                  ['RH(D)+', 'RH(D)-'],
+                                  widget.action == update
+                                      ? widget.model.rhBloodGroup
+                                      : null, (value) {
+                                setState(() {
+                                  if (widget.action == update) {
+                                    widget.model.rhBloodGroup = value;
                                   } else {
-                                    childModel.headVortex =
-                                        num.parse(value.toString());
+                                    childModel.rhBloodGroup = value;
                                   }
-                                }
-                              });
-                            }),
-                            flex: 2,
-                          ),
-                          const SizedBox(
-                            width: 17,
-                          ),
-                          Flexible(
-                            child: CustomInputNumber(
-                                'Số vân tay',
-                                widget.action == update
-                                    ? widget.model.fingertips.toString()
-                                    : "", function: (value) {
-                              setState(() {
-                                if (widget.action == update) {
-                                  if (value == "") {
-                                    widget.model.fingertips = 0;
+                                });
+                              }),
+                              flex: 2,
+                            ),
+                          ],
+                        ),
+                      SizedBox(height: SizeConfig.blockSizeVertical * 1.7),
+                      if (widget.action == update &&
+                              widget.model.bornFlag == true ||
+                          selectedStatusValue.toString() == born)
+                        Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Flexible(
+                              child: CustomInputNumber(
+                                  'Xoáy đầu',
+                                  widget.action == update
+                                      ? widget.model.headVortex.toString()
+                                      : "", function: (value) {
+                                setState(() {
+                                  if (widget.action == update) {
+                                    if (value == "") {
+                                      widget.model.headVortex = 0;
+                                    } else {
+                                      widget.model.headVortex =
+                                          num.parse(value.toString());
+                                    }
                                   } else {
-                                    widget.model.fingertips =
-                                        num.parse(value.toString());
+                                    if (value == "") {
+                                      childModel.headVortex = 0;
+                                    } else {
+                                      childModel.headVortex =
+                                          num.parse(value.toString());
+                                    }
                                   }
-                                } else {
-                                  if (value == "") {
-                                    childModel.fingertips = 0;
+                                });
+                              }),
+                              flex: 2,
+                            ),
+                            const SizedBox(
+                              width: 17,
+                            ),
+                            Flexible(
+                              child: CustomInputNumber(
+                                  'Số vân tay',
+                                  widget.action == update
+                                      ? widget.model.fingertips.toString()
+                                      : "", function: (value) {
+                                setState(() {
+                                  if (widget.action == update) {
+                                    if (value == "") {
+                                      widget.model.fingertips = 0;
+                                    } else {
+                                      widget.model.fingertips =
+                                          num.parse(value.toString());
+                                    }
                                   } else {
-                                    childModel.fingertips =
-                                        num.parse(value.toString());
+                                    if (value == "") {
+                                      childModel.fingertips = 0;
+                                    } else {
+                                      childModel.fingertips =
+                                          num.parse(value.toString());
+                                    }
                                   }
-                                }
-                              });
-                            }),
-                            flex: 2,
-                          ),
-                        ],
-                      ),
-                    Padding(
-                        padding: EdgeInsets.only(
-                            bottom:
-                                MediaQuery.of(context).viewInsets.bottom / 2)),
-                  ],
+                                });
+                              }),
+                              flex: 2,
+                            ),
+                          ],
+                        ),
+                      Padding(
+                          padding: EdgeInsets.only(
+                              bottom:
+                                  MediaQuery.of(context).viewInsets.bottom / 2)),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: CustomBottomButton(

@@ -22,9 +22,12 @@ class ActionViewModel extends Model {
 
   ActionModel actionModel;
   List<dynamic> listdynamic;
-  List<ActionModel> _listAction;
+  List<dynamic> listAlldynamic;
+  List<ActionModel> _listActionType;
+  List<ActionModel> _listAllAction;
 
-  List<ActionModel> get list =>_listAction;
+  List<ActionModel> get list =>_listActionType;
+  List<ActionModel> get listAllAction =>_listAllAction;
 
   Future<void> getActionByType(String type) async{
     try{
@@ -34,34 +37,35 @@ class ActionViewModel extends Model {
         Map<String, dynamic> jsonData = jsonDecode(data);
         // print("jsonData " +jsonData.toString());
         if(jsonData['data'] == null){
-          _listAction = <ActionModel>[];
+          _listActionType = <ActionModel>[];
         } else{
           listdynamic = jsonData['data'];
-          _listAction = listdynamic.map((e) => ActionModel.fromJson(e)).toList();
+          _listActionType = listdynamic.map((e) => ActionModel.fromJson(e)).toList();
         }
-      } else _listAction = <ActionModel>[];
+      } else _listActionType = <ActionModel>[];
       notifyListeners();
     } catch(e){
       print("ERROR getActionByType: " + e.toString());
     }
   }
 
-  Future<void> getActionByActionId(int actionId) async{
+  Future<void> getAllActionByChildId() async{
     try{
       var childID = await storage.read(key: childIdKey);
       print('childID'+childID.toString());
-      var data = await ActionRepository.apiGetActionIdByChild(childID, actionId);
-      print('data'+data);
+      var data = await ActionRepository.apiGetAllActionIdByChild(childID);
+      print('data All'+data);
       if(data != null){
         Map<String, dynamic> jsonData = jsonDecode(data);
-        // print("jsonData " +jsonData.toString());
-        if(jsonData['succeeded'] == false){
-          actionModel = ActionModel();
-          actionModel.checkedFlag = false;
+        print("jsonData " +jsonData.toString());
+        if(jsonData['data'] == null){
+          _listAllAction = <ActionModel>[];
         } else{
-          actionModel = ActionModel.fromJson(jsonData['data']);
+          listAlldynamic = jsonData['data'];
+          print('listAlldynamic'+listAlldynamic.toString());
+          _listAllAction = listAlldynamic.map((e) => ActionModel.fromJson(e)).toList();
         }
-      } else actionModel = ActionModel();
+      } else _listAllAction = <ActionModel>[];
       notifyListeners();
     } catch(e){
       print("ERROR getActionIdByChild: " + e.toString());
