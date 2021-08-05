@@ -12,6 +12,7 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/saveKey.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Model/tooth_model.dart';
+import 'package:mumbi_app/View/teethTrack_view.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/tooth_viewmodel.dart';
 import 'package:cross_file/cross_file.dart';
@@ -57,6 +58,9 @@ class _TeethDetailState extends State<TeethDetail> {
   String image;
   bool result = false;
   bool isShow = false;
+
+  ToothViewModel toothViewModel;
+  ChildViewModel childViewModel;
 
 
   String update = "Update";
@@ -126,11 +130,11 @@ class _TeethDetailState extends State<TeethDetail> {
 
   @override
   void initState() {
-    // if(widget.action != update){
-    //   toothModel = ToothModel();
-    // }
+    toothViewModel = ToothViewModel.getInstance();
+    toothViewModel.getToothInfoById();
+
     super.initState();
-    getToothModel();
+    // getToothModel();
   }
 
   @override
@@ -138,72 +142,62 @@ class _TeethDetailState extends State<TeethDetail> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Mọc răng'),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () => {Navigator.pop(context)},
-        ),
+        leading: backButton(context, TeethTrack())
       ),
       body: SingleChildScrollView(
         child: ScopedModel(
-        model: ToothViewModel.getInstance(),
-          child: ScopedModel(
-            model: ChildViewModel.getInstance(),
-            child: ScopedModelDescendant(
-              builder: (BuildContext context,Widget child,ToothViewModel model){
-                model.getToothByChildId();
-                toothModel = model.toothModel;
-                // print("TOOTH MODEL: " +toothModel.note.toString());
-                getToothModel();
+        model: toothViewModel,
+          child: ScopedModelDescendant<ToothViewModel>(
+            builder: (context,child,model){
+              toothModel = model.toothModel;
+              // print("TOOTH MODEL: " +toothModel.note.toString());
+              getToothModel();
 
-                return  Form(
-                  key: formKey,
-                  child: Container(
-                    padding: EdgeInsets.only(left: 16, right: 16, top: 12),
-                    child: Column(
-                      // mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        growTimeDB == null
-                        ? loadingProgress()
-                        : CalendarBirthday('Ngày', growTimeDB,function: (value) {
+              return  Form(
+                key: formKey,
+                child: Container(
+                  padding: EdgeInsets.only(left: 16, right: 16, top: 12),
+                  child: Column(
+                    // mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      growTimeDB == null
+                      ? loadingProgress()
+                      : CalendarBirthday('Ngày', growTimeDB,function: (value) {
 
-                          setState(() {
-                            growTimePick = value;
-                          });
-                          },),
-                        ScopedModelDescendant(
-                            builder: (BuildContext context,Widget child,ToothViewModel modelInfo){
-                              modelInfo.getToothInfoById();
-                              return createTextFeildDisable("Răng",modelInfo.toothInforModel.name);
-                            }),
-                        Container(
-                          padding: EdgeInsets.only(top: 12),
-                          child: new CustomStatusDropdown(
-                            'Trạng thái (*)',
-                            itemsStatus,
-                            showStatus(status == notGrow),
-                            function: (value) {
-                              setState(() {
-                                  value == notGrow ? growFlag = false
-                                  : growFlag = true;
-                              },
-                              );
+                        setState(() {
+                          growTimePick = value;
+                        });
+                        },),
+                      ScopedModelDescendant<ToothViewModel>(
+                          builder: (context,child,modelInfo){
+                            return createTextFeildDisable("Răng",modelInfo.toothInforModel.name);
+                          }),
+                      Container(
+                        padding: EdgeInsets.only(top: 12),
+                        child: new CustomStatusDropdown(
+                          'Trạng thái (*)',
+                          itemsStatus,
+                          showStatus(status == notGrow),
+                          function: (value) {
+                            value == notGrow ? growFlag = false
+                                : growFlag = true;
+                            print("growFlag"+growFlag.toString());
+                            setState(() {
                             },
-                          ),
+                            );
+                          },
                         ),
-                        createTextFeild("Ghi chú (nếu có)", "",
-                            noteDB,(value){
-                            noteInput = value;
-                            }),
-                        // _pickerAvartar(context),
-                      ],
-                    ),
+                      ),
+                      createTextFeild("Ghi chú (nếu có)", "",
+                          noteDB,(value){
+                          noteInput = value;
+                          }),
+                      // _pickerAvartar(context),
+                    ],
                   ),
-                );
-              }
-            ),
+                ),
+              );
+            }
           ),
         ),
       ) ,
@@ -214,8 +208,9 @@ class _TeethDetailState extends State<TeethDetail> {
               toothModel.grownDate = DateFormat('dd/M/yyyy').parse(growTimePick);
             }
             toothModel.note = noteInput;
+            print("growFlag cần update"+ growFlag.toString());
             toothModel.grownFlag = growFlag;
-            print("TOOTH UPDATE: " + toothModel.toothId.toString() +"child:" +
+            print("DATA TOOTH UPDATE: " + toothModel.toothId.toString() +"child:" +toothModel.grownFlag.toString()+
                 toothModel.childId.toString() + " " + toothModel.grownDate.toString() + toothModel.note.toString());
             result = await ToothViewModel().upsertTooth(toothModel);
           }else{
@@ -235,21 +230,22 @@ class _TeethDetailState extends State<TeethDetail> {
     }
   }
 
-  void getToothModel() async{
+  void getToothModel(){
     if(toothModel != null && toothModel.grownFlag == true){
       DateTime oDate = toothModel.grownDate;
         if(oDate == null){
           growTimeDB = "--";
         } else growTimeDB = oDate.day.toString()+"/"+oDate.month.toString() +"/"+ oDate.year.toString();
         status = grow;
-        if(status == notGrow){
-          growFlag = false;
-        } else growFlag = true;
+        if(growFlag == null ){
+          if(status == notGrow){
+            growFlag = false;
+          } else growFlag = true;
+        }
 
       if(toothModel.note == null){
         noteDB = "";
       } else noteDB = toothModel.note;
-
 
     } else{
       status = notGrow;

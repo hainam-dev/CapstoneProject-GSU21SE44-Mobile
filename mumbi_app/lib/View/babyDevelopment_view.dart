@@ -195,34 +195,26 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
       Duration dur = DateTime.now().difference(dayCurrent);
       double durInMoth = dur.inDays / 30;
       double durInDay = dur.inDays / 30 - 12 * dur.inDays / 30 / 12;
+      int durDay = (DateTime.now().day - dayCurrent.day);
+      if(durDay < 0)
+        durDay*=-1;
       if (durInMoth < 12 && durInMoth >= 1) {
         day = durInMoth.floor().toString() +
             " tháng " +
-            (DateTime
-                .now()
-                .day - dayCurrent.day).toString() +
+            durDay.toString() +
             " ngày";
       } else if (durInMoth > 12) {
         day = (durInMoth / 12).floor().toString() +
-            " năm " +
-            durInDay.floor().toString() +
-            " tháng " +
-            (DateTime
-                .now()
-                .day - dayCurrent.day).toString() +
-            " ngày";
+            " năm " + durInDay.floor().toString() +
+            " tháng " + durDay.toString() + " ngày";
       } else if (durInMoth > 0) {
-        day = (DateTime
-            .now()
-            .day - dayCurrent.day).toString() + " ngày";
+        day = durDay.toString() + " ngày";
       } else if (durInMoth < 0) {
         durInMoth *= -1;
         day = "Còn " +
             durInMoth.floor().toString() +
             " tháng " +
-            (DateTime
-                .now()
-                .day - dayCurrent.day).toString() +
+            durDay.toString().toString() +
             " ngày bé ra đời";
       }
     }

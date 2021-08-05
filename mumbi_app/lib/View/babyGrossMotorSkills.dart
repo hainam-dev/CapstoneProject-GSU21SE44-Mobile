@@ -17,6 +17,7 @@ class GrossMotorSkill extends StatefulWidget {
 
 class _FineMotorSkillState extends State<GrossMotorSkill> {
   List<ActionModel> list;
+  List<ActionModel> listFlag;
   ActionViewModel actionViewModel;
   Map<int, Iterable<ActionModel>> result;
   List<int> listMonth =<int>[];
@@ -29,7 +30,8 @@ class _FineMotorSkillState extends State<GrossMotorSkill> {
    if(actionViewModel.list != null)
    actionViewModel.list.clear();
    actionViewModel.getActionByType("Thô");
-
+   actionViewModel.getAllActionByChildId();
+    listFlag = actionViewModel.listAllAction;
   }
 
   @override
@@ -54,7 +56,7 @@ class _FineMotorSkillState extends State<GrossMotorSkill> {
             };
             return DataTable(
                 columnSpacing: 0,
-                dataRowHeight: 200,
+                dataRowHeight: 100,
                 headingRowColor: MaterialStateColor.resolveWith((
                     states) => BLACK_COLOR),
                 dataRowColor: MaterialStateColor.resolveWith((states) =>
@@ -106,7 +108,9 @@ class _FineMotorSkillState extends State<GrossMotorSkill> {
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+                                    if(listFlag != null)for( var index in listFlag)
                                     for(var values in result[keys])
+
                                       Container(
                                         width: SizeConfig.safeBlockHorizontal*0, //SET width
                                         margin: EdgeInsets.all(10),
@@ -118,10 +122,10 @@ class _FineMotorSkillState extends State<GrossMotorSkill> {
                                             // setState(() {});
                                           },
                                           icon:
-                                          // _flag[0] == false
-                                          //     ? Icon(
-                                          //   Icons.check_circle, color: GREEN400,)
-                                          //     :
+                                          index.id == values.id && index.checkedFlag
+                                              ? Icon(
+                                            Icons.check_circle, color: GREEN400,)
+                                              :
                                           Icon(
                                             Icons.check_circle_outline, color: Colors.grey,),),
                                       ),

@@ -39,7 +39,8 @@ class ToothViewModel extends Model{
       if(data != null){
         Map<String, dynamic> jsonData = jsonDecode(data);
         _toothInforModel = ToothInfoModel.fromJson(jsonData);
-        var toothId = storage.write(key: toothIdKey, value: _toothInforModel.id);
+        var toothId = await storage.write(key: toothIdKey, value: _toothInforModel.id);
+        getToothByChildId();
         notifyListeners();
       }
     }catch (e){
@@ -62,7 +63,7 @@ class ToothViewModel extends Model{
 
   Future<void> getToothByChildId() async{
     var childID = await storage.read(key: childIdKey);
-    dynamic toothID = await storage.read(key: toothPosInfo);
+    dynamic toothID = await storage.read(key: toothIdKey);
 
     print('toothID '+toothID.toString());
 
@@ -70,15 +71,18 @@ class ToothViewModel extends Model{
       if (toothID == null && childID == null)
         return null;
       var data = await ToothRepository.apiGetToothByChildId(childID, toothID);
+      print('data'+data);
       if(data != null){
         Map<String, dynamic> jsonData = jsonDecode(data);
-        if(jsonData['succeeded'] == false){
-          _toothModel = new ToothModel();
-          _toothModel.toothId = toothID;
-          _toothModel.childId = childID;
-          _toothModel.note = " ";
-        } else{
-          _toothModel = ToothModel.fromJson(jsonData);
+        if(jsonData['succeeded'] == true){
+          if(jsonData['data'] != null){
+            _toothModel = ToothModel.fromJson(jsonData);
+          } else{
+            _toothModel = new ToothModel();
+            _toothModel.toothId = toothID;
+            _toothModel.childId = childID;
+            _toothModel.note = " ";
+        }
         }
       } else {
         _toothModel = new ToothModel();
@@ -103,7 +107,7 @@ class ToothViewModel extends Model{
       print("DATA3: "+ data);
       if(data != null){
         Map<String, dynamic> jsonData = jsonDecode(data);
-        print("jsonData " +jsonData.toString());
+        // print("jsonData " +jsonData.toString());
         if(jsonData['data'] == null){
           _listTooth = <ToothModel>[];
         } else{

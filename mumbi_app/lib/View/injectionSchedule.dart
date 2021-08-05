@@ -27,12 +27,7 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Lịch tiêm chủng'),
-        leading: IconButton(
-          icon: Icon(Icons.keyboard_backspace),
-            onPressed: () {
-              Navigator.pop(context);
-            }
-        ),
+        leading: backButton(context, BotNavBar()),
       ),
       body: SingleChildScrollView(
         child: Container(
