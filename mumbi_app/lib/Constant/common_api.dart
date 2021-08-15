@@ -52,6 +52,7 @@ final String GET_STAND_INDEX_BY_GENDER = getApiPath("/api/StandardIndex/GetStand
 
 final String GET_ACTION_BY_TYPE = getApiPath("/api/Action/GetActionBy/");
 final String GET_ACTION_ID_BY_CHILDID = getApiPath("/api/ActionChild/GetActionChildBy/");
+final String UPDATE_ACTION_ID_BY_CHILDID = getApiPath("/api/ActionChild/UpsertActionChild/");
 
 //post vaccination info
 final String POST_PERSONAL_INFO_AddInjectedPerson =
