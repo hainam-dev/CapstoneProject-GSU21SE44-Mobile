@@ -1,27 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
-import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/View/myFamily_view.dart';
-
-import 'customBottomButton.dart';
 
 class CustomDialog extends StatelessWidget {
-  final String title, description, buttonText;
+  final String title, description;
   final String image;
 
   CustomDialog({
     this.title,
     this.description,
-    this.buttonText,
     this.image,
   });
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 3), () {
-      Navigator.pop(context);
-    });
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Consts.padding),
@@ -29,7 +21,6 @@ class CustomDialog extends StatelessWidget {
       elevation: 0.0,
       backgroundColor: Colors.transparent,
       child: dialogContent(context),
-      insetAnimationDuration: const Duration(milliseconds: 50),
     );
   }
 
@@ -63,7 +54,7 @@ class CustomDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min, // To make the card compact
             children: <Widget>[
-              Image.asset(image),
+              Image.asset(image,width: 70,height: 70,),
               SizedBox(
                 height: 16.0,
               ),
@@ -84,17 +75,7 @@ class CustomDialog extends StatelessWidget {
                   fontSize: 14.0,
                 ),
               ),
-              SizedBox(
-                height: 24.0,
-              ),
-              // Align(
-              //   alignment: Alignment.bottomRight,
-              //   child: CustomBottomButton(
-              //       titleCancel: 'Hủy',
-              //       titleSave: '',
-              //       cancelFunction: () => {Navigator.pop(context)},
-              //       saveFunction: () async {}),
-              // ),
+
             ],
           ),
         ),
@@ -103,14 +84,13 @@ class CustomDialog extends StatelessWidget {
   }
 }
 
-void showResult(BuildContext context, bool result) {
+void showResult(BuildContext context, bool result, String SuccessResult) {
   if (result) {
     showDialog(
       context: context,
       builder: (BuildContext context) => CustomDialog(
         title: "Thành công!",
-        description: "Bạn đã xóa thành viên thành công",
-        buttonText: "Nhấn để thoát",
+        description: SuccessResult,
         image: checked,
       ),
     );
@@ -120,7 +100,6 @@ void showResult(BuildContext context, bool result) {
       builder: (BuildContext context) => CustomDialog(
         title: "Thất bại",
         description: "Có lỗi xảy ra vui lòng thử lại sau",
-        buttonText: "Nhấn để thoát",
         image: unchecked,
       ),
     );

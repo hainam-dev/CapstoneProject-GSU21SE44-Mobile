@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mumbi_app/View/bottomNavBar_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Constant/colorTheme.dart';
@@ -40,8 +41,8 @@ class _MyApp extends State<MyApp> {
       if (message.data.length > 0) {
         flutterLocalNotificationsPlugin.show(
             message.data.hashCode,
-            message.data['Title'],
-            message.data['Body'],
+            message.data['title'],
+            message.data['text'],
             NotificationDetails(
               android: AndroidNotificationDetails(
                   channel.id, channel.name, channel.description,
@@ -53,8 +54,8 @@ class _MyApp extends State<MyApp> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text(message.data['Title']),
-                content: Text(message.data['Body']),
+                title: Text(message.data['title']),
+                content: Text(message.data['text']),
                 actions: [
                   TextButton(
                     child: Text("Ok"),
@@ -92,6 +93,14 @@ class _MyApp extends State<MyApp> {
         fontFamily: 'Lato',
         iconTheme: new IconThemeData(color: Colors.white, size: 24.0),
       ),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('vi', ''),
+      ],
       home: MainScreen(),
       routes: {
         '/LoginScreen': (context) => LoginScreen(),

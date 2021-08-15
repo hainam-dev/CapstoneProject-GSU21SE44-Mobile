@@ -3,9 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter/services.dart';
 import 'Constant/colorTheme.dart';
 import 'app.dart';
@@ -26,8 +24,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (message.data.length > 0) {
     await flutterLocalNotificationsPlugin.show(
         message.data.hashCode,
-        message.data['Title'],
-        message.data['Body'],
+        message.data['title'],
+        message.data['text'],
         NotificationDetails(
           android: AndroidNotificationDetails(
               channel.id, channel.name, channel.description,
@@ -53,7 +51,7 @@ Future<void> main() async {
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
+      AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -62,5 +60,5 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
   ]);
 
-  initializeDateFormatting().then((_) => runApp(ProviderScope(child: MyApp())));
+  runApp(MyApp());
 }

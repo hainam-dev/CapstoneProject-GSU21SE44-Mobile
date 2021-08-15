@@ -33,10 +33,8 @@ class _ListRemindScreenState extends State<ListRemindScreen> {
     SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: SizeConfig.blockSizeVertical * 6,
         title: CustomText(
           text: 'Nhắc nhở',
-          size: 20.0,
           color: Colors.white,
         ),
         actions: [

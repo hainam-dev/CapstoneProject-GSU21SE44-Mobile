@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/dateTime_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
@@ -28,8 +30,9 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: DateTime(2019, 8),
-        lastDate: DateTime(2050),
+        currentDate: DateTime.now(),
+        firstDate: DateTime.now().add(new Duration(days: 0)),
+        lastDate: DateTime.now().add(new Duration(days: PREGNANCY_DAY)),
         builder: (BuildContext context, Widget child) {
           return Theme(
             data: ThemeData(
@@ -66,10 +69,10 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.blockSizeVertical * 7.5,
-      width: SizeConfig.blockSizeHorizontal * 90,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 1,vertical: 6),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
             width: SizeConfig.blockSizeHorizontal * 60,
@@ -83,7 +86,7 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
                   controller: _dateController,
                   decoration: InputDecoration(
                     labelStyle:
-                        TextStyle(color: PINK_COLOR, fontWeight: FontWeight.w600),
+                        TextStyle(color: PINK_COLOR),
                     labelText: 'Ngày dự sinh (*)',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -102,8 +105,8 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
             width: 10,
           ),
           Container(
-            height: SizeConfig.blockSizeVertical * 7,
-            width: SizeConfig.blockSizeHorizontal * 27,
+            height: 50,
+            width: SizeConfig.blockSizeHorizontal * 30,
             child: RaisedButton(
               child: new Text(
                 "Tính ngày",
@@ -117,9 +120,7 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
               textColor: Colors.white,
               color: PINK_COLOR,
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CalculateDate()));
-                setState(() {});
+                _awaitReturnValueFromSecondScreen(context);
               },
               shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(15.0)),
@@ -129,4 +130,16 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
       ),
     );
   }
+
+  void _awaitReturnValueFromSecondScreen(BuildContext context) async {
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CalculateDate(),
+        ));
+    setState(() {
+      _dateController.text = result;
+    });
+  }
+
 }

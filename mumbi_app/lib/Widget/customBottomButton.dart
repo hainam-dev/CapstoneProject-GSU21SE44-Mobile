@@ -29,43 +29,54 @@ class _CustomBottomButtonState extends State<CustomBottomButton> {
   }
 
   Widget _getActionButtons(String titleCancel, String titleSave) => Container(
-        margin: EdgeInsets.fromLTRB(16, 0, 16, 23),
-        child: new Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            Flexible(
-              child: Container(
-                height: SizeConfig.blockSizeVertical * 7,
-                width: SizeConfig.blockSizeHorizontal * 35,
-                child: new FlatButton(
-                  child: new Text(titleCancel),
-                  textColor: PINK_COLOR,
-                  onPressed: widget.cancelFunction,
-                  shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(20.0),
-                      side:
-                          BorderSide(color: Color.fromRGBO(255, 240, 244, 1))),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            Flexible(
-              child: Container(
-                  height: SizeConfig.blockSizeVertical * 7,
-                  width: SizeConfig.blockSizeHorizontal * 65,
-                  child: new RaisedButton(
-                    child: new Text(titleSave),
-                    textColor: Colors.white,
-                    color: PINK_COLOR,
-                    onPressed: widget.saveFunction,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(15.0)),
-                  )),
-              flex: 2,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: LIGHT_GREY_COLOR,
+              spreadRadius: 5,
+              blurRadius: 10,
             ),
           ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 15),
+          child: new Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Flexible(
+                child: Container(
+                  height: 45,
+                  width: SizeConfig.blockSizeHorizontal * 35,
+                  child: new FlatButton(
+                    child: new Text(titleCancel,style: TextStyle(fontSize: 19,fontWeight: FontWeight.w600)),
+                    textColor: PINK_COLOR,
+                    color: WHITE_COLOR,
+                    onPressed: widget.cancelFunction,
+                    shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(25.0),side: BorderSide(color: PINK_COLOR)),
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              Flexible(
+                child: Container(
+                    height: 45,
+                    width: SizeConfig.blockSizeHorizontal * 65,
+                    child: new FlatButton(
+                      child: new Text(titleSave,style: TextStyle(fontSize: 19,fontWeight: FontWeight.w600),),
+                      textColor: Colors.white,
+                      color: PINK_COLOR,
+                      onPressed: widget.saveFunction,
+                      shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(25.0)),
+                    )),
+                flex: 2,
+              ),
+            ],
+          ),
         ),
       );
 }

@@ -16,7 +16,6 @@ class DateTimeConvert{
         return "$month tháng $dayOfMonth ngày tuổi";
       }
     }catch(e){
-      print(e);
       return "...";
     }
   }
@@ -28,7 +27,6 @@ class DateTimeConvert{
       num week = ((now.difference(dob).inDays / 7).floor());
       return week;
     }catch(e){
-      print(e);
       return 0;
     }
   }
@@ -46,25 +44,32 @@ class DateTimeConvert{
         return "$week tuần $dayOfWeek ngày tuổi";
       }
     }catch(e){
-      print(e);
       return "...";
     }
   }
 
 
   static num pregnancyWeek(String estimatedDoB) {
-    DateTime now = DateTime.now();
-    DateTime eDob = DateFormat("yyyy-MM-dd").parse(estimatedDoB.split('/').reversed.join("-"));
-    num week = (eDob.difference(now).inDays / 7).round();
-    return PREGNANCY_WEEK - week;
+    try{
+      DateTime now = DateTime.now();
+      DateTime eDob = DateFormat("yyyy-MM-dd").parse(estimatedDoB.split('/').reversed.join("-"));
+      num week = (eDob.difference(now).inDays / 7).round();
+      return PREGNANCY_WEEK - week;
+    }catch(e){
+      return 0;
+    }
   }
 
 
   static num dayUntil(String estimatedDoB) {
-    DateTime now = DateTime.now();
-    DateTime dob = DateFormat("yyyy-MM-dd").parse(estimatedDoB.split('/').reversed.join("-"));
-    String day = (dob.difference(now).inDays).toString();
-    return num.parse(day);
+    try{
+      DateTime now = DateTime.now();
+      DateTime dob = DateFormat("yyyy-MM-dd").parse(estimatedDoB.split('/').reversed.join("-"));
+      String day = (dob.difference(now).inDays).toString();
+      return num.parse(day);
+    }catch(e){
+      return 0;
+    }
   }
 
   static String getCurrentDay(){
@@ -89,6 +94,17 @@ class DateTimeConvert{
       case 'Sunday': return "Chủ nhật"; break;
       default: return "";
     }
+  }
+
+  static DateTime convertStringToDatetimeDMY(String value){
+    DateTime date = DateFormat('dd/MM/yyyy').parse(value);
+    return date;
+  }
+
+  static String convertDateTimeToStringDMY(DateTime value){
+    DateTime date = DateTime.parse(value.toString());
+    String date2 = "${date.day}/${date.month}/${date.year}";
+    return date2;
   }
 
   static String convertDatetimeDMY(String date){
@@ -119,7 +135,7 @@ class DateTimeConvert{
       return '${difference.inHours} giờ trước';
     } else if (difference.inMinutes >= 1) {
       return '${difference.inMinutes} phút trước';
-    } else if (difference.inSeconds == 3 || difference.inSeconds == 10 || difference.inSeconds == 30) {
+    } else if (difference.inSeconds >= 2) {
       return '${difference.inSeconds} giây trước';
     } else {
       return 'Vừa xong';

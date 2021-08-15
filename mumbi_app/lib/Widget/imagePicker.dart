@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
@@ -106,7 +107,7 @@ class _PickerImageState extends State<PickerImage> {
 
 
   Widget _buildChangeAvatar(BuildContext context) => Padding(
-        padding: EdgeInsets.only(top: 24.0, bottom: 26),
+        padding: EdgeInsets.only(top: 5, bottom: 10),
         child: new Center(
           child: GestureDetector(
             onTap: () {
@@ -182,7 +183,7 @@ class _PickerImageState extends State<PickerImage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          getImage != null ? Image.network(getImage) :
+                          getImage != null ? CachedNetworkImage(imageUrl: getImage) :
                           Icon(
                             Icons.camera_alt,
                             color: Colors.grey[800],

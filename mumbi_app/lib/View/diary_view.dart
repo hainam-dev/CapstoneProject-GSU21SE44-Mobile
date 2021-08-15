@@ -42,13 +42,13 @@ class _BabyDiaryState extends State<BabyDiary> {
             title: ScopedModel(
                 model: _childViewModel,
                 child: ScopedModelDescendant(builder: (BuildContext context, Widget child, ChildViewModel model) {
-                  return Text("Nhật ký của ${model.childModel.fullName}",maxLines: 1,overflow: TextOverflow.ellipsis,);
+                  return Text("Nhật ký của ${model.childModel != null ? model.childModel.fullName : "..."}");
                 },)),
           ),
           body: model.childDiaryListModel == null
               ? createEmptyDiary(context)
               : ListView.builder(
-            itemCount: model.childDiaryListModel.length,
+            itemCount: model.childDiaryListModel != null ? model.childDiaryListModel.length : 0,
             itemBuilder: (context, index) {
               DiaryModel diaryModel = model.childDiaryListModel[index];
               return createDiaryItem(context, diaryModel,onClick: () async{
@@ -64,7 +64,7 @@ class _BabyDiaryState extends State<BabyDiary> {
                   context, MaterialPageRoute(builder: (context) => AddBabyDiary()));
               await _diaryViewModel.getChildDiary(CurrentMember.id);
             },
-            label: Text('Thêm nhật ký'),
+            label: Text('Viết nhật ký'),
             icon: Image.asset(
               addDiary,
             ),

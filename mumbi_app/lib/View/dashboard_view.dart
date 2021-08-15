@@ -124,12 +124,12 @@ class _DashBoardState extends State<DashBoard> {
                 LIGHT_GREY_COLOR,
                 empty,
                 "Chưa có thông tin",
-                "Nhấp vào để thêm thông tin bé/thai kì.",
+                "Nhấp vào để thêm thông tin thai kì.",
                 0,
                 "",
                 onClick: ()async{
                   await Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => ChildrenInfo("", CREATE_STATE)));
+                      context, MaterialPageRoute(builder: (context) => ChildrenInfo("", CREATE_STATE,PREGNANCY_ENTRY)));
                 },)
                 : createListTileHome(
                 context,
@@ -142,8 +142,8 @@ class _DashBoardState extends State<DashBoard> {
                 PREGNANCY_ROLE,
                 onClick: ()async{
                   await Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => ChildrenInfo(pregnancyModel, UPDATE_STATE)));
-                  await _childViewModel.getChildByID(CurrentMember.id);
+                      context, MaterialPageRoute(builder: (context) => ChildrenInfo(pregnancyModel, UPDATE_STATE, PREGNANCY_ENTRY)));
+                  await _childViewModel.getChildByID(CurrentMember.pregnancyID);
                 },
             );
           },
@@ -168,7 +168,7 @@ class _DashBoardState extends State<DashBoard> {
               CHILD_ROLE,
               onClick: ()async{
                 await Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => ChildrenInfo(model.childModel, UPDATE_STATE)));
+                    context, MaterialPageRoute(builder: (context) => ChildrenInfo(model.childModel, UPDATE_STATE,CHILD_ENTRY)));
                 await _childViewModel.getChildByID(CurrentMember.id);
               },
           );
@@ -187,14 +187,14 @@ class _DashBoardState extends State<DashBoard> {
       child: Padding(
         padding: const EdgeInsets.all(2.0),
         child: Card(
-          elevation: 1.6,
+          elevation: 2,
           child: Scaffold(
             backgroundColor: WHITE_COLOR,
             body: SingleChildScrollView(
               physics: NeverScrollableScrollPhysics(),
               child: ClipRRect(
                   borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(6.0),),
+                      BorderRadius.vertical(top: Radius.circular(4.0),),
                   child: CachedNetworkImage(imageUrl: _imageURL)),
             ),
             bottomNavigationBar: Column(
@@ -216,11 +216,13 @@ class _DashBoardState extends State<DashBoard> {
                 ),
                 Row(
                   children: [
-                    Image(
-                      image: AssetImage(readIcon),
-                      height: 30,
-                      width: 30,
+                    SizedBox(width: 8,),
+                    Icon(
+                      Icons.auto_stories_outlined,
+                      color: GREY_COLOR,
+                      size: 20,
                     ),
+                    SizedBox(width: 5),
                     Text(
                       _estimatedTime + " phút đọc",
                       maxLines: 1,
@@ -316,9 +318,21 @@ class _DashBoardState extends State<DashBoard> {
             context, "Tiêm chủng", injection, InjectionSchedule()),
         createButtonTextImageLink(context, "Cộng đồng", community, Community()),
         createButtonTextImageLink(
-            context, "Mốc phát triển", developmentMilestone, BabyDevelopment()),
+            context, "Mốc phát triển", developmentMilestone, checkEntryBabyDevelopment()),
       ],
     );
+  }
+
+  Widget checkEntryBabyDevelopment(){
+    if(CurrentMember.role == MOM_ROLE){
+      if(CurrentMember.pregnancyFlag == true){
+        return BabyDevelopment();
+      }else{
+        return ChangeAccount(1);
+      }
+    }else{
+      return BabyDevelopment();
+    }
   }
 
   Widget GridViewNews() {

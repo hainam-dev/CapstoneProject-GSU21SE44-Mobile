@@ -81,7 +81,6 @@ class ChildViewModel extends Model {
   Future<bool> deleteChild(String childID) async {
     try {
       String data = await ChildRepository.apiDeleteChild(childID);
-      destroyInstance();
       return true;
     } catch (e) {
       print("error: " + e.toString());

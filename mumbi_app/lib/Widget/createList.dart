@@ -135,12 +135,11 @@ Widget createButtonTextImageLink(
     onTap: () {
       Navigator.push(context, MaterialPageRoute(builder: (context) => _screen));
     },
-    child: FlatButton(
-      shape: RoundedRectangleBorder(
+    child: Container(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
+        color: Colors.transparent,
       ),
-      // onPressed: () => {},
-      color: Colors.transparent,
       padding: EdgeInsets.all(10.0),
       child: Column(
         children: <Widget>[
@@ -295,8 +294,6 @@ Widget createListTileSelectedAccount(
           CurrentMember.role = role;
 
           ChangeAccountViewModel().destroyInstance();
-
-          await Future.delayed(Duration(seconds: 2));
           if(_num == 1){
             Navigator.pop(context);
           }else{
@@ -336,22 +333,25 @@ Widget createListTileUnselectedAccount(
 
 Widget createListTileNavigator(
     BuildContext context, String _imageName, String _text, Widget _screen) {
-  return Card(
-    elevation: 0,
-    margin: EdgeInsets.zero,
-    child: ListTile(
-      leading: Image(
-        image: AssetImage(_imageName),
-        height: SizeConfig.blockSizeVertical * 8,
-        width: SizeConfig.blockSizeHorizontal * 8,
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 1),
+    child: Card(
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      child: ListTile(
+        leading: Image(
+          image: AssetImage(_imageName),
+          height: SizeConfig.blockSizeVertical * 8,
+          width: SizeConfig.blockSizeHorizontal * 8,
+        ),
+        title: Text(_text),
+        trailing: Icon(Icons.arrow_forward_ios, size: 15),
+        onTap: () {
+          Navigator.of(context).pop();
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => _screen));
+        },
       ),
-      title: Text(_text),
-      trailing: Icon(Icons.arrow_forward_ios, size: 15),
-      onTap: () {
-        Navigator.of(context).pop();
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => _screen));
-      },
     ),
   );
 }
@@ -450,21 +450,22 @@ Widget createDiaryItem(BuildContext context, DiaryModel diaryModel,
       onClick();
     },
     child: Padding(
-      padding: const EdgeInsets.fromLTRB(10, 3, 10, 7),
+      padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
         elevation: 1,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if(diaryModel.imageURL != null)
-              Container(
-                color: BLACK_COLOR,
-                child: Center(
-                  child: CachedNetworkImage(imageUrl: diaryModel.imageURL),
-                ),
-              ),
+              ClipRRect(
+                  borderRadius:
+                  BorderRadius.all(Radius.circular(20.0)),
+                  child: CachedNetworkImage(imageUrl: diaryModel.imageURL)),
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -473,7 +474,7 @@ Widget createDiaryItem(BuildContext context, DiaryModel diaryModel,
                       Text(
                         DateTimeConvert.getDayOfWeek(diaryModel.createTime)
                             + DateTimeConvert.convertDatetimeFullFormat(diaryModel.createTime),
-                        style: TextStyle(color: LIGHT_DARK_GREY_COLOR,fontSize: 17,fontWeight: FontWeight.w600),),
+                        style: TextStyle(color: LIGHT_DARK_GREY_COLOR,fontSize: 18,fontWeight: FontWeight.w600),),
                       SizedBox(width: 3,),
 
                       if(diaryModel.publicFlag == true && diaryModel.approvedFlag == true
@@ -483,24 +484,24 @@ Widget createDiaryItem(BuildContext context, DiaryModel diaryModel,
                       SizedBox(width: 3,),
 
                       if(diaryModel.publicFlag == true && diaryModel.approvedFlag == true)
-                        Text("Đã chia sẻ",style: TextStyle(color: LIGHT_DARK_GREY_COLOR,),),
+                        Expanded(child: Text("Đã chia sẻ",style: TextStyle(color: LIGHT_DARK_GREY_COLOR,),)),
 
                       if(diaryModel.publicFlag == true && diaryModel.approvedFlag == false)
-                        Text("Đang chờ duyệt",style: TextStyle(color: LIGHT_DARK_GREY_COLOR,),)
+                        Expanded(child: Text("Đang chờ duyệt",style: TextStyle(color: LIGHT_DARK_GREY_COLOR,),))
                     ],
                   ),
-                  SizedBox(height: 8,),
+                  Divider(),
                   Text(
                     diaryModel.diaryContent,
                     maxLines: 5,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                        color: BLACK_COLOR,fontSize: 15
+                        color: BLACK_COLOR,fontSize: 16
                     ),
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

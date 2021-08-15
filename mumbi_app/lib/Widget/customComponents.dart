@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
@@ -213,11 +214,10 @@ Widget createFamilyCard(
     {Function onClick}) {
   return ConstrainedBox(
     constraints: BoxConstraints(
-      minHeight: 200,
-      minWidth: 200,
+      maxWidth: 230,
     ),
     child: Container(
-      height: SizeConfig.blockSizeVertical * 22,
+      height: 200,
       width: SizeConfig.blockSizeHorizontal * 50,
       child: Padding(
         padding: EdgeInsets.fromLTRB(15, 20, 15, 5),
@@ -227,6 +227,8 @@ Widget createFamilyCard(
           hoverElevation: 0,
           focusElevation: 0,
           highlightElevation: 0,
+            splashColor: TRANSPARENT_COLOR,
+            highlightColor: GREY_COLOR,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
           ),
@@ -355,6 +357,8 @@ Widget createButtonWhite(
     width: _width,
     height: 40,
     child: RaisedButton(
+      splashColor: TRANSPARENT_COLOR,
+      highlightColor: LIGHT_PINK_COLOR,
       onPressed: () => {
         Navigator.push(
           context,
@@ -376,38 +380,36 @@ Widget createButtonWhite(
 Widget createAddFamilyCard(
     BuildContext context, String _title, {Function onClick}) {
   return Container(
-    height: SizeConfig.blockSizeVertical * 22,
+    height: 200,
     width: SizeConfig.blockSizeHorizontal * 50,
     child: Padding(
       padding: EdgeInsets.fromLTRB(15, 20, 15, 5),
       child: RaisedButton(
         color: WHITE_COLOR,
-        elevation: 0,
-        hoverElevation: 0,
-        focusElevation: 0,
-        highlightElevation: 0,
+          elevation: 0,
+          hoverElevation: 0,
+          focusElevation: 0,
+          highlightElevation: 0,
+          splashColor: TRANSPARENT_COLOR,
+          highlightColor: GREY_COLOR,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
         ),
-        child: Container(
-          height: SizeConfig.safeBlockVertical * 16,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              CircleAvatar(
-                radius: 39,
-                backgroundColor: Colors.transparent,
-                backgroundImage: AssetImage(empty),
-              ),
-              Text(
-                _title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-              ),
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            CircleAvatar(
+              radius: 39,
+              backgroundColor: Colors.transparent,
+              backgroundImage: AssetImage(empty),
+            ),
+            Text(
+              _title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+            ),
+          ],
         ),
         onPressed: () {
           onClick();

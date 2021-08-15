@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/Widget/calendarBirthday.dart';
 
@@ -14,7 +17,10 @@ enum ListRadio { btn1, btn2 }
 
 class _CalculateDateState extends State<CalculateDate> {
   ListRadio _site = ListRadio.btn1;
-
+  DateTime FirstDayOfLastPeriod;
+  DateTime EstimatedBornDate;
+  String result;
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -22,166 +28,130 @@ class _CalculateDateState extends State<CalculateDate> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        toolbarHeight: SizeConfig.blockSizeVertical * 6,
         title: Text(
           'Tính ngày dự sinh',
           style: TextStyle(fontFamily: 'Lato', fontSize: 20),
         ),
       ),
-      body: Container(
-        height: SizeConfig.blockSizeVertical * 100,
-        width: SizeConfig.blockSizeHorizontal * 100,
+      body: Form(
+        key: formKey,
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildCalendarImage(),
-              Container(
-                height: SizeConfig.blockSizeVertical * 7,
-                width: SizeConfig.blockSizeHorizontal * 90,
-                child: Text(
-                  'Mẹ ơi! Hãy nhập những thông tin dưới đây để biết được ngày con chào đời nhé.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontFamily: 'Lato',
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              children: [
+                _buildCalendarImage(),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    'Mẹ ơi! Hãy nhập những thông tin dưới đây để biết được ngày con chào đời nhé.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 12.0,
-              ),
-              CalendarBirthday('Chọn ngày đầu tiên của kì kinh nguyệt cuối',""),
-              SizedBox(
-                height: 24.0,
-              ),
-              _typePeriod(),
-              SizedBox(
-                height: 24.0,
-              ),
-              _chooseRadioBtn(),
-              SizedBox(
-                height: 152.0,
-              ),
-              _btnSave()
-            ],
+                CalendarBirthday(FIRST_DAY_OF_LAST_PERIOD_FIELD,"",
+                  function: (value) {
+                    if (value.isEmpty) {
+                      return "Vui lòng chọn ngày đầu tiên của kì kinh nguyệt cuối";
+                    } else {
+                      setState(() {
+                        FirstDayOfLastPeriod = DateTimeConvert.convertStringToDatetimeDMY(value);
+                      });
+                    }
+                  },),
+                _chooseRadioBtn(),
+                if(_site == ListRadio.btn1)
+                  Text("(Con so có thể sinh sớm hơn con rạ 8 ngày)",style: TextStyle(fontStyle: FontStyle.italic),),
+              ],
+            ),
           ),
         ),
       ),
+      bottomNavigationBar: _btnSave(),
     );
   }
 
-  Widget _btnSave() => Container(
-        height: SizeConfig.blockSizeVertical * 7,
-        width: SizeConfig.blockSizeHorizontal * 60,
-        child: new RaisedButton(
-          child: new Text(
-            "Lưu thông tin",
-            style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w700,
-                fontFamily: 'Lato'),
-          ),
-          textColor: Colors.white,
-          color: PINK_COLOR,
-          onPressed: () {
-            setState(() {});
-          },
-          shape: new RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(15.0)),
+  Widget _btnSave() => GestureDetector(
+    onTap: (){
+      if (formKey.currentState.validate()) {
+        if(_site == ListRadio.btn1){
+          EstimatedBornDate = FirstDayOfLastPeriod.add(new Duration(days: PREGNANCY_DAY)).subtract(new Duration(days: 8));
+        }else{
+          EstimatedBornDate = FirstDayOfLastPeriod.add(new Duration(days: PREGNANCY_DAY));
+        }
+        result = DateTimeConvert.convertDateTimeToStringDMY(EstimatedBornDate);
+        Navigator.pop(context, result);
+      }
+    },
+    child: Container(
+      margin: EdgeInsets.symmetric(horizontal: 120,vertical: 20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+        color: PINK_COLOR,
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(15.0),
+        child: Text(
+          "Tính ngày",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: WHITE_COLOR,
+              fontSize: 20),
         ),
-      );
+      ),
+    ),
+  );
 
-  Widget _chooseRadioBtn() => Container(
-        height: SizeConfig.blockSizeVertical * 3,
-        width: SizeConfig.blockSizeHorizontal * 90,
+  Widget _chooseRadioBtn() => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: <Widget>[
+      GestureDetector(
+        onTap: (){
+          setState(() {
+            _site = ListRadio.btn1;
+          });
+        },
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            GestureDetector(
-              child: Container(
-                height: SizeConfig.blockSizeVertical * 5,
-                width: SizeConfig.blockSizeHorizontal * 45,
-                child: ListTile(
-                  title: const Text('Con so'),
-                  leading: Radio<ListRadio>(
-                    value: ListRadio.btn1,
-                    groupValue: _site,
-                    onChanged: (ListRadio value) {
-                      setState(() {
-                        _site = value;
-                      });
-                    },
-                  ),
-                ),
-              ),
+          children: [
+            Radio<ListRadio>(
+              value: ListRadio.btn1,
+              groupValue: _site,
+              onChanged: (ListRadio value) {
+                setState(() {
+                  _site = value;
+                });
+              },
             ),
-            GestureDetector(
-              child: Container(
-                height: SizeConfig.blockSizeVertical * 5,
-                width: SizeConfig.blockSizeHorizontal * 45,
-                child: ListTile(
-                  title: const Text('Con rạ'),
-                  leading: Radio<ListRadio>(
-                    value: ListRadio.btn2,
-                    groupValue: _site,
-                    onChanged: (ListRadio value) {
-                      setState(() {
-                        _site = value;
-                      });
-                    },
-                  ),
-                ),
-              ),
-            ),
+            Text('Con so'),
           ],
         ),
-      );
-
-  Widget _typePeriod() => Container(
-        height: SizeConfig.blockSizeVertical * 7,
-        width: SizeConfig.blockSizeHorizontal * 90,
-        child: TextFormField(
-          decoration: InputDecoration(
-            labelStyle: TextStyle(
-                color: PINK_COLOR, fontSize: 15.0, fontFamily: 'Lato'),
-            labelText: 'Độ dài chu kì kinh nguyệt',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                width: 1,
-              ),
+      ),
+      GestureDetector(
+        onTap: (){
+          setState(() {
+            _site = ListRadio.btn2;
+          });
+        },
+        child: Row(
+          children: [
+            Radio<ListRadio>(
+              value: ListRadio.btn2,
+              groupValue: _site,
+              onChanged: (ListRadio value) {
+                setState(() {
+                  _site = value;
+                });
+              },
             ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: PINK_COLOR, width: 1.0),
-            ),
-          ),
-          validator: (value) {
-            final pattern = r'^[0-9]{2}$';
-            final regExp = RegExp(pattern);
-            if (value.isEmpty) {
-              return 'Vui lòng nhập độ dài chu kì kinh nguyệt.';
-            } else if (!regExp.hasMatch(value)) {
-              return 'Chu kì kinh nguyệt không quá 100 ngày';
-            } else {
-              return null;
-            }
-          },
-          onSaved: (newValue) => {},
-          keyboardType: TextInputType.phone,
+            Text('Con rạ'),
+          ],
         ),
-      );
+      ),
+    ],
+  );
 
-  Widget _buildCalendarImage() => Padding(
-        padding: EdgeInsets.only(top: 32.0, bottom: 32.0),
-        child: new Container(
-          height: SizeConfig.blockSizeVertical * 20,
-          width: SizeConfig.blockSizeHorizontal * 50,
-          decoration: new BoxDecoration(
-            image: new DecorationImage(
-              image: new ExactAssetImage(iconCalendar),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-      );
+  Widget _buildCalendarImage() => SvgPicture.asset(iconCalendar,width: 200,height: 200,);
 }

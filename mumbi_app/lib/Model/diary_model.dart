@@ -47,11 +47,14 @@ class DiaryModel {
   }
 
   Map<String, dynamic> toJson() => {
+    'id': id,
     'childId': childId,
     'imageURL': imageURL,
     'diaryContent': diaryContent,
     'createdBy': createdByID,
     'lastModifiedBy': lastModifiedBy,
+    'publicDate': publicDate,
     'publicFlag': publicFlag,
+    'approvedFlag': approvedFlag,
   };
 }

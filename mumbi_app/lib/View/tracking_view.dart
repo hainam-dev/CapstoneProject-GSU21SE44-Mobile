@@ -11,6 +11,7 @@ import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/changeAccount_view.dart';
+import 'package:mumbi_app/View/childHistory_view.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/ViewModel/activity_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
@@ -77,8 +78,19 @@ class _TrackingState extends State<Tracking> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Theo dõi"),
-        actions: <Widget>[
-            ChangeAccountButton(context),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: IconButton(
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChildHistory(),));
+              },
+              icon: CircleAvatar(
+                  backgroundColor: WHITE_COLOR,
+                  child: Icon(Icons.history,size: 20,color: BLACK_COLOR,)
+              ),
+            ),
+          )
         ],
       ),
         drawer: getDrawer(context),
@@ -253,7 +265,7 @@ class _TrackingState extends State<Tracking> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           CurrentMember.pregnancyFlag == true
-              ? createFlatButton(context,'Bé đã ra đời',ChildrenInfo(childModel, UPDATE_STATE))
+              ? createFlatButton(context,'Bé đã ra đời',ChildrenInfo(childModel, UPDATE_STATE,CHILD_ENTRY))
               : Container(),
           Row(
             children: [
@@ -270,8 +282,8 @@ class _TrackingState extends State<Tracking> {
   Widget CalendarBody(){
     return TableCalendar(
       locale: 'vi',
-      firstDay: DateTime(2000),
-      lastDay: DateTime(2200),
+      firstDay: DateTime.now().subtract(new Duration(days: 30)),
+      lastDay: DateTime.now().add(new Duration(days: 30)),
       focusedDay: DateTime.now(),
       calendarFormat: CalendarFormat.week,
       startingDayOfWeek: StartingDayOfWeek.monday,
@@ -441,76 +453,6 @@ class _TrackingState extends State<Tracking> {
                   );
                 },);
             },)),);
-  }
-
-  Widget ChangeAccountButton(BuildContext context) {
-    return FlatButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ChangeAccount(2)));
-        },
-        child: Row(
-          children: [
-            MomAvatar(),
-            if (CurrentMember.role == CHILD_ROLE)
-              Row(
-                children: [
-                  Icon(
-                    Icons.all_inclusive,
-                    color: WHITE_COLOR,
-                    size: 19,
-                  ),
-                  ChildAvatar(),
-                ],
-              )
-          ],
-        ));
-  }
-
-  Widget MomAvatar() {
-    return ScopedModel(
-      model: _momViewModel,
-      child: ScopedModelDescendant(builder:
-          (BuildContext buildContext, Widget child, MomViewModel model) {
-        return model.momModel == null
-            ? CircleAvatar(
-          backgroundColor: Colors.white,
-          radius: 18,
-        )
-            : CircleAvatar(
-          backgroundColor: Colors.white,
-          radius: 18,
-          child: CircleAvatar(
-            radius: 17,
-            backgroundImage:
-            CachedNetworkImageProvider(model.momModel.imageURL),
-          ),
-        );
-      }),
-    );
-  }
-
-  Widget ChildAvatar() {
-    return ScopedModel(
-        model: ChildViewModel.getInstance(),
-        child: ScopedModelDescendant(
-          builder: (BuildContext context, Widget child, ChildViewModel model) {
-            return model.childModel == null
-                ? CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 18,
-            )
-                : CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 18,
-              child: CircleAvatar(
-                radius: 17,
-                backgroundImage:
-                CachedNetworkImageProvider(model.childModel.imageURL),
-              ),
-            );
-          },
-        ));
   }
 
   Widget Empty(String title){

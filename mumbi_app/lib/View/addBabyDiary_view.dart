@@ -3,11 +3,13 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/diary_model.dart';
+import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
 import 'package:mumbi_app/Widget/customFlushBar.dart';
+import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class AddBabyDiary extends StatefulWidget {
@@ -17,13 +19,16 @@ class AddBabyDiary extends StatefulWidget {
 
 class _AddBabyDiaryState extends State<AddBabyDiary> {
   DiaryModel diaryModel;
+  ChildViewModel childViewModel;
   bool postFlag;
   bool publicFlag = false;
 
   @override
   void initState() {
-    diaryModel = DiaryModel();
     super.initState();
+    diaryModel = DiaryModel();
+
+    childViewModel = ChildViewModel.getInstance();
   }
 
   @override
@@ -33,7 +38,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
         backgroundColor: WHITE_COLOR,
         appBar: AppBar(
           title: Text(
-            "Thêm nhật ký",
+            "Viết nhật ký",
           ),
           actions: [
             AddButton(),
@@ -42,7 +47,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              UserInfo(),
+              ChildInfo(),
               InputPostContent(),
             ],
           ),
@@ -66,12 +71,14 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
   }
 
   void handlePost() async {
+    showProgressDialogue(context);
     bool result = false;
     diaryModel.childId = CurrentMember.id;
     diaryModel.publicFlag = publicFlag;
     result = await DiaryViewModel().addDiary(diaryModel);
     Navigator.pop(context);
-    showResult(context, result);
+    Navigator.pop(context);
+    showResult(context, result, "Thêm nhật ký thành công");
   }
 
   Widget AddButton(){
@@ -102,15 +109,14 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
     );
   }
 
-  Widget UserInfo(){
+  Widget ChildInfo(){
     return ScopedModel(
-        model: MomViewModel.getInstance(),
+        model: childViewModel,
         child: ScopedModelDescendant(
           builder: (BuildContext context, Widget child,
-              MomViewModel model) {
-            model.getMomByID();
-            return createListTileDiaryPost(model.momModel.imageURL,
-                model.momModel.fullName, publicFlag);
+              ChildViewModel model) {
+            return createListTileDiaryPost(model.childModel.imageURL,
+                model.childModel.fullName, publicFlag);
           },
         ));
   }

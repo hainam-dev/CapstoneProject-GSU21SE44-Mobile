@@ -39,33 +39,34 @@ class _LoginScreenState extends State<LoginScreen> {
     );
     SizeConfig().init(context);
     return Scaffold(
-      body: Container(
-        height: SizeConfig.blockSizeVertical * 100,
-        width: SizeConfig.blockSizeHorizontal * 100,
-        decoration: new BoxDecoration(
-          image: new DecorationImage(
-            image: AssetImage(backgroundApp),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Stack(
-          children: [
-            Container(
-              margin: EdgeInsets.only(left: 32, right: 32, top: 84),
+      body: Column(
+        children: [
+          Container(
+            height: SizeConfig.blockSizeVertical * 100,
+            width: SizeConfig.blockSizeHorizontal * 100,
+            decoration: new BoxDecoration(
+              image: new DecorationImage(
+                image: AssetImage(backgroundApp),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Container(
+              margin: EdgeInsets.only(left: 32, right: 32,bottom: SizeConfig.blockSizeVertical * 20),
               height: SizeConfig.blockSizeVertical * 60,
               width: SizeConfig.blockSizeHorizontal * 90,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Image.asset(
                     logoApp,
-                    scale: 1.2,
+                    scale: 1,
                   ),
                   _btnLogin()
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -95,9 +96,10 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
 
-  Widget _btnLogin() => Container(
-        height: SizeConfig.safeBlockVertical * 20,
-        width: SizeConfig.safeBlockHorizontal * 100,
+  Widget _btnLogin() => Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -106,9 +108,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 _isLoading ? null : _loginGoogle();
               },
               new Text(
-                "Đăng nhập với google",
+                "Đăng nhập qua google",
                 style: TextStyle(
-                    fontSize: 15.0,
+                    fontSize: 17.0,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Lato'),
               ),
@@ -120,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Colors.white,
               Color.fromRGBO(79, 79, 79, 1),
             ),
-            Padding(
+            /*Padding(
               padding: const EdgeInsets.only(
                   left: 0.0, right: 0.0, top: 16.0, bottom: 0.0),
               child: _btnLoginStyle(
@@ -144,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Colors.black,
                 Color.fromRGBO(255, 255, 255, 1),
               ),
-            ),
+            ),*/
           ],
         ),
       );

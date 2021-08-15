@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/dateTime_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
@@ -26,19 +27,9 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: DateTime(2019, 8),
-        lastDate: DateTime(2100),
-        builder: (BuildContext context, Widget child) {
-          return Theme(
-            data: ThemeData(
-              primarySwatch: ColorTheme,
-              primaryColor: ColorTheme,
-              // Picked or select date color
-              accentColor: ColorTheme, // Picked or select date color
-            ),
-            child: child,
-          );
-        });
+        firstDate: getFirstDate(title),
+        lastDate: DateTime.now(),
+    );
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
@@ -48,6 +39,15 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
       prefs.setString('GetBirthday', _dateController.text);
     }
     widget.function;
+  }
+
+  DateTime getFirstDate(String title){
+    switch (title){
+      case PARENT_BIRTHDAY_FIELD : return DateTime.now().subtract(new Duration(days: MAX_BIRTHDAY_PARENT));
+      case CHILD_BIRTHDAY_FIELD : return DateTime.now().subtract(new Duration(days: MAX_BIRTHDAY_CHILD));
+      case FIRST_DAY_OF_LAST_PERIOD_FIELD: return DateTime.now().subtract(new Duration(days: PREGNANCY_DAY - 8));
+      default : return DateTime.now();
+    }
   }
 
   @override
@@ -66,25 +66,28 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
       child: GestureDetector(
         onTap: () => _selectDate(context),
         child: AbsorbPointer(
-          child: TextFormField(
-            onSaved: (val) {
-              _date.date = selectedDate;
-            },
-            controller: _dateController,
-            decoration: InputDecoration(
-              labelStyle: TextStyle(
-                  color: PINK_COLOR, fontWeight: FontWeight.w600, fontSize: 14.0),
-              labelText: title,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
-                  width: 1,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 1,vertical: 6),
+            child: TextFormField(
+              onSaved: (val) {
+                _date.date = selectedDate;
+              },
+              controller: _dateController,
+              decoration: InputDecoration(
+                labelStyle: TextStyle(
+                    color: PINK_COLOR),
+                labelText: title,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                    width: 1,
+                  ),
                 ),
+                suffixIcon: Icon(Icons.calendar_today),
               ),
-              suffixIcon: Icon(Icons.calendar_today),
+              validator:
+                widget.function
             ),
-            validator:
-              widget.function
           ),
         ),
       ),

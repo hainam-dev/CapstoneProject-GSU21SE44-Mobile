@@ -221,7 +221,7 @@ class _TeethDetailState extends State<TeethDetail> {
           }else{
 
           }
-          showResult(context, result);
+          showResult(context, result, "Cập nhật thông tin răng cho bé thành công");
           }
       ),
     );
