@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/saveKey.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
+import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/View/bottomNavBar_view.dart';
 import 'package:mumbi_app/View/dashboard_view.dart';
@@ -55,7 +56,7 @@ class _TeethTrackState extends State<TeethTrack> {
     listTeeth = getListTeeth();
 
     childViewModel = ChildViewModel.getInstance();
-    childViewModel.getChildByMom();
+    childViewModel.getChildByID(CurrentMember.id);
 
     toothViewModel = ToothViewModel.getInstance();
     toothViewModel.getAllToothByChildId();
@@ -98,12 +99,12 @@ class _TeethTrackState extends State<TeethTrack> {
                         model: childViewModel,
                         child: ScopedModelDescendant<ChildViewModel>(
                           builder: (context,child,modelChild){
-                            if(modelChild.childListModel == null){
+                            if(modelChild.childModel == null){
                               return loadingProgress();
                             }
-                            name = modelChild.childListModel[0].fullName;
-                            storage.write(key: childIdKey, value: modelChild.childListModel[0].id);
-                            return createListTile(modelChild.childListModel[0].imageURL, modelChild.childListModel[0].fullName);
+                            name = modelChild.childModel.fullName;
+                            storage.write(key: childIdKey, value: modelChild.childModel.id);
+                            return createListTile(modelChild.childModel.imageURL, modelChild.childModel.fullName);
                           },
                         )
                       )

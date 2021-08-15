@@ -63,12 +63,27 @@ class ActionViewModel extends Model {
         } else{
           listAlldynamic = jsonData['data'];
           print('listAlldynamic'+listAlldynamic.toString());
-          _listAllAction = listAlldynamic.map((e) => ActionModel.fromJson(e)).toList();
+          _listAllAction = listAlldynamic.map((e) => ActionModel.fromJsonAll(e)).toList();
+          print('_listAllAction'+ _listAllAction.toString());
         }
       } else _listAllAction = <ActionModel>[];
       notifyListeners();
     } catch(e){
       print("ERROR getActionIdByChild: " + e.toString());
+    }
+  }
+
+  Future<bool> upsertAction(ActionModel actionModel) async {
+    var childID = await storage.read(key: childIdKey);
+    actionModel.childID= childID;
+    try {
+      String data = await ActionRepository.apiUpdateActionIdByChild(actionModel);
+      print("Update thành công");
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print("error upsertAction: " + e.toString());
+      return false;
     }
   }
 }

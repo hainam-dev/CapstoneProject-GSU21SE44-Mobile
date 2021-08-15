@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/saveKey.dart';
+import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/standard_index_model.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
@@ -11,6 +12,8 @@ import 'package:mumbi_app/View/activityDetailBaby_update.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:mumbi_app/Widget/customBabyDevelopment.dart';
+import "package:normal/normal.dart";
+
 
 import '../main.dart';
 
@@ -32,11 +35,25 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
   StandardIndexViewModel standardIndexViewModel;
   List<StandardIndexModel> listStandard;
 
+
+
   @override
   void initState() {
+    double i = 3.2;
+
+     double x = (i - 3.2) / 2.8;
+     print("Giá tri");
+      // print(
+      //     "${x.toString().padLeft(4)} |${" " * (p * 40).round()}:${p.toStringAsFixed(4)}");
+
+
     super.initState();
     childViewModel = ChildViewModel.getInstance();
-    childViewModel.getChildByMom();
+    if(CurrentMember.pregnancyFlag == true){
+      childViewModel.getChildByID(CurrentMember.pregnancyID);
+    }else{
+      childViewModel.getChildByID(CurrentMember.id);
+    }
 
     standardIndexViewModel = StandardIndexViewModel.getInstance();
     standardIndexViewModel.getAllStandard();
@@ -93,7 +110,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                               child: ScopedModelDescendant(
                                 builder: (BuildContext context, Widget child,
                                     ChildViewModel modelChild) {
-                                  childModel = modelChild.childListModel[0];
+                                  childModel = modelChild.childModel;
                                   var childKey = storage.write(key: childIdKey, value: childModel.id);
                                   if (childModel == null) {
                                     return loadingProgress();
@@ -218,9 +235,6 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
             " ngày bé ra đời";
       }
     }
-
-
-
   }
 }
 

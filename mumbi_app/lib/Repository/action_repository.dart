@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:mumbi_app/Constant/common_api.dart';
 import 'package:http/http.dart' as http;
+import 'package:mumbi_app/Model/action_model.dart';
 
 
 class ActionRepository{
@@ -22,6 +25,19 @@ class ActionRepository{
         'Content-Type': 'application/json; charset=UTF-8'
       },
     );
+    if (response.statusCode == 200) {
+      return response.body;
+    }
+  }
+
+  static Future<dynamic> apiUpdateActionIdByChild(ActionModel actionModel) async {
+    var response = await http.post(
+        Uri.parse("${UPDATE_ACTION_ID_BY_CHILDID}${actionModel.childID}"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: jsonEncode(actionModel.toJsonActionChild()));
+    print('jsonEncode');
     if (response.statusCode == 200) {
       return response.body;
     }
