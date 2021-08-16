@@ -12,7 +12,6 @@ import 'package:mumbi_app/View/activityDetailBaby_update.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:mumbi_app/Widget/customBabyDevelopment.dart';
-import "package:normal/normal.dart";
 
 
 import '../main.dart';

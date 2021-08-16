@@ -6,65 +6,75 @@ import 'package:mumbi_app/Constant/common_message.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
+import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/Widget/customBottomButton.dart';
 import 'package:mumbi_app/Widget/customInputNumber.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class ChildInfoUpdate extends StatefulWidget {
-  final model;
-  ChildInfoUpdate(this.model) ;
-
-  @override
   _ChildInfoUpdateState createState() => _ChildInfoUpdateState();
 }
 
 class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
   final formKey = GlobalKey<FormState>();
+  ChildViewModel childViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    childViewModel = ChildViewModel.getInstance();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.keyboard_backspace),
-          onPressed: () => {
-            Navigator.pop(context)
-          },
-        ),
-        title: Text("Ngày ${DateTimeConvert.getCurrentDay()}"),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DisabledTextField(
-                  CurrentMember.pregnancyFlag == true ? 'Tuần thai' : "Tuần tuổi",
-                  CurrentMember.pregnancyFlag == true
-                      ? "Tuần ${DateTimeConvert.pregnancyWeek(widget.model.estimatedBornDate)}"
-                      : "Tuần ${DateTimeConvert.calculateChildWeekAge(widget.model.birthday)}",
+    return ScopedModel(
+      model: childViewModel,
+      child: ScopedModelDescendant(builder: (BuildContext context, Widget child, ChildViewModel model) {
+        return Scaffold(
+          extendBody: true,
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.keyboard_backspace),
+              onPressed: () => {
+                Navigator.pop(context)
+              },
+            ),
+            title: Text("Ngày ${DateTimeConvert.getCurrentDay()}"),
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    DisabledTextField(
+                      CurrentMember.pregnancyFlag == true ? 'Tuần thai' : "Tuần tuổi",
+                      CurrentMember.pregnancyFlag == true
+                          ? "Tuần ${DateTimeConvert.pregnancyWeek(model.childModel.estimatedBornDate)}"
+                          : "Tuần ${DateTimeConvert.calculateChildWeekAge(model.childModel.birthday)}",
+                    ),
+                    if(CurrentMember.pregnancyFlag == true)
+                      PregnancyInfo(),
+                    if(CurrentMember.pregnancyFlag == false)
+                      ChildInfo(),
+                  ],
                 ),
-                if(CurrentMember.pregnancyFlag == true)
-                PregnancyInfo(),
-                if(CurrentMember.pregnancyFlag == false)
-                ChildInfo(),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-      bottomNavigationBar: CustomBottomButton(
-          titleCancel: 'Hủy',
-          titleSave: 'Lưu thông tin',
-          cancelFunction: () => {Navigator.pop(context)},
-          saveFunction: () async {
-            if (formKey.currentState.validate()) {
+          bottomNavigationBar: CustomBottomButton(
+              titleCancel: 'Hủy',
+              titleSave: 'Lưu thông tin',
+              cancelFunction: () => {Navigator.pop(context)},
+              saveFunction: () async {
+                if (formKey.currentState.validate()) {
 
-            }
-          }),
+                }
+              }),
+        );
+      },),
     );
   }
 
@@ -105,9 +115,6 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
           DigitalNumber(
               CHILD_WEIGHT_FIELD,
             "",
-              onType: (){
-
-              }
           ),
           DigitalNumber(
             CHILD_HEIGHT_FIELD,

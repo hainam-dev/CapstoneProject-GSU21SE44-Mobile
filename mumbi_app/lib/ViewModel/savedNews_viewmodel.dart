@@ -42,7 +42,6 @@ class SavedNewsViewModel extends Model{
   Future<bool> unsavedNews(num id) async {
     try {
       String data = await SavedNewsRepository.apiUnsavedNews(id);
-      destroyInstance();
       return true;
     } catch (e) {
       print("error: " + e.toString());

@@ -8,6 +8,7 @@ import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/ViewModel/savedGuidebook_viewmodel.dart';
 import 'package:mumbi_app/Widget/customFlushBar.dart';
+import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class GuidebookDetail extends StatefulWidget {
@@ -92,18 +93,20 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
             return ListTile(
               leading: Icon(
                 SavedFlag == true
-                    ? Icons.bookmark_outline_rounded
-                    : Icons.bookmark,
+                    ? Icons.bookmark_remove_outlined
+                    : Icons.bookmark_add_outlined,
                 color: BLACK_COLOR,
               ),
               title: Text(SavedFlag == true ? 'Bỏ lưu bài viết' : "Lưu bài viết"),
               onTap: () async {
+                showProgressDialogue(context);
                 bool result = false;
                 if(SavedFlag == true){
                   result = await SavedGuidebookViewModel().unsavedGuidebook(SavedID);
                 }else{
                   result = await SavedGuidebookViewModel().saveGuidebook(widget.model.guidebookId);
                 }
+                Navigator.pop(context);
                 Navigator.pop(context);
                 if (result) {
                   getFlushBar(context, SavedFlag == true ? "Đã bỏ lưu bài viết" : "Đã lưu bài viết");
@@ -116,19 +119,16 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
         ));
   }
 
-  Widget Thumbnail(){
+  Widget Thumbnail() {
     return Center(
-      child: Container(
-        width: SizeConfig.blockSizeHorizontal * 100,
-        child: ConstrainedBox(
-          constraints: new BoxConstraints(
-            maxHeight: SizeConfig.blockSizeVertical * 45,
-          ),
-          child: Image(
-              image: CachedNetworkImageProvider(
-                widget.model.imageURL,
-              )),
+      child: ConstrainedBox(
+        constraints: new BoxConstraints(
+          maxHeight: 350,
         ),
+        child: Image(
+            image: CachedNetworkImageProvider(
+              widget.model.imageURL,
+            )),
       ),
     );
   }

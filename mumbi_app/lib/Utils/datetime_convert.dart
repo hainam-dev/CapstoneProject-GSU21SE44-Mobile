@@ -53,7 +53,7 @@ class DateTimeConvert{
     try{
       DateTime now = DateTime.now();
       DateTime eDob = DateFormat("yyyy-MM-dd").parse(estimatedDoB.split('/').reversed.join("-"));
-      num week = (eDob.difference(now).inDays / 7).round();
+      num week = (eDob.difference(now).inDays / 7).floor();
       return PREGNANCY_WEEK - week;
     }catch(e){
       return 0;

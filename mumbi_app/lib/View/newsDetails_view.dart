@@ -8,6 +8,7 @@ import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/ViewModel/savedNews_viewmodel.dart';
 import 'package:mumbi_app/Widget/customFlushBar.dart';
+import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class NewsDetail extends StatefulWidget {
@@ -95,14 +96,16 @@ class _NewsDetailState extends State<NewsDetail> {
                 color: BLACK_COLOR,
               ),
               title:
-                  Text(SavedFlag == true ? 'Bỏ lưu bài viết' : "Lưu bài viết"),
+              Text(SavedFlag == true ? 'Bỏ lưu bài viết' : "Lưu bài viết"),
               onTap: () async {
+                showProgressDialogue(context);
                 bool result = false;
                 if (SavedFlag == true) {
                   result = await SavedNewsViewModel().unsavedNews(SavedID);
                 } else {
                   result = await SavedNewsViewModel().saveNews(widget.model.newsId);
                 }
+                Navigator.pop(context);
                 Navigator.pop(context);
                 if (result) {
                   getFlushBar(
@@ -121,17 +124,14 @@ class _NewsDetailState extends State<NewsDetail> {
 
   Widget Thumbnail() {
     return Center(
-      child: Container(
-        width: SizeConfig.blockSizeHorizontal * 100,
-        child: ConstrainedBox(
-          constraints: new BoxConstraints(
-            maxHeight: SizeConfig.blockSizeVertical * 45,
-          ),
-          child: Image(
-              image: CachedNetworkImageProvider(
-            widget.model.imageURL,
-          )),
+      child: ConstrainedBox(
+        constraints: new BoxConstraints(
+          maxHeight: 350,
         ),
+        child: Image(
+            image: CachedNetworkImageProvider(
+              widget.model.imageURL,
+            )),
       ),
     );
   }

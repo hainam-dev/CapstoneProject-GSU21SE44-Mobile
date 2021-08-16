@@ -11,6 +11,7 @@ import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
+import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:readmore/readmore.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -85,12 +86,14 @@ class _CommunityState extends State<Community> {
                 onSelected: (value) async {
                   switch (value) {
                     case 'Bỏ chia sẻ cộng đồng':
+                      showProgressDialogue(context);
                       bool result = false;
                       diaryModel.publicDate = "1900-01-01T00:00:00.000";
                       diaryModel.publicFlag = false;
                       diaryModel.approvedFlag = false;
                       result = await DiaryViewModel().updateDiary(diaryModel);
                       await _communityViewModel.getPublicDiary();
+                      Navigator.pop(context);
                       showResult(context, result, "Bài viết đã được gỡ khỏi mục cộng đồng");
                       break;
                   }

@@ -339,7 +339,7 @@ class _TrackingState extends State<Tracking> {
                     : DateTimeConvert.calculateChildAge(childModel.birthday)
                 , style: BOLDWHITE_20,)
           ),
-          createButtonWhite(context, 'Cập nhật thông tin', 180, ChildInfoUpdate(childModel)),
+          createButtonWhite(context, 'Cập nhật thông tin', 180, ChildInfoUpdate()),
         ],
       ),
     );
