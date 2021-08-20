@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/saveKey.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
+import 'package:mumbi_app/Model/action_model.dart';
+import 'package:mumbi_app/Model/childHistory_model.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/standard_index_model.dart';
+import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
+import 'package:mumbi_app/ViewModel/action_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/childHistory_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/standardIndex_viewModel.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
@@ -26,23 +31,22 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
   String name = "", birthday = "", imageUrl = "", day = "", status = "";
   var curentBMI = null;
   var result;
-  Future<StandardIndexModel> futureStandard;
+  List<ChildDataModel> resultChildWeight = <ChildDataModel>[];
+  List<ChildDataModel> resultChildHeight = <ChildDataModel>[];
+  List<ChildDataModel> resultChildHead = <ChildDataModel>[];
 
   ChildModel childModel;
   ChildViewModel childViewModel;
   StandardIndexViewModel standardIndexViewModel;
-  List<StandardIndexModel> listStandard;
+  // List<ChildHistoryModel> listHisChild;
+
+  ChildHistoryViewModel childHistoryViewModel;
+  ActionViewModel actionViewModel;
 
   @override
   void initState() {
-    double i = 3.2;
-
-    double x = (i - 3.2) / 2.8;
-    print("Giá tri");
-    // print(
-    //     "${x.toString().padLeft(4)} |${" " * (p * 40).round()}:${p.toStringAsFixed(4)}");
-
     super.initState();
+
     childViewModel = ChildViewModel.getInstance();
     if (CurrentMember.pregnancyFlag == true) {
       childViewModel.getChildByID(CurrentMember.pregnancyID);
@@ -53,19 +57,14 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
     standardIndexViewModel = StandardIndexViewModel.getInstance();
     standardIndexViewModel.getAllStandard();
 
-    // double weight = childModel.weight = 60.0;
-    // double height = childModel.height = 1.53;
+    childHistoryViewModel = ChildHistoryViewModel.getInstance();
+    childHistoryViewModel.getListChildHistory();
+    // listHisChild = childHistoryViewModel.childListHistoryChild;
 
-    double weight = 60.0;
-    double height = 1.53;
-    num data = weight / (height * height);
-    curentBMI = data.floor();
-    if (curentBMI < 5) {
-      status = "Thiếu cân";
-    } else if (curentBMI >= 5 && curentBMI <= 95) {
-      status = "Bình thường";
-    } else
-      status = "Béo phì";
+    actionViewModel = ActionViewModel.getInstance();
+    actionViewModel.getActionByType("Thô");
+    actionViewModel.getAllActionByChildId();
+
     getChild();
   }
 
@@ -133,56 +132,94 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                     padding: EdgeInsets.only(top: 16, left: 16, right: 16),
                     color: Colors.white,
                     child: ScopedModel(
-                      model: standardIndexViewModel,
-                      child: ScopedModelDescendant<StandardIndexViewModel>(
-                        builder: (context, child, modelStand) {
-                          List<StandardIndexModel> list =
-                              modelStand.listStandIndex;
-                          List<String> listType = ["Weight", "Height", "Head"];
-                          list == null
-                              ? loadingProgress()
-                              : result = {
-                                  for (var type in listType)
-                                    type:
-                                        list.where((data) => data.type == type)
-                                };
-                          return Column(
-                            children: <Widget>[
-                              //Thể trạng của bé
-                              curentBMI == null || status == ""
-                                  ? loadingProgress()
-                                  : createBabyCondition(
-                                      context, curentBMI.toString(), status),
-                              result == null
-                                  ? loadingProgress()
-                                  : Container(
-                                      child: new Column(children: <Widget>[
-                                      new SizedBox(
-                                          height: 350.0,
-                                          child: StackedAreaLineChart
-                                              .withSampleData(
-                                                  "Cân nặng",
-                                                  "Bé nặng hơn 30% trẻ ",
-                                                  result["Weight"])),
-                                    ])),
-                              result == null
-                                  ? loadingProgress()
-                                  : new SizedBox(
-                                      height: 350.0,
-                                      child:
-                                          StackedAreaLineChart.withSampleData(
-                                              "Chiều cao",
-                                              "Bé cao hơn 30% trẻ ",
-                                              result["Height"])),
-                              result == null
-                                  ? loadingProgress()
-                                  : new SizedBox(
-                                      height: 350.0,
-                                      child: StackedAreaLineChart.withSampleData(
-                                          "Chu vi đầu",
-                                          "Bé có chu vi đầu lớn hơn 30% trẻ cùng lứa",
-                                          result["Head"])),
-                            ],
+                      model: childHistoryViewModel,
+                      child: ScopedModelDescendant(
+                        builder: (BuildContext context, Widget child,
+                            ChildHistoryViewModel modelChild) {
+                          if (modelChild.childListHistoryChild != null)
+                            modelChild.childListHistoryChild.forEach((e) => e
+                                    .date =
+                                DateTimeConvert.calculateChildMonth(e.date));
+                          curentBMI = DateTimeConvert.caculateBMI(
+                              modelChild.childListHistoryChild.first.weight,
+                              modelChild.childListHistoryChild.first.height);
+                          status = DateTimeConvert.caculateBMIdata(
+                              modelChild.childListHistoryChild.first.weight,
+                              modelChild.childListHistoryChild.first.height);
+                          for (var child in modelChild.childListHistoryChild) {
+                            if (child.date != null) {
+                              resultChildWeight.add(
+                                  new ChildDataModel(child.date, child.weight));
+                              resultChildHeight.add(
+                                  new ChildDataModel(child.date, child.height));
+                              resultChildHead.add(new ChildDataModel(
+                                  child.date, child.headCircumference));
+                            }
+                          }
+                          return ScopedModel<StandardIndexViewModel>(
+                            model: standardIndexViewModel,
+                            child:
+                                ScopedModelDescendant<StandardIndexViewModel>(
+                              builder: (context, child, modelStand) {
+                                List<StandardIndexModel> list =
+                                    modelStand.listStandIndex;
+                                List<String> listType = [
+                                  "Weight",
+                                  "Height",
+                                  "Head"
+                                ];
+                                list == null
+                                    ? loadingProgress()
+                                    : result = {
+                                        for (var type in listType)
+                                          type: list.where(
+                                              (data) => data.type == type)
+                                      };
+                                return Column(
+                                  children: <Widget>[
+                                    //Thể trạng của bé
+                                    curentBMI == null || status == ""
+                                        ? loadingProgress()
+                                        : createBabyCondition(context,
+                                            curentBMI.toString(), status),
+                                    result == null
+                                        ? loadingProgress()
+                                        : Container(
+                                            child:
+                                                new Column(children: <Widget>[
+                                            new SizedBox(
+                                                height: 350.0,
+                                                child: StackedAreaLineChart
+                                                    .withSampleData(
+                                                        "Cân nặng",
+                                                        "Bé nặng hơn 30% trẻ ",
+                                                        result["Weight"],
+                                                        resultChildWeight)),
+                                          ])),
+                                    result == null
+                                        ? loadingProgress()
+                                        : new SizedBox(
+                                            height: 350.0,
+                                            child: StackedAreaLineChart
+                                                .withSampleData(
+                                                    "Chiều cao",
+                                                    "Bé cao hơn 30% trẻ ",
+                                                    result["Height"],
+                                                    resultChildHeight)),
+                                    result == null
+                                        ? loadingProgress()
+                                        : new SizedBox(
+                                            height: 350.0,
+                                            child: StackedAreaLineChart
+                                                .withSampleData(
+                                                    "Chu vi đầu",
+                                                    "Bé có chu vi đầu lớn hơn 30% trẻ cùng lứa",
+                                                    result["Head"],
+                                                    resultChildHead)),
+                                  ],
+                                );
+                              },
+                            ),
                           );
                         },
                       ),
@@ -190,7 +227,51 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                   )
                 ],
               ),
-              DrawProgress()
+              Container(
+                  margin: EdgeInsets.only(top: 16),
+                  color: Colors.white,
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            'Mốc phát triển',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w700),
+                          )),
+                      Container(
+                          padding: EdgeInsets.only(top: 16),
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            'Bé của bạn đã có tiến bộ gì hơn chưa? ',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w400),
+                          )),
+                      ScopedModel<ActionViewModel>(
+                        model: actionViewModel,
+                        child: ScopedModelDescendant<ActionViewModel>(
+                          builder: (context, child, model) {
+                            List<ActionModel> listType = model.list;
+                            List<ActionModel> list = model.listAllAction;
+                            var result = {
+                              for (var month in list)
+                                month: listType
+                                    .where((data) => data.month == month)
+                            };
+                            double percent = result.length / listType.length;
+                            return createLinear(
+                                "Vận động thô", percent, Colors.green);
+                          },
+                        ),
+                      ),
+                      createLinear("Vận động tinh", 0.5, Colors.orange),
+                      Container(
+                          padding: EdgeInsets.only(top: 16),
+                          child: createFlatButton(context,
+                              'Cập nhật sự vận động của bé', ActivityDetail())),
+                    ],
+                  )),
             ],
           ),
         ),
@@ -210,34 +291,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
       birthday = childModel.birthday;
       imageUrl = childModel.imageURL;
 
-      DateTime dayCurrent = DateTime.parse(birthday.split('/').reversed.join());
-      Duration dur = DateTime.now().difference(dayCurrent);
-      double durInMoth = dur.inDays / 30;
-      double durInDay = dur.inDays / 30 - 12 * dur.inDays / 30 / 12;
-      int durDay = (DateTime.now().day - dayCurrent.day);
-      if (durDay < 0) durDay *= -1;
-      if (durInMoth < 12 && durInMoth >= 1) {
-        day = durInMoth.floor().toString() +
-            " tháng " +
-            durDay.toString() +
-            " ngày";
-      } else if (durInMoth > 12) {
-        day = (durInMoth / 12).floor().toString() +
-            " năm " +
-            durInDay.floor().toString() +
-            " tháng " +
-            durDay.toString() +
-            " ngày";
-      } else if (durInMoth > 0) {
-        day = durDay.toString() + " ngày";
-      } else if (durInMoth < 0) {
-        durInMoth *= -1;
-        day = "Còn " +
-            durInMoth.floor().toString() +
-            " tháng " +
-            durDay.toString().toString() +
-            " ngày bé ra đời";
-      }
+      day = DateTimeConvert.calculateChildBorn(birthday);
     }
   }
 }
@@ -264,7 +318,15 @@ class DrawProgress extends StatelessWidget {
                   'Bé của bạn đã có tiến bộ gì hơn chưa? ',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                 )),
-            createLinear("Vận động thô", 1, Colors.green),
+            ScopedModel(
+              model: ActionViewModel.getInstance(),
+              child: ScopedModelDescendant<ActionViewModel>(
+                builder: (context, child, model) {
+                  model.getAllActionByChildId();
+                  return createLinear("Vận động thô", 0.5, Colors.green);
+                },
+              ),
+            ),
             createLinear("Vận động tinh", 0.5, Colors.orange),
             Container(
                 padding: EdgeInsets.only(top: 16),

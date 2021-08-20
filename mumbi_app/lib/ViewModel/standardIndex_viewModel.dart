@@ -27,9 +27,7 @@ class StandardIndexViewModel extends Model {
   var gender;
 
   Future<StandardIndexModel> getAllStandard() async {
-    // setState();
     var gender = await storage.read(key: childGenderKey);
-    // print('gender'+gender.toString());
     try {
       var data = await StandardRespisotory.apiGetStandedIndexByGender(gender);
       if (data != null) {
@@ -38,28 +36,14 @@ class StandardIndexViewModel extends Model {
           _listStandIndex = null;
         else {
           listDynamic = jsonData['data'];
-          print('listDynamic' + listDynamic.toString());
           _listStandIndex =
               listDynamic.map((e) => StandardIndexModel.fromJson(e)).toList();
-          print('listStandIndex ' + listStandIndex[1].gender.toString());
         }
-        print("alo2");
-
         notifyListeners();
       } else
         _listStandIndex = null;
     } catch (e) {
       print("ERROR getAllStandard: " + e.toString());
     }
-  }
-
-  // Future<http.Response> getAllStandard() {
-  //   return http.get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
-  // }
-
-  void setState() {
-    storage.read(key: childGenderKey);
-    print("alo1");
-    notifyListeners();
   }
 }

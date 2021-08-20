@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:mumbi_app/Model/childHistory_model.dart';
 import 'package:mumbi_app/Model/standard_index_model.dart';
 import 'package:charts_flutter/src/text_style.dart' as style;
 import 'package:charts_flutter/src/text_element.dart' as TextElement;
@@ -16,11 +17,11 @@ class StackedAreaLineChart extends StatelessWidget {
       {this.animate});
 
   /// Creates a [LineChart] with sample data and no transition.
-  factory StackedAreaLineChart.withSampleData(
-      String name, String perscent, Iterable<StandardIndexModel> model) {
+  factory StackedAreaLineChart.withSampleData(String name, String perscent,
+      Iterable<StandardIndexModel> model, List<ChildDataModel> child) {
     return new StackedAreaLineChart(
       name, perscent,
-      _createSampleData(model),
+      _createSampleData(model, child),
       // Disable animations for image tests.
       animate: true,
     );
@@ -104,13 +105,14 @@ class StackedAreaLineChart extends StatelessWidget {
 
   /// Create one series with sample hard coded data.
   static List<charts.Series<LinearSales, int>> _createSampleData(
-      Iterable<StandardIndexModel> model) {
+      Iterable<StandardIndexModel> model, List<ChildDataModel> child) {
     // print(model.toString());
     // Iterable<StandardIndexModel> modelWeight = model['Weight'];
     // Iterable<StandardIndexModel> modelHeight = model['Height'];
     // Iterable<StandardIndexModel> modelHead = model['Head'];
     List<LinearSales> listLinearMax = <LinearSales>[];
     List<LinearSales> listLinearMin = <LinearSales>[];
+    List<LinearSales> listLinearBaby = <LinearSales>[];
     for (int i = 0; i <= model.length - 1; i++) {
       listLinearMax.add(
           LinearSales(model.elementAt(i).month, model.elementAt(i).maxValue));
@@ -118,18 +120,21 @@ class StackedAreaLineChart extends StatelessWidget {
       listLinearMin.add(
           LinearSales(model.elementAt(i).month, model.elementAt(i).minValue));
     }
+    for (int i = 0; i <= child.length - 1; i++) {
+      listLinearBaby.add(LinearSales(
+          int.tryParse(child.elementAt(i).month.toString()),
+          child.elementAt(i).data.toDouble()));
+    }
     final nguongTren = [
       for (int i = 0; i <= listLinearMax.length - 1; i++) listLinearMax[i]
     ];
 
     var nguongDuoi = [
-      for (int i = 0; i <= listLinearMax.length - 1; i++) listLinearMin[i]
+      for (int i = 0; i <= listLinearMin.length - 1; i++) listLinearMin[i]
     ];
 
     var dataBaby = [
-      new LinearSales(4, 3),
-      // new LinearSales(1, 2),
-      new LinearSales(10, 6),
+      for (int i = 0; i <= listLinearBaby.length - 1; i++) listLinearBaby[i]
     ];
 
     return [
