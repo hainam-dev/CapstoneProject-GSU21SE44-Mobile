@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:mumbi_app/Constant/saveKey.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/tooth_model.dart';
-import 'package:mumbi_app/Repository/teeth_repository.dart';
+import 'package:mumbi_app/Repository/tooth_repository.dart';
 import 'package:mumbi_app/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 

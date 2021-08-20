@@ -168,4 +168,116 @@ class DateTimeConvert{
     }
   }
 
+  static String calculateToothDate(DateTime birthday) {
+    String day;
+    try{
+      Duration dur = DateTime.now().difference(birthday);
+      double durInMoth = dur.inDays / 30;
+      double durInDay = dur.inDays / 30 - 12*dur.inDays / 30 / 12;
+      int durDay = (DateTime.now().day - birthday.day);
+      print('durDay'+durDay.toString());
+      if(durDay < 0)
+        durDay*=-1;
+      if(durInDay < 0)
+        durInDay*=-1;
+      if(durInMoth < 12 && durInMoth >= 1){
+        day = durInMoth.floor().toString()+" tháng " + durDay.toString() +" ngày";}
+      else if(durInMoth > 12){
+        day = (durInMoth/12).floor().toString()+" năm " + durInDay.floor().toString()+" tháng " + durDay.toString() +" ngày";
+      } else if(durInMoth >= 0){
+        day = dur.inDays.toString() +" ngày";
+      } else if(durInMoth < 0) day ="Ngày sai";
+      return day;
+    }catch(e){
+      return "...";
+    }
+  }
+
+  static String calculateChildBorn(String datetime) {
+    String dayResult;
+    try{
+      DateTime birthday = DateTime.parse(datetime
+          .split('/')
+          .reversed
+          .join());
+      Duration dur = DateTime.now().difference(birthday);
+      // print('dur'+dur.toString());
+      int durInDay = (dur.inDays / 30 - 12*dur.inDays / 30 / 12).floor();
+      int durInMonth = (dur.inDays / 30).floor();
+      // print('durInMonth'+durInMonth.toString());
+      int durInYear = (durInMonth/12).floor();
+      // print('durInYear'+durInYear.toString());
+      // print('durInDay'+durInDay.toString());
+
+      int durDay;
+      if(birthday.day >= DateTime.now().day)
+      durDay = (DateTime.now().day - birthday.day);
+      else durDay = birthday.day;
+      if(durDay < 0)
+        durDay*=-1;
+
+      int durMonth;
+      if(birthday.month >= DateTime.now().month)
+        durMonth = (DateTime.now().month - birthday.month);
+      else durMonth = birthday.month;
+      if(durDay < 0)
+        durDay*=-1;
+      String year = durInYear.toString();
+      String month = durInMonth.toString();
+      String monthInYear = durMonth.toString();
+      String day = durDay.toString();
+
+      if(durInMonth < 0)
+        dayResult ="Ngày sai";
+      else if(durInMonth >= 0 && durInMonth < 1) {
+        dayResult = dur.inDays.toString() + " ngày";
+      } else if(durInMonth < 12 && durInMonth >= 1){
+        dayResult = "$month tháng $day ngày";
+      } else if(durInYear >= 1 && durInMonth > 12){
+        dayResult = "$year tuổi $monthInYear tháng $day ngày";
+      } else if(durInYear >= 1 && durInMonth <= 12){
+        dayResult = "$year tuổi 0 tháng $day ngày";
+      }
+
+      return dayResult;
+    }catch(e){
+      return "...";
+    }
+  }
+
+  static String calculateChildMonth(String birthday) {
+    try{
+      DateTime now = DateTime.now();
+      DateTime dob = DateFormat("yyyy-MM-dd").parse(birthday.split('/').reversed.join("-"));
+      int month = ((now.difference(dob).inDays / 30).floor());
+      int dayOfMonth = (((((now.difference(dob).inDays / 30))
+          - (now.difference(dob).inDays / 30).floor()) * 30)).floor();
+      if(month == "0"){
+        return dayOfMonth.toString();
+      }else{
+        return month.toString();
+      }
+    }catch(e){
+      return null;
+    }
+  }
+  static String caculateBMI(num weight, num height){
+    String status;
+    num numBMI = weight/(height*height);
+    if (numBMI < 5) {
+      status = "Thiếu cân";
+
+    } else if (numBMI >= 5 && numBMI <= 95) {
+      status = "Bình thường";
+    } else
+      status = "Béo phì";
+    return status;
+  }
+
+  static String caculateBMIdata(num weight, num height){
+    num numBMI = weight/(height*height);
+    // print('numBMI'+numBMI.toString());
+    return numBMI.floor().toString();
+  }
+
 }

@@ -20,6 +20,7 @@ import 'dart:math';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:mumbi_app/Model/childHistory_model.dart';
 import 'package:mumbi_app/Model/standard_index_model.dart';
 import 'package:charts_flutter/src/text_style.dart' as style;
 import 'package:charts_flutter/src/text_element.dart' as TextElement;
@@ -38,9 +39,9 @@ class StackedAreaLineChart extends StatelessWidget {
   StackedAreaLineChart(this.nameChart, this.desciption,this.seriesList, {this.animate});
 
   /// Creates a [LineChart] with sample data and no transition.
-  factory StackedAreaLineChart.withSampleData(String name, String perscent, Iterable<StandardIndexModel> model) {
+  factory StackedAreaLineChart.withSampleData(String name, String perscent, Iterable<StandardIndexModel> model,List<ChildDataModel> child) {
     return new StackedAreaLineChart(name, perscent,
-      _createSampleData(model),
+      _createSampleData(model, child),
       // Disable animations for image tests.
       animate: true,
 
@@ -87,14 +88,14 @@ class StackedAreaLineChart extends StatelessWidget {
             behaviorPosition: charts.BehaviorPosition.top,
             titleOutsideJustification: charts.OutsideJustification.start,
             innerPadding: 18),
-            // chú thích
-            new charts.SeriesLegend(
-              position: charts.BehaviorPosition.bottom,
-              outsideJustification: charts.OutsideJustification.endDrawArea,
-              // desiredMaxRows: 2,
-              cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
-              entryTextStyle: charts.TextStyleSpec(fontSize: 11),
-            ),
+        // chú thích
+        new charts.SeriesLegend(
+          position: charts.BehaviorPosition.bottom,
+          outsideJustification: charts.OutsideJustification.endDrawArea,
+          // desiredMaxRows: 2,
+          cellPadding: new EdgeInsets.only(right: 4.0, bottom: 4.0),
+          entryTextStyle: charts.TextStyleSpec(fontSize: 11),
+        ),
         charts.SlidingViewport(),
         charts.PanAndZoomBehavior(),
         // charts.LinePointHighlighter()
@@ -129,7 +130,7 @@ class StackedAreaLineChart extends StatelessWidget {
 
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<LinearSales, int>> _createSampleData( Iterable<StandardIndexModel> model) {
+  static List<charts.Series<LinearSales, int>> _createSampleData( Iterable<StandardIndexModel> model, List<ChildDataModel> child) {
     // print(model.toString());
     // Iterable<StandardIndexModel> modelWeight = model['Weight'];
     // Iterable<StandardIndexModel> modelHeight = model['Height'];
@@ -142,20 +143,22 @@ class StackedAreaLineChart extends StatelessWidget {
       // print("Tháng"+ listLinearMax[i].month.toString()+ ", Max: "+ listLinearMax[i].sales.toString());
       listLinearMin.add(LinearSales(model.elementAt(i).month, model.elementAt(i).minValue));
     }
+    for( int i = 0; i <= child.length -1; i++){
+      listLinearBaby.add(LinearSales(int.tryParse(child.elementAt(i).month.toString()),child.elementAt(i).data.toDouble()));
+    }
     final nguongTren = [
       for( int i = 0; i <= listLinearMax.length -1; i++)
         listLinearMax[i]
     ];
 
     var nguongDuoi = [
-      for( int i = 0; i <= listLinearMax.length -1; i++)
+      for( int i = 0; i <= listLinearMin.length -1; i++)
         listLinearMin[i]
     ];
 
     var dataBaby = [
-      new LinearSales(4, 3),
-      // new LinearSales(1, 2),
-      new LinearSales(10, 6),
+      for( int i = 0; i <= listLinearBaby.length -1; i++)
+        listLinearBaby[i]
     ];
 
 
@@ -169,14 +172,14 @@ class StackedAreaLineChart extends StatelessWidget {
         data: nguongDuoi,
         displayName: 'Ngưỡng dưới',
       ),
-        new charts.Series<LinearSales, int>(
+      new charts.Series<LinearSales, int>(
         id: 'upperThreshold',
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
         // dashPatternFn: (LinearSales sales, _) => sales.dashPattern,
         domainFn: (LinearSales sales, _) => sales.month,
         measureFn: (LinearSales sales, _) => sales.sales,
         data: nguongTren,
-          displayName: 'Ngưỡng trên',
+        displayName: 'Ngưỡng trên',
       ),
 
       new charts.Series<LinearSales, int>(
@@ -216,7 +219,7 @@ class CustomCircleSymbolRenderer extends CircleSymbolRenderer {
 }
 
 /// Sample linear data type.
- class LinearSales {
+class LinearSales {
   final int month;
   final double sales;
   // final List<int> dashPattern;

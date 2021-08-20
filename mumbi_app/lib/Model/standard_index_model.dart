@@ -40,19 +40,3 @@ class StandardIndexModel {
     return data;
   }
 }
-
-class HeadModel extends StandardIndexModel{
-  double minValue;
-  double maxValue;
-  HeadModel({this.maxValue,this.minValue});
-}
-class WeightModel {
-  double minValue;
-  double maxValue;
-  WeightModel({this.maxValue,this.minValue});
-}
-// class HeadModel {
-//   double minValue;
-//   double maxValue;
-//   HeadModel({this.maxValue,this.minValue});
-// }
