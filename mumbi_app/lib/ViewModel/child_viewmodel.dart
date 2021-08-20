@@ -50,8 +50,8 @@ class ChildViewModel extends Model {
 
   Future<void> getChildByMom() async {
     if (_instance != null) {
-      String momID = await UserViewModel.getUserID();
       loadingChildListModel = true;
+      String momID = await UserViewModel.getUserID();
       try {
         String data = await ChildRepository.apiGetChildByMom(momID);
         Map<String, dynamic> jsonList = json.decode(data);

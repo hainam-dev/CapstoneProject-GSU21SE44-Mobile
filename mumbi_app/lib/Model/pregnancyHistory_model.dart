@@ -25,16 +25,16 @@ class PregnancyHistoryModel{
 
   factory PregnancyHistoryModel.fromJson(dynamic json){
     return PregnancyHistoryModel(
-      id: json['data']['id'],
-      childId: json['data']['childId'],
-      date: json['data']['date'],
-      pregnancyWeek: json['data']['pregnancyWeek'],
-      weight: json['data']['weight'],
-      biparietalDiameter: json['data']['biparietalDiameter'],
-      headCircumference: json['data']['headCircumference'],
-      femurLength: json['data']['femurLength'],
-      fetalHeartRate: json['data']['fetalHeartRate'],
-      motherWeight: json['data']['motherWeight'],
+      id: json['id'],
+      childId: json['childId'],
+      date: json['date'],
+      pregnancyWeek: json['pregnancyWeek'],
+      weight: json['weight'],
+      biparietalDiameter: json['biparietalDiameter'],
+      headCircumference: json['headCircumference'],
+      femurLength: json['femurLength'],
+      fetalHeartRate: json['fetalHeartRate'],
+      motherWeight: json['motherWeight'],
     );
   }
 

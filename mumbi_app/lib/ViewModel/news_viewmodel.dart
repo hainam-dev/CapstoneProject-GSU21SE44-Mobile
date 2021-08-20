@@ -20,9 +20,11 @@ class NewsViewModel extends Model {
   NewsModel newsModel;
 
   List<dynamic> newsList;
+  bool loadingNewsListModel;
   List<NewsModel> newsListModel;
 
   void getAllNews() async {
+    loadingNewsListModel = true;
     try {
       String data = await NewsRepository.apiGetAllNews();
       Map<String, dynamic> jsonList = json.decode(data);
@@ -30,6 +32,7 @@ class NewsViewModel extends Model {
       newsListModel = newsList.map((e) => NewsModel.fromJson(e)).toList();
       newsListModel.sort((a, b) => b.createTime.compareTo(a.createTime));
       notifyListeners();
+      loadingNewsListModel = false;
     } catch (e) {
       print("error: " + e.toString());
     }

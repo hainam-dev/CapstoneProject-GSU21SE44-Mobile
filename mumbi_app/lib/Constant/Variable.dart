@@ -21,9 +21,16 @@ const String FIRST_DAY_OF_LAST_PERIOD_FIELD =
 
 const String CHILD_WEIGHT_FIELD = "Cân nặng (kg)";
 const String CHILD_HEIGHT_FIELD = 'Chiều cao (cm)';
-const String CHILD_HEAD_CIRCUMFERENCE_FIELD = 'Đường kính vòng đầu (cm)';
+const String CHILD_HEAD_CIRCUMFERENCE_FIELD = 'Chu vi vòng đầu (cm)';
 const String CHILD_SLEEP_TIME_FIELD = 'Số giờ ngủ của bé';
 const String CHILD_MILK_FIELD = 'Số lượng sữa bé uống';
+
+const String PREGNANCY_MOTHER_WEIGHT_FIELD = 'Cân nặng của mẹ (kg)';
+const String PREGNANCY_WEIGHT_FIELD = 'Cân nặng thai nhi (kg)';
+const String PREGNANCY_HEAD_CIRCUMFERENCE_FIELD = 'Chu vi vòng đầu (cm)';
+const String PREGNANCY_FETAL_HEART_RATE_FIELD = 'Nhịp tim thai (lần/phút)';
+const String PREGNANCY_FEMUR_LENGTH_FIELD = 'Chiều dài xương đùi (mm)';
+const String PREGNANCY_BIPARIETAL_DIAMETER_FIELD = 'Đường kính lưỡng đỉnh (mm)';
 
 const String CHILD_ENTRY = "Bé";
 const String PREGNANCY_ENTRY = "Thai kì";

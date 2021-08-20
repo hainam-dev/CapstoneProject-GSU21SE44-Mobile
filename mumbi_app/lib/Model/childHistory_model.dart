@@ -22,15 +22,15 @@ class ChildHistoryModel{
 
   factory ChildHistoryModel.fromJson(dynamic json){
     return ChildHistoryModel(
-      id: json['data']['id'],
-      childId: json['data']['childId'],
-      weight: json['data']['weight'],
-      height: json['data']['height'],
-      headCircumference: json['data']['headCircumference'],
-      hourSleep: json['data']['hourSleep'],
-      avgMilk: json['data']['avgMilk'],
-      weekOlds: json['data']['weekOlds'],
-      date: json['data']['date'],
+      id: json['id'],
+      childId: json['childId'],
+      weight: json['weight'],
+      height: json['height'],
+      headCircumference: json['headCircumference'],
+      hourSleep: json['hourSleep'],
+      avgMilk: json['avgMilk'],
+      weekOlds: json['weekOlds'],
+      date: json['date'],
     );
   }
 

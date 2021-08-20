@@ -33,6 +33,8 @@ class ChildHistoryViewModel extends Model{
           if(date != ""){
             childHistoryModel = childHistoryListModel[0];
           }
+        }else{
+          childHistoryModel = null;
         }
         notifyListeners();
       }catch (e){

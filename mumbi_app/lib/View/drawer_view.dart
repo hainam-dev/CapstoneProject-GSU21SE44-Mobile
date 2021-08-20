@@ -44,7 +44,6 @@ Widget getDrawer(BuildContext context) {
             model: MomViewModel.getInstance(),
             child: ScopedModelDescendant(builder:
                 (BuildContext buildContext, Widget child, MomViewModel model) {
-              model.getMomByID();
               return model.momModel == null
                   ? loadingUserInfoListTile()
                   : Card(
