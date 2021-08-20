@@ -1,13 +1,9 @@
 import 'dart:convert';
-
 import 'package:mumbi_app/Model/news_model.dart';
-import 'package:mumbi_app/Model/savedNews_model.dart';
 import 'package:mumbi_app/Repository/news_repository.dart';
-import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class NewsViewModel extends Model{
-
+class NewsViewModel extends Model {
   static NewsViewModel _instance;
 
   static NewsViewModel getInstance() {
@@ -26,18 +22,16 @@ class NewsViewModel extends Model{
   List<dynamic> newsList;
   List<NewsModel> newsListModel;
 
-  void getAllNews() async{
-    try{
+  void getAllNews() async {
+    try {
       String data = await NewsRepository.apiGetAllNews();
       Map<String, dynamic> jsonList = json.decode(data);
       newsList = jsonList['data'];
       newsListModel = newsList.map((e) => NewsModel.fromJson(e)).toList();
-      newsListModel.sort((a,b) => b.createTime.compareTo(a.createTime));
+      newsListModel.sort((a, b) => b.createTime.compareTo(a.createTime));
       notifyListeners();
-    }catch(e){
+    } catch (e) {
       print("error: " + e.toString());
     }
   }
-
-
 }

@@ -6,7 +6,6 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/View/menuRemind.dart';
 import 'package:mumbi_app/View/parentInfo_view.dart';
 import 'package:mumbi_app/View/teethTrack_view.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
@@ -91,10 +90,20 @@ Widget getDrawer(BuildContext context) {
               context, myFamily, 'Gia đình của tôi', MyFamily()),
           /*createListTileNavigator(context, reminder, 'Nhắc nhở', MenuRemind()),*/
           createListTileNavigator(context, saved, 'Đã lưu', SavedPost(0)),
-          createListTileNavigator(context, babyDiary, 'Nhật ký của bé',
-              CurrentMember.role == CHILD_ROLE ? BabyDiary() : ChangeAccount(2)),
-          createListTileNavigator(context, teethGrow, 'Mọc răng',
-              CurrentMember.role == CHILD_ROLE ? TeethTrack() : ChangeAccount(2)),
+          createListTileNavigator(
+              context,
+              babyDiary,
+              'Nhật ký của bé',
+              CurrentMember.role == CHILD_ROLE
+                  ? BabyDiary()
+                  : ChangeAccount(2)),
+          createListTileNavigator(
+              context,
+              teethGrow,
+              'Mọc răng',
+              CurrentMember.role == CHILD_ROLE
+                  ? TeethTrack()
+                  : ChangeAccount(2)),
           createListTileNavigator(
               context, contact, 'Liên Hệ Hỗ Trợ', Contact()),
           SizedBox(

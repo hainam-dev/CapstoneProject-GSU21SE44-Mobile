@@ -6,11 +6,7 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/View/teethDetail_view.dart';
-import 'package:mumbi_app/View/teethProcess.dart';
-import 'package:mumbi_app/View/teethTrack_view.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
-import 'package:mumbi_app/Widget/splashScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import '../main.dart';
@@ -51,7 +47,10 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             child: Container(
-              margin: EdgeInsets.only(left: 32, right: 32,bottom: SizeConfig.blockSizeVertical * 20),
+              margin: EdgeInsets.only(
+                  left: 32,
+                  right: 32,
+                  bottom: SizeConfig.blockSizeVertical * 20),
               height: SizeConfig.blockSizeVertical * 60,
               width: SizeConfig.blockSizeHorizontal * 90,
               child: Column(
@@ -177,6 +176,6 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       // _showMsg(context, "Please sign in with FPT Education mail");
     }
-      _isLoading = false;
+    _isLoading = false;
   }
 }

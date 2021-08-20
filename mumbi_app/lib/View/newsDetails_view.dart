@@ -5,7 +5,6 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
 import 'package:mumbi_app/Model/savedNews_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
-import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/ViewModel/savedNews_viewmodel.dart';
 import 'package:mumbi_app/Widget/customFlushBar.dart';
 import 'package:mumbi_app/Widget/customProgressDialog.dart';
@@ -96,14 +95,15 @@ class _NewsDetailState extends State<NewsDetail> {
                 color: BLACK_COLOR,
               ),
               title:
-              Text(SavedFlag == true ? 'Bỏ lưu bài viết' : "Lưu bài viết"),
+                  Text(SavedFlag == true ? 'Bỏ lưu bài viết' : "Lưu bài viết"),
               onTap: () async {
                 showProgressDialogue(context);
                 bool result = false;
                 if (SavedFlag == true) {
                   result = await SavedNewsViewModel().unsavedNews(SavedID);
                 } else {
-                  result = await SavedNewsViewModel().saveNews(widget.model.newsId);
+                  result =
+                      await SavedNewsViewModel().saveNews(widget.model.newsId);
                 }
                 Navigator.pop(context);
                 Navigator.pop(context);
@@ -130,8 +130,8 @@ class _NewsDetailState extends State<NewsDetail> {
         ),
         child: Image(
             image: CachedNetworkImageProvider(
-              widget.model.imageURL,
-            )),
+          widget.model.imageURL,
+        )),
       ),
     );
   }

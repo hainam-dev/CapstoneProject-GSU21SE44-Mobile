@@ -6,31 +6,38 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Model/tooth_model.dart';
 import 'package:timeline_tile/timeline_tile.dart';
-class CustomTimeLine{
 
-}
-Widget firstTimeLineTile(ToothModel model){
+class CustomTimeLine {}
 
-
+Widget firstTimeLineTile(ToothModel model) {
   DateTime oDate = DateTime.tryParse(model.grownDate.toString());
-  String growTime = oDate.day.toString()+"/"+oDate.month.toString() +"\n"+ oDate.year.toString();
+  String growTime = oDate.day.toString() +
+      "/" +
+      oDate.month.toString() +
+      "\n" +
+      oDate.year.toString();
 
   String day;
   DateTime dayCurrent = model.grownDate;
   // DateTime dob = DateTime.parse("2022-07-10");
   Duration dur = DateTime.now().difference(model.grownDate);
-  double durInMoth = dur.inDays/30;
-  double durInDay = dur.inDays/30 - 12*dur.inDays/30/12;
+  double durInMoth = dur.inDays / 30;
+  double durInDay = dur.inDays / 30 - 12 * dur.inDays / 30 / 12;
   int durDay = (DateTime.now().day - dayCurrent.day);
-  if(durDay < 0)
-    durDay*=-1;
-  if(durInMoth < 12 && durInMoth >= 1){
-    day = durInMoth.floor().toString()+" tháng " + durDay.toString() +" ngày";}
-  else if(durInMoth > 12){
-    day = (durInMoth/12).floor().toString()+" năm " + durInDay.floor().toString()+" tháng " + durDay.toString() +" ngày";
-  } else if(durInMoth > 0){
-    day = dur.inDays.toString() +" ngày";
-  } else if(durInMoth < 0) day ="Ngày sai";
+  if (durDay < 0) durDay *= -1;
+  if (durInMoth < 12 && durInMoth >= 1) {
+    day =
+        durInMoth.floor().toString() + " tháng " + durDay.toString() + " ngày";
+  } else if (durInMoth > 12) {
+    day = (durInMoth / 12).floor().toString() +
+        " năm " +
+        durInDay.floor().toString() +
+        " tháng " +
+        durDay.toString() +
+        " ngày";
+  } else if (durInMoth >= 0) {
+    day = dur.inDays.toString() + " ngày";
+  } else if (durInMoth < 0) day = "Ngày sai";
 
   final str = model.toothName;
   final start = "(";
@@ -48,8 +55,6 @@ Widget firstTimeLineTile(ToothModel model){
   final secondIndex = str.indexOf(start, firstIndex + first.length);
   String nameTooth = str.substring(firstIndex + first.length, secondIndex);
 
-
-
   return TimelineTile(
     isFirst: true,
     // axis: TimelineAxis.horizontal,
@@ -58,77 +63,92 @@ Widget firstTimeLineTile(ToothModel model){
     startChild: Container(
       padding: EdgeInsets.only(top: 20, left: 16, right: 8),
       constraints: const BoxConstraints(
-        minHeight:80,
+        minHeight: 80,
       ),
-      child: Text(growTime, style: SEMIBOLD_18,),
+      child: Text(
+        growTime,
+        style: SEMIBOLD_18,
+      ),
       // color: PINK_COLOR,
     ),
     indicatorStyle: IndicatorStyle(
         width: 35,
-        height:35,
+        height: 35,
         color: PINK_COLOR,
         padding: const EdgeInsets.all(5),
         indicator: Container(
           decoration: BoxDecoration(
               // color: PINK_COLOR,
               border: Border.all(width: 1, color: PINK_COLOR),
-              borderRadius: BorderRadius.circular(10.0)
+              borderRadius: BorderRadius.circular(10.0)),
+          child: SvgPicture.asset(
+            ic_tooth_color,
+            width: 20,
+            height: 20,
           ),
-          child: SvgPicture.asset(ic_tooth_color, width: 20, height: 20,),
-        )
-    ),
+        )),
     // leftChild: Text('ahihi'),
     endChild: Container(
-      padding: EdgeInsets.only(top:20, left: 8),
+      padding: EdgeInsets.only(top: 20, left: 8),
       child: Column(
         children: <Widget>[
           Align(
               alignment: Alignment.topLeft,
-              child: Text(nameTooth,style: SEMIBOLD_16,textAlign: TextAlign.start)),
+              child: Text(nameTooth,
+                  style: SEMIBOLD_16, textAlign: TextAlign.start)),
           Row(
             children: <Widget>[
               Container(
                   padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: Colors.white
-                  ),
-                  child: Text(day, style: REG_13,)),
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: Text(
+                    day,
+                    style: REG_13,
+                  )),
               Container(
                   padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: Colors.white
-                  ),
-                  child: Text(indexTooth, style: REG_13,)),
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: Text(
+                    indexTooth,
+                    style: REG_13,
+                  )),
             ],
           )
         ],
       ),
-
     ),
   );
 }
 
-Widget customTimeLineTile(ToothModel model){
-
+Widget customTimeLineTile(ToothModel model) {
   DateTime oDate = DateTime.tryParse(model.grownDate.toString());
-  String growTime = oDate.day.toString()+"/"+oDate.month.toString() +"\n"+ oDate.year.toString();
+  String growTime = oDate.day.toString() +
+      "/" +
+      oDate.month.toString() +
+      "\n" +
+      oDate.year.toString();
 
   String day;
   DateTime dayCurrent = model.grownDate;
   // DateTime dob = DateTime.parse("2022-07-10");
   Duration dur = DateTime.now().difference(model.grownDate);
-  double durInMoth = dur.inDays/30;
-  double durInDay = dur.inDays/30 - 12*dur.inDays/30/12;
+  double durInMoth = dur.inDays / 30;
+  double durInDay = dur.inDays / 30 - 12 * dur.inDays / 30 / 12;
   int durDay = (DateTime.now().day - dayCurrent.day);
-  if(durDay < 0)
-    durDay*=-1;
-  if(durInMoth < 12 && durInMoth >= 1){
-    day = durInMoth.floor().toString()+" tháng " + durDay.toString() +" ngày";}
-  else if(durInMoth > 12){
-    day = (durInMoth/12).floor().toString()+" năm " + durInDay.floor().toString()+" tháng " + durDay.toString() +" ngày";
-  } else if(durInMoth > 0){
-    day = dur.inDays.toString() +" ngày";
-  } else if(durInMoth < 0) day ="Ngày sai";
+  if (durDay < 0) durDay *= -1;
+  if (durInMoth < 12 && durInMoth >= 1) {
+    day =
+        durInMoth.floor().toString() + " tháng " + durDay.toString() + " ngày";
+  } else if (durInMoth > 12) {
+    day = (durInMoth / 12).floor().toString() +
+        " năm " +
+        durInDay.floor().toString() +
+        " tháng " +
+        durDay.toString() +
+        " ngày";
+  } else if (durInMoth > 0) {
+    day = dur.inDays.toString() + " ngày";
+  } else if (durInMoth < 0) day = "Ngày sai";
 
   final str = model.toothName;
   final start = "(";
@@ -146,7 +166,6 @@ Widget customTimeLineTile(ToothModel model){
   final secondIndex = str.indexOf(start, firstIndex + first.length);
   String indexTooth = str.substring(firstIndex + first.length, secondIndex);
 
-
   return TimelineTile(
     // isFirst: true,
     // axis: TimelineAxis.horizontal,
@@ -155,76 +174,87 @@ Widget customTimeLineTile(ToothModel model){
     startChild: Container(
       padding: EdgeInsets.only(top: 20, left: 16, right: 8),
       constraints: const BoxConstraints(
-        minHeight:80,
+        minHeight: 80,
       ),
-      child: Text(growTime, style: SEMIBOLD_18,),
+      child: Text(
+        growTime,
+        style: SEMIBOLD_18,
+      ),
       // color: PINK_COLOR,
     ),
     indicatorStyle: IndicatorStyle(
         width: 35,
-        height:35,
+        height: 35,
         color: PINK_COLOR,
         padding: const EdgeInsets.all(5),
         indicator: Container(
           decoration: BoxDecoration(
-            // color: PINK_COLOR,
+              // color: PINK_COLOR,
               border: Border.all(width: 1, color: PINK_COLOR),
-              borderRadius: BorderRadius.circular(10.0)
-          ),
+              borderRadius: BorderRadius.circular(10.0)),
           child: SvgPicture.asset(ic_tooth_color),
-        )
-    ),
+        )),
     endChild: Container(
-      padding: EdgeInsets.only(top:20, left: 8),
+      padding: EdgeInsets.only(top: 20, left: 8),
       child: Column(
         children: <Widget>[
           Align(
               alignment: Alignment.topLeft,
-              child: Text(indexTooth,style: SEMIBOLD_16,textAlign: TextAlign.start)),
+              child: Text(indexTooth,
+                  style: SEMIBOLD_16, textAlign: TextAlign.start)),
           Row(
             children: <Widget>[
               Container(
                   padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: Colors.white
-                  ),
-                  child: Text(day, style: REG_13,)),
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: Text(
+                    growTime,
+                    style: REG_13,
+                  )),
               Container(
                   padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: Colors.white
-                  ),
-                  child: Text(nameTooth, style: REG_13,)),
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: Text(
+                    nameTooth,
+                    style: REG_13,
+                  )),
             ],
           )
         ],
       ),
-
     ),
   );
 }
 
-Widget lastTimeLineTile(ToothModel model){
-
+Widget lastTimeLineTile(ToothModel model) {
   DateTime oDate = DateTime.tryParse(model.grownDate.toString());
-  String growTime = oDate.day.toString()+"/"+oDate.month.toString() +"\n"+ oDate.year.toString();
+  String growTime = oDate.day.toString() +
+      "/" +
+      oDate.month.toString() +
+      "\n" +
+      oDate.year.toString();
 
   String day;
   DateTime dayCurrent = model.grownDate;
   // DateTime dob = DateTime.parse("2022-07-10");
   Duration dur = DateTime.now().difference(model.grownDate);
-  double durInMoth = dur.inDays/30;
-  double durInDay = dur.inDays/30 - 12*dur.inDays/30/12;
+  double durInMoth = dur.inDays / 30;
+  double durInDay = dur.inDays / 30 - 12 * dur.inDays / 30 / 12;
   int durDay = (DateTime.now().day - dayCurrent.day);
-  if(durDay < 0)
-    durDay*=-1;
-  if(durInMoth < 12 && durInMoth >= 1){
-    day = durInMoth.floor().toString()+" tháng " + durDay.toString() +" ngày";}
-  else if(durInMoth > 12){
-    day = (durInMoth/12).floor().toString()+" năm " + durInDay.floor().toString()+" tháng " + durDay.toString() +" ngày";
-  } else if(durInMoth > 0){
-    day = dur.inDays.toString() +" ngày";
-  } else if(durInMoth < 0) day ="Ngày sai";
+  if (durDay < 0) durDay *= -1;
+  if (durInMoth < 12 && durInMoth >= 1) {
+    day =
+        durInMoth.floor().toString() + " tháng " + durDay.toString() + " ngày";
+  } else if (durInMoth > 12) {
+    day = (durInMoth / 12).floor().toString() +
+        " năm " +
+        durInDay.floor().toString() +
+        " tháng " +
+        durDay.toString() +
+        " ngày";
+  } else if (durInMoth > 0) {
+    day = dur.inDays.toString() + " ngày";
+  } else if (durInMoth < 0) day = "Ngày sai";
 
   final str = model.toothName;
   final start = "(";
@@ -250,52 +280,55 @@ Widget lastTimeLineTile(ToothModel model){
     startChild: Container(
       padding: EdgeInsets.only(top: 20, left: 16, right: 8),
       constraints: const BoxConstraints(
-        minHeight:80,
+        minHeight: 80,
       ),
-      child: Text(growTime, style: SEMIBOLD_18,),
+      child: Text(
+        growTime,
+        style: SEMIBOLD_18,
+      ),
       // color: PINK_COLOR,
     ),
     indicatorStyle: IndicatorStyle(
         width: 35,
-        height:35,
+        height: 35,
         color: PINK_COLOR,
         padding: const EdgeInsets.all(5),
         indicator: Container(
           decoration: BoxDecoration(
-            // color: PINK_COLOR,
+              // color: PINK_COLOR,
               border: Border.all(width: 1, color: PINK_COLOR),
-              borderRadius: BorderRadius.circular(10.0)
-          ),
+              borderRadius: BorderRadius.circular(10.0)),
           child: SvgPicture.asset(ic_tooth_color),
-        )
-    ),
+        )),
     // leftChild: Text('ahihi'),
     endChild: Container(
-      padding: EdgeInsets.only(top:20, left: 8),
+      padding: EdgeInsets.only(top: 20, left: 8),
       child: Column(
         children: <Widget>[
           Align(
               alignment: Alignment.topLeft,
-              child: Text(indexTooth,style: SEMIBOLD_16,textAlign: TextAlign.start)),
+              child: Text(indexTooth,
+                  style: SEMIBOLD_16, textAlign: TextAlign.start)),
           Row(
             children: <Widget>[
               Container(
                   padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: Colors.white
-                  ),
-                  child: Text(day, style: REG_13,)),
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: Text(
+                    day,
+                    style: REG_13,
+                  )),
               Container(
                   padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                      color: Colors.white
-                  ),
-                  child: Text(nameTooth, style: REG_13,)),
+                  decoration: BoxDecoration(color: Colors.white),
+                  child: Text(
+                    nameTooth,
+                    style: REG_13,
+                  )),
             ],
           )
         ],
       ),
-
     ),
   );
 }

@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -105,27 +104,33 @@ Widget createListTileDetail(String name, String detail, String image) {
     ),
     child: ListTile(
       leading: ClipRRect(
-        borderRadius: BorderRadius.circular(65),
+          borderRadius: BorderRadius.circular(65),
           child: image.isNotEmpty
               ? Image.network(
-            image,
-            height: 50,
-            width: 50,
-            fit: BoxFit.cover,
-            )
-            : null
-        ),
-      subtitle:Text(detail, style: SEMIBOLD_14_6,),
-      title:  Text(name, style: SEMIBOLDPINK_16_6,),
+                  image,
+                  height: 50,
+                  width: 50,
+                  fit: BoxFit.cover,
+                )
+              : null),
+      subtitle: Text(
+        detail,
+        style: SEMIBOLD_14_6,
+      ),
+      title: Text(
+        name,
+        style: SEMIBOLDPINK_16_6,
+      ),
       onTap: () => {},
       // trailing: Icon(Icons.keyboard_arrow_down_outlined),
     ),
   );
 }
 
-Widget createListTileNext(BuildContext context, String day, String title, Widget screen) {
+Widget createListTileNext(
+    BuildContext context, String day, String title, Widget screen) {
   return GestureDetector(
-    onTap: (){
+    onTap: () {
       print("ahihi");
       Navigator.push(
         context,
@@ -141,7 +146,10 @@ Widget createListTileNext(BuildContext context, String day, String title, Widget
         leading: CircleAvatar(
             backgroundColor: Colors.grey, child: SvgPicture.asset(ic_needle)),
         subtitle: Text(day, style: BOLD_16),
-        title: Text(title, style: SEMIBOLD_16,),
+        title: Text(
+          title,
+          style: SEMIBOLD_16,
+        ),
         // onTap: () => {},
         trailing: Icon(Icons.navigate_next),
       ),
@@ -204,13 +212,8 @@ Widget createData(String name) {
   );
 }
 
-Widget createFamilyCard(
-    BuildContext context,
-    String _imageURL,
-    String _name,
-    Color _labelColor,
-    String _labelText,
-    Color _labelTextColor,
+Widget createFamilyCard(BuildContext context, String _imageURL, String _name,
+    Color _labelColor, String _labelText, Color _labelTextColor,
     {Function onClick}) {
   return ConstrainedBox(
     constraints: BoxConstraints(
@@ -222,68 +225,68 @@ Widget createFamilyCard(
       child: Padding(
         padding: EdgeInsets.fromLTRB(15, 20, 15, 5),
         child: RaisedButton(
-          color: WHITE_COLOR,
-          elevation: 0,
-          hoverElevation: 0,
-          focusElevation: 0,
-          highlightElevation: 0,
+            color: WHITE_COLOR,
+            elevation: 0,
+            hoverElevation: 0,
+            focusElevation: 0,
+            highlightElevation: 0,
             splashColor: TRANSPARENT_COLOR,
             highlightColor: GREY_COLOR,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Flexible(
-                child: Stack(
-                  children: [
-                    CircleAvatar(
-                        radius: 39,
-                        backgroundColor: PINK_COLOR,
-                        backgroundImage: CachedNetworkImageProvider(_imageURL)),
-                    Positioned(
-                      top: -2,
-                      right: -2,
-                      child: Container(
-                        child: SvgPicture.asset(
-                          editpencil,
-                          width: 25,
-                          height: 25,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Flexible(
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                          radius: 39,
+                          backgroundColor: PINK_COLOR,
+                          backgroundImage:
+                              CachedNetworkImageProvider(_imageURL)),
+                      Positioned(
+                        top: -2,
+                        right: -2,
+                        child: Container(
+                          child: SvgPicture.asset(
+                            editpencil,
+                            width: 25,
+                            height: 25,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                _name,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-              ),
-              Card(
-                elevation: 0,
-                color: _labelColor,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-                  child: Text(
-                    _labelText,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: _labelTextColor, fontWeight: FontWeight.w600),
+                    ],
                   ),
                 ),
-              )
-            ],
-          ),
-          onPressed:()  {
+                Text(
+                  _name,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                ),
+                Card(
+                  elevation: 0,
+                  color: _labelColor,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+                    child: Text(
+                      _labelText,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          color: _labelTextColor, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            onPressed: () {
               onClick();
-          }
-        ),
+            }),
       ),
     ),
   );
@@ -320,7 +323,7 @@ Widget createLinear(String _name, double _value, Color _color) {
     child: Row(
       children: <Widget>[
         Container(
-            width: SizeConfig.safeBlockHorizontal*30,
+            width: SizeConfig.safeBlockHorizontal * 30,
             child: Text(
               _name,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
@@ -328,7 +331,7 @@ Widget createLinear(String _name, double _value, Color _color) {
         Container(
           padding: EdgeInsets.only(left: 16),
           child: SizedBox(
-            width: SizeConfig.safeBlockHorizontal*40,
+            width: SizeConfig.safeBlockHorizontal * 40,
             child: LinearProgressIndicator(
               minHeight: 16,
               value: _value,
@@ -339,7 +342,7 @@ Widget createLinear(String _name, double _value, Color _color) {
           ),
         ),
         Container(
-          width: SizeConfig.safeBlockHorizontal*15,
+          width: SizeConfig.safeBlockHorizontal * 15,
           padding: EdgeInsets.only(left: 4),
           child: Text(
             (_value * 100).round().toString() + "%",
@@ -377,44 +380,43 @@ Widget createButtonWhite(
   );
 }
 
-Widget createAddFamilyCard(
-    BuildContext context, String _title, {Function onClick}) {
+Widget createAddFamilyCard(BuildContext context, String _title,
+    {Function onClick}) {
   return Container(
     height: 200,
     width: SizeConfig.blockSizeHorizontal * 50,
     child: Padding(
       padding: EdgeInsets.fromLTRB(15, 20, 15, 5),
       child: RaisedButton(
-        color: WHITE_COLOR,
+          color: WHITE_COLOR,
           elevation: 0,
           hoverElevation: 0,
           focusElevation: 0,
           highlightElevation: 0,
           splashColor: TRANSPARENT_COLOR,
           highlightColor: GREY_COLOR,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            CircleAvatar(
-              radius: 39,
-              backgroundColor: Colors.transparent,
-              backgroundImage: AssetImage(empty),
-            ),
-            Text(
-              _title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-            ),
-          ],
-        ),
-        onPressed: () {
-          onClick();
-        }
-      ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CircleAvatar(
+                radius: 39,
+                backgroundColor: Colors.transparent,
+                backgroundImage: AssetImage(empty),
+              ),
+              Text(
+                _title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+              ),
+            ],
+          ),
+          onPressed: () {
+            onClick();
+          }),
     ),
   );
 }
@@ -435,9 +437,8 @@ Widget getButtonUpload(BuildContext context) {
           // gap: 3,
           strokeWidth: 1,
           child: Center(
-              child: FlatButton(
             child: SvgPicture.asset(btn_plus),
-          )),
+          ),
         ),
       ),
     ),
@@ -455,8 +456,8 @@ Widget createTeeth(ToothInfoModel teethModel, bool choose, ontap) {
       child: Container(
         // color: Colors.blue,
         child: IconButton(
-          icon:
-              SvgPicture.asset(choose ? teethModel.iconChoose : teethModel.icon),
+          icon: SvgPicture.asset(
+              choose ? teethModel.iconChoose : teethModel.icon),
           onPressed: ontap,
         ),
       ),

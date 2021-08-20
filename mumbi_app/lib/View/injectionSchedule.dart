@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/View/bottomNavBar_view.dart';
@@ -7,7 +6,6 @@ import 'package:mumbi_app/Widget/customComponents.dart';
 import 'package:mumbi_app/View/vaccinePrice_compare.dart';
 import 'package:mumbi_app/View/injectiondetail_view.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'injectionUpdatePhone_view.dart';
 import 'injectionVaccinationLogin_view.dart';
 
 class InjectionSchedule extends StatefulWidget {
@@ -19,7 +17,6 @@ class InjectionSchedule extends StatefulWidget {
 
 class _InjectionScheduleState extends State<InjectionSchedule> {
   int _value1 = 1;
-  int _value2 = 1;
   String _chosenValue;
 
   @override

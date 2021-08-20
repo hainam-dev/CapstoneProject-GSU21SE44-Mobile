@@ -1,11 +1,7 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:mumbi_app/Constant/common_api.dart';
-import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/tooth_model.dart';
-import 'package:mumbi_app/View/childrenInfo_view.dart';
-import 'package:mumbi_app/ViewModel/tooth_viewmodel.dart';
 
 class ToothRepository {
   static Future<dynamic> apiGetToothInfoByToothId(int position) async {
@@ -47,9 +43,11 @@ class ToothRepository {
 
   static Future<dynamic> apiUpsertToothById(ToothModel toothModel) async {
     String toothId = await toothModel.toothId;
-    print("TOOTH VIEW MODEL:" + toothModel.toothId.toString() + toothModel.grownFlag.toString());
+    print("TOOTH VIEW MODEL:" +
+        toothModel.toothId.toString() +
+        toothModel.grownFlag.toString());
     dynamic jsonData = jsonEncode(toothModel.toJson());
-    print("JSONDATA: "+ jsonData);
+    print("JSONDATA: " + jsonData);
     var response = await http.post(
         Uri.parse("${UPSERT_TOOTH_BY_TOOTH_ID}${toothId}"),
         headers: <String, String>{
@@ -61,6 +59,5 @@ class ToothRepository {
     if (response.statusCode == 200) {
       return response.body;
     }
-
   }
 }

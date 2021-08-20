@@ -7,7 +7,6 @@ import 'package:mumbi_app/Repository/vaccination_respository.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
 import 'package:mumbi_app/View/phoneEmpty.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'injectionUpdatePhone_view.dart';
 
@@ -52,7 +51,6 @@ class _InectionVaccinationLoginState extends State<InectionVaccinationLogin> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     VaccinationRespository.getToken().then((value) {
       if (value != null && value.isNotEmpty) {

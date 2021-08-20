@@ -26,58 +26,62 @@ class ActionViewModel extends Model {
   List<ActionModel> _listActionType;
   List<ActionModel> _listAllAction;
 
-  List<ActionModel> get list =>_listActionType;
-  List<ActionModel> get listAllAction =>_listAllAction;
+  List<ActionModel> get list => _listActionType;
+  List<ActionModel> get listAllAction => _listAllAction;
 
-  Future<void> getActionByType(String type) async{
-    try{
+  Future<void> getActionByType(String type) async {
+    try {
       var data = await ActionRepository.apiGetActionByType(type);
-      print('data'+data);
-      if(data != null){
+      print('data' + data);
+      if (data != null) {
         Map<String, dynamic> jsonData = jsonDecode(data);
         // print("jsonData " +jsonData.toString());
-        if(jsonData['data'] == null){
+        if (jsonData['data'] == null) {
           _listActionType = <ActionModel>[];
-        } else{
+        } else {
           listdynamic = jsonData['data'];
-          _listActionType = listdynamic.map((e) => ActionModel.fromJson(e)).toList();
+          _listActionType =
+              listdynamic.map((e) => ActionModel.fromJson(e)).toList();
         }
-      } else _listActionType = <ActionModel>[];
+      } else
+        _listActionType = <ActionModel>[];
       notifyListeners();
-    } catch(e){
+    } catch (e) {
       print("ERROR getActionByType: " + e.toString());
     }
   }
 
-  Future<void> getAllActionByChildId() async{
-    try{
+  Future<void> getAllActionByChildId() async {
+    try {
       var childID = await storage.read(key: childIdKey);
-      print('childID'+childID.toString());
+      print('childID' + childID.toString());
       var data = await ActionRepository.apiGetAllActionIdByChild(childID);
-      print('data All'+data);
-      if(data != null){
+      print('data All' + data);
+      if (data != null) {
         Map<String, dynamic> jsonData = jsonDecode(data);
-        print("jsonData " +jsonData.toString());
-        if(jsonData['data'] == null){
+        print("jsonData " + jsonData.toString());
+        if (jsonData['data'] == null) {
           _listAllAction = <ActionModel>[];
-        } else{
+        } else {
           listAlldynamic = jsonData['data'];
-          print('listAlldynamic'+listAlldynamic.toString());
-          _listAllAction = listAlldynamic.map((e) => ActionModel.fromJsonAll(e)).toList();
-          print('_listAllAction'+ _listAllAction.toString());
+          print('listAlldynamic' + listAlldynamic.toString());
+          _listAllAction =
+              listAlldynamic.map((e) => ActionModel.fromJsonAll(e)).toList();
+          print('_listAllAction' + _listAllAction.toString());
         }
-      } else _listAllAction = <ActionModel>[];
+      } else
+        _listAllAction = <ActionModel>[];
       notifyListeners();
-    } catch(e){
+    } catch (e) {
       print("ERROR getActionIdByChild: " + e.toString());
     }
   }
 
   Future<bool> upsertAction(ActionModel actionModel) async {
-    var childID = await storage.read(key: childIdKey);
-    actionModel.childID= childID;
+    actionModel.childID = await storage.read(key: childIdKey);
     try {
-      String data = await ActionRepository.apiUpdateActionIdByChild(actionModel);
+      String data =
+          await ActionRepository.apiUpdateActionIdByChild(actionModel);
       print("Update thành công");
       notifyListeners();
       return true;

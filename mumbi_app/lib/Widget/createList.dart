@@ -52,32 +52,38 @@ Widget createListTileWithBlueTextTrailing(
   );
 }
 
-Widget createListTileDiaryPost(String _imageURL, String _name, bool publicFlag) {
+Widget createListTileDiaryPost(
+    String _imageURL, String _name, bool publicFlag) {
   return Card(
     elevation: 0,
     margin: EdgeInsets.zero,
     child: ListTile(
-      leading: CircleAvatar(
-        radius: 20,
-        backgroundColor: LIGHT_GREY_COLOR,
-        backgroundImage: CachedNetworkImageProvider(_imageURL),
-      ),
-      title: Text(_name,style: TextStyle(fontWeight: FontWeight.w600),),
-      subtitle: Row(
-        children: [
-          Text(DateTimeConvert.getCurrentDay(),style: TextStyle(color: LIGHT_DARK_GREY_COLOR),),
-          SizedBox(width: 2),
-          if(publicFlag == true)
-          Icon(
-            Icons.fiber_manual_record,
-            color: GREY_COLOR,
-            size: 6,
-          ),
-          SizedBox(width: 2),
-          if(publicFlag == true) Text("Cộng đồng: Đã bật"),
-        ],
-      )
-    ),
+        leading: CircleAvatar(
+          radius: 20,
+          backgroundColor: LIGHT_GREY_COLOR,
+          backgroundImage: CachedNetworkImageProvider(_imageURL),
+        ),
+        title: Text(
+          _name,
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+        subtitle: Row(
+          children: [
+            Text(
+              DateTimeConvert.getCurrentDay(),
+              style: TextStyle(color: LIGHT_DARK_GREY_COLOR),
+            ),
+            SizedBox(width: 2),
+            if (publicFlag == true)
+              Icon(
+                Icons.fiber_manual_record,
+                color: GREY_COLOR,
+                size: 6,
+              ),
+            SizedBox(width: 2),
+            if (publicFlag == true) Text("Cộng đồng: Đã bật"),
+          ],
+        )),
   );
 }
 
@@ -143,11 +149,14 @@ Widget createButtonTextImageLink(
       padding: EdgeInsets.all(10.0),
       child: Column(
         children: <Widget>[
-          Image(image: AssetImage(_image),filterQuality: FilterQuality.high,),
+          Image(
+            image: AssetImage(_image),
+            filterQuality: FilterQuality.high,
+          ),
           SizedBox(height: 8),
           Text(
             _text,
-            style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           )
         ],
       ),
@@ -156,7 +165,8 @@ Widget createButtonTextImageLink(
 }
 
 Widget createListTileHome(BuildContext context, Color _color, String _imageName,
-    String _text, String _subText, num day, String role, {Function onClick}) {
+    String _text, String _subText, num day, String role,
+    {Function onClick}) {
   return GestureDetector(
     onTap: () {
       onClick();
@@ -181,36 +191,35 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
                     _text,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0),
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0),
                   ),
                 ),
-
-                if(_subText != "")
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
-                  child: Text(
-                    _subText,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: GREY_COLOR, fontSize: 14.0),
+                if (_subText != "")
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: Text(
+                      _subText,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: GREY_COLOR, fontSize: 14.0),
+                    ),
                   ),
-                ),
-
-                if(role == PREGNANCY_ROLE)
-                LinearPercentIndicator(
-                  backgroundColor: WHITE_COLOR,
-                  width: SizeConfig.blockSizeHorizontal * 53,
-                  lineHeight: 7.0,
-                  percent: getOpposite(calculatePercent(PREGNANCY_DAY, day)),
-                  progressColor: PINK_COLOR,
-                ),
+                if (role == PREGNANCY_ROLE)
+                  LinearPercentIndicator(
+                    backgroundColor: WHITE_COLOR,
+                    width: SizeConfig.blockSizeHorizontal * 53,
+                    lineHeight: 7.0,
+                    percent: getOpposite(calculatePercent(PREGNANCY_DAY, day)),
+                    progressColor: PINK_COLOR,
+                  ),
 
                 /*Text(
                   "Tìm hiểu thêm",
@@ -225,7 +234,6 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
   );
 }
 
-
 item(
   Icon _icon,
   String _name,
@@ -239,8 +247,8 @@ item(
   );
 }
 
-Widget createListTileSelectedAccount(
-    BuildContext context, String _imageURL, String _title,String id, String pregnancyId ,String role, num _num) {
+Widget createListTileSelectedAccount(BuildContext context, String _imageURL,
+    String _title, String id, String pregnancyId, String role, num _num) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
     child: Card(
@@ -248,7 +256,8 @@ Widget createListTileSelectedAccount(
       margin: EdgeInsets.zero,
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: CurrentMember.id == id ? PINK_COLOR : Colors.transparent,
+          backgroundColor:
+              CurrentMember.id == id ? PINK_COLOR : Colors.transparent,
           radius: 23,
           child: CircleAvatar(
             radius: 22,
@@ -256,16 +265,14 @@ Widget createListTileSelectedAccount(
           ),
         ),
         title: Text(
-            _title,
+          _title,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
         subtitle: Row(
           children: [
-            Text(
-              role
-            ),
-            if(CurrentMember.id == id)
+            Text(role),
+            if (CurrentMember.id == id)
               Text(
                 " (Đang chọn)",
                 maxLines: 1,
@@ -275,18 +282,18 @@ Widget createListTileSelectedAccount(
           ],
         ),
         trailing: CurrentMember.id == id
-          ? Icon(
-          Icons.check,
-          size: 25,
-          color: PINK_COLOR,
-          )
-        :SizedBox.shrink(),
-        onTap: () async{
-          if(pregnancyId != ""){
+            ? Icon(
+                Icons.check,
+                size: 25,
+                color: PINK_COLOR,
+              )
+            : SizedBox.shrink(),
+        onTap: () async {
+          if (pregnancyId != "") {
             CurrentMember.pregnancyFlag = true;
             CurrentMember.pregnancyID = pregnancyId;
             CurrentMember.id = id;
-          }else{
+          } else {
             CurrentMember.pregnancyFlag = false;
             CurrentMember.pregnancyID = null;
             CurrentMember.id = id;
@@ -294,13 +301,17 @@ Widget createListTileSelectedAccount(
           CurrentMember.role = role;
 
           ChangeAccountViewModel().destroyInstance();
-          if(_num == 1){
+          if (_num == 1) {
             Navigator.pop(context);
-          }else{
+          } else {
             Navigator.pop(context);
             Navigator.pop(context);
           }
-          Navigator.push(context, MaterialPageRoute(builder: (context) => BotNavBar(),));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BotNavBar(),
+              ));
         },
       ),
     ),
@@ -311,23 +322,29 @@ Widget createListTileUnselectedAccount(
     BuildContext context, String _imageURL, String _title, String _subtitle) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-      child: Card(
-        color: LIGHT_GREY_COLOR,
-        elevation: 2,
-        margin: EdgeInsets.zero,
-        child: ListTile(
-          leading: CircleAvatar(
+    child: Card(
+      color: LIGHT_GREY_COLOR,
+      elevation: 2,
+      margin: EdgeInsets.zero,
+      child: ListTile(
+        leading: CircleAvatar(
+          radius: 22,
+          backgroundImage: CachedNetworkImageProvider(_imageURL),
+          child: CircleAvatar(
             radius: 22,
-            backgroundImage: CachedNetworkImageProvider(_imageURL),
-            child: CircleAvatar(
-              radius: 22,
-              backgroundColor: GREY_COLOR.withOpacity(0.4),
-            ),
+            backgroundColor: GREY_COLOR.withOpacity(0.4),
           ),
-          title: Text(_title, style: TextStyle(color: GREY_COLOR.withOpacity(0.8)),),
-          subtitle: Text(_subtitle, style: TextStyle(color: GREY_COLOR.withOpacity(0.8)),),
+        ),
+        title: Text(
+          _title,
+          style: TextStyle(color: GREY_COLOR.withOpacity(0.8)),
+        ),
+        subtitle: Text(
+          _subtitle,
+          style: TextStyle(color: GREY_COLOR.withOpacity(0.8)),
         ),
       ),
+    ),
   );
 }
 
@@ -417,7 +434,9 @@ Widget createEmptyDiary(BuildContext context) {
               ),
             ),
           ),
-          SizedBox(height: 8,),
+          SizedBox(
+            height: 8,
+          ),
           Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
@@ -459,11 +478,6 @@ Widget createDiaryItem(BuildContext context, DiaryModel diaryModel,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if(diaryModel.imageURL != null)
-              ClipRRect(
-                  borderRadius:
-                  BorderRadius.all(Radius.circular(20.0)),
-                  child: CachedNetworkImage(imageUrl: diaryModel.imageURL)),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -472,22 +486,47 @@ Widget createDiaryItem(BuildContext context, DiaryModel diaryModel,
                   Row(
                     children: [
                       Text(
-                        DateTimeConvert.getDayOfWeek(diaryModel.createTime)
-                            + DateTimeConvert.convertDatetimeFullFormat(diaryModel.createTime),
-                        style: TextStyle(color: LIGHT_DARK_GREY_COLOR,fontSize: 18,fontWeight: FontWeight.w600),),
-                      SizedBox(width: 3,),
-
-                      if(diaryModel.publicFlag == true && diaryModel.approvedFlag == true
-                      || diaryModel.publicFlag == true && diaryModel.approvedFlag == false)
-                        Icon(Icons.fiber_manual_record,color: LIGHT_DARK_GREY_COLOR,size: 5,),
-
-                      SizedBox(width: 3,),
-
-                      if(diaryModel.publicFlag == true && diaryModel.approvedFlag == true)
-                        Expanded(child: Text("Đã chia sẻ",style: TextStyle(color: LIGHT_DARK_GREY_COLOR,),)),
-
-                      if(diaryModel.publicFlag == true && diaryModel.approvedFlag == false)
-                        Expanded(child: Text("Đang chờ duyệt",style: TextStyle(color: LIGHT_DARK_GREY_COLOR,),))
+                        DateTimeConvert.getDayOfWeek(diaryModel.createTime) +
+                            DateTimeConvert.convertDatetimeFullFormat(
+                                diaryModel.createTime),
+                        style: TextStyle(
+                            color: LIGHT_DARK_GREY_COLOR,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(
+                        width: 3,
+                      ),
+                      if (diaryModel.publicFlag == true &&
+                              diaryModel.approvedFlag == true ||
+                          diaryModel.publicFlag == true &&
+                              diaryModel.approvedFlag == false)
+                        Icon(
+                          Icons.fiber_manual_record,
+                          color: LIGHT_DARK_GREY_COLOR,
+                          size: 5,
+                        ),
+                      SizedBox(
+                        width: 3,
+                      ),
+                      if (diaryModel.publicFlag == true &&
+                          diaryModel.approvedFlag == true)
+                        Expanded(
+                            child: Text(
+                          "Đã chia sẻ",
+                          style: TextStyle(
+                            color: LIGHT_DARK_GREY_COLOR,
+                          ),
+                        )),
+                      if (diaryModel.publicFlag == true &&
+                          diaryModel.approvedFlag == false)
+                        Expanded(
+                            child: Text(
+                          "Đang chờ duyệt",
+                          style: TextStyle(
+                            color: LIGHT_DARK_GREY_COLOR,
+                          ),
+                        ))
                     ],
                   ),
                   Divider(),
@@ -495,13 +534,17 @@ Widget createDiaryItem(BuildContext context, DiaryModel diaryModel,
                     diaryModel.diaryContent,
                     maxLines: 5,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        color: BLACK_COLOR,fontSize: 16
-                    ),
+                    style: TextStyle(color: BLACK_COLOR, fontSize: 16),
                   ),
                 ],
               ),
             ),
+            if (diaryModel.imageURL != null && diaryModel.imageURL != "")
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                child: CachedNetworkImage(
+                    imageUrl: diaryModel.imageURL.split(";").first),
+              ),
           ],
         ),
       ),

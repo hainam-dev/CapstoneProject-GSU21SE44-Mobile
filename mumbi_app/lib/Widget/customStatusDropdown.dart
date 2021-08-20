@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/View/childrenInfo_view.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'customText.dart';
 
 class CustomStatusDropdown extends StatefulWidget {
   final title;
@@ -31,7 +26,7 @@ class _CustomStatusDropdownState extends State<CustomStatusDropdown> {
 
   Widget _buildStatus(String title, List<DropdownMenuItem> listItems) =>
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 1,vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 6),
         child: DropdownButtonFormField<String>(
           value: widget.status,
           decoration: InputDecoration(

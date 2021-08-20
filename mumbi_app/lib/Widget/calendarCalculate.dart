@@ -14,7 +14,8 @@ class CalendarCalculate extends StatefulWidget {
   const CalendarCalculate(this.estimatedDate, {this.function});
 
   @override
-  _CalendarCalculateState createState() => _CalendarCalculateState(this.estimatedDate);
+  _CalendarCalculateState createState() =>
+      _CalendarCalculateState(this.estimatedDate);
 }
 
 class _CalendarCalculateState extends State<CalendarCalculate> {
@@ -44,7 +45,7 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
             child: child,
           );
         });
-    if (picked != null && picked != selectedDate){
+    if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
         var date =
@@ -59,9 +60,9 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
 
   @override
   void initState() {
-    if(widget.estimatedDate != ""){
+    if (widget.estimatedDate != "") {
       _dateController.text = estimatedDate;
-    }else{
+    } else {
       _dateController.text = "";
     }
     super.initState();
@@ -70,7 +71,7 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 1,vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -80,24 +81,21 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
               onTap: () => _selectDate(context),
               child: AbsorbPointer(
                 child: TextFormField(
-                  onSaved: (val) {
-                    _date.date = selectedDate;
-                  },
-                  controller: _dateController,
-                  decoration: InputDecoration(
-                    labelStyle:
-                        TextStyle(color: PINK_COLOR),
-                    labelText: 'Ngày dự sinh (*)',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(
-                        width: 1,
+                    onSaved: (val) {
+                      _date.date = selectedDate;
+                    },
+                    controller: _dateController,
+                    decoration: InputDecoration(
+                      labelStyle: TextStyle(color: PINK_COLOR),
+                      labelText: 'Ngày dự sinh (*)',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          width: 1,
+                        ),
                       ),
                     ),
-                  ),
-                    validator:
-                    widget.function
-                ),
+                    validator: widget.function),
               ),
             ),
           ),
@@ -106,13 +104,13 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
           ),
           Container(
             height: 50,
-            width: SizeConfig.blockSizeHorizontal * 30,
+            width: SizeConfig.blockSizeHorizontal * 28,
             child: RaisedButton(
               child: new Text(
                 "Tính ngày",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 15.0,
                   fontWeight: FontWeight.w700,
                   fontFamily: 'Lato',
                 ),
@@ -141,5 +139,4 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
       _dateController.text = result;
     });
   }
-
 }

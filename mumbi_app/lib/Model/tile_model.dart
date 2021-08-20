@@ -1,12 +1,9 @@
-import 'package:mumbi_app/Model/playlist_model.dart';
-
-class TileModel{
+class TileModel {
   String icon;
   String title;
 }
 
-class MutiplePlayListModel{
+class MutiplePlayListModel {
   TileModel tileModel;
- // List<PlayListModel> playlistModel;
+  // List<PlayListModel> playlistModel;
 }
-

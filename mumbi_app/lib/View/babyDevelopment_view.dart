@@ -13,7 +13,6 @@ import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:mumbi_app/Widget/customBabyDevelopment.dart';
 
-
 import '../main.dart';
 
 class BabyDevelopment extends StatefulWidget {
@@ -34,23 +33,20 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
   StandardIndexViewModel standardIndexViewModel;
   List<StandardIndexModel> listStandard;
 
-
-
   @override
   void initState() {
     double i = 3.2;
 
-     double x = (i - 3.2) / 2.8;
-     print("Giá tri");
-      // print(
-      //     "${x.toString().padLeft(4)} |${" " * (p * 40).round()}:${p.toStringAsFixed(4)}");
-
+    double x = (i - 3.2) / 2.8;
+    print("Giá tri");
+    // print(
+    //     "${x.toString().padLeft(4)} |${" " * (p * 40).round()}:${p.toStringAsFixed(4)}");
 
     super.initState();
     childViewModel = ChildViewModel.getInstance();
-    if(CurrentMember.pregnancyFlag == true){
+    if (CurrentMember.pregnancyFlag == true) {
       childViewModel.getChildByID(CurrentMember.pregnancyID);
-    }else{
+    } else {
       childViewModel.getChildByID(CurrentMember.id);
     }
 
@@ -62,7 +58,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
 
     double weight = 60.0;
     double height = 1.53;
-    num data= weight/(height*height);
+    num data = weight / (height * height);
     curentBMI = data.floor();
     if (curentBMI < 5) {
       status = "Thiếu cân";
@@ -75,14 +71,12 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    //
     super.dispose();
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Theo dõi bé'),
@@ -110,7 +104,8 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                                 builder: (BuildContext context, Widget child,
                                     ChildViewModel modelChild) {
                                   childModel = modelChild.childModel;
-                                  var childKey = storage.write(key: childIdKey, value: childModel.id);
+                                  storage.write(
+                                      key: childIdKey, value: childModel.id);
                                   if (childModel == null) {
                                     return loadingProgress();
                                   }
@@ -141,41 +136,52 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                       model: standardIndexViewModel,
                       child: ScopedModelDescendant<StandardIndexViewModel>(
                         builder: (context, child, modelStand) {
-                          List<StandardIndexModel> list = modelStand.listStandIndex;
+                          List<StandardIndexModel> list =
+                              modelStand.listStandIndex;
                           List<String> listType = ["Weight", "Height", "Head"];
                           list == null
-                          ? loadingProgress()
-                          : result = { for (var type in listType) type: list.where((data) => data.type == type) };
+                              ? loadingProgress()
+                              : result = {
+                                  for (var type in listType)
+                                    type:
+                                        list.where((data) => data.type == type)
+                                };
                           return Column(
                             children: <Widget>[
-
                               //Thể trạng của bé
                               curentBMI == null || status == ""
                                   ? loadingProgress()
-                                  : createBabyCondition(context,
-                                      curentBMI.toString(), status),
+                                  : createBabyCondition(
+                                      context, curentBMI.toString(), status),
                               result == null
                                   ? loadingProgress()
                                   : Container(
-                                  child: new Column(children: <Widget>[
-                                  new SizedBox(
-                                    height: 350.0,
-                                    child: StackedAreaLineChart.withSampleData(
-                                        "Cân nặng", "Bé nặng hơn 30% trẻ ",result["Weight"])),
-                              ])),
+                                      child: new Column(children: <Widget>[
+                                      new SizedBox(
+                                          height: 350.0,
+                                          child: StackedAreaLineChart
+                                              .withSampleData(
+                                                  "Cân nặng",
+                                                  "Bé nặng hơn 30% trẻ ",
+                                                  result["Weight"])),
+                                    ])),
                               result == null
                                   ? loadingProgress()
                                   : new SizedBox(
-                                  height: 350.0,
-                                  child: StackedAreaLineChart.withSampleData(
-                                      "Chiều cao", "Bé cao hơn 30% trẻ ", result["Height"])),
+                                      height: 350.0,
+                                      child:
+                                          StackedAreaLineChart.withSampleData(
+                                              "Chiều cao",
+                                              "Bé cao hơn 30% trẻ ",
+                                              result["Height"])),
                               result == null
                                   ? loadingProgress()
                                   : new SizedBox(
-                                  height: 350.0,
-                                  child: StackedAreaLineChart.withSampleData(
-                                      "Chu vi đầu",
-                                      "Bé có chu vi đầu lớn hơn 30% trẻ cùng lứa",  result["Head"])),
+                                      height: 350.0,
+                                      child: StackedAreaLineChart.withSampleData(
+                                          "Chu vi đầu",
+                                          "Bé có chu vi đầu lớn hơn 30% trẻ cùng lứa",
+                                          result["Head"])),
                             ],
                           );
                         },
@@ -196,24 +202,20 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
     if (imageUrl == null) {
       imageUrl = "";
     }
-    if(childModel != null) {
+    if (childModel != null) {
       if (childModel.gender != null)
-        var childGender = await storage.write(
+        await storage.write(
             key: childGenderKey, value: childModel.gender.toString());
       name = childModel.fullName;
       birthday = childModel.birthday;
       imageUrl = childModel.imageURL;
 
-      DateTime dayCurrent = DateTime.parse(birthday
-          .split('/')
-          .reversed
-          .join());
+      DateTime dayCurrent = DateTime.parse(birthday.split('/').reversed.join());
       Duration dur = DateTime.now().difference(dayCurrent);
       double durInMoth = dur.inDays / 30;
       double durInDay = dur.inDays / 30 - 12 * dur.inDays / 30 / 12;
       int durDay = (DateTime.now().day - dayCurrent.day);
-      if(durDay < 0)
-        durDay*=-1;
+      if (durDay < 0) durDay *= -1;
       if (durInMoth < 12 && durInMoth >= 1) {
         day = durInMoth.floor().toString() +
             " tháng " +
@@ -221,8 +223,11 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
             " ngày";
       } else if (durInMoth > 12) {
         day = (durInMoth / 12).floor().toString() +
-            " năm " + durInDay.floor().toString() +
-            " tháng " + durDay.toString() + " ngày";
+            " năm " +
+            durInDay.floor().toString() +
+            " tháng " +
+            durDay.toString() +
+            " ngày";
       } else if (durInMoth > 0) {
         day = durDay.toString() + " ngày";
       } else if (durInMoth < 0) {

@@ -37,7 +37,8 @@ class LoginViewModel extends Model {
         print("idToken: " + token);
         print("fcmToken: " + fcmToken);
         response = await _loginRepository.callAPILoginGoogle(token, fcmToken);
-        if (response != null) {/*
+        if (response != null) {
+          /*
           UserModel userModel = UserModel.fromJson(jsonDecode(response));
           print(userModel.data.id);
           print(userModel.data.email);
@@ -65,20 +66,19 @@ class LoginViewModel extends Model {
     ]);
   }
 
-  Future<bool> isSignedIn() async {
-    try {
-      final user = await _firebaseAuth.currentUser;
-      if (user != null) {
-        return true;
-      }
-    } catch (e) {
-      print(e);
-      return false;
-    }
-  }
+  // Future<bool> isSignedIn() async {
+  //   try {
+  //     final user = await _firebaseAuth.currentUser;
+  //     if (user != null) {
+  //       return true;
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //     return false;
+  //   }
+  // }
 
   Future<String> getUser() async {
     return (await _firebaseAuth.currentUser).email;
   }
-
 }

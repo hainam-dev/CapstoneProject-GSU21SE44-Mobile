@@ -5,7 +5,6 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
 import 'package:mumbi_app/Model/savedGuidebook_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
-import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/ViewModel/savedGuidebook_viewmodel.dart';
 import 'package:mumbi_app/Widget/customFlushBar.dart';
 import 'package:mumbi_app/Widget/customProgressDialog.dart';
@@ -21,7 +20,6 @@ class GuidebookDetail extends StatefulWidget {
 }
 
 class _GuidebookDetailState extends State<GuidebookDetail> {
-
   bool SavedFlag;
   num SavedID;
 
@@ -48,7 +46,7 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
         ));
   }
 
-  Widget MoreButton(){
+  Widget MoreButton() {
     return Padding(
         padding: EdgeInsets.only(right: 20.0),
         child: GestureDetector(
@@ -72,18 +70,19 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
         });
   }
 
-  Widget SaveFunction(){
+  Widget SaveFunction() {
     return ScopedModel(
         model: SavedGuidebookViewModel.getInstance(),
         child: ScopedModelDescendant(
-          builder: (context, Widget child,
-              SavedGuidebookViewModel model) {
+          builder: (context, Widget child, SavedGuidebookViewModel model) {
             model.getSavedGuidebookByMom();
             SavedFlag = false;
-            if(model.savedGuidebookListModel != null){
-              for(int i = 0; i < model.savedGuidebookListModel.length; i++){
-                SavedGuidebookModel savedGuidebookModel = model.savedGuidebookListModel[i];
-                if(savedGuidebookModel.guidebookId == widget.model.guidebookId){
+            if (model.savedGuidebookListModel != null) {
+              for (int i = 0; i < model.savedGuidebookListModel.length; i++) {
+                SavedGuidebookModel savedGuidebookModel =
+                    model.savedGuidebookListModel[i];
+                if (savedGuidebookModel.guidebookId ==
+                    widget.model.guidebookId) {
                   SavedFlag = true;
                   SavedID = savedGuidebookModel.id;
                   break;
@@ -97,19 +96,26 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
                     : Icons.bookmark_add_outlined,
                 color: BLACK_COLOR,
               ),
-              title: Text(SavedFlag == true ? 'Bỏ lưu bài viết' : "Lưu bài viết"),
+              title:
+                  Text(SavedFlag == true ? 'Bỏ lưu bài viết' : "Lưu bài viết"),
               onTap: () async {
                 showProgressDialogue(context);
                 bool result = false;
-                if(SavedFlag == true){
-                  result = await SavedGuidebookViewModel().unsavedGuidebook(SavedID);
-                }else{
-                  result = await SavedGuidebookViewModel().saveGuidebook(widget.model.guidebookId);
+                if (SavedFlag == true) {
+                  result =
+                      await SavedGuidebookViewModel().unsavedGuidebook(SavedID);
+                } else {
+                  result = await SavedGuidebookViewModel()
+                      .saveGuidebook(widget.model.guidebookId);
                 }
                 Navigator.pop(context);
                 Navigator.pop(context);
                 if (result) {
-                  getFlushBar(context, SavedFlag == true ? "Đã bỏ lưu bài viết" : "Đã lưu bài viết");
+                  getFlushBar(
+                      context,
+                      SavedFlag == true
+                          ? "Đã bỏ lưu bài viết"
+                          : "Đã lưu bài viết");
                 } else {
                   getFlushBar(context, ERROR_MESSAGE);
                 }
@@ -127,31 +133,29 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
         ),
         child: Image(
             image: CachedNetworkImageProvider(
-              widget.model.imageURL,
-            )),
+          widget.model.imageURL,
+        )),
       ),
     );
   }
 
-  Widget Title(){
+  Widget Title() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 10, 8),
       child: Text(
         widget.model.title,
-        style:
-        TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
       ),
     );
   }
 
-  Widget CreateAndReadTime(){
+  Widget CreateAndReadTime() {
     return Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 10, 6),
         child: Row(
           children: [
             Text(
-              DateTimeConvert.timeAgoSinceDateWithDoW(
-                  widget.model.createTime),
+              DateTimeConvert.timeAgoSinceDateWithDoW(widget.model.createTime),
               style: TextStyle(color: LIGHT_DARK_GREY_COLOR),
             ),
             SizedBox(width: 6),
@@ -162,15 +166,14 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
             ),
             SizedBox(width: 6),
             Text(
-              widget.model.estimatedFinishTime.toString() +
-                  " phút đọc",
+              widget.model.estimatedFinishTime.toString() + " phút đọc",
               style: TextStyle(color: LIGHT_DARK_GREY_COLOR),
             ),
           ],
         ));
   }
 
-  Widget Content(){
+  Widget Content() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 0, 8, 16),
       child: Html(
@@ -178,5 +181,4 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
       ),
     );
   }
-
 }

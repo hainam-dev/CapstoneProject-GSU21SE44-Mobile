@@ -35,7 +35,7 @@ class _ParentInfoState extends State<ParentInfo> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final appbarTitle;
   _ParentInfoState(this.appbarTitle);
-  String defaultImage = chooseImage;
+  String pickImage = chooseImage;
   DadModel dadModel;
 
   @override
@@ -58,7 +58,8 @@ class _ParentInfoState extends State<ParentInfo> {
           color: WHITE_COLOR,
         ),
         actions: <Widget>[
-          if (widget.appbarTitle != MOM_APP_BAR_TITLE && widget.action == UPDATE_STATE)
+          if (widget.appbarTitle != MOM_APP_BAR_TITLE &&
+              widget.action == UPDATE_STATE)
             MoreButton(),
         ],
       ),
@@ -70,8 +71,9 @@ class _ParentInfoState extends State<ParentInfo> {
             padding: const EdgeInsets.all(15.0),
             child: Column(
               children: [
-                PickerImage(
-                    widget.action == UPDATE_STATE ? widget.model.imageURL : defaultImage),
+                PickerImage(widget.action == UPDATE_STATE
+                    ? widget.model.imageURL
+                    : pickImage),
                 CustomInputText(
                   'Họ & tên (*)',
                   widget.action == UPDATE_STATE ? widget.model.fullName : "",
@@ -99,17 +101,19 @@ class _ParentInfoState extends State<ParentInfo> {
                     return null;
                   },
                 ),
-                CustomInputNumber('Số điện thoại',
-                    widget.action == UPDATE_STATE ? widget.model.phoneNumber : "",
-                    function: (value) {
-                      setState(() {
-                        if (widget.action == UPDATE_STATE) {
-                          widget.model.phoneNumber = value;
-                        } else {
-                          dadModel.phoneNumber = value;
-                        }
-                      });
-                    }),
+                CustomInputNumber(
+                    'Số điện thoại',
+                    widget.action == UPDATE_STATE
+                        ? widget.model.phoneNumber
+                        : "", function: (value) {
+                  setState(() {
+                    if (widget.action == UPDATE_STATE) {
+                      widget.model.phoneNumber = value;
+                    } else {
+                      dadModel.phoneNumber = value;
+                    }
+                  });
+                }),
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -162,18 +166,31 @@ class _ParentInfoState extends State<ParentInfo> {
       ),
       bottomNavigationBar: CustomBottomButton(
         titleCancel: 'Hủy',
-        titleSave: widget.action == UPDATE_STATE ? 'Cập nhật thông tin' : 'Lưu thông tin',
+        titleSave: widget.action == UPDATE_STATE
+            ? 'Cập nhật thông tin'
+            : 'Lưu thông tin',
         cancelFunction: () => {Navigator.pop(context)},
         saveFunction: () async {
           if (formKey.currentState.validate()) {
             showProgressDialogue(context);
-            String url = await uploadImageToFirebase(
-                widget.action == UPDATE_STATE ? widget.model.id : dadModel.id);
-            if (url != null) {
-              if (widget.action == UPDATE_STATE) {
-                widget.model.imageURL = url;
-              } else {
-                dadModel.imageURL = url;
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            String fileContentBase64 = prefs.getString('UserImage');
+            if (fileContentBase64 != null) {
+              String url = await uploadImageToFirebase(
+                  "AvatarParent",
+                  widget.action == UPDATE_STATE
+                      ? widget.model.id
+                      : dadModel.id);
+              if (url != null) {
+                if (widget.action == UPDATE_STATE) {
+                  widget.model.imageURL = url;
+                } else {
+                  dadModel.imageURL = url;
+                }
+              }
+            } else {
+              if (widget.action == CREATE_STATE) {
+                dadModel.imageURL = defaultImage;
               }
             }
             bool result = false;
@@ -188,7 +205,12 @@ class _ParentInfoState extends State<ParentInfo> {
               }
             }
             Navigator.pop(context);
-            showResult(context, result, widget.action == UPDATE_STATE ? "Cập nhật thông tin thành công" : "Lưu thông tin thành công");
+            showResult(
+                context,
+                result,
+                widget.action == UPDATE_STATE
+                    ? "Cập nhật thông tin thành công"
+                    : "Lưu thông tin thành công");
           }
         },
       ),
@@ -220,12 +242,19 @@ class _ParentInfoState extends State<ParentInfo> {
   }
 
   Widget DeleteFunction() {
-    return ListTile (
-      leading: Icon(Icons.delete_outline,color: RED_COLOR,),
-      title: Text("Xóa thành viên",style: TextStyle(color: RED_COLOR),),
+    return ListTile(
+      leading: Icon(
+        Icons.delete_outline,
+        color: RED_COLOR,
+      ),
+      title: Text(
+        "Xóa thành viên",
+        style: TextStyle(color: RED_COLOR),
+      ),
       onTap: () async {
         Navigator.pop(context);
-        showConfirmDialog(context, "Xóa thành viên", DELETE_MEMBER_MESSAGE,ContinueFunction: () async{
+        showConfirmDialog(context, "Xóa thành viên", DELETE_MEMBER_MESSAGE,
+            ContinueFunction: () async {
           Navigator.pop(context);
           showProgressDialogue(context);
           bool result = true;
@@ -233,14 +262,16 @@ class _ParentInfoState extends State<ParentInfo> {
           Navigator.pop(context);
           Navigator.pop(context);
           Navigator.pop(context);
-          Navigator.push(context, MaterialPageRoute(builder: (context) => MyFamily(),));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MyFamily(),
+              ));
           showResult(context, result, "Xóa thành viên thành công");
         });
-
       },
     );
   }
-
 
   Future<void> setBirthday() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -254,7 +285,7 @@ class _ParentInfoState extends State<ParentInfo> {
   Widget _buildBloodGroup(String labelText, String hinText, List<String> items,
           String selectedValue, Function function) =>
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 1,vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 6),
         child: DropdownButtonFormField<String>(
           value: selectedValue,
           decoration: InputDecoration(

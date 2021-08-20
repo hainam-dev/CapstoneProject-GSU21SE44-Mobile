@@ -1,15 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Model/history_vaccination.dart';
 import 'package:mumbi_app/Repository/vaccination_respository.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
-
-import 'injectionVaccinationLogin_view.dart';
 
 class PhoneEmpty extends StatefulWidget {
   const PhoneEmpty({Key key}) : super(key: key);
@@ -23,7 +18,6 @@ class _PhoneEmptyState extends State<PhoneEmpty> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     // list.add(HistoryVaccination.fromJson({
     //   "lich_su_tiem_id": 194337730.0,

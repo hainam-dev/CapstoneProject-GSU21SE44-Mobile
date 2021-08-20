@@ -1,26 +1,27 @@
-import 'dart:convert' show json;
-
 import 'package:intl/intl.dart';
-class ToothInfoModel{
+
+class ToothInfoModel {
   String id;
   String icon;
   String iconChoose;
   int position;
   bool flag;
-  double width, height,top, left;
+  double width, height, top, left;
   String name;
   String growTime;
   int number;
 
-  ToothInfoModel({this.id,this.position,this.number, this.name, this.growTime});
+  ToothInfoModel(
+      {this.id, this.position, this.number, this.name, this.growTime});
 
   factory ToothInfoModel.fromJson(dynamic json) {
     return ToothInfoModel(
       id: json['data']['id'],
-      position : json['data']['position'],
-      name : json['data']['name'],
-      growTime : json['data']['growTime'],
-      number : json['data']['number'],);
+      position: json['data']['position'],
+      name: json['data']['name'],
+      growTime: json['data']['growTime'],
+      number: json['data']['number'],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -44,30 +45,38 @@ class ToothModel {
   String toothName;
   int position;
 
-  ToothModel({this.toothId, this.childId, this.grownDate, this.note, this.imageURL, this.grownFlag, this.toothName, this.position});
+  ToothModel(
+      {this.toothId,
+      this.childId,
+      this.grownDate,
+      this.note,
+      this.imageURL,
+      this.grownFlag,
+      this.toothName,
+      this.position});
 
   factory ToothModel.fromJson(dynamic json) {
     return ToothModel(
-        toothId : json['data']['toothId'],
-        childId : json['data']['childId'],
-        grownDate : DateTime.tryParse(json['data']['grownDate']),
-        note : json['data']['note'],
-        imageURL : json['data']['imageURL'],
-        grownFlag : json['data']['grownFlag'],
-        position : json['data']['position'],
+      toothId: json['data']['toothId'],
+      childId: json['data']['childId'],
+      grownDate: DateTime.tryParse(json['data']['grownDate']),
+      note: json['data']['note'],
+      imageURL: json['data']['imageURL'],
+      grownFlag: json['data']['grownFlag'],
+      position: json['data']['position'],
     );
   }
 
   factory ToothModel.fromJsonModel(dynamic json) {
     return ToothModel(
-      toothId : json['toothId'],
-      childId : json['childId'],
-      grownDate : DateTime.tryParse(json['grownDate']),
-      note : json['note'],
-      imageURL : json['imageURL'],
-      grownFlag : json['grownFlag'],
-      toothName : json['toothName'],
-      position : json['position'],
+      toothId: json['toothId'],
+      childId: json['childId'],
+      grownDate: DateTime.tryParse(json['grownDate']),
+      note: json['note'],
+      imageURL: json['imageURL'],
+      grownFlag: json['grownFlag'],
+      toothName: json['toothName'],
+      position: json['position'],
     );
   }
 

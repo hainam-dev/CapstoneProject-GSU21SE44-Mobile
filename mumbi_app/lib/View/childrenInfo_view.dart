@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
@@ -20,6 +19,7 @@ import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:mumbi_app/Widget/customStatusDropdown.dart';
 import 'package:mumbi_app/Widget/customText.dart';
 import 'package:mumbi_app/Widget/imagePicker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChildrenInfo extends StatefulWidget {
   final model;
@@ -35,7 +35,7 @@ class ChildrenInfo extends StatefulWidget {
 class _ChildrenInfoState extends State<ChildrenInfo> {
   final formKey = GlobalKey<FormState>();
   String selectedStatusValue;
-  String defaultImage = chooseImage;
+  String pickImage = chooseImage;
   String born = "Bé chào đời";
   String notBorn = "Thai nhi";
   ChildModel childModel;
@@ -56,13 +56,14 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: CustomText(
-          text: widget.entry == CHILD_ENTRY ? CHILD_APP_BAR_TITLE : PREGNANCY_APP_BAR_TITLE,
+          text: widget.entry == CHILD_ENTRY
+              ? CHILD_APP_BAR_TITLE
+              : PREGNANCY_APP_BAR_TITLE,
           size: 20.0,
           color: WHITE_COLOR,
         ),
         actions: <Widget>[
-          if (widget.action == UPDATE_STATE)
-            MoreButton(),
+          if (widget.action == UPDATE_STATE) MoreButton(),
         ],
       ),
       body: Form(
@@ -72,8 +73,9 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
             padding: const EdgeInsets.all(15.0),
             child: Column(
               children: [
-                PickerImage(
-                    widget.action == UPDATE_STATE ? widget.model.imageURL : defaultImage),
+                PickerImage(widget.action == UPDATE_STATE
+                    ? widget.model.imageURL
+                    : pickImage),
                 CustomInputText(
                   FULL_NAME_FIELD,
                   widget.action == UPDATE_STATE ? widget.model.fullName : "",
@@ -108,21 +110,20 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                       : null,
                   function: (value) {
                     setState(
-                          () {
+                      () {
                         selectedStatusValue = value;
                         if (widget.action == UPDATE_STATE) {
                           widget.model.bornFlag =
-                          (value == born ? true : false);
+                              (value == born ? true : false);
                         } else {
-                          childModel.bornFlag =
-                          (value == born ? true : false);
+                          childModel.bornFlag = (value == born ? true : false);
                         }
                       },
                     );
                   },
                 ),
                 if (widget.action == UPDATE_STATE &&
-                    widget.model.bornFlag == true ||
+                        widget.model.bornFlag == true ||
                     selectedStatusValue.toString() == born)
                   CalendarBirthday(
                     CHILD_BIRTHDAY_FIELD,
@@ -143,7 +144,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     },
                   ),
                 if (widget.action == UPDATE_STATE &&
-                    widget.model.bornFlag == false ||
+                        widget.model.bornFlag == false ||
                     selectedStatusValue.toString() == notBorn)
                   CalendarCalculate(
                     widget.action == UPDATE_STATE
@@ -172,7 +173,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                       : null,
                   function: (value) {
                     setState(
-                          () {
+                      () {
                         if (widget.action == UPDATE_STATE) {
                           widget.model.gender = getGender(value);
                         } else {
@@ -183,7 +184,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                   },
                 ),
                 if (widget.action == UPDATE_STATE &&
-                    widget.model.bornFlag == true ||
+                        widget.model.bornFlag == true ||
                     selectedStatusValue.toString() == born)
                   Row(
                     mainAxisSize: MainAxisSize.max,
@@ -231,7 +232,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     ],
                   ),
                 if (widget.action == UPDATE_STATE &&
-                    widget.model.bornFlag == true ||
+                        widget.model.bornFlag == true ||
                     selectedStatusValue.toString() == born)
                   Row(
                     mainAxisSize: MainAxisSize.max,
@@ -301,18 +302,31 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
       ),
       bottomNavigationBar: CustomBottomButton(
           titleCancel: 'Hủy',
-          titleSave: widget.action == UPDATE_STATE ? 'Cập nhật thông tin' : "Lưu thông tin",
+          titleSave: widget.action == UPDATE_STATE
+              ? 'Cập nhật thông tin'
+              : "Lưu thông tin",
           cancelFunction: () => {Navigator.pop(context)},
           saveFunction: () async {
             if (formKey.currentState.validate()) {
               showProgressDialogue(context);
-              String url = await uploadImageToFirebase(
-                  widget.action == UPDATE_STATE ? widget.model.id : childModel.id);
-              if (url != null) {
-                if (widget.action == UPDATE_STATE) {
-                  widget.model.imageURL = url;
-                } else {
-                  childModel.imageURL = url;
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              String fileContentBase64 = prefs.getString('UserImage');
+              if (fileContentBase64 != null) {
+                String url = await uploadImageToFirebase(
+                    "AvatarChild",
+                    widget.action == UPDATE_STATE
+                        ? widget.model.id
+                        : childModel.id);
+                if (url != null) {
+                  if (widget.action == UPDATE_STATE) {
+                    widget.model.imageURL = url;
+                  } else {
+                    childModel.imageURL = url;
+                  }
+                }
+              } else {
+                if (widget.action == CREATE_STATE) {
+                  childModel.imageURL = defaultImage;
                 }
               }
               bool result = false;
@@ -328,7 +342,12 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                 }
               }
               Navigator.pop(context);
-              showResult(context, result, widget.action == UPDATE_STATE ? "Cập nhật thông tin thành công" : "Lưu thông tin thành công");
+              showResult(
+                  context,
+                  result,
+                  widget.action == UPDATE_STATE
+                      ? "Cập nhật thông tin thành công"
+                      : "Lưu thông tin thành công");
             }
           }),
     );
@@ -359,21 +378,27 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
   }
 
   Widget DeleteFunction() {
-    return ListTile (
-      leading: Icon(Icons.delete_outline,color: RED_COLOR,),
-      title: Text("Xóa thành viên",style: TextStyle(color: RED_COLOR),),
+    return ListTile(
+      leading: Icon(
+        Icons.delete_outline,
+        color: RED_COLOR,
+      ),
+      title: Text(
+        "Xóa thành viên",
+        style: TextStyle(color: RED_COLOR),
+      ),
       onTap: () async {
         Navigator.pop(context);
         showConfirmDialog(context, "Xóa thành viên", DELETE_MEMBER_MESSAGE,
-            ContinueFunction: () async{
-              Navigator.pop(context);
-              showProgressDialogue(context);
-              bool result = true;
-              result = await ChildViewModel().deleteChild(widget.model.id);
-              Navigator.pop(context);
-              Navigator.pop(context);
-              showResult(context, result, "Xóa thành viên thành công");
-            });
+            ContinueFunction: () async {
+          Navigator.pop(context);
+          showProgressDialogue(context);
+          bool result = true;
+          result = await ChildViewModel().deleteChild(widget.model.id);
+          Navigator.pop(context);
+          Navigator.pop(context);
+          showResult(context, result, "Xóa thành viên thành công");
+        });
       },
     );
   }
@@ -518,7 +543,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
   Widget _buildBloodGroup(String labelText, String hinText, List<String> items,
           String selectedValue, Function function) =>
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 1,vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 6),
         child: DropdownButtonFormField<String>(
           value: selectedValue,
           decoration: InputDecoration(

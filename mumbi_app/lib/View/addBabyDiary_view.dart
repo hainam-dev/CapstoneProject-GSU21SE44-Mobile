@@ -1,16 +1,22 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+import 'package:full_screen_image/full_screen_image.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/diary_model.dart';
+import 'package:mumbi_app/Utils/upload_multipleImage.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
 import 'package:mumbi_app/Widget/customFlushBar.dart';
 import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class AddBabyDiary extends StatefulWidget {
   @override
@@ -18,11 +24,14 @@ class AddBabyDiary extends StatefulWidget {
 }
 
 class _AddBabyDiaryState extends State<AddBabyDiary> {
+  List<Asset> images = <Asset>[];
+  List<File> _files = <File>[];
+  CollectionReference imgRef;
+  firebase_storage.Reference ref;
   DiaryModel diaryModel;
   ChildViewModel childViewModel;
   bool postFlag;
   bool publicFlag = false;
-
   @override
   void initState() {
     super.initState();
@@ -46,9 +55,11 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
         ),
         body: SingleChildScrollView(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               ChildInfo(),
               InputPostContent(),
+              if (_files != null) showMultipleImagePicked()
             ],
           ),
         ),
@@ -81,22 +92,35 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
     showResult(context, result, "Thêm nhật ký thành công");
   }
 
-  Widget AddButton(){
+  Widget AddButton() {
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 8, 15, 8),
       child: FlatButton(
         color: postFlag == true ? WHITE_COLOR : LIGHT_GREY_COLOR,
-        splashColor:
-        postFlag == true ? LIGHT_GREY_COLOR : Colors.transparent,
-        focusColor:
-        postFlag == true ? LIGHT_GREY_COLOR : Colors.transparent,
+        splashColor: postFlag == true ? LIGHT_GREY_COLOR : Colors.transparent,
+        focusColor: postFlag == true ? LIGHT_GREY_COLOR : Colors.transparent,
         highlightColor:
-        postFlag == true ? LIGHT_GREY_COLOR : Colors.transparent,
+            postFlag == true ? LIGHT_GREY_COLOR : Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        onPressed: () {
-          postFlag == true ? handlePost() : null;
+        onPressed: () async {
+          List<String> listUrl = await uploadMultipleImage(
+              fileName: CurrentMember.id.toString(),
+              thread: "DiaryImages",
+              files: _files);
+          if (listUrl.isNotEmpty) {
+            String url = "";
+            for (var getUrl in listUrl) {
+              if (getUrl != listUrl.last) {
+                url += getUrl + ";";
+              } else {
+                url += getUrl;
+              }
+            }
+            diaryModel.imageURL = url;
+            postFlag == true ? handlePost() : null;
+          }
         },
         child: Text(
           "Lưu",
@@ -109,12 +133,11 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
     );
   }
 
-  Widget ChildInfo(){
+  Widget ChildInfo() {
     return ScopedModel(
         model: childViewModel,
         child: ScopedModelDescendant(
-          builder: (BuildContext context, Widget child,
-              ChildViewModel model) {
+          builder: (BuildContext context, Widget child, ChildViewModel model) {
             return createListTileDiaryPost(model.childModel.imageURL,
                 model.childModel.fullName, publicFlag);
           },
@@ -162,7 +185,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
 
   Widget ChooseImageButton() {
     return InkWell(
-      onTap: () {},
+      onTap: loadAssets,
       splashColor: LIGHT_PINK_COLOR,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 10),
@@ -217,5 +240,99 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
         ),
       ),
     );
+  }
+
+  Widget showMultipleImagePicked() {
+    return Column(
+      children: [
+        GridView.count(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          crossAxisCount: 2,
+          children: List.generate(
+            _files.length,
+            (index) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 2),
+                child: FullScreenWidget(
+                  backgroundColor: WHITE_COLOR,
+                  child: Center(
+                    child: Hero(
+                        tag: _files[index].toString(),
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Card(
+                                clipBehavior: Clip.antiAlias,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  child: Image.file(
+                                    _files[index],
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> loadAssets() async {
+    List<Asset> resultList = <Asset>[];
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 5,
+        enableCamera: true,
+        selectedAssets: images,
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        materialOptions: MaterialOptions(
+          actionBarColor: "#abcdef",
+          actionBarTitle: "Thêm hình ảnh",
+          allViewTitle: "Tất cả hình ảnh",
+          useDetailsView: true,
+          selectCircleStrokeColor: "#000000",
+        ),
+      );
+    } on Exception catch (e) {
+      e.toString();
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      images = resultList;
+      convertAssetToFile();
+      // _error = error;
+    });
+  }
+
+  Future<void> convertAssetToFile() async {
+    List<File> files = <File>[];
+    try {
+      for (Asset asset in images) {
+        final filePath =
+            await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+        files.add(File(filePath));
+      }
+    } on Exception catch (e) {
+      e.toString();
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _files = files;
+    });
   }
 }

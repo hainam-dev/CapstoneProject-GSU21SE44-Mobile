@@ -19,7 +19,6 @@ class MyApp extends StatefulWidget {
 class _MyApp extends State<MyApp> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     FirebaseMessaging.instance
         .getInitialMessage()
@@ -50,22 +49,6 @@ class _MyApp extends State<MyApp> {
                   color: PINK_COLOR,
                   icon: 'logo_notification'),
             ));
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(message.data['title']),
-                content: Text(message.data['text']),
-                actions: [
-                  TextButton(
-                    child: Text("Ok"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              );
-            });
       }
     });
 

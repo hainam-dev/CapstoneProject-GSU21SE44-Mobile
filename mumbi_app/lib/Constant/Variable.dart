@@ -16,7 +16,8 @@ const String STATUS_FIELD = "Trạng thái (*)";
 const String PARENT_BIRTHDAY_FIELD = "Ngày sinh";
 const String CHILD_BIRTHDAY_FIELD = "Ngày sinh (*)";
 const String GENDER_FIELD = "Giới tính (*)";
-const String FIRST_DAY_OF_LAST_PERIOD_FIELD = "Chọn ngày đầu tiên của kì kinh nguyệt cuối";
+const String FIRST_DAY_OF_LAST_PERIOD_FIELD =
+    "Chọn ngày đầu tiên của kì kinh nguyệt cuối";
 
 const String CHILD_WEIGHT_FIELD = "Cân nặng (kg)";
 const String CHILD_HEIGHT_FIELD = 'Chiều cao (cm)';
