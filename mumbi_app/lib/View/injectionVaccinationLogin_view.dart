@@ -79,57 +79,62 @@ class _InectionVaccinationLoginState extends State<InectionVaccinationLogin> {
         title: Text("Đăng nhập"),
         leading: backButton(context, InjectionSchedule()),
       ),
-      body: Container(
-        padding: EdgeInsets.only(left: 16, right: 16),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 16),
-              child: TextFormField(
-                keyboardType: TextInputType.phone,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                ],
-                decoration: InputDecoration(
-                    labelStyle: SEMIBOLDPINK_16,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(
-                        width: 1,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextFormField(
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  ],
+                  decoration: InputDecoration(
+                      labelStyle: SEMIBOLDPINK_16,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          width: 1,
+                        ),
                       ),
-                    ),
-                    hintText: "Nhập số điện thoại"),
-                controller: phoneNoController,
-              ),
-            ),
-            createFieldPassword("Mật khẩu", "Mật khẩu", isHidePassword,
-                passController, passwordView),
-            Padding(
-              padding: EdgeInsets.only(top: 16),
-              child: Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: createTextBlueHyperlink(
-                        context, "Đăng ký", InjectionUpdatePhone()),
+                      hintText: "Nhập số điện thoại"),
+                  controller: phoneNoController,
+                ),
+                createFieldPassword("Mật khẩu", "Mật khẩu", isHidePassword,
+                    passController, passwordView),
+                Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: createTextBlueHyperlink(
+                            context, "Đăng ký", InjectionUpdatePhone()),
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: createTextBlueHyperlink(
+                            context,
+                            "Quên mật khẩu?",
+                            InjectionUpdatePhone(
+                              isRecover: true,
+                            )),
+                      )
+                    ],
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: createTextBlueHyperlink(
-                        context,
-                        "Quên mật khẩu?",
-                        InjectionUpdatePhone(
-                          isRecover: true,
-                        )),
-                  )
-                ],
-              ),
+                ),
+                Container(
+                  child: createButtonConfirm("Đăng nhập", login),
+                ),
+              ],
             ),
-            Container(
-              padding: EdgeInsets.all(16),
-              child: createButtonConfirm("Đăng nhập", login),
-            ),
-          ],
+          ),
         ),
       ),
     );

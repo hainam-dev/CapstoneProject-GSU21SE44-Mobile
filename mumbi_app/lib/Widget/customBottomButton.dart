@@ -31,13 +31,9 @@ class _CustomBottomButtonState extends State<CustomBottomButton> {
   Widget _getActionButtons(String titleCancel, String titleSave) => Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: LIGHT_GREY_COLOR,
-              spreadRadius: 5,
-              blurRadius: 10,
-            ),
-          ],
+          border: Border(
+            top: BorderSide(color: LIGHT_GREY_COLOR),
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 15),

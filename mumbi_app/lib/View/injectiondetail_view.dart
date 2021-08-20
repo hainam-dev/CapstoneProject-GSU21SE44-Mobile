@@ -4,7 +4,9 @@ import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 
 class InjectionDetail extends StatefulWidget {
-  const InjectionDetail({Key key}) : super(key: key);
+  final model;
+
+  const InjectionDetail(this.model);
 
   @override
   _InjectionDetailState createState() => _InjectionDetailState();
@@ -15,139 +17,69 @@ class _InjectionDetailState extends State<InjectionDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-        title: Text('Chi tiết tiêm chủng'),
-    leading: IconButton(
-    icon: Icon(Icons.keyboard_backspace),
-    onPressed: () => {
-    Navigator.pop(context)
-    },
-    ),
-    ),
-    body: Column(
-      children: <Widget>[
-        InjectionTableDetail(),
-        VaccineTableDetail(),
-        ButtonAction(),
-      ],
-    )
-    );
-  }
-}
-class InjectionTableDetail extends StatelessWidget {
-  const InjectionTableDetail({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 400,
-      margin: EdgeInsets.all(16),
-      color: Colors.white,
-      child: DataTable(
-        columnSpacing:  30,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          columns: <DataColumn>[
-            DataColumn(label: Text('Chi tiết mũi tiêm', style: BOLDPINK_16,),),
-            DataColumn(label: Text(''),)
+          title: Text('Chi tiết tiêm chủng'),
+        ),
+        body: Column(
+          children: <Widget>[
+            InjectionTableDetail(),
+            SizedBox(height: 10,),
+            VaccineTableDetail(),
           ],
-          rows: <DataRow>[
-            DataRow(
-                cells:
-                <DataCell>[
-                  DataCell(Text('Kháng viên',style: SEMIBOLD_13)),
-                  DataCell(Text('Viêm tai giữa, phế cầu khuẩn',style: TextStyle(fontSize: 13))),
-                ]
-            ),
-            DataRow(
-                cells:
-                <DataCell>[
-                  DataCell(Text('Mũi số',style: SEMIBOLD_13)),
-                  DataCell(Text('1',style: TextStyle(fontSize: 13))),
-                ]
-            ),
-            DataRow(
-                cells:
-                <DataCell>[
-                  DataCell(Text('Đã tiêm',style: SEMIBOLD_13)),
-                  DataCell(
-                      Icon(Icons.check_circle,color: Colors.grey,)
-                  ),
-                ]
-            ),
-            DataRow(
-                cells:
-                <DataCell>[
-                  DataCell(Text('Ngày tiêm',style: SEMIBOLD_13)),
-                  DataCell(Text('10:00 12/03/2021',style: TextStyle(fontSize: 13))),
-                ]
-            ),
-            DataRow(
-                cells:
-                <DataCell>[
-                  DataCell(Text('Ngày tiêm',style: SEMIBOLD_13)),
-                  DataCell(Text('Trạm Y Tế Quận 7',style: TextStyle(fontSize: 13))),
-                ]
-            )
-          ]),
+        ));
+  }
+
+  Widget InjectionTableDetail(){
+    return Card(
+        elevation: 0,
+        margin: EdgeInsets.zero,
+      child: Column(
+        children: [
+          HeaderItem('Chi tiết mũi tiêm'),
+          BodyItem(Icon(Icons.coronavirus_outlined),'Kháng nguyên',widget.model.antigen),
+          BodyItem(Icon(Icons.colorize),'Mũi số', widget.model.orderOfInjection.toString()),
+          BodyItem(Icon(Icons.access_time),'Ngày tiêm', widget.model.injectionDate),
+          BodyItem(Icon(Icons.location_on_outlined),'Nơi tiêm', widget.model.vaccinationFacility),
+          BodyItem(Icon(Icons.check_circle_outline),'Đã tiêm', ""),
+        ],
+      )
     );
   }
-}
 
-class VaccineTableDetail extends StatelessWidget {
-  const VaccineTableDetail({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-       width: 400,
-      margin: EdgeInsets.all(16),
-      color: Colors.white,
-      child: DataTable(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-          ),
-          columns: <DataColumn>[
-            DataColumn(label: Text('Thông tin vaccine', style: BOLDPINK_16,),),
-            DataColumn(label: Text(''),)
-          ],
-          rows: <DataRow>[
-            DataRow(
-                cells:
-                <DataCell>[
-                  DataCell(Text('Tên Vaccine',style: SEMIBOLD_13)),
-                  DataCell(Text('Synflorix',style: TextStyle(fontSize: 13))),
-                ]
-            ),
-            DataRow(
-                cells:
-                <DataCell>[
-                  DataCell(Text('Số lô',style: SEMIBOLD_13)),
-                  DataCell(Text('10:00 12/03/2021',style: TextStyle(fontSize: 13))),
-                ]
-            ),
-          ]),
-    );
-  }
-}
-class ButtonAction extends StatelessWidget {
-  const ButtonAction({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(left: 16),
-      child: Row(
-        children: <Widget>[
-          createButtonWhite(context,'Đề nghị xác minh', 200, null),
-          Container(
-              padding: EdgeInsets.only(left: 16),
-              child: createButtonWhite(context, 'Cập nhật', 150, null)),
-
+  Widget VaccineTableDetail(){
+    return Card(
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      child: Column(
+        children: [
+          HeaderItem('Thông tin vaccine'),
+          BodyItem(Icon(Icons.bubble_chart_outlined),'Tên Vaccine', widget.model.vaccineName),
+          BodyItem(Icon(Icons.inventory_2_outlined),'Số lô', widget.model.vaccineBatch),
         ],
       ),
     );
   }
+
+
+  Widget HeaderItem(String name){
+    return ListTile(
+      leading: Text(name, style: TextStyle(fontSize: 19,fontWeight: FontWeight.w600,color: PINK_COLOR)));
+  }
+
+  Widget BodyItem(Icon icon, String name, String detail){
+    return Column(
+      children: [
+        Divider(height: 1,),
+        ListTile(
+          leading: icon,
+          title: Text(name, style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600)),
+          subtitle: detail == "" ? null : Text(
+            detail == null ? "..." : detail ,
+            style: TextStyle(fontSize: 16),textWidthBasis: TextWidthBasis.longestLine,)
+          ),
+      ],
+    );
+  }
+
 }
 
 

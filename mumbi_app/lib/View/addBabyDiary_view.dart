@@ -5,7 +5,6 @@ import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/diary_model.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
 import 'package:mumbi_app/Widget/customFlushBar.dart';

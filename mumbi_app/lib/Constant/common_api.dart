@@ -18,10 +18,10 @@ final String GET_CHILD_BY_MOM =
 final String UPDATE_CHILD_INFO = getApiPath("/api/ChildInfo/UpdateChildInfo/");
 final String DELETE_CHILD = getApiPath("/api/ChildInfo/DeleteChildInfo/");
 
-final String GET_CHILD_HISTORY = getApiPath("/api​/ChildHistory​/GetChildHistoryByChildId");
-final String UPDATE_CHILD_HISTORY = getApiPath("​/api​/ChildHistory​/UpdateChildHistory");
-final String GET_PREGNANCY_HISTORY = getApiPath("/api​/PregnancyHistory​/GetPregnancyHistoryByChildId");
-final String UPDATE_PREGNANCY_HISTORY = getApiPath("​/api​/PregnancyHistory​/UpdatePregnancyHistory");
+final String GET_CHILD_HISTORY = getApiPath("/api/ChildHistory/GetChildHistoryByChildId/");
+final String UPDATE_CHILD_HISTORY = getApiPath("​/api​/ChildHistory​/UpdateChildHistory/");
+final String GET_PREGNANCY_HISTORY = getApiPath("/api/PregnancyHistory/GetPregnancyHistoryByChildId/");
+final String UPDATE_PREGNANCY_HISTORY = getApiPath("​/api​/PregnancyHistory​/UpdatePregnancyHistory/");
 
 final String GET_NEWS_BY_ID = getApiPath("/api/News/GetNewsBy/");
 final String GET_ALL_NEWS = getApiPath("/api/News/GetAllNews");
@@ -59,6 +59,7 @@ final String GET_ACTION_BY_TYPE = getApiPath("/api/Action/GetActionBy/");
 final String GET_ACTION_ID_BY_CHILDID = getApiPath("/api/ActionChild/GetActionChildBy/");
 final String UPDATE_ACTION_ID_BY_CHILDID = getApiPath("/api/ActionChild/UpsertActionChild/");
 
+final String GET_INJECTION_SCHEDULE = getApiPath("/api/InjectionSchedule/GetInjectionSchedules/");
 //post vaccination info
 final String POST_PERSONAL_INFO_AddInjectedPerson =
     getApiPath("/api/InjectedPerson/AddInjectedPerson");

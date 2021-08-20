@@ -129,7 +129,9 @@ class _DashBoardState extends State<DashBoard> {
                 "",
                 onClick: ()async{
                   await Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => ChildrenInfo("", CREATE_STATE,PREGNANCY_ENTRY)));
+                    context, MaterialPageRoute(builder: (context) => ChildrenInfo("", CREATE_STATE,PREGNANCY_ENTRY),),
+                  );
+                  await _childViewModel.getChildByMom();
                 },)
                 : createListTileHome(
                 context,
@@ -315,7 +317,7 @@ class _DashBoardState extends State<DashBoard> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         createButtonTextImageLink(
-            context, "Tiêm chủng", injection, InjectionSchedule()),
+            context, "Tiêm chủng", injection, checkEntryInjectionSchedule()),
         createButtonTextImageLink(context, "Cộng đồng", community, Community()),
         createButtonTextImageLink(
             context, "Mốc phát triển", developmentMilestone, checkEntryBabyDevelopment()),
@@ -323,12 +325,24 @@ class _DashBoardState extends State<DashBoard> {
     );
   }
 
+  Widget checkEntryInjectionSchedule(){
+    if(CurrentMember.role == MOM_ROLE){
+      if(CurrentMember.pregnancyFlag == true){
+        return InjectionSchedule();
+      }else{
+        return ChangeAccount(2);
+      }
+    }else{
+      return InjectionSchedule();
+    }
+  }
+
   Widget checkEntryBabyDevelopment(){
     if(CurrentMember.role == MOM_ROLE){
       if(CurrentMember.pregnancyFlag == true){
         return BabyDevelopment();
       }else{
-        return ChangeAccount(1);
+        return ChangeAccount(2);
       }
     }else{
       return BabyDevelopment();

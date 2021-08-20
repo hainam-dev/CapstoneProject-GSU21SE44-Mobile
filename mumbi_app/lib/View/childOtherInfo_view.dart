@@ -5,10 +5,10 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
-import 'package:mumbi_app/Utils/size_config.dart';
+import 'package:mumbi_app/ViewModel/childHistory_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/pregnancyViewModel.dart';
 import 'package:mumbi_app/Widget/customBottomButton.dart';
-import 'package:mumbi_app/Widget/customInputNumber.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ChildInfoUpdate extends StatefulWidget {
@@ -18,11 +18,31 @@ class ChildInfoUpdate extends StatefulWidget {
 class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
   final formKey = GlobalKey<FormState>();
   ChildViewModel childViewModel;
+  ChildHistoryViewModel childHistoryViewModel;
+  PregnancyHistoryViewModel pregnancyHistoryViewModel;
+
+  void getChildHistory() async {
+    childHistoryViewModel = ChildHistoryViewModel.getInstance();
+    await childHistoryViewModel.getChildHistory(CurrentMember.id, DateTimeConvert.getCurrentDay());
+  }
+
+  void getPregnancyHistory() async {
+    pregnancyHistoryViewModel = PregnancyHistoryViewModel.getInstance();
+    await pregnancyHistoryViewModel.getPregnancyHistory(CurrentMember.pregnancyID, DateTimeConvert.getCurrentDay());
+  }
 
   @override
   void initState() {
     super.initState();
     childViewModel = ChildViewModel.getInstance();
+
+    if(CurrentMember.pregnancyFlag == false){
+      getChildHistory();
+    }
+
+    if(CurrentMember.pregnancyFlag == true){
+      getPregnancyHistory();
+    }
   }
 
   @override
@@ -79,60 +99,71 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
   }
 
   Widget PregnancyInfo(){
-    return Column(
-      children: [
-          DigitalNumber(
-            'Cân nặng của mẹ (kg)',
-            "",
-          ),
-          DigitalNumber(
-            'Cân nặng thai nhi (kg)',
-            "",
-          ),
-          DigitalNumber(
-            'Đường kính vòng đầu (cm)',
-            "",
-          ),
-          DigitalNumber(
-            'Nhịp tim thai (lần/phút)',
-            "",
-          ),
-          DigitalNumber(
-            'Chiều dài xương đùi (cm)',
-            "",
-          ),
-          DigitalNumber(
-            'Chiều dài đầu (cm)',
-            "",
-          ),
-      ],
+    return ScopedModel(
+      model: pregnancyHistoryViewModel,
+      child: ScopedModelDescendant(builder: (BuildContext context, Widget child, PregnancyHistoryViewModel model) {
+        return Column(
+          children: [
+            DigitalNumber(
+              PREGNANCY_MOTHER_WEIGHT_FIELD,
+              model.pregnancyHistoryModel == null ? "" : model.pregnancyHistoryModel.motherWeight.toString(),
+            ),
+            DigitalNumber(
+              PREGNANCY_WEIGHT_FIELD,
+              model.pregnancyHistoryModel == null ? "" : model.pregnancyHistoryModel.weight.toString(),
+            ),
+            DigitalNumber(
+              PREGNANCY_HEAD_CIRCUMFERENCE_FIELD,
+              model.pregnancyHistoryModel == null ? "" : model.pregnancyHistoryModel.headCircumference.toString(),
+            ),
+            DigitalNumber(
+              PREGNANCY_FETAL_HEART_RATE_FIELD,
+              model.pregnancyHistoryModel == null ? "" : model.pregnancyHistoryModel.fetalHeartRate.toString(),
+            ),
+            DigitalNumber(
+              PREGNANCY_FEMUR_LENGTH_FIELD,
+              model.pregnancyHistoryModel == null ? "" : model.pregnancyHistoryModel.femurLength.toString(),
+            ),
+            DigitalNumber(
+              PREGNANCY_BIPARIETAL_DIAMETER_FIELD,
+              model.pregnancyHistoryModel == null ? "" : model.pregnancyHistoryModel.biparietalDiameter.toString(),
+            ),
+          ],
+        );
+      },),
     );
   }
 
   Widget ChildInfo(){
-    return Column(
-      children: [
-          DigitalNumber(
+    return ScopedModel(
+      model: childHistoryViewModel,
+      child: ScopedModelDescendant(builder: (BuildContext context, Widget child, ChildHistoryViewModel model) {
+        return Column(
+          children: [
+            DigitalNumber(
               CHILD_WEIGHT_FIELD,
-            "",
-          ),
-          DigitalNumber(
-            CHILD_HEIGHT_FIELD,
-            "",
-          ),
-          DigitalNumber(
-            CHILD_HEAD_CIRCUMFERENCE_FIELD,
-            "",
-          ),
-          DigitalNumber(
-            CHILD_SLEEP_TIME_FIELD,
-            "",
-          ),
-          DigitalNumber(
-            CHILD_MILK_FIELD,
-            "",
-          ),
-      ],
+              model.childHistoryModel == null ? "" : model.childHistoryModel.weight.toString(),
+            ),
+            DigitalNumber(
+              CHILD_HEIGHT_FIELD,
+              model.childHistoryModel == null ? "" : model.childHistoryModel.height.toString(),
+            ),
+            DigitalNumber(
+              CHILD_HEAD_CIRCUMFERENCE_FIELD,
+              model.childHistoryModel == null ? "" : model.childHistoryModel.headCircumference.toString(),
+            ),
+            DigitalNumber(
+              CHILD_SLEEP_TIME_FIELD,
+              model.childHistoryModel == null ? "" : model.childHistoryModel.hourSleep.toString(),
+            ),
+            DigitalNumber(
+              CHILD_MILK_FIELD,
+              model.childHistoryModel == null ? "" : model.childHistoryModel.avgMilk.toString(),
+            ),
+          ],
+        );
+      },
+      ),
     );
   }
 
@@ -181,8 +212,21 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                 return CHILD_HEAD_CIRCUMFERENCE_VALIDATION_MESSAGE;
               } else if (title == CHILD_SLEEP_TIME_FIELD && !isBetween(num.parse(value),7,16)){
                 return CHILD_SLEEP_TIME_VALIDATION_MESSAGE;
-              } else if (title == CHILD_MILK_FIELD && !isBetween(num.parse(value),25,130)){
+              } else if (title == CHILD_MILK_FIELD && !isBetween(num.parse(value),5,1200)){
                 return CHILD_MILK_VALIDATION_MESSAGE;
+
+              } else if (title == PREGNANCY_MOTHER_WEIGHT_FIELD && !isBetween(num.parse(value),35,90)){
+                return PREGNANCY_MOTHER_WEIGHT_VALIDATION_MESSAGE;
+              } else if (title == PREGNANCY_WEIGHT_FIELD && !isBetween(num.parse(value),0.1,3.5)){
+                return PREGNANCY_WEIGHT_FIELD_VALIDATION_MESSAGE;
+              } else if (title == PREGNANCY_HEAD_CIRCUMFERENCE_FIELD && !isBetween(num.parse(value),60,350)){
+                return PREGNANCY_HEAD_CIRCUMFERENCE_VALIDATION_MESSAGE;
+              } else if (title == PREGNANCY_FETAL_HEART_RATE_FIELD && !isBetween(num.parse(value),100,190)){
+                return PREGNANCY_FETAL_HEART_RATE_VALIDATION_MESSAGE;
+              } else if (title == PREGNANCY_FEMUR_LENGTH_FIELD && !isBetween(num.parse(value),13,84)){
+                return PREGNANCY_FEMUR_LENGTH_VALIDATION_MESSAGE;
+              } else if (title == PREGNANCY_BIPARIETAL_DIAMETER_FIELD && !isBetween(num.parse(value),21,94)){
+                return PREGNANCY_BIPARIETAL_DIAMETER_VALIDATION_MESSAGE;
               } else {
                 return null;
               }

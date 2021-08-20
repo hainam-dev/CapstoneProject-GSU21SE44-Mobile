@@ -1,14 +1,14 @@
 import 'dart:convert';
-import 'dart:async';
+
 import 'package:http/http.dart' as http;
 import 'package:mumbi_app/Constant/common_api.dart';
 import 'package:mumbi_app/Model/childHistory_model.dart';
 
 class ChildHistoryRepository{
   static Future<dynamic> apiGetChildHistory(String childId, String date) async{
-    var response = await http.get(
-      Uri.parse("${GET_CHILD_HISTORY}").replace(queryParameters: <String, String>
-      {'ChildId': childId, 'Date' : date}),
+    var response = await http.get(Uri.parse("${GET_CHILD_HISTORY}")
+        .replace(queryParameters: <String, String>
+          {'ChildId': childId, 'Date' : date}),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },);

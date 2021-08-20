@@ -6,7 +6,6 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/View/menuRemind.dart';
 import 'package:mumbi_app/View/parentInfo_view.dart';
 import 'package:mumbi_app/View/teethTrack_view.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
@@ -45,7 +44,6 @@ Widget getDrawer(BuildContext context) {
             model: MomViewModel.getInstance(),
             child: ScopedModelDescendant(builder:
                 (BuildContext buildContext, Widget child, MomViewModel model) {
-              model.getMomByID();
               return model.momModel == null
                   ? loadingUserInfoListTile()
                   : Card(

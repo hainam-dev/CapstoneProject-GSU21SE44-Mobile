@@ -33,6 +33,8 @@ class PregnancyHistoryViewModel extends Model{
           if(date != ""){
             pregnancyHistoryModel = pregnancyHistoryListModel[0];
           }
+        }else{
+          pregnancyHistoryModel = null;
         }
         notifyListeners();
       }catch (e){
