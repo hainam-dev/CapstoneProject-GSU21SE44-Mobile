@@ -45,26 +45,26 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
           appBar: AppBar(
             title: Text('Lịch sử tiêm chủng'),
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                ChildInfo(model.childModel),
-                Align(
-                  alignment: Alignment.topRight,
-                    child: createTextBlueHyperlink(context, "Cập nhật lịch sử tiêm chủng", InectionVaccinationLogin())),
-                TextButton(
+          body: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ChildInfo(model.childModel),
+              Align(
+                alignment: Alignment.topRight,
+                  child: createTextBlueHyperlink(context, "Cập nhật lịch sử tiêm chủng", InectionVaccinationLogin())),
+              Align(
+                alignment: Alignment.topRight,
+                child: TextButton(
                   child: Text("logout"),
                   onPressed: (){
                     VaccinationRespository.logout();
-
                   },
                 ),
-                Header(),
-                InjectTable(),
-            ],
-          ),
-        ),);
+              ),
+              Header(),
+              InjectTable(),
+          ],
+          ),);
       },),
     );
   }
@@ -86,20 +86,22 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
     return ScopedModel(
       model: injectionScheduleViewModel,
       child: ScopedModelDescendant(builder: (BuildContext context, Widget child, InjectionScheduleViewModel model){
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: model.injectionScheduleListModel == null ? 1 : model.injectionScheduleListModel.length,
-          itemBuilder: (context, index) {
-            if(model.injectionScheduleListModel == null){
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 10),
-                child: Center(child: Text("- Chưa có lịch sử tiêm chủng được ghi nhận -")),
-              );
-            }else{
-              InjectionScheduleModel injectModel = model.injectionScheduleListModel[index];
-              return Body(injectModel);
-            }
-          },
+        return Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: model.injectionScheduleListModel == null ? 1 : model.injectionScheduleListModel.length,
+            itemBuilder: (context, index) {
+              if(model.injectionScheduleListModel == null){
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 10),
+                  child: Center(child: Text("- Chưa có lịch sử tiêm chủng được ghi nhận -")),
+                );
+              }else{
+                InjectionScheduleModel injectModel = model.injectionScheduleListModel[index];
+                return Body(injectModel);
+              }
+            },
+          ),
         );
       },),
     );
@@ -113,9 +115,9 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
       child: Row(
         children: <Widget>[
           HeaderItem(20,"Ngày tiêm"),
-          HeaderItem(40,"Kháng nguyên"),
-          HeaderItem(20,"Mũi thứ"),
-          HeaderItem(10,""),
+          HeaderItem(55,"Kháng nguyên"),
+          HeaderItem(15,"Mũi thứ"),
+          HeaderItem(5,""),
         ],
       ),
     );
@@ -140,9 +142,9 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
             title: Row(
                 children: <Widget>[
                   BodyItem(20,CutDate(model.injectionDate),model),
-                  BodyItem(40,model.antigen,model),
-                  BodyItem(20,model.orderOfInjection.toString(),model),
-                  BodyItem(10,"",model),
+                  BodyItem(55,model.antigen,model),
+                  BodyItem(10,model.orderOfInjection.toString(),model),
+                  BodyItem(5,"",model),
                 ]
             )),
         Divider(height: 1),
@@ -153,26 +155,27 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
   Widget BodyItem(num size, String name, InjectionScheduleModel model){
     return Container(
       width: SizeConfig.safeBlockHorizontal * size,
-      child: Center(
-        child: name != "" ? Text(
+      child: name != "" ? Align(
+        alignment: Alignment.center,
+        child: Text(
             name,
             style: TextStyle(fontSize: 15,fontWeight: FontWeight.w600)
-        )
-            : IconButton(
-          icon: Icon(Icons.visibility),color: BLACK_COLOR,
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => InjectionDetail(model)));
-          },
-        )
+        ),
+      )
+          : IconButton(
+        icon: Icon(Icons.visibility),color: BLACK_COLOR,
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => InjectionDetail(model)));
+        },
       ),
     );
   }
 
   String CutDate(String date){
-    var str = "10:05 18/05/2021";
+    var str = date;
     var parts = str.split(' ');
-    var date = parts.sublist(1).join(' ');
-    return date;
+    var date2 = parts.sublist(1).join(' ');
+    return date2;
   }
 
 }

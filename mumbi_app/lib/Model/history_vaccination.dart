@@ -36,7 +36,7 @@ class HistoryVaccination {
     thu_tu_mui_tiem = json['thu_tu_mui_tiem'];
     co_so_tiem_chung = json['co_so_tiem_chung'];
     seo = json['seo'];
-    truoc_24h = json['truoc_24h'];
+    /*truoc_24h = json['truoc_24h'];*/
     lo_vacxin = json['lo_vacxin'];
     phan_ung_sau_tiem = json['phan_ung_sau_tiem'];
   }

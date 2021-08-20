@@ -63,7 +63,18 @@ class _TrackingState extends State<Tracking> {
     _activityViewModel.getActivityByType(1);
     _activityViewModel.getActivityByType(2);
     _activityViewModel.getActivityByType(3);
-
+    /*_activityViewModel.getActivityByType(1,
+        CurrentMember.pregnancyFlag == true
+            ? DateTimeConvert.pregnancyWeek(_childViewModel.childModel.estimatedBornDate)
+            : DateTimeConvert.calculateChildWeekAge(_childViewModel.childModel.birthday));
+    _activityViewModel.getActivityByType(2,
+        CurrentMember.pregnancyFlag == true
+            ? DateTimeConvert.pregnancyWeek(_childViewModel.childModel.estimatedBornDate)
+            : DateTimeConvert.calculateChildWeekAge(_childViewModel.childModel.birthday));
+    _activityViewModel.getActivityByType(3,
+            CurrentMember.pregnancyFlag == true
+            ? DateTimeConvert.pregnancyWeek(_childViewModel.childModel.estimatedBornDate)
+                : DateTimeConvert.calculateChildWeekAge(_childViewModel.childModel.birthday));*/
   }
 
   @override
