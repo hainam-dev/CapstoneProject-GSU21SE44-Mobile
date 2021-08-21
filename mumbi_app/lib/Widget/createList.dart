@@ -6,6 +6,7 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/diary_model.dart';
+import 'package:mumbi_app/Repository/vaccination_respository.dart';
 import 'package:mumbi_app/Utils/calculation.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
@@ -387,6 +388,7 @@ Widget createListTileNavigatorNoTrailing(
       title: Text(_text),
       onTap: () async {
         await LoginViewModel().signOut();
+        VaccinationRespository.logout();
         LogoutViewModel().destroyInstance();
         Navigator.pop(context);
         Navigator.pop(context);

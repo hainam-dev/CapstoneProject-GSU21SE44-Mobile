@@ -24,13 +24,12 @@ class _PickerImageState extends State<PickerImage> {
   final _picker = ImagePicker();
   String imagePath;
 
-
   _PickerImageState(this.getImage);
 
   _imgFromCamera() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final image =
-    await _picker.getImage(source: ImageSource.camera, imageQuality: 100);
+        await _picker.getImage(source: ImageSource.camera, imageQuality: 50);
 
     setState(() {
       if (image != null) {
@@ -48,7 +47,7 @@ class _PickerImageState extends State<PickerImage> {
   _imgFromGallery() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final image =
-    await _picker.getImage(source: ImageSource.gallery, imageQuality: 100);
+        await _picker.getImage(source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
       if (image != null) {
@@ -65,7 +64,6 @@ class _PickerImageState extends State<PickerImage> {
 
   @override
   void initState() {
-
     super.initState();
   }
 
@@ -103,8 +101,6 @@ class _PickerImageState extends State<PickerImage> {
           );
         });
   }
-
-
 
   Widget _buildChangeAvatar(BuildContext context) => Padding(
         padding: EdgeInsets.only(top: 5, bottom: 10),
@@ -147,57 +143,59 @@ class _PickerImageState extends State<PickerImage> {
                         ),
                       ],
                     )
-                  : getImage != "" ? Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(65),
-                    child:
-                    Image.network(
-                      getImage,
-                      height: 125,
-                      width: 125,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Positioned(
-                    right: 5,
-                    bottom: 5,
-                    child: CircleAvatar(
-                      backgroundColor: WHITE_COLOR,
-                      radius: 14.0,
-                      child: new CircleAvatar(
-                        backgroundColor: PINK_COLOR,
-                        radius: 13.0,
-                        child: Icon(
-                          Icons.image_rounded,
-                          color: Colors.white,
-                          size: 22,
+                  : getImage != ""
+                      ? Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(65),
+                              child: Image.network(
+                                getImage,
+                                height: 125,
+                                width: 125,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Positioned(
+                              right: 5,
+                              bottom: 5,
+                              child: CircleAvatar(
+                                backgroundColor: WHITE_COLOR,
+                                radius: 14.0,
+                                child: new CircleAvatar(
+                                  backgroundColor: PINK_COLOR,
+                                  radius: 13.0,
+                                  child: Icon(
+                                    Icons.image_rounded,
+                                    color: Colors.white,
+                                    size: 22,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : CircleAvatar(
+                          radius: 63,
+                          backgroundColor: Colors.grey[200],
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              getImage != null
+                                  ? CachedNetworkImage(imageUrl: getImage)
+                                  : Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.grey[800],
+                                    ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CustomText(
+                                text: 'Chọn ảnh',
+                                size: 16.0,
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                ],
-              ): CircleAvatar(
-                      radius: 63,
-                      backgroundColor: Colors.grey[200],
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          getImage != null ? CachedNetworkImage(imageUrl: getImage) :
-                          Icon(
-                            Icons.camera_alt,
-                            color: Colors.grey[800],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          CustomText(
-                            text: 'Chọn ảnh',
-                            size: 16.0,
-                          )
-                        ],
-                      ),
-                    ),
             ),
           ),
         ),

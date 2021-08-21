@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Constant/textStyle.dart';
-import 'package:mumbi_app/Widget/customComponents.dart';
 
 class InjectionDetail extends StatefulWidget {
   final model;
@@ -19,14 +17,16 @@ class _InjectionDetailState extends State<InjectionDetail> {
         appBar: AppBar(
           title: Text('Chi tiết tiêm chủng'),
         ),
-        body: Column(
-          children: <Widget>[
-            InjectionTableDetail(),
-            SizedBox(
-              height: 10,
-            ),
-            VaccineTableDetail(),
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              InjectionTableDetail(),
+              SizedBox(
+                height: 10,
+              ),
+              VaccineTableDetail(),
+            ],
+          ),
         ));
   }
 

@@ -618,6 +618,7 @@ Widget createTextTitle(String title) {
     child: Text(
       title,
       style: SEMIBOLD_16,
+      textAlign: TextAlign.center,
     ),
   );
 }
@@ -625,11 +626,14 @@ Widget createTextTitle(String title) {
 Widget createTextBlueHyperlink(
     BuildContext context, String title, Widget screen) {
   return Padding(
-    padding: const EdgeInsets.all(8.0),
+    padding: const EdgeInsets.all(10.0),
     child: GestureDetector(
         child: Text(title,
             style: TextStyle(
-                decoration: TextDecoration.underline, color: Colors.blue)),
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                decoration: TextDecoration.underline,
+                color: Colors.blue)),
         onTap: () {
           Navigator.push(
             context,
@@ -681,13 +685,14 @@ Widget backButton(BuildContext context, Widget screen) {
 }
 
 Widget createFieldPassword(String title, String hintText, bool isHidePassword,
-    TextEditingController controller, passwordView) {
+    TextEditingController controller, Function passwordView) {
   return Container(
     padding: EdgeInsets.only(top: 16),
     child: TextFormField(
       controller: controller,
       obscureText: isHidePassword,
       decoration: InputDecoration(
+          icon: Icon(Icons.lock),
           labelText: title,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -719,7 +724,9 @@ void showCustomProgressDialog(BuildContext context, Future<dynamic> future,
     Pair<bool, String> Function(dynamic) onHasData) async {
   ProgressDialog dialog = ProgressDialog(context,
       type: ProgressDialogType.Normal, isDismissible: false);
-  dialog.style(message: "Vui lòng đợi");
+  dialog.style(
+    message: "Vui lòng đợi",
+  );
   if (future != null) {
     dialog.show();
   }

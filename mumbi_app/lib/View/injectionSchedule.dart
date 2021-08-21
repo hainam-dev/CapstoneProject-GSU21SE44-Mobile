@@ -1,19 +1,24 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/injectionSchedule_model.dart';
 import 'package:mumbi_app/Repository/vaccination_respository.dart';
+import 'package:mumbi_app/Utils/rebuildAllChildren.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/injectionSchedule_viewmodel.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
-import 'package:mumbi_app/View/vaccinePrice_compare.dart';
 import 'package:mumbi_app/View/injectiondetail_view.dart';
+import 'package:mumbi_app/Widget/customLoading.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'injectionVaccinationLogin_view.dart';
+import 'injectionUpdatePhone_view.dart';
 
 class InjectionSchedule extends StatefulWidget {
   @override
@@ -21,6 +26,10 @@ class InjectionSchedule extends StatefulWidget {
 }
 
 class _InjectionScheduleState extends State<InjectionSchedule> {
+  bool isHidePassword = true;
+  final TextEditingController passController = TextEditingController();
+  final TextEditingController phoneNoController = TextEditingController();
+  bool isLogin = true;
   ChildViewModel childViewModel;
   InjectionScheduleViewModel injectionScheduleViewModel;
   @override
@@ -36,6 +45,17 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
         CurrentMember.pregnancyFlag == true
             ? CurrentMember.pregnancyID
             : CurrentMember.id);
+
+    VaccinationRespository.getToken().then((value) {
+      if (value != null && value.isNotEmpty) {
+        return isLogin = true;
+      } else {
+        isLogin = false;
+        setState(() {
+          _loginDialog(context);
+        });
+      }
+    });
   }
 
   @override
@@ -52,21 +72,53 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 ChildInfo(model.childModel),
-                Align(
+                if (isLogin)
+                  Align(
                     alignment: Alignment.topRight,
-                    child: createTextBlueHyperlink(
-                        context,
-                        "Cập nhật lịch sử tiêm chủng",
-                        InectionVaccinationLogin())),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: TextButton(
-                    child: Text("logout"),
-                    onPressed: () {
-                      VaccinationRespository.logout();
-                    },
+                    child: TextButton(
+                      child: Text("Logout"),
+                      onPressed: () {
+                        VaccinationRespository.logout();
+                        setState(() {
+                          isLogin = false;
+                        });
+                        rebuildAllChildren(context);
+                      },
+                    ),
                   ),
-                ),
+                Align(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: GestureDetector(
+                          child: Text("Cập nhật lịch sử tiêm chủng",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.blue)),
+                          onTap: () {
+                            if (isLogin) {
+                              setState(() {
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((_) async {
+                                  showCustomProgressDialog(
+                                      context,
+                                      VaccinationRespository
+                                          .historyListSynchronization(),
+                                      (value) {
+                                    //do something...............
+
+                                    return Pair(true, "");
+                                  });
+                                });
+                                rebuildAllChildren(context);
+                              });
+                            } else {
+                              _loginDialog(context);
+                            }
+                          }),
+                    )),
                 Header(),
                 InjectTable(),
               ],
@@ -99,29 +151,31 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
       child: ScopedModelDescendant(
         builder: (BuildContext context, Widget child,
             InjectionScheduleViewModel model) {
-          return Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: model.injectionScheduleListModel == null
-                  ? 1
-                  : model.injectionScheduleListModel.length,
-              itemBuilder: (context, index) {
-                if (model.injectionScheduleListModel == null) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 10),
-                    child: Center(
-                        child: Text(
-                            "- Chưa có lịch sử tiêm chủng được ghi nhận -")),
-                  );
-                } else {
-                  InjectionScheduleModel injectModel =
-                      model.injectionScheduleListModel[index];
-                  return Body(injectModel);
-                }
-              },
-            ),
-          );
+          return model.injectionScheduleListModel == null
+              ? loadingProgress()
+              : Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: model.injectionScheduleListModel == null
+                        ? 1
+                        : model.injectionScheduleListModel.length,
+                    itemBuilder: (context, index) {
+                      if (model.injectionScheduleListModel == null) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 10),
+                          child: Center(
+                              child: Text(
+                                  "- Chưa có lịch sử tiêm chủng được ghi nhận -")),
+                        );
+                      } else {
+                        InjectionScheduleModel injectModel =
+                            model.injectionScheduleListModel[index];
+                        return Body(injectModel);
+                      }
+                    },
+                  ),
+                );
         },
       ),
     );
@@ -135,10 +189,10 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
       ),
       child: Row(
         children: <Widget>[
-          HeaderItem(20, "Ngày tiêm"),
-          HeaderItem(55, "Kháng nguyên"),
+          HeaderItem(25, "Ngày tiêm"),
+          HeaderItem(45, "Kháng nguyên"),
           HeaderItem(15, "Mũi thứ"),
-          HeaderItem(5, ""),
+          Expanded(child: HeaderItem(5, "")),
         ],
       ),
     );
@@ -149,8 +203,9 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
       width: SizeConfig.safeBlockHorizontal * size,
       child: Center(
         child: Text(name,
+            textAlign: TextAlign.center,
             style: TextStyle(
-                color: WHITE_COLOR, fontSize: 16, fontWeight: FontWeight.w600)),
+                color: WHITE_COLOR, fontSize: 15, fontWeight: FontWeight.w600)),
       ),
     );
   }
@@ -160,12 +215,15 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
       children: [
         ListTile(
             title: Row(children: <Widget>[
-          BodyItem(20, CutDate(model.injectionDate), model),
-          BodyItem(55, model.antigen, model),
+          BodyItem(25, CutDate(model.injectionDate), model),
+          BodyItem(45, model.antigen, model),
           BodyItem(10, model.orderOfInjection.toString(), model),
-          BodyItem(5, "", model),
+          Expanded(child: BodyItem(5, "", model)),
         ])),
-        Divider(height: 1),
+        Divider(
+          height: 1,
+          thickness: 1,
+        ),
       ],
     );
   }
@@ -174,11 +232,12 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
     return Container(
       width: SizeConfig.safeBlockHorizontal * size,
       child: name != ""
-          ? Align(
-              alignment: Alignment.center,
-              child: Text(name,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-            )
+          ? Text(name,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ))
           : IconButton(
               icon: Icon(Icons.visibility),
               color: BLACK_COLOR,
@@ -197,5 +256,104 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
     var parts = str.split(' ');
     var date2 = parts.sublist(1).join(' ');
     return date2;
+  }
+
+  void login() async {
+    Navigator.pop(context);
+    showCustomProgressDialog(
+        context,
+        VaccinationRespository.login(
+            phoneNoController.text, passController.text), (value) {
+      final json = jsonDecode(value);
+      //print(json);
+      final success = json["code"] == 1;
+      if (success) {
+        VaccinationRespository.setTokenValue(json["data"]["token"]);
+        showCustomProgressDialog(
+            context, VaccinationRespository.personListSynchronization(),
+            (value1) {
+          return Pair(success, json["message"]);
+        });
+      }
+      return Pair(success, json["message"]);
+    });
+  }
+
+  _loginDialog(context) {
+    Alert(
+        desc:
+            "Vui lòng nhập số điện thoại đã đăng ký để xem thông tin chi tiết lịch tiêm chủng của bé.",
+        style: AlertStyle(
+            descStyle: TextStyle(fontSize: 15.0),
+            titleStyle: TextStyle(
+                color: PINK_COLOR,
+                fontSize: 25.0,
+                fontWeight: FontWeight.w600)),
+        context: context,
+        title: "Đăng nhập",
+        content: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 10.0,
+            ),
+            TextFormField(
+              keyboardType: TextInputType.phone,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              ],
+              decoration: InputDecoration(
+                  icon: Icon(Icons.account_circle),
+                  labelStyle: SEMIBOLDPINK_16,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(
+                      width: 1,
+                    ),
+                  ),
+                  hintText: "Nhập số điện thoại"),
+              controller: phoneNoController,
+            ),
+            createFieldPassword("Mật khẩu", "Mật khẩu", isHidePassword,
+                passController, passwordView),
+            Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: createTextBlueHyperlink(
+                        context, "Đăng ký", InjectionUpdatePhone()),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: createTextBlueHyperlink(
+                        context,
+                        "Quên mật khẩu?",
+                        InjectionUpdatePhone(
+                          isRecover: true,
+                        )),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+        buttons: [
+          DialogButton(
+            color: PINK_COLOR,
+            width: SizeConfig.safeBlockHorizontal * 40,
+            onPressed: () => login(),
+            child: Text(
+              "LOGIN",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          )
+        ]).show();
+  }
+
+  void passwordView() {
+    setState(() {
+      isHidePassword = !isHidePassword;
+    });
   }
 }

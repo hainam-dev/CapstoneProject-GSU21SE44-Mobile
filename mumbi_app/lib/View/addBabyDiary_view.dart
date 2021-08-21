@@ -83,6 +83,21 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
 
   void handlePost() async {
     showProgressDialogue(context);
+    List<String> listUrl = await uploadMultipleImage(
+        fileName: CurrentMember.id.toString(),
+        thread: "DiaryImages",
+        files: _files);
+    if (listUrl != "" && listUrl != null) {
+      String url = "";
+      for (var getUrl in listUrl) {
+        if (getUrl != listUrl.last) {
+          url += getUrl + ";";
+        } else {
+          url += getUrl;
+        }
+      }
+      diaryModel.imageURL = url;
+    }
     bool result = false;
     diaryModel.childId = CurrentMember.id;
     diaryModel.publicFlag = publicFlag;
@@ -105,22 +120,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
           borderRadius: BorderRadius.circular(8),
         ),
         onPressed: () async {
-          List<String> listUrl = await uploadMultipleImage(
-              fileName: CurrentMember.id.toString(),
-              thread: "DiaryImages",
-              files: _files);
-          if (listUrl.isNotEmpty) {
-            String url = "";
-            for (var getUrl in listUrl) {
-              if (getUrl != listUrl.last) {
-                url += getUrl + ";";
-              } else {
-                url += getUrl;
-              }
-            }
-            diaryModel.imageURL = url;
-            postFlag == true ? handlePost() : null;
-          }
+          postFlag == true ? handlePost() : null;
         },
         child: Text(
           "Lưu",

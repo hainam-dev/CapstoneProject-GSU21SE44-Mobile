@@ -1,5 +1,5 @@
-class InjectionScheduleModel{
-  num id;
+class InjectionScheduleModel {
+  num injectionScheduleId;
   String momId;
   String childId;
   num injectedPersonId;
@@ -12,7 +12,7 @@ class InjectionScheduleModel{
   num status;
 
   InjectionScheduleModel(
-      {this.id,
+      {this.injectionScheduleId,
       this.momId,
       this.childId,
       this.injectedPersonId,
@@ -24,9 +24,9 @@ class InjectionScheduleModel{
       this.vaccinationFacility,
       this.status});
 
-  factory InjectionScheduleModel.fromJson(dynamic json){
+  factory InjectionScheduleModel.fromJson(dynamic json) {
     return InjectionScheduleModel(
-      id: json['id'],
+      injectionScheduleId: json['injectionScheduleId'],
       momId: json['momId'],
       childId: json['childId'],
       injectedPersonId: json['injectedPersonId'],
