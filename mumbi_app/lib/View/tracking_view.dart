@@ -100,8 +100,8 @@ class _TrackingState extends State<Tracking> {
               icon: CircleAvatar(
                   backgroundColor: WHITE_COLOR,
                   child: Icon(
-                    Icons.history,
-                    size: 20,
+                    Icons.update,
+                    size: 25,
                     color: BLACK_COLOR,
                   )),
             ),

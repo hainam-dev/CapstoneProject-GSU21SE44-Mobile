@@ -18,8 +18,8 @@ class ChildHistoryRepository{
   }
 
   static Future<dynamic> apiUpdateChildHistory(String childId, ChildHistoryModel childHistoryModel, String date) async {
-    var response = await http.put(
-        Uri.parse("${UPDATE_CHILD_HISTORY}").replace(queryParameters: <String, String>
+    var response = await http.put(Uri.parse("${UPDATE_CHILD_HISTORY}")
+        .replace(queryParameters: <String, String>
         {'ChildId' : childId,'Date' : date}),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
