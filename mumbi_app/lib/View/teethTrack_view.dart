@@ -138,7 +138,7 @@ class _TeethTrackState extends State<TeethTrack> {
                             print("Chạy nút");
                             getPosition(index);
                             toothViewModel.getToothInfoById();
-                            // toothViewModel.getToothByChildId();
+                            toothViewModel.getAllToothByChildId();
                             setState(() {});
                           })
                       ],
@@ -166,7 +166,7 @@ class _TeethTrackState extends State<TeethTrack> {
                             }
                             getPosition(index);
                             toothViewModel.getToothInfoById();
-
+                            toothViewModel.getAllToothByChildId();
                             setState(() {});
                           })
                       ],
