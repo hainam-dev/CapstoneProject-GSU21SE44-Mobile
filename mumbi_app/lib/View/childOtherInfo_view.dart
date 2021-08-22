@@ -26,20 +26,8 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
   ChildHistoryViewModel childHistoryViewModel;
   PregnancyHistoryViewModel pregnancyHistoryViewModel;
 
-  ChildHistoryModel childHistoryModel = new ChildHistoryModel();
-  PregnancyHistoryModel pregnancyHistoryModel = new PregnancyHistoryModel();
-
-  void getChildHistory() async {
-    childHistoryViewModel = ChildHistoryViewModel.getInstance();
-    await childHistoryViewModel.getChildHistory(
-        CurrentMember.id, DateTimeConvert.getCurrentDay());
-  }
-
-  void getPregnancyHistory() async {
-    pregnancyHistoryViewModel = PregnancyHistoryViewModel.getInstance();
-    await pregnancyHistoryViewModel.getPregnancyHistory(
-        CurrentMember.pregnancyID, DateTimeConvert.getCurrentDay());
-  }
+  ChildHistoryModel childHistoryModel;
+  PregnancyHistoryModel pregnancyHistoryModel;
 
   @override
   void initState() {
@@ -51,6 +39,18 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
     } else {
       getPregnancyHistory();
     }
+  }
+
+  void getChildHistory() async {
+    childHistoryViewModel = ChildHistoryViewModel.getInstance();
+    await childHistoryViewModel.getChildHistory(
+        CurrentMember.id, DateTimeConvert.getCurrentDay());
+  }
+
+  void getPregnancyHistory() async {
+    pregnancyHistoryViewModel = PregnancyHistoryViewModel.getInstance();
+    await pregnancyHistoryViewModel.getPregnancyHistory(
+        CurrentMember.pregnancyID, DateTimeConvert.getCurrentDay());
   }
 
   @override
@@ -96,7 +96,16 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                               showProgressDialogue(context);
                               bool result;
                               if (CurrentMember.pregnancyFlag == false) {
-                                checkChildNull();
+                                if (childHistoryModel.weight == null)
+                                  childHistoryModel.weight = 0;
+                                if (childHistoryModel.height == null)
+                                  childHistoryModel.height = 0;
+                                if (childHistoryModel.headCircumference == null)
+                                  childHistoryModel.headCircumference = 0;
+                                if (childHistoryModel.hourSleep == null)
+                                  childHistoryModel.hourSleep = 0;
+                                if (childHistoryModel.avgMilk == null)
+                                  childHistoryModel.avgMilk = 0;
                                 childHistoryModel.childId = CurrentMember.id;
                                 num weekAge =
                                     await DateTimeConvert.pregnancyWeek(
@@ -205,16 +214,12 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                           ? ""
                           : model.childHistoryModel.weight.toString(),
                   onType: (value) {
-                setState(() {
-                  if (value == "") {
-                    model.childHistoryModel.weight = 0;
-                    print(model.childHistoryModel.weight);
-                  } else {
-                    model.childHistoryModel.weight =
-                        num.parse(value.toString());
-                    print(model.childHistoryModel.weight);
-                  }
-                });
+                if (value == "") {
+                  model.childHistoryModel.weight = 0;
+                  print(model.childHistoryModel.weight);
+                } else {
+                  model.childHistoryModel.weight = int.parse(value);
+                }
               }),
               DigitalNumber(
                 CHILD_HEIGHT_FIELD,
@@ -298,6 +303,7 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                 !isBetween(num.parse(value), 25, 130)) {
               return CHILD_HEIGHT_VALIDATION_MESSAGE;
             } else if (title == CHILD_HEAD_CIRCUMFERENCE_FIELD &&
+                CurrentMember.pregnancyFlag == false &&
                 !isBetween(num.parse(value), 25, 60)) {
               return CHILD_HEAD_CIRCUMFERENCE_VALIDATION_MESSAGE;
             } else if (title == CHILD_SLEEP_TIME_FIELD &&
@@ -313,6 +319,7 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                 !isBetween(num.parse(value), 0.1, 3.5)) {
               return PREGNANCY_WEIGHT_FIELD_VALIDATION_MESSAGE;
             } else if (title == PREGNANCY_HEAD_CIRCUMFERENCE_FIELD &&
+                CurrentMember.pregnancyFlag == true &&
                 !isBetween(num.parse(value), 60, 350)) {
               return PREGNANCY_HEAD_CIRCUMFERENCE_VALIDATION_MESSAGE;
             } else if (title == PREGNANCY_FETAL_HEART_RATE_FIELD &&
@@ -328,7 +335,7 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
               return null;
             }
           },
-          onChanged: onType,
+          onFieldSubmitted: onType,
           keyboardType:
               TextInputType.numberWithOptions(decimal: true, signed: false),
           inputFormatters: [

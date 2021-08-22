@@ -39,11 +39,11 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
   void initState() {
     super.initState();
     VaccinationRespository.getToken().then((value) async {
-      isLogin = value != null && value != "";
-      if (isLogin) {
+      if (value != null && value != "") {
         if (injectionScheduleViewModel.injectionScheduleListModel == null) {
           await getHistorySchedule();
         }
+        isLogin = true;
       }
     });
     childViewModel = ChildViewModel.getInstance();
