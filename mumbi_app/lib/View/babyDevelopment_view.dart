@@ -76,6 +76,8 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
     listActFine= actionViewModel.listFine;
 
     actionViewModel.getAllActionByChildId();
+    resultChildWeight.clear();
+    listChild = childHistoryViewModel.childListHistoryChild;
 
     getChild();
   }
@@ -144,12 +146,15 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                       model: childHistoryViewModel,
                       child: ScopedModelDescendant(
                         builder: (BuildContext context, Widget child, ChildHistoryViewModel modelChild) {
-                          listChild = modelChild.childListHistoryChild;
+
                           if (listChild?.isNotEmpty ?? false) {
                             // listChild.forEach((e) => e.date = DateTimeConvert.calculateChildMonth(e.date));
                             curentBMI = DateTimeConvert.caculateBMI(listChild.last.weight, listChild.last.height);
                             status = DateTimeConvert.caculateBMIdata(listChild.last.weight, listChild.last.height);
-                            for (var child in modelChild.childListHistoryChild) {
+                            resultChildWeight.clear();
+                            resultChildHeight.clear();
+                            resultChildHead.clear();
+                            for (var child in listChild) {
                               if (child.date != null) {
                                 final date = DateTimeConvert.calculateChildMonth(child.date,DateFormat("dd/MM/yyyy").parse(childModel.birthday));
                                 print('date'+date.toString());
@@ -158,6 +163,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                                 resultChildHead.add(new ChildDataModel(date, child.headCircumference));
                               }
                             }
+                            print('resultChildWeight'+resultChildWeight.length.toString());
                           }
                           return ScopedModel<StandardIndexViewModel>(
                             model: standardIndexViewModel,
@@ -174,7 +180,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                                           type: list.where(
                                               (data) => data.type == type)
                                       };
-                                if(result != null )
+                                if(result != null && (listChild?.isNotEmpty ?? false))
                                   {
                                     Iterable<StandardIndexModel> weightList = result["Weight"];
                                     Iterable<StandardIndexModel> heightList = result["Height"];
@@ -184,21 +190,24 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                                     {
                                       if(index.month.toString() == date.toString())
                                       {
-                                        weightPercent = (listChild.last.weight - index.minValue)/(index.maxValue - index.minValue);
+                                        double weight = converData(listChild.last.weight.toDouble(), index.maxValue, index.minValue);
+                                        weightPercent = (weight - index.minValue)/(index.maxValue - index.minValue);
                                       }
                                     }
                                     for (var index in heightList)
                                     {
+                                      double height = converData(listChild.last.height.toDouble(), index.maxValue, index.minValue);
                                       if(index.month.toString() == date.toString())
                                       {
-                                        heightPercent = (listChild.last.height - index.minValue)/(index.maxValue - index.minValue);
+                                        heightPercent = (height - index.minValue)/(index.maxValue - index.minValue);
                                       }
                                     }
                                     for (var index in headList)
                                     {
+                                      double head = converData(listChild.last.headCircumference.toDouble(), index.maxValue, index.minValue);
                                       if(index.month.toString() == date.toString())
                                       {
-                                        headPercent = (listChild.last.weight - index.minValue)/(index.maxValue - index.minValue);
+                                        headPercent = (head - index.minValue)/(index.maxValue - index.minValue);
                                       }
                                     }
                                   }
@@ -364,5 +373,14 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
       day = DateTimeConvert.calculateChildAge(birthday);
     }
   }
+}
+
+num converData(double weightData, double maxValue, double minValue) {
+  double weight = weightData;
+  if(weight >= maxValue)
+    weight = maxValue*0.99;
+  else if(weight <= minValue)
+    weight = minValue*0.99;
+  return weight;
 }
 

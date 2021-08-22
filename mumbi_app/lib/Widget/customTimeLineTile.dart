@@ -208,7 +208,7 @@ Widget customTimeLineTile(ToothModel model) {
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(color: Colors.white),
                   child: Text(
-                    growTime,
+                    day,
                     style: REG_13,
                   )),
               Container(
