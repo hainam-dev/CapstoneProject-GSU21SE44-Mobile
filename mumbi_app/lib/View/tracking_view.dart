@@ -100,8 +100,8 @@ class _TrackingState extends State<Tracking> {
               icon: CircleAvatar(
                   backgroundColor: WHITE_COLOR,
                   child: Icon(
-                    Icons.history,
-                    size: 20,
+                    Icons.update,
+                    size: 25,
                     color: BLACK_COLOR,
                   )),
             ),
@@ -117,37 +117,37 @@ class _TrackingState extends State<Tracking> {
               return model.childModel == null
                   ? loadingProgress()
                   : SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(13, 0, 13, 10),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(13, 0, 13, 10),
-                            child: Column(
-                              children: <Widget>[
-                                CalendarHeader(model.childModel),
-                                CalendarBody(),
-                                CircleThing(model.childModel),
-                                SizedBox(
-                                  height: 12,
-                                ),
-                                Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      'Các hoạt động cho bé:',
-                                      style: BOLD_20,
-                                    )),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                ListenToMusic(),
-                                TellTheStory(),
-                                ReadPoetry(),
-                              ],
-                            ),
+                          CalendarHeader(model.childModel),
+                          CalendarBody(),
+                          CircleThing(model.childModel),
+                          SizedBox(
+                            height: 12,
                           ),
+                          Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                'Các hoạt động cho bé:',
+                                style: BOLD_20,
+                              )),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          ListenToMusic(),
+                          TellTheStory(),
+                          ReadPoetry(),
                         ],
                       ),
-                    );
+                    ),
+                  ],
+                ),
+              );
             },
           )),
       bottomNavigationBar: currentSong != "" ? MusicPlaying() : null,
@@ -176,8 +176,8 @@ class _TrackingState extends State<Tracking> {
                 ),
                 Expanded(
                     child: Text(
-                  currentTitle,
-                )),
+                      currentTitle,
+                    )),
                 PLayAndPause(),
               ],
             ),
@@ -300,7 +300,7 @@ class _TrackingState extends State<Tracking> {
         children: [
           CurrentMember.pregnancyFlag == true
               ? createFlatButton(context, 'Bé đã ra đời',
-                  ChildrenInfo(childModel, UPDATE_STATE, CHILD_ENTRY))
+              ChildrenInfo(childModel, UPDATE_STATE, CHILD_ENTRY))
               : Container(),
           Row(
             children: [
@@ -384,7 +384,7 @@ class _TrackingState extends State<Tracking> {
               child: Text(
                 CurrentMember.pregnancyFlag == true
                     ? DateTimeConvert.pregnancyWeekAndDay(
-                        childModel.estimatedBornDate)
+                    childModel.estimatedBornDate)
                     : DateTimeConvert.calculateChildAge(childModel.birthday),
                 style: BOLDWHITE_20,
               )),
@@ -421,28 +421,28 @@ class _TrackingState extends State<Tracking> {
               return model.loadingActivityMusicListModel == true
                   ? loadingProgress()
                   : model.activityMusicListModel == null
-                      ? Empty("- Hoạt động nghe nhạc hiện đang trống -")
-                      : ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: model.activityMusicListModel.length,
-                          itemBuilder: (context, index) {
-                            ActivityModel activityModel =
-                                model.activityMusicListModel[index];
-                            return customListTilePlaylist(
-                              activityModel.activityName,
-                              ic_playlist,
-                              onClick: () {
-                                playMusic(activityModel.mediaFileURL);
-                                setState(() {
-                                  currentImage = ic_playlist;
-                                  currentTitle = activityModel.activityName;
-                                  currentSong = activityModel.mediaFileURL;
-                                });
-                              },
-                            );
-                          },
-                        );
+                  ? Empty("- Hoạt động nghe nhạc hiện đang trống -")
+                  : ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: model.activityMusicListModel.length,
+                itemBuilder: (context, index) {
+                  ActivityModel activityModel =
+                  model.activityMusicListModel[index];
+                  return customListTilePlaylist(
+                    activityModel.activityName,
+                    ic_playlist,
+                    onClick: () {
+                      playMusic(activityModel.mediaFileURL);
+                      setState(() {
+                        currentImage = ic_playlist;
+                        currentTitle = activityModel.activityName;
+                        currentSong = activityModel.mediaFileURL;
+                      });
+                    },
+                  );
+                },
+              );
             },
           )),
     );
@@ -460,28 +460,28 @@ class _TrackingState extends State<Tracking> {
               return model.loadingActivityPoetryListModel == true
                   ? loadingProgress()
                   : model.activityPoetryListModel == null
-                      ? Empty("- Hoạt động đọc thơ hiện đang trống -")
-                      : ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: model.activityPoetryListModel.length,
-                          itemBuilder: (context, index) {
-                            ActivityModel activityModel =
-                                model.activityPoetryListModel[index];
-                            return customListTilePlaylist(
-                              activityModel.activityName,
-                              ic_poet,
-                              onClick: () {
-                                playMusic(activityModel.mediaFileURL);
-                                setState(() {
-                                  currentImage = ic_poet;
-                                  currentTitle = activityModel.activityName;
-                                  currentSong = activityModel.mediaFileURL;
-                                });
-                              },
-                            );
-                          },
-                        );
+                  ? Empty("- Hoạt động đọc thơ hiện đang trống -")
+                  : ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: model.activityPoetryListModel.length,
+                itemBuilder: (context, index) {
+                  ActivityModel activityModel =
+                  model.activityPoetryListModel[index];
+                  return customListTilePlaylist(
+                    activityModel.activityName,
+                    ic_poet,
+                    onClick: () {
+                      playMusic(activityModel.mediaFileURL);
+                      setState(() {
+                        currentImage = ic_poet;
+                        currentTitle = activityModel.activityName;
+                        currentSong = activityModel.mediaFileURL;
+                      });
+                    },
+                  );
+                },
+              );
             },
           )),
     );
@@ -499,28 +499,28 @@ class _TrackingState extends State<Tracking> {
               return model.loadingActivityStoryListModel == true
                   ? loadingProgress()
                   : model.activityStoryListModel == null
-                      ? Empty("- Hoạt động kể chuyện hiện đang trống -")
-                      : ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: model.activityStoryListModel.length,
-                          itemBuilder: (context, index) {
-                            ActivityModel activityModel =
-                                model.activityStoryListModel[index];
-                            return customListTilePlaylist(
-                              activityModel.activityName,
-                              ic_kechuyen,
-                              onClick: () {
-                                playMusic(activityModel.mediaFileURL);
-                                setState(() {
-                                  currentImage = ic_kechuyen;
-                                  currentTitle = activityModel.activityName;
-                                  currentSong = activityModel.mediaFileURL;
-                                });
-                              },
-                            );
-                          },
-                        );
+                  ? Empty("- Hoạt động kể chuyện hiện đang trống -")
+                  : ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: model.activityStoryListModel.length,
+                itemBuilder: (context, index) {
+                  ActivityModel activityModel =
+                  model.activityStoryListModel[index];
+                  return customListTilePlaylist(
+                    activityModel.activityName,
+                    ic_kechuyen,
+                    onClick: () {
+                      playMusic(activityModel.mediaFileURL);
+                      setState(() {
+                        currentImage = ic_kechuyen;
+                        currentTitle = activityModel.activityName;
+                        currentSong = activityModel.mediaFileURL;
+                      });
+                    },
+                  );
+                },
+              );
             },
           )),
     );
@@ -531,9 +531,9 @@ class _TrackingState extends State<Tracking> {
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: Center(
           child: Text(
-        title,
-        style: TextStyle(color: GREY_COLOR),
-      )),
+            title,
+            style: TextStyle(color: GREY_COLOR),
+          )),
     );
   }
 }
