@@ -32,6 +32,7 @@ class ChildHistoryViewModel extends Model {
   List<ChildHistoryModel> get childListHistoryChild => _childListHistoryChild;
 
   void getChildHistory(String childId, String date) async {
+    print('Chay cua Duy');
     if (_instance != null) {
       try {
         var data =
@@ -70,29 +71,28 @@ class ChildHistoryViewModel extends Model {
   }
 
   void getListChildHistory() async {
+    print('Chay 4');
     var childId = await storage.read(key: childIdKey);
-    if (_instance != null) {
       try {
         var data = await ChildHistoryRepository.apiGetChildHistory(childId, "");
 
         Map<String, dynamic> jsonList = json.decode(data);
         _childHistoryList = jsonList['data'];
 
-        if (childHistoryList != null) {
+        if (_childHistoryList != null) {
           _childListHistoryChild = childHistoryList
-              .map((e) => ChildHistoryModel.fromJsonModel(e))
+              .map((e) => ChildHistoryModel.fromJson(e))
               .toList();
           if (_childListHistoryChild.length > 1) {
-            _childListHistoryChild.sort((a, b) => DateFormat("dd/MM/yyyy")
+            await _childListHistoryChild.sort((a, b) => DateFormat("dd/MM/yyyy")
                 .parse(a.date)
                 .compareTo(DateFormat("dd/MM/yyyy").parse(b.date)));
           }
+          notifyListeners();
         } else
           _childListHistoryChild = <ChildHistoryModel>[];
-        notifyListeners();
       } catch (e) {
         print("error getListChildHistory: " + e.toString());
       }
     }
-  }
 }
