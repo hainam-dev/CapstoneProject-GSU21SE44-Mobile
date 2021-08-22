@@ -50,6 +50,8 @@ class _CalendarBirthdayState extends State<CalendarBirthday> {
         return DateTime.now().subtract(new Duration(days: MAX_BIRTHDAY_CHILD));
       case FIRST_DAY_OF_LAST_PERIOD_FIELD:
         return DateTime.now().subtract(new Duration(days: PREGNANCY_DAY - 8));
+      case "Ngày":
+        return DateTime.now().subtract(new Duration(days: MAX_BIRTHDAY_CHILD));
       default:
         return DateTime.now();
     }

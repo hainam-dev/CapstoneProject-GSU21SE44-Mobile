@@ -8,7 +8,7 @@ class ChildHistoryRepository{
   static Future<dynamic> apiGetChildHistory(String childId, String date) async{
     var response = await http.get(Uri.parse("${GET_CHILD_HISTORY}")
         .replace(queryParameters: <String, String>
-          {'ChildId': childId, 'Date' : date}),
+    {'ChildId': childId, 'Date' : date}),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },);
@@ -18,9 +18,9 @@ class ChildHistoryRepository{
   }
 
   static Future<dynamic> apiUpdateChildHistory(String childId, ChildHistoryModel childHistoryModel, String date) async {
-    var response = await http.put(
-        Uri.parse("${UPDATE_CHILD_HISTORY}").replace(queryParameters: <String, String>
-        {'ChildId' : childId,'Date' : date}),
+    var response = await http.put(Uri.parse("${UPDATE_CHILD_HISTORY}")
+        .replace(queryParameters: <String, String>
+    {'ChildId' : childId,'Date' : date}),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },

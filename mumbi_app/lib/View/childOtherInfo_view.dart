@@ -4,11 +4,15 @@ import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
+import 'package:mumbi_app/Model/childHistory_model.dart';
+import 'package:mumbi_app/Model/pregnancyHistory_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/ViewModel/childHistory_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/pregnancyViewModel.dart';
 import 'package:mumbi_app/Widget/customBottomButton.dart';
+import 'package:mumbi_app/Widget/customDialog.dart';
+import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ChildInfoUpdate extends StatefulWidget {
@@ -18,8 +22,12 @@ class ChildInfoUpdate extends StatefulWidget {
 class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
   final formKey = GlobalKey<FormState>();
   ChildViewModel childViewModel;
+
   ChildHistoryViewModel childHistoryViewModel;
   PregnancyHistoryViewModel pregnancyHistoryViewModel;
+
+  ChildHistoryModel childHistoryModel = new ChildHistoryModel();
+  PregnancyHistoryModel pregnancyHistoryModel = new PregnancyHistoryModel();
 
   void getChildHistory() async {
     childHistoryViewModel = ChildHistoryViewModel.getInstance();
@@ -40,9 +48,7 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
 
     if (CurrentMember.pregnancyFlag == false) {
       getChildHistory();
-    }
-
-    if (CurrentMember.pregnancyFlag == true) {
+    } else {
       getPregnancyHistory();
     }
   }
@@ -86,7 +92,40 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                           titleSave: 'Lưu thông tin',
                           cancelFunction: () => {Navigator.pop(context)},
                           saveFunction: () async {
-                            if (formKey.currentState.validate()) {}
+                            if (formKey.currentState.validate()) {
+                              showProgressDialogue(context);
+                              bool result;
+                              if (CurrentMember.pregnancyFlag == false) {
+                                checkChildNull();
+                                childHistoryModel.childId = CurrentMember.id;
+                                num weekAge =
+                                    await DateTimeConvert.pregnancyWeek(
+                                        model.childModel.estimatedBornDate);
+                                childHistoryModel.weekOlds = weekAge;
+                                result = await ChildHistoryViewModel()
+                                    .updateChildHistory(
+                                        CurrentMember.id,
+                                        childHistoryModel,
+                                        DateTimeConvert.getCurrentDay());
+                              } else {
+                                checkPregnancyNull();
+                                pregnancyHistoryModel.childId =
+                                    CurrentMember.pregnancyID;
+                                num pregnancyAge =
+                                    await DateTimeConvert.calculateChildWeekAge(
+                                        model.childModel.birthday);
+                                pregnancyHistoryModel.pregnancyWeek =
+                                    pregnancyAge;
+                                result = await PregnancyHistoryViewModel()
+                                    .updatePregnancyHistory(
+                                        CurrentMember.pregnancyID,
+                                        pregnancyHistoryModel,
+                                        DateTimeConvert.getCurrentDay());
+                              }
+                              Navigator.pop(context);
+                              showResult(context, result,
+                                  "Cập nhật thông tin thành công");
+                            }
                           }),
                     ],
                   ),
@@ -159,34 +198,55 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
           return Column(
             children: [
               DigitalNumber(
-                CHILD_WEIGHT_FIELD,
-                model.childHistoryModel == null
-                    ? ""
-                    : model.childHistoryModel.weight.toString(),
-              ),
+                  CHILD_WEIGHT_FIELD,
+                  model.childHistoryModel == null
+                      ? ""
+                      : model.childHistoryModel.weight == 0
+                          ? ""
+                          : model.childHistoryModel.weight.toString(),
+                  onType: (value) {
+                setState(() {
+                  if (value == "") {
+                    model.childHistoryModel.weight = 0;
+                    print(model.childHistoryModel.weight);
+                  } else {
+                    model.childHistoryModel.weight =
+                        num.parse(value.toString());
+                    print(model.childHistoryModel.weight);
+                  }
+                });
+              }),
               DigitalNumber(
                 CHILD_HEIGHT_FIELD,
                 model.childHistoryModel == null
                     ? ""
-                    : model.childHistoryModel.height.toString(),
+                    : model.childHistoryModel.height == 0
+                        ? ""
+                        : model.childHistoryModel.height.toString(),
               ),
               DigitalNumber(
                 CHILD_HEAD_CIRCUMFERENCE_FIELD,
                 model.childHistoryModel == null
                     ? ""
-                    : model.childHistoryModel.headCircumference.toString(),
+                    : model.childHistoryModel.headCircumference == 0
+                        ? ""
+                        : model.childHistoryModel.headCircumference.toString(),
               ),
               DigitalNumber(
                 CHILD_SLEEP_TIME_FIELD,
                 model.childHistoryModel == null
                     ? ""
-                    : model.childHistoryModel.hourSleep.toString(),
+                    : model.childHistoryModel.hourSleep == 0
+                        ? ""
+                        : model.childHistoryModel.hourSleep.toString(),
               ),
               DigitalNumber(
                 CHILD_MILK_FIELD,
                 model.childHistoryModel == null
                     ? ""
-                    : model.childHistoryModel.avgMilk.toString(),
+                    : model.childHistoryModel.avgMilk == 0
+                        ? ""
+                        : model.childHistoryModel.avgMilk.toString(),
               ),
             ],
           );
@@ -290,5 +350,28 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
       return true;
     }
     return false;
+  }
+
+  void checkPregnancyNull() {
+    if (pregnancyHistoryModel.motherWeight == null)
+      pregnancyHistoryModel.motherWeight = 0;
+    if (pregnancyHistoryModel.weight == null) pregnancyHistoryModel.weight = 0;
+    if (pregnancyHistoryModel.headCircumference == null)
+      pregnancyHistoryModel.headCircumference = 0;
+    if (pregnancyHistoryModel.fetalHeartRate == null)
+      pregnancyHistoryModel.fetalHeartRate = 0;
+    if (pregnancyHistoryModel.femurLength == null)
+      pregnancyHistoryModel.femurLength = 0;
+    if (pregnancyHistoryModel.biparietalDiameter == null)
+      pregnancyHistoryModel.biparietalDiameter = 0;
+  }
+
+  void checkChildNull() {
+    if (childHistoryModel.weight == null) childHistoryModel.weight = 0;
+    if (childHistoryModel.height == null) childHistoryModel.height = 0;
+    if (childHistoryModel.headCircumference == null)
+      childHistoryModel.headCircumference = 0;
+    if (childHistoryModel.hourSleep == null) childHistoryModel.hourSleep = 0;
+    if (childHistoryModel.avgMilk == null) childHistoryModel.avgMilk = 0;
   }
 }
