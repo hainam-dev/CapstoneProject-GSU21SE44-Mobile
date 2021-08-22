@@ -276,12 +276,13 @@ class DateTimeConvert {
     }
   }
 
-  static String calculateChildMonth(String birthday) {
+  static String calculateChildMonth(String monthBaby, DateTime chilDateTime) {
     try {
-      DateTime now = DateTime.now();
-      DateTime dob = DateFormat("yyyy-MM-dd")
-          .parse(birthday.split('/').reversed.join("-"));
-      int month = ((now.difference(dob).inDays / 30).floor());
+      DateTime dateTimeBaby = DateFormat("yyyy-MM-dd")
+          .parse(monthBaby.split('/').reversed.join("-"));
+      int month = ((chilDateTime.difference(dateTimeBaby).inDays / 30).floor());
+      if(month < 0)
+        month*=-1;
       return month.toString();
     } catch (e) {
       return null;
@@ -290,19 +291,21 @@ class DateTimeConvert {
 
   static String caculateBMI(num weight, num height) {
     String status;
-    num numBMI = weight / (height * height);
-    if (numBMI < 5) {
+    num numBMI = weight / ((height/100) * (height/100));
+    if (numBMI < 18.5) {
       status = "Thiếu cân";
-    } else if (numBMI >= 5 && numBMI <= 95) {
+    } else if (numBMI >= 18.5 && numBMI <= 24.9) {
       status = "Bình thường";
-    } else
-      status = "Béo phì";
+    } else if(numBMI >= 25)
+      status = "Thừa cân";
     return status;
   }
 
   static String caculateBMIdata(num weight, num height) {
-    num numBMI = weight / (height * height);
-    // print('numBMI'+numBMI.toString());
-    return numBMI.floor().toString();
+    print('weight'+weight.toString());
+    print('height'+height.toString());
+    num numBMI = weight / ((height/100) * (height/100));
+    print('numBMI'+numBMI.toString());
+    return numBMI.toStringAsFixed(1);
   }
 }

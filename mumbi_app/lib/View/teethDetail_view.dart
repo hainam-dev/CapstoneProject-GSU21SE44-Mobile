@@ -136,7 +136,7 @@ class _TeethDetailState extends State<TeethDetail> {
                               fileName: toothModel.childId.toString(),
                               thread: "ToothImages",
                               files: _files);
-                          if (listUrl != null && listUrl != "") {
+                          if (listUrl.isNotEmpty) {
                             String url = "";
                             for (var getUrl in listUrl) {
                               if (getUrl != listUrl.last) {

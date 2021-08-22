@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mumbi_app/Constant/saveKey.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/action_model.dart';
@@ -6,6 +7,7 @@ import 'package:mumbi_app/Model/childHistory_model.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/standard_index_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
+import 'package:mumbi_app/View/bottomNavBar_view.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
 import 'package:mumbi_app/ViewModel/action_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/childHistory_viewmodel.dart';
@@ -38,10 +40,15 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
   ChildModel childModel;
   ChildViewModel childViewModel;
   StandardIndexViewModel standardIndexViewModel;
-  // List<ChildHistoryModel> listHisChild;
+  List<ChildHistoryModel> listChild;
 
   ChildHistoryViewModel childHistoryViewModel;
   ActionViewModel actionViewModel;
+  List<ActionModel> listActFine;
+  List<ActionModel> listActGross;
+  double weightPercent;
+  double heightPercent;
+  double headPercent;
 
   @override
   void initState() {
@@ -59,10 +66,15 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
 
     childHistoryViewModel = ChildHistoryViewModel.getInstance();
     childHistoryViewModel.getListChildHistory();
-    // listHisChild = childHistoryViewModel.childListHistoryChild;
 
     actionViewModel = ActionViewModel.getInstance();
-    actionViewModel.getActionByType("Thô");
+
+    actionViewModel.getActionGross();
+    listActGross= actionViewModel.listGross;
+
+    actionViewModel.getActionFine();
+    listActFine= actionViewModel.listFine;
+
     actionViewModel.getAllActionByChildId();
 
     getChild();
@@ -79,10 +91,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Theo dõi bé'),
-        leading: IconButton(
-          icon: Icon(Icons.keyboard_backspace),
-          onPressed: () => {Navigator.pop(context)},
-        ),
+        leading: backButton(context, BotNavBar())
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -113,19 +122,19 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                                       name, day.toString(), imageUrl);
                                 },
                               ))),
-                      ScopedModel(
-                          //todo
-                          model: childViewModel,
-                          child: ScopedModelDescendant(
-                            builder: (BuildContext context, Widget child,
-                                ChildViewModel model) {
-                              return createListTileNext(
-                                  context,
-                                  ' 21/05/2021',
-                                  'Ngày tiêm chủng sắp tới:',
-                                  InjectionSchedule());
-                            },
-                          )),
+                      // ScopedModel(
+                      //     //todo
+                      //     model: childViewModel,
+                      //     child: ScopedModelDescendant(
+                      //       builder: (BuildContext context, Widget child,
+                      //           ChildViewModel model) {
+                      //         return createListTileNext(
+                      //             context,
+                      //             ' 21/05/2021',
+                      //             'Ngày tiêm chủng sắp tới:',
+                      //             InjectionSchedule());
+                      //       },
+                      //     )),
                     ],
                   ),
                   Container(
@@ -134,26 +143,20 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                     child: ScopedModel(
                       model: childHistoryViewModel,
                       child: ScopedModelDescendant(
-                        builder: (BuildContext context, Widget child,
-                            ChildHistoryViewModel modelChild) {
-                          if (modelChild.childListHistoryChild != null)
-                            modelChild.childListHistoryChild.forEach((e) => e
-                                    .date =
-                                DateTimeConvert.calculateChildMonth(e.date));
-                          curentBMI = DateTimeConvert.caculateBMI(
-                              modelChild.childListHistoryChild.first.weight,
-                              modelChild.childListHistoryChild.first.height);
-                          status = DateTimeConvert.caculateBMIdata(
-                              modelChild.childListHistoryChild.first.weight,
-                              modelChild.childListHistoryChild.first.height);
-                          for (var child in modelChild.childListHistoryChild) {
-                            if (child.date != null) {
-                              resultChildWeight.add(
-                                  new ChildDataModel(child.date, child.weight));
-                              resultChildHeight.add(
-                                  new ChildDataModel(child.date, child.height));
-                              resultChildHead.add(new ChildDataModel(
-                                  child.date, child.headCircumference));
+                        builder: (BuildContext context, Widget child, ChildHistoryViewModel modelChild) {
+                          listChild = modelChild.childListHistoryChild;
+                          if (listChild?.isNotEmpty ?? false) {
+                            // listChild.forEach((e) => e.date = DateTimeConvert.calculateChildMonth(e.date));
+                            curentBMI = DateTimeConvert.caculateBMI(listChild.last.weight, listChild.last.height);
+                            status = DateTimeConvert.caculateBMIdata(listChild.last.weight, listChild.last.height);
+                            for (var child in modelChild.childListHistoryChild) {
+                              if (child.date != null) {
+                                final date = DateTimeConvert.calculateChildMonth(child.date,DateFormat("dd/MM/yyyy").parse(childModel.birthday));
+                                print('date'+date.toString());
+                                resultChildWeight.add(new ChildDataModel(date, child.weight));
+                                resultChildHeight.add(new ChildDataModel(date, child.height));
+                                resultChildHead.add(new ChildDataModel(date, child.headCircumference));
+                              }
                             }
                           }
                           return ScopedModel<StandardIndexViewModel>(
@@ -161,59 +164,98 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                             child:
                                 ScopedModelDescendant<StandardIndexViewModel>(
                               builder: (context, child, modelStand) {
-                                List<StandardIndexModel> list =
-                                    modelStand.listStandIndex;
-                                List<String> listType = [
-                                  "Weight",
-                                  "Height",
-                                  "Head"
-                                ];
-                                list == null
+                                List<StandardIndexModel> list = modelStand.listStandIndex;
+                                List<String> listType = ["Weight", "Height", "Head"];
+
+                                list == null || listChild == null
                                     ? loadingProgress()
                                     : result = {
                                         for (var type in listType)
                                           type: list.where(
                                               (data) => data.type == type)
                                       };
+                                if(result != null )
+                                  {
+                                    Iterable<StandardIndexModel> weightList = result["Weight"];
+                                    Iterable<StandardIndexModel> heightList = result["Height"];
+                                    Iterable<StandardIndexModel> headList = result["Head"];
+                                    final date = DateTimeConvert.calculateChildMonth(modelChild.childListHistoryChild.last.date,DateFormat("dd/MM/yyyy").parse(childModel.birthday));
+                                    for (var index in weightList)
+                                    {
+                                      if(index.month.toString() == date.toString())
+                                      {
+                                        weightPercent = (listChild.last.weight - index.minValue)/(index.maxValue - index.minValue);
+                                      }
+                                    }
+                                    for (var index in heightList)
+                                    {
+                                      if(index.month.toString() == date.toString())
+                                      {
+                                        heightPercent = (listChild.last.height - index.minValue)/(index.maxValue - index.minValue);
+                                      }
+                                    }
+                                    for (var index in headList)
+                                    {
+                                      if(index.month.toString() == date.toString())
+                                      {
+                                        headPercent = (listChild.last.weight - index.minValue)/(index.maxValue - index.minValue);
+                                      }
+                                    }
+                                  }
+                                String dataWeight;
+                                String dataHeight;
+                                String dataHead;
+                                if(weightPercent!= null){
+                                  weightPercent*=100;
+                                  dataWeight = weightPercent.floor().toString();
+                                }
+                                if(heightPercent!= null){
+                                  heightPercent*=100;
+                                  dataHeight = heightPercent.floor().toString();
+                                }
+                                if(headPercent!= null){
+                                  headPercent*=100;
+                                  dataHead = headPercent.floor().toString();
+                                }
                                 return Column(
                                   children: <Widget>[
                                     //Thể trạng của bé
                                     curentBMI == null || status == ""
                                         ? loadingProgress()
                                         : createBabyCondition(context,
-                                            curentBMI.toString(), status),
-                                    result == null
+                                              status, curentBMI.toString(),),
+                                    result == null || resultChildWeight == null
                                         ? loadingProgress()
                                         : Container(
-                                            child:
-                                                new Column(children: <Widget>[
+                                            child: new Column(
+                                            children: <Widget>[
                                             new SizedBox(
                                                 height: 350.0,
                                                 child: StackedAreaLineChart
                                                     .withSampleData(
                                                         "Cân nặng",
-                                                        "Bé nặng hơn 30% trẻ ",
+                                                        "Bé nặng hơn $dataWeight% trẻ ",
                                                         result["Weight"],
                                                         resultChildWeight)),
                                           ])),
-                                    result == null
+                                    result == null || resultChildHeight == null
                                         ? loadingProgress()
                                         : new SizedBox(
                                             height: 350.0,
                                             child: StackedAreaLineChart
                                                 .withSampleData(
                                                     "Chiều cao",
-                                                    "Bé cao hơn 30% trẻ ",
+                                                    "Bé cao hơn $dataHeight% trẻ ",
                                                     result["Height"],
                                                     resultChildHeight)),
-                                    result == null
+                                    result == null || resultChildHead == null
                                         ? loadingProgress()
                                         : new SizedBox(
                                             height: 350.0,
                                             child: StackedAreaLineChart
                                                 .withSampleData(
                                                     "Chu vi đầu",
-                                                    "Bé có chu vi đầu lớn hơn 30% trẻ cùng lứa",
+                                                    "Bé có chu vi đầu lớn hơn $dataHead% trẻ cùng lứa",
                                                     result["Head"],
                                                     resultChildHead)),
                                   ],
@@ -252,20 +294,48 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                         model: actionViewModel,
                         child: ScopedModelDescendant<ActionViewModel>(
                           builder: (context, child, model) {
-                            List<ActionModel> listType = model.list;
-                            List<ActionModel> list = model.listAllAction;
-                            var result = {
-                              for (var month in list)
-                                month: listType
-                                    .where((data) => data.month == month)
-                            };
-                            double percent = result.length / listType.length;
+                            List<ActionModel> listAll = model.listAllAction;
+                            List<ActionModel> listGross = listActGross;
+                            double percentGross = 0;
+                            if(listAll != null && listGross != null)
+                              {
+                                  for (var child in listGross)
+                                    for (var all in listAll)
+                                    {
+                                      if(all.id == child.id && all.checkedFlag == true)
+                                        percentGross++;
+                                    }
+                                percentGross = percentGross/(listGross.length);
+                              }
                             return createLinear(
-                                "Vận động thô", percent, Colors.green);
+                                "Vận động thô", percentGross, Colors.green);
                           },
                         ),
                       ),
-                      createLinear("Vận động tinh", 0.5, Colors.orange),
+                      ScopedModel<ActionViewModel>(
+                        model: actionViewModel,
+                        child: ScopedModelDescendant<ActionViewModel>(
+                          builder: (context, child, model) {
+                            List<ActionModel> listAll = model.listAllAction;
+                            List<ActionModel> listFine = listActFine;
+                            double percentFine = 0;
+                            int resultFine = 0;
+                            if(listAll != null && listFine != null)
+                            {
+                              for (var child in listFine)
+                                for (var all in listAll)
+                                {
+                                  if(all.id == child.id && all.checkedFlag == true)
+                                    resultFine++;
+                                }
+                              percentFine = resultFine/(listFine.length);
+                            }
+                            return createLinear(
+                                "Vận động tinh", percentFine, Colors.orange);
+                          },
+                        ),
+                      ),
+
                       Container(
                           padding: EdgeInsets.only(top: 16),
                           child: createFlatButton(context,
@@ -291,48 +361,8 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
       birthday = childModel.birthday;
       imageUrl = childModel.imageURL;
 
-      day = DateTimeConvert.calculateChildBorn(birthday);
+      day = DateTimeConvert.calculateChildAge(birthday);
     }
   }
 }
 
-class DrawProgress extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        margin: EdgeInsets.only(top: 16),
-        color: Colors.white,
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: <Widget>[
-            Container(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Mốc phát triển',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                )),
-            Container(
-                padding: EdgeInsets.only(top: 16),
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Bé của bạn đã có tiến bộ gì hơn chưa? ',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-                )),
-            ScopedModel(
-              model: ActionViewModel.getInstance(),
-              child: ScopedModelDescendant<ActionViewModel>(
-                builder: (context, child, model) {
-                  model.getAllActionByChildId();
-                  return createLinear("Vận động thô", 0.5, Colors.green);
-                },
-              ),
-            ),
-            createLinear("Vận động tinh", 0.5, Colors.orange),
-            Container(
-                padding: EdgeInsets.only(top: 16),
-                child: createFlatButton(
-                    context, 'Cập nhật sự vận động của bé', ActivityDetail())),
-          ],
-        ));
-  }
-}

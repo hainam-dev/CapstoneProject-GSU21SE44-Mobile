@@ -1,5 +1,7 @@
 import 'dart:collection';
 
+import 'package:collection/collection.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
@@ -28,9 +30,8 @@ class _FineMotorSkillState extends State<FineMotorSkill> {
     super.initState();
     actionViewModel = ActionViewModel.getInstance();
     if (actionViewModel.list != null) actionViewModel.list.clear();
-    actionViewModel.getActionByType("Tinh");
+    actionViewModel.getActionFine();
     actionViewModel.getAllActionByChildId();
-    listFlag = actionViewModel.listAllAction;
   }
 
   @override
@@ -41,8 +42,7 @@ class _FineMotorSkillState extends State<FineMotorSkill> {
         child: Column(
           children: <Widget>[
             Container(
-              padding:
-                  EdgeInsets.only(top: 30, bottom: 30, left: 16, right: 16),
+              padding: EdgeInsets.only(top: 30, bottom: 30, left: 16, right: 16),
               decoration: BoxDecoration(
                 color: BLACK_COLOR,
               ),
@@ -59,7 +59,7 @@ class _FineMotorSkillState extends State<FineMotorSkill> {
                     width: SizeConfig.safeBlockHorizontal * 50,
                     padding: EdgeInsets.only(left: 16),
                     child: Text(
-                      'Vận động tinh',
+                      'Vận động thô',
                       style: SEMIBOLDWHITE_13,
                     ),
                   ),
@@ -70,17 +70,16 @@ class _FineMotorSkillState extends State<FineMotorSkill> {
               model: actionViewModel,
               child: ScopedModelDescendant<ActionViewModel>(
                 builder: (context, child, model) {
-                  list = model.list;
+                  list = model.listFine;
                   listMonth.clear();
                   if (list != null)
-                    for (int i = 0; i < list.length; i++) {
-                      listMonth.add(list[i].month);
+                    for (var item in list) {
+                      listMonth.add(item.month);
                     }
                   Set<int> set = LinkedHashSet<int>.of(listMonth);
-                  result = {
-                    for (var month in set)
-                      month: list.where((data) => data.month == month)
-                  };
+                  result = {for (var month in set) month: list.where((data) => data.month == month).toList()};
+                  // for(var index in result.keys)
+                  //   print("index"+index.toString());
                   return Container(
                     padding: EdgeInsets.only(top: 16),
                     child: ListView.separated(
@@ -90,79 +89,69 @@ class _FineMotorSkillState extends State<FineMotorSkill> {
                         scrollDirection: Axis.vertical,
                         itemCount: result.keys.length,
                         itemBuilder: (context, index) {
-                          // for (var value in result.values.elementAt(index))
-                          //   value.checkedFlag = false;
-                          for (var value in result.values.elementAt(index))
-                            if (listFlag != null)
-                              for (var flag in listFlag)
-                                if (value.id == flag.id &&
-                                    flag.checkedFlag == true)
-                                  value.checkedFlag = true;
+                          listFlag = model.listAllAction;
+
+// this is the list action model in each row
+                          final value = result.values.elementAt(index).toList().map((actionModel) => actionModel
+                            ..checkedFlag =
+                                listFlag.firstWhereOrNull((flag) => flag.id == actionModel.id)?.checkedFlag ?? false);
                           return Row(
                             children: <Widget>[
                               Container(
                                 padding: EdgeInsets.only(left: 16),
-                                child: Text(
-                                    result.keys.elementAt(index).toString() +
-                                        ' Tháng'),
-                                width: SizeConfig.safeBlockHorizontal *
-                                    20, //SET width
+                                child: Text(result.keys.elementAt(index).toString() + ' Tháng'),
+                                width: SizeConfig.safeBlockHorizontal * 20, //SET width
                               ),
                               Column(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    for (var values
-                                        in result.values.elementAt(index))
+                                    for (var actionModel in value)
                                       Container(
-                                          // height: SizeConfig.safeBlockVertical*result[keys].length,
-                                          width:
-                                              SizeConfig.safeBlockHorizontal *
-                                                  50, //SET width
+                                        // height: SizeConfig.safeBlockVertical*result[keys].length,
+                                          width: SizeConfig.safeBlockHorizontal * 50, //SET width
                                           margin: EdgeInsets.symmetric(
                                             vertical: 10,
                                           ),
-                                          child: Text(values.name)),
+                                          child: Text(actionModel.name)),
                                   ]),
                               Column(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    for (var values
-                                        in result.values.elementAt(index))
+                                    for (var actionModel in value)
                                       IconButton(
                                         onPressed: () async {
-                                          if (values.checkedFlag == null)
-                                            values.checkedFlag = false;
-                                          else
-                                            values.checkedFlag =
-                                                !values.checkedFlag;
-                                          print('values.checkedFlag' +
-                                              values.checkedFlag.toString());
-                                          ActionModel actionModel =
-                                              new ActionModel(
-                                            id: values.id,
-                                            checkedFlag: values.checkedFlag,
+                                          if (actionModel.checkedFlag == null) {
+                                            actionModel.checkedFlag = false;
+                                            print("TH1 ");
+                                          } else {
+                                            actionModel.checkedFlag = await !actionModel.checkedFlag;
+                                            print("TH2");
+                                          }
+                                          print('values.checkedFlag' + actionModel.checkedFlag.toString());
+                                          ActionModel newActionModel = new ActionModel(
+                                            id: actionModel.id,
+                                            checkedFlag: actionModel.checkedFlag,
                                           );
-                                          print("actionModel" +
-                                              actionModel.id.toString());
-                                          resultUpdate = await ActionViewModel()
-                                              .upsertAction(actionModel);
+                                          print("actionModel" + newActionModel.id.toString());
+                                          resultUpdate = await actionViewModel.upsertAction(newActionModel);
+                                          await actionViewModel.getActionFine();
+                                          await actionViewModel.getAllActionByChildId();
                                           print('chicl');
                                           showResult(context, resultUpdate, "");
                                           setState(() {});
                                         },
                                         icon:
-                                            // values.id == listFlag[index].id
-                                            values.checkedFlag == true
-                                                ? Icon(
-                                                    Icons.check_circle,
-                                                    color: GREEN400,
-                                                  )
-                                                : Icon(
-                                                    Icons.check_circle_outline,
-                                                    color: Colors.grey,
-                                                  ),
+                                        actionModel.checkedFlag == true
+                                            ? Icon(
+                                          Icons.check_circle,
+                                          color: GREEN400,
+                                        )
+                                            : Icon(
+                                          Icons.check_circle_outline,
+                                          color: Colors.grey,
+                                        ),
                                       )
                                   ])
                             ],
@@ -171,7 +160,7 @@ class _FineMotorSkillState extends State<FineMotorSkill> {
                   );
                 },
               ),
-            ),
+            )
           ],
         ),
       ),
