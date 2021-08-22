@@ -278,8 +278,9 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                 builder: (context, setState) {
                   _setStateLoginDialog = setState;
                   return Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text("Đăng nhập"),
+                      Align(alignment: Alignment.center,child: Text("Vui lòng nhập số điện thoại và mật khẩu đã đăng ký với các cơ sở tiêm chủng để cập nhật lịch sử tiêm chủng cho bé")),
                       SizedBox(
                         height: 10.0,
                       ),
@@ -355,7 +356,7 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                         width: SizeConfig.safeBlockHorizontal * 40,
                         onPressed: () => login(),
                         child: Text(
-                          "LOGIN",
+                          "Đăng nhập",
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       )
