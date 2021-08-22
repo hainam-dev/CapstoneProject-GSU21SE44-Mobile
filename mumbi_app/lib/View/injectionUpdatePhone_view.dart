@@ -26,29 +26,30 @@ class _InjectionUpdatePhoneState extends State<InjectionUpdatePhone> {
 
   void onNextBtn() {
     if (formKey.currentState.validate()) {
-      return;
-    }
-    //0902741611
-    //Navigator.push(context, MaterialPageRoute(builder: (context) => InjectionUpdateToken(phoneNo: phoneNoController.text)), );
-    showCustomProgressDialog(
-        context,
-        widget.isRecover
-            ? VaccinationRespository.getOTPRecoveryPass(phoneNoController.text)
-            : VaccinationRespository.checkPhoneNo(phoneNoController.text),
-        (data) {
-      var jsonObject = jsonDecode(data);
-      print(jsonObject);
-      var success = jsonObject['code'] == 1;
-      if (success) {
-        Navigator.push(
+      //0902741611
+      //Navigator.push(context, MaterialPageRoute(builder: (context) => InjectionUpdateToken(phoneNo: phoneNoController.text)), );
+      showCustomProgressDialog(
           context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  InjectionUpdateToken(phoneNo: phoneNoController.text)),
-        );
-      }
-      return Pair(success, jsonObject['message']);
-    });
+          "Vui lòng đợi",
+          widget.isRecover
+              ? VaccinationRespository.getOTPRecoveryPass(
+                  phoneNoController.text)
+              : VaccinationRespository.checkPhoneNo(phoneNoController.text),
+          (data) {
+        var jsonObject = jsonDecode(data);
+        print(jsonObject);
+        var success = jsonObject['code'] == 1;
+        if (success) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    InjectionUpdateToken(phoneNo: phoneNoController.text)),
+          );
+        }
+        return Pair(success, jsonObject['message']);
+      });
+    }
   }
 
   @override

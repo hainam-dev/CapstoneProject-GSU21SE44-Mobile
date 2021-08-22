@@ -5,8 +5,7 @@ import 'package:mumbi_app/Model/news_model.dart';
 import 'package:mumbi_app/Repository/vaccination_respository.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class InjectionScheduleViewModel extends Model{
-
+class InjectionScheduleViewModel extends Model {
   static InjectionScheduleViewModel _instance;
 
   static InjectionScheduleViewModel getInstance() {
@@ -23,22 +22,26 @@ class InjectionScheduleViewModel extends Model{
   List<dynamic> injectionScheduleList;
   List<InjectionScheduleModel> injectionScheduleListModel;
 
-  void getInjectionSchedule(String childId) async{
-    try{
-      String data = await VaccinationRespository.apiGetInjectionSchedule(childId);
+  Future<bool> getInjectionSchedule(String childId) async {
+    try {
+      String data =
+          await VaccinationRespository.apiGetInjectionSchedule(childId);
       Map<String, dynamic> jsonList = json.decode(data);
       injectionScheduleList = jsonList['data'];
-      if(injectionScheduleList != null){
-        injectionScheduleListModel = injectionScheduleList.map((e) => InjectionScheduleModel.fromJson(e)).toList();
-        injectionScheduleListModel.sort((a,b) => b.injectionDate.compareTo(a.injectionDate));
-      }else{
+      if (injectionScheduleList != null) {
+        injectionScheduleListModel = injectionScheduleList
+            .map((e) => InjectionScheduleModel.fromJson(e))
+            .toList();
+        injectionScheduleListModel
+            .sort((a, b) => b.injectionDate.compareTo(a.injectionDate));
+      } else {
         injectionScheduleListModel = null;
       }
       notifyListeners();
-    }catch(e){
+      return true;
+    } catch (e) {
       print("error: " + e.toString());
+      return false;
     }
   }
-
-
 }

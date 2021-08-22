@@ -59,7 +59,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
             children: [
               ChildInfo(),
               InputPostContent(),
-              if (_files != null) showMultipleImagePicked()
+              if (_files != null && _files != "") showMultipleImagePicked()
             ],
           ),
         ),
@@ -246,7 +246,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
     return Column(
       children: [
         GridView.count(
-          scrollDirection: Axis.vertical,
+          physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           crossAxisCount: 2,
           children: List.generate(
@@ -271,7 +271,8 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
                                   borderRadius: BorderRadius.circular(10.0),
                                   child: Image.file(
                                     _files[index],
-                                    fit: BoxFit.cover,
+                                    height: 120,
+                                    width: 120,
                                   ),
                                 ),
                               ),
@@ -301,7 +302,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
           actionBarTitle: "Thêm hình ảnh",
           allViewTitle: "Tất cả hình ảnh",
           useDetailsView: true,
-          selectCircleStrokeColor: "#000000",
+          selectCircleStrokeColor: "#ffffff",
         ),
       );
     } on Exception catch (e) {

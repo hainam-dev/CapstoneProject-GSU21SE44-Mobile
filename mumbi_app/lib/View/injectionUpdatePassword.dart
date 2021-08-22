@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Repository/vaccination_respository.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
-import 'package:mumbi_app/View/phoneEmpty.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 
 class InectionUpdatePassword extends StatefulWidget {
@@ -24,13 +23,14 @@ class _InectionUpdatePasswordState extends State<InectionUpdatePassword> {
 
   void updatePass() async {
     if (passController.text != passConfirmController.text) {
-      showCustomProgressDialog(context, null, (data) {
+      showCustomProgressDialog(context, "Vui lòng đợi", null, (data) {
         return Pair(false, "Xác nhận mật khẩu không khớp");
       });
       return;
     }
     showCustomProgressDialog(
         context,
+        "Vui lòng đợi",
         widget.isRecovery
             ? VaccinationRespository.changePassByToken(
                 widget.phoneNo, passController.text)
@@ -43,13 +43,13 @@ class _InectionUpdatePasswordState extends State<InectionUpdatePassword> {
         VaccinationRespository.setTokenValue(json["data"]["token"]);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PhoneEmpty()),
+          MaterialPageRoute(builder: (context) => InjectionSchedule()),
         );
       }
       return Pair(success, json['message']);
     });
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => PhoneEmpty()));
+        context, MaterialPageRoute(builder: (context) => InjectionSchedule()));
   }
 
   @override

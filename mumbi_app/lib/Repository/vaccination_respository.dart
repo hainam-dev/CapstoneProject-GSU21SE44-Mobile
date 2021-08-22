@@ -27,6 +27,7 @@ class VaccinationRespository {
     sharedPreferences.setString(_KEY_PASSWORD_USER, "");
     sharedPreferences.setStringList(_KEY_DOI_TUONG_ID, []);
     sharedPreferences.setString(_KEY_TOKEN, "");
+    _tokenValue = "";
   }
 
   static Future<String> getPhoneUser() async {
@@ -196,7 +197,7 @@ class VaccinationRespository {
     String momId = await UserViewModel.getUserID();
     list.forEach((e) {
       l.add({
-        "id": e.lich_su_tiem_id,
+        "injectionScheduleId": e.lich_su_tiem_id,
         "momId": momId,
         "injectedPersonId": e.doi_tuong_id,
         "vaccineName": e.ten_vacxin,

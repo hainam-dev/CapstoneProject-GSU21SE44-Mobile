@@ -19,7 +19,7 @@ Future<List<String>> uploadMultipleImage(
       final result = await FlutterImageCompress.compressAndGetFile(
         file.absolute.path,
         outPath,
-        quality: 10,
+        quality: 30,
       );
       String imageName = thread +
           "/" +

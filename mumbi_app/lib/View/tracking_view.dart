@@ -60,18 +60,6 @@ class _TrackingState extends State<Tracking> {
     _activityViewModel.getActivityByType(1);
     _activityViewModel.getActivityByType(2);
     _activityViewModel.getActivityByType(3);
-    /*_activityViewModel.getActivityByType(1,
-        CurrentMember.pregnancyFlag == true
-            ? DateTimeConvert.pregnancyWeek(_childViewModel.childModel.estimatedBornDate)
-            : DateTimeConvert.calculateChildWeekAge(_childViewModel.childModel.birthday));
-    _activityViewModel.getActivityByType(2,
-        CurrentMember.pregnancyFlag == true
-            ? DateTimeConvert.pregnancyWeek(_childViewModel.childModel.estimatedBornDate)
-            : DateTimeConvert.calculateChildWeekAge(_childViewModel.childModel.birthday));
-    _activityViewModel.getActivityByType(3,
-            CurrentMember.pregnancyFlag == true
-            ? DateTimeConvert.pregnancyWeek(_childViewModel.childModel.estimatedBornDate)
-                : DateTimeConvert.calculateChildWeekAge(_childViewModel.childModel.birthday));*/
   }
 
   @override
@@ -186,9 +174,12 @@ class _TrackingState extends State<Tracking> {
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: Row(
               children: [
-                CurrentDuration(),
-                slider(),
-                SongDuration(),
+                Flexible(child: CurrentDuration()),
+                Flexible(
+                  child: slider(),
+                  flex: 4,
+                ),
+                Flexible(child: SongDuration()),
               ],
             ),
           ),
@@ -360,7 +351,7 @@ class _TrackingState extends State<Tracking> {
       child: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 52),
+            margin: EdgeInsets.only(top: 45),
             width: 60,
             height: 60,
             decoration: BoxDecoration(
@@ -388,6 +379,9 @@ class _TrackingState extends State<Tracking> {
                     : DateTimeConvert.calculateChildAge(childModel.birthday),
                 style: BOLDWHITE_20,
               )),
+          SizedBox(
+            height: 10.0,
+          ),
           createButtonWhite(
               context, 'Cập nhật thông tin', 180, ChildInfoUpdate()),
         ],

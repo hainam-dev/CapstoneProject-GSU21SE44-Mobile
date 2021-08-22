@@ -1,8 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:full_screen_image/full_screen_image.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
@@ -11,6 +15,7 @@ import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/Widget/customConfirmDialog.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
 import 'package:mumbi_app/Widget/customProgressDialog.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class BabyDiaryDetails extends StatefulWidget {
   final model;
@@ -25,7 +30,10 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
   bool editFlag = false;
   int currentPos = 0;
   List<String> getImages;
-
+  List<Asset> images = <Asset>[];
+  List<File> _files = <File>[];
+  CollectionReference imgRef;
+  firebase_storage.Reference ref;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -46,14 +54,23 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
           editFlag == false ? MoreButton() : OkAndCancelButton(),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(15),
-        child: Column(
-          children: [
-            if (widget.model.imageURL != null && widget.model.imageURL != "")
-              getDiaryImage(widget.model.imageURL),
-            DiaryContent(),
-          ],
+      body: Scaffold(
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(15),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (widget.model.imageURL != null && widget.model.imageURL != "")
+                getDiaryImage(widget.model.imageURL),
+              DiaryContent(),
+            ],
+          ),
+        ),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+              color: WHITE_COLOR,
+              border: Border(top: BorderSide(color: GREY_COLOR))),
+          child: Card(margin: EdgeInsets.zero, child: ChooseImageButton()),
         ),
       ),
     );
@@ -357,5 +374,78 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
         ),
       ],
     );
+  }
+
+  Widget ChooseImageButton() {
+    return InkWell(
+      onTap: loadAssets,
+      splashColor: LIGHT_PINK_COLOR,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 10),
+        child: Row(
+          children: [
+            Icon(
+              Icons.photo_library,
+              color: GREEN400,
+            ),
+            SizedBox(
+              width: 8,
+            ),
+            Text(
+              "Thêm hình ảnh",
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> loadAssets() async {
+    List<Asset> resultList = <Asset>[];
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 5,
+        enableCamera: true,
+        selectedAssets: images,
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        materialOptions: MaterialOptions(
+          actionBarColor: "#abcdef",
+          actionBarTitle: "Thêm hình ảnh",
+          allViewTitle: "Tất cả hình ảnh",
+          useDetailsView: true,
+          selectCircleStrokeColor: "#ffffff",
+        ),
+      );
+    } on Exception catch (e) {
+      e.toString();
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      images = resultList;
+      convertAssetToFile();
+      // _error = error;
+    });
+  }
+
+  Future<void> convertAssetToFile() async {
+    List<File> files = <File>[];
+    try {
+      for (Asset asset in images) {
+        final filePath =
+            await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+        files.add(File(filePath));
+      }
+    } on Exception catch (e) {
+      e.toString();
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _files = files;
+    });
   }
 }

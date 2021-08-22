@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Repository/vaccination_respository.dart';
 import 'package:mumbi_app/View/injectionUpdatePassword.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
@@ -41,6 +42,7 @@ class _InjectionUpdateTokenState extends State<InjectionUpdateToken> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: WHITE_COLOR,
       appBar: AppBar(
         title: Text("Xác nhận số điện thoại"),
         leading: backButton(context, InjectionUpdatePhone()),
@@ -70,7 +72,7 @@ class _InjectionUpdateTokenState extends State<InjectionUpdateToken> {
                   setState(() {
                     disableConfirm = true;
                   });
-                  showCustomProgressDialog(context,
+                  showCustomProgressDialog(context, "Vui lòng đợi",
                       VaccinationRespository.activeOTP(widget.phoneNo, pin),
                       (data) {
                     var json = jsonDecode(data);

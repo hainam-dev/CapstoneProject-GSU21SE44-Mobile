@@ -31,7 +31,6 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
-
   ChildModel pregnancyModel;
   NewsViewModel _newsViewModel;
   MomViewModel _momViewModel;
@@ -53,9 +52,8 @@ class _DashBoardState extends State<DashBoard> {
     _childViewModel = ChildViewModel.getInstance();
     _childViewModel.getChildByMom();
 
-    if(CurrentMember.role == CHILD_ROLE)
+    if (CurrentMember.role == CHILD_ROLE)
       _childViewModel.getChildByID(CurrentMember.id);
-
   }
 
   @override
@@ -75,10 +73,8 @@ class _DashBoardState extends State<DashBoard> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (CurrentMember.role == MOM_ROLE)
-              PregnancyInfo(),
-            if (CurrentMember.role == CHILD_ROLE)
-              ChildInfo(),
+            if (CurrentMember.role == MOM_ROLE) PregnancyInfo(),
+            if (CurrentMember.role == CHILD_ROLE) ChildInfo(),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
               child: Align(
@@ -99,16 +95,13 @@ class _DashBoardState extends State<DashBoard> {
     );
   }
 
-  Widget PregnancyInfo(){
+  Widget PregnancyInfo() {
     return ScopedModel(
         model: _childViewModel,
         child: ScopedModelDescendant(
-          builder: (BuildContext context, Widget child,
-              ChildViewModel model) {
+          builder: (BuildContext context, Widget child, ChildViewModel model) {
             if (model.childListModel != null) {
-              for (int i = model.childListModel.length - 1;
-              i >= 0;
-              i--) {
+              for (int i = model.childListModel.length - 1; i >= 0; i--) {
                 ChildModel childModel = model.childListModel[i];
                 if (childModel.bornFlag == false) {
                   pregnancyModel = childModel;
@@ -120,39 +113,47 @@ class _DashBoardState extends State<DashBoard> {
             }
             return pregnancyModel == null
                 ? createListTileHome(
-                context,
-                LIGHT_GREY_COLOR,
-                empty,
-                "Chưa có thông tin",
-                "Nhấp vào để thêm thông tin thai kì.",
-                0,
-                "",
-                onClick: ()async{
-                  await Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => ChildrenInfo("", CREATE_STATE,PREGNANCY_ENTRY),),
-                  );
-                  await _childViewModel.getChildByMom();
-                },)
+                    context,
+                    LIGHT_GREY_COLOR,
+                    empty,
+                    "Chưa có thông tin",
+                    "Nhấp vào để thêm thông tin thai kì.",
+                    0,
+                    "",
+                    onClick: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ChildrenInfo("", CREATE_STATE, PREGNANCY_ENTRY),
+                        ),
+                      );
+                      await _childViewModel.getChildByMom();
+                    },
+                  )
                 : createListTileHome(
-                context,
-                LIGHT_PINK_COLOR,
-                pregnancy,
-                "Tuần thứ ${DateTimeConvert.pregnancyWeek(pregnancyModel.estimatedBornDate)} của thai kì",
-                "Bạn còn ${DateTimeConvert.dayUntil(pregnancyModel.estimatedBornDate)} ngày để gặp được bé",
-                DateTimeConvert.dayUntil(
-                    pregnancyModel.estimatedBornDate),
-                PREGNANCY_ROLE,
-                onClick: ()async{
-                  await Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => ChildrenInfo(pregnancyModel, UPDATE_STATE, PREGNANCY_ENTRY)));
-                  await _childViewModel.getChildByID(CurrentMember.pregnancyID);
-                },
-            );
+                    context,
+                    LIGHT_PINK_COLOR,
+                    pregnancy,
+                    "Tuần thứ ${DateTimeConvert.pregnancyWeek(pregnancyModel.estimatedBornDate)} của thai kì",
+                    "Bạn còn ${DateTimeConvert.dayUntil(pregnancyModel.estimatedBornDate)} ngày để gặp được bé",
+                    DateTimeConvert.dayUntil(pregnancyModel.estimatedBornDate),
+                    PREGNANCY_ROLE,
+                    onClick: () async {
+                      await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChildrenInfo(pregnancyModel,
+                                  UPDATE_STATE, PREGNANCY_ENTRY)));
+                      await _childViewModel
+                          .getChildByID(CurrentMember.pregnancyID);
+                    },
+                  );
           },
         ));
   }
 
-  Widget ChildInfo(){
+  Widget ChildInfo() {
     return ScopedModel(
       model: _childViewModel,
       child: ScopedModelDescendant(
@@ -160,20 +161,22 @@ class _DashBoardState extends State<DashBoard> {
           return model.childModel == null
               ? loadingProgress()
               : createListTileHome(
-              context,
-              LIGHT_BLUE_COLOR,
-              embe,
-              "Bé đã ${DateTimeConvert.calculateChildAge(
-                  model.childModel.birthday)}",
-              "",
-              0,
-              CHILD_ROLE,
-              onClick: ()async{
-                await Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => ChildrenInfo(model.childModel, UPDATE_STATE,CHILD_ENTRY)));
-                await _childViewModel.getChildByID(CurrentMember.id);
-              },
-          );
+                  context,
+                  LIGHT_BLUE_COLOR,
+                  embe,
+                  "Bé đã ${DateTimeConvert.calculateChildAge(model.childModel.birthday)}",
+                  "",
+                  0,
+                  CHILD_ROLE,
+                  onClick: () async {
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChildrenInfo(
+                                model.childModel, UPDATE_STATE, CHILD_ENTRY)));
+                    await _childViewModel.getChildByID(CurrentMember.id);
+                  },
+                );
         },
       ),
     );
@@ -195,8 +198,9 @@ class _DashBoardState extends State<DashBoard> {
             body: SingleChildScrollView(
               physics: NeverScrollableScrollPhysics(),
               child: ClipRRect(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(4.0),),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(4.0),
+                  ),
                   child: CachedNetworkImage(imageUrl: _imageURL)),
             ),
             bottomNavigationBar: Column(
@@ -218,7 +222,9 @@ class _DashBoardState extends State<DashBoard> {
                 ),
                 Row(
                   children: [
-                    SizedBox(width: 8,),
+                    SizedBox(
+                      width: 8,
+                    ),
                     Icon(
                       Icons.auto_stories_outlined,
                       color: GREY_COLOR,
@@ -269,8 +275,8 @@ class _DashBoardState extends State<DashBoard> {
   Widget MomAvatar() {
     return ScopedModel(
       model: _momViewModel,
-      child: ScopedModelDescendant(builder:
-          (BuildContext context, Widget child, MomViewModel model) {
+      child: ScopedModelDescendant(
+          builder: (BuildContext context, Widget child, MomViewModel model) {
         return model.momModel == null
             ? CircleAvatar(
                 backgroundColor: Colors.white,
@@ -319,32 +325,32 @@ class _DashBoardState extends State<DashBoard> {
         createButtonTextImageLink(
             context, "Tiêm chủng", injection, checkEntryInjectionSchedule()),
         createButtonTextImageLink(context, "Cộng đồng", community, Community()),
-        createButtonTextImageLink(
-            context, "Mốc phát triển", developmentMilestone, checkEntryBabyDevelopment()),
+        createButtonTextImageLink(context, "Mốc phát triển",
+            developmentMilestone, checkEntryBabyDevelopment()),
       ],
     );
   }
 
-  Widget checkEntryInjectionSchedule(){
-    if(CurrentMember.role == MOM_ROLE){
-      if(CurrentMember.pregnancyFlag == true){
+  Widget checkEntryInjectionSchedule() {
+    if (CurrentMember.role == MOM_ROLE) {
+      if (CurrentMember.pregnancyFlag == true) {
         return InjectionSchedule();
-      }else{
+      } else {
         return ChangeAccount(2);
       }
-    }else{
+    } else {
       return InjectionSchedule();
     }
   }
 
-  Widget checkEntryBabyDevelopment(){
-    if(CurrentMember.role == MOM_ROLE){
-      if(CurrentMember.pregnancyFlag == true){
+  Widget checkEntryBabyDevelopment() {
+    if (CurrentMember.role == MOM_ROLE) {
+      if (CurrentMember.pregnancyFlag == true) {
         return BabyDevelopment();
-      }else{
+      } else {
         return ChangeAccount(2);
       }
-    }else{
+    } else {
       return BabyDevelopment();
     }
   }

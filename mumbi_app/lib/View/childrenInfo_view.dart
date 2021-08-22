@@ -52,7 +52,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: CustomText(
@@ -102,26 +102,6 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     });
                   },
                 ),
-                CustomStatusDropdown(
-                  STATUS_FIELD,
-                  itemsStatus,
-                  widget.action == UPDATE_STATE
-                      ? showStatus(widget.model.bornFlag)
-                      : null,
-                  function: (value) {
-                    setState(
-                      () {
-                        selectedStatusValue = value;
-                        if (widget.action == UPDATE_STATE) {
-                          widget.model.bornFlag =
-                              (value == born ? true : false);
-                        } else {
-                          childModel.bornFlag = (value == born ? true : false);
-                        }
-                      },
-                    );
-                  },
-                ),
                 if (widget.action == UPDATE_STATE &&
                         widget.model.bornFlag == true ||
                     selectedStatusValue.toString() == born)
@@ -165,23 +145,59 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                       }
                     },
                   ),
-                CustomStatusDropdown(
-                  GENDER_FIELD,
-                  itemsGender,
-                  widget.action == UPDATE_STATE
-                      ? showGender(widget.model.gender)
-                      : null,
-                  function: (value) {
-                    setState(
-                      () {
-                        if (widget.action == UPDATE_STATE) {
-                          widget.model.gender = getGender(value);
-                        } else {
-                          childModel.gender = getGender(value);
-                        }
-                      },
-                    );
-                  },
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      child: CustomStatusDropdown(
+                        STATUS_FIELD,
+                        itemsStatus,
+                        widget.action == UPDATE_STATE
+                            ? showStatus(widget.model.bornFlag)
+                            : null,
+                        function: (value) {
+                          setState(
+                            () {
+                              selectedStatusValue = value;
+                              if (widget.action == UPDATE_STATE) {
+                                widget.model.bornFlag =
+                                    (value == born ? true : false);
+                              } else {
+                                childModel.bornFlag =
+                                    (value == born ? true : false);
+                              }
+                            },
+                          );
+                        },
+                      ),
+                      flex: 4,
+                    ),
+                    const SizedBox(
+                      width: 17,
+                    ),
+                    Flexible(
+                      child: CustomStatusDropdown(
+                        GENDER_FIELD,
+                        itemsGender,
+                        widget.action == UPDATE_STATE
+                            ? showGender(widget.model.gender)
+                            : null,
+                        function: (value) {
+                          setState(
+                            () {
+                              if (widget.action == UPDATE_STATE) {
+                                widget.model.gender = getGender(value);
+                              } else {
+                                childModel.gender = getGender(value);
+                              }
+                            },
+                          );
+                        },
+                      ),
+                      flex: 3,
+                    ),
+                  ],
                 ),
                 if (widget.action == UPDATE_STATE &&
                         widget.model.bornFlag == true ||
@@ -206,7 +222,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                             }
                           });
                         }),
-                        flex: 2,
+                        flex: 4,
                       ),
                       const SizedBox(
                         width: 17,
@@ -227,7 +243,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                             }
                           });
                         }),
-                        flex: 2,
+                        flex: 3,
                       ),
                     ],
                   ),
@@ -262,7 +278,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                             }
                           });
                         }),
-                        flex: 2,
+                        flex: 4,
                       ),
                       const SizedBox(
                         width: 17,
@@ -291,65 +307,69 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                             }
                           });
                         }),
-                        flex: 2,
+                        flex: 3,
                       ),
                     ],
                   ),
+                CustomBottomButton(
+                    titleCancel: 'Hủy',
+                    titleSave: widget.action == UPDATE_STATE
+                        ? 'Cập nhật thông tin'
+                        : "Lưu thông tin",
+                    cancelFunction: () => {Navigator.pop(context)},
+                    saveFunction: () async {
+                      if (formKey.currentState.validate()) {
+                        showProgressDialogue(context);
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        String fileContentBase64 = prefs.getString('UserImage');
+                        if (fileContentBase64 != null) {
+                          String url = await uploadImageToFirebase(
+                              "AvatarChild",
+                              widget.action == UPDATE_STATE
+                                  ? widget.model.id
+                                  : childModel.id);
+                          if (url != null && url != "") {
+                            if (widget.action == UPDATE_STATE) {
+                              widget.model.imageURL = url;
+                            } else {
+                              childModel.imageURL = url;
+                            }
+                          }
+                        } else {
+                          if (widget.action == CREATE_STATE) {
+                            childModel.imageURL = defaultImage;
+                          }
+                        }
+                        bool result = false;
+                        if (widget.action == UPDATE_STATE) {
+                          result = await ChildViewModel()
+                              .updateChildInfo(widget.model);
+                          Navigator.pop(context);
+                        } else {
+                          if (childModel.fingertips == null)
+                            childModel.fingertips = 0;
+                          if (childModel.headVortex == null)
+                            childModel.headVortex = 0;
+                          result = await ChildViewModel().addChild(childModel);
+                          if (result == true) {
+                            Navigator.pop(context);
+                          }
+                        }
+                        Navigator.pop(context);
+                        showResult(
+                            context,
+                            result,
+                            widget.action == UPDATE_STATE
+                                ? "Cập nhật thông tin thành công"
+                                : "Lưu thông tin thành công");
+                      }
+                    }),
               ],
             ),
           ),
         ),
       ),
-      bottomNavigationBar: CustomBottomButton(
-          titleCancel: 'Hủy',
-          titleSave: widget.action == UPDATE_STATE
-              ? 'Cập nhật thông tin'
-              : "Lưu thông tin",
-          cancelFunction: () => {Navigator.pop(context)},
-          saveFunction: () async {
-            if (formKey.currentState.validate()) {
-              showProgressDialogue(context);
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              String fileContentBase64 = prefs.getString('UserImage');
-              if (fileContentBase64 != null) {
-                String url = await uploadImageToFirebase(
-                    "AvatarChild",
-                    widget.action == UPDATE_STATE
-                        ? widget.model.id
-                        : childModel.id);
-                if (url != null) {
-                  if (widget.action == UPDATE_STATE) {
-                    widget.model.imageURL = url;
-                  } else {
-                    childModel.imageURL = url;
-                  }
-                }
-              } else {
-                if (widget.action == CREATE_STATE) {
-                  childModel.imageURL = defaultImage;
-                }
-              }
-              bool result = false;
-              if (widget.action == UPDATE_STATE) {
-                result = await ChildViewModel().updateChildInfo(widget.model);
-                Navigator.pop(context);
-              } else {
-                if (childModel.fingertips == null) childModel.fingertips = 0;
-                if (childModel.headVortex == null) childModel.headVortex = 0;
-                result = await ChildViewModel().addChild(childModel);
-                if (result == true) {
-                  Navigator.pop(context);
-                }
-              }
-              Navigator.pop(context);
-              showResult(
-                  context,
-                  result,
-                  widget.action == UPDATE_STATE
-                      ? "Cập nhật thông tin thành công"
-                      : "Lưu thông tin thành công");
-            }
-          }),
     );
   }
 

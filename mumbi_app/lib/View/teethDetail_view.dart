@@ -67,8 +67,11 @@ class _TeethDetailState extends State<TeethDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
-          title: Text('Mọc răng'), leading: backButton(context, TeethTrack())),
+        title: Text('Mọc răng'),
+        leading: backButton(context, TeethTrack()),
+      ),
       body: SingleChildScrollView(
         child: ScopedModel(
           model: toothViewModel,
@@ -122,61 +125,63 @@ class _TeethDetailState extends State<TeethDetail> {
                     if (toothModel.imageURL != null &&
                         toothModel.imageURL != "")
                       getDiaryImage(toothModel.imageURL),
+                    CustomBottomButton(
+                      titleCancel: 'Hủy',
+                      titleSave: "Cập nhật",
+                      cancelFunction: () => {Navigator.pop(context)},
+                      saveFunction: () async {
+                        if (formKey.currentState.validate()) {
+                          showProgressDialogue(context);
+                          List<String> listUrl = await uploadMultipleImage(
+                              fileName: toothModel.childId.toString(),
+                              thread: "ToothImages",
+                              files: _files);
+                          if (listUrl != null && listUrl != "") {
+                            String url = "";
+                            for (var getUrl in listUrl) {
+                              if (getUrl != listUrl.last) {
+                                url += getUrl + ";";
+                              } else {
+                                url += getUrl;
+                              }
+                            }
+                            if (toothModel.imageURL != null &&
+                                toothModel.imageURL != "") {
+                              toothModel.imageURL += url;
+                            } else {
+                              toothModel.imageURL = url;
+                            }
+                          }
+                          if (growTimePick != "--") {
+                            toothModel.grownDate =
+                                DateFormat('dd/M/yyyy').parse(growTimePick);
+                          }
+                          toothModel.note = noteInput;
+                          print("growFlag cần update" + growFlag.toString());
+                          toothModel.grownFlag = growFlag;
+                          print("DATA TOOTH UPDATE: " +
+                              toothModel.toothId.toString() +
+                              "child:" +
+                              toothModel.grownFlag.toString() +
+                              toothModel.childId.toString() +
+                              " " +
+                              toothModel.grownDate.toString() +
+                              toothModel.note.toString());
+                          result =
+                              await ToothViewModel().upsertTooth(toothModel);
+                        }
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        showResult(context, result,
+                            "Cập nhật thông tin răng cho bé thành công");
+                      },
+                    ),
                   ],
                 ),
               ),
             );
           }),
         ),
-      ),
-      bottomNavigationBar: CustomBottomButton(
-        titleCancel: 'Hủy',
-        titleSave: "Cập nhật",
-        cancelFunction: () => {Navigator.pop(context)},
-        saveFunction: () async {
-          if (formKey.currentState.validate()) {
-            showProgressDialogue(context);
-            List<String> listUrl = await uploadMultipleImage(
-                fileName: toothModel.childId.toString(),
-                thread: "ToothImages",
-                files: _files);
-            if (listUrl.isNotEmpty) {
-              String url = "";
-              for (var getUrl in listUrl) {
-                if (getUrl != listUrl.last) {
-                  url += getUrl + ";";
-                } else {
-                  url += getUrl;
-                }
-              }
-              if (toothModel.imageURL != null && toothModel.imageURL != "") {
-                toothModel.imageURL += url;
-              } else {
-                toothModel.imageURL = url;
-              }
-            }
-            if (growTimePick != "--") {
-              toothModel.grownDate =
-                  DateFormat('dd/M/yyyy').parse(growTimePick);
-            }
-            toothModel.note = noteInput;
-            print("growFlag cần update" + growFlag.toString());
-            toothModel.grownFlag = growFlag;
-            print("DATA TOOTH UPDATE: " +
-                toothModel.toothId.toString() +
-                "child:" +
-                toothModel.grownFlag.toString() +
-                toothModel.childId.toString() +
-                " " +
-                toothModel.grownDate.toString() +
-                toothModel.note.toString());
-            result = await ToothViewModel().upsertTooth(toothModel);
-          }
-          Navigator.pop(context);
-          Navigator.pop(context);
-          showResult(
-              context, result, "Cập nhật thông tin răng cho bé thành công");
-        },
       ),
     );
   }
@@ -280,7 +285,7 @@ class _TeethDetailState extends State<TeethDetail> {
     return Column(
       children: [
         GridView.count(
-          scrollDirection: Axis.vertical,
+          physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           crossAxisCount: 4,
           children: List.generate(
@@ -346,7 +351,7 @@ class _TeethDetailState extends State<TeethDetail> {
         getButtonUpload(context),
         Expanded(
           child: GridView.count(
-            scrollDirection: Axis.vertical,
+            physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             crossAxisCount: 3,
             children: List.generate(_files.length, (index) {

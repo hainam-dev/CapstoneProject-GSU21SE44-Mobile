@@ -36,6 +36,6 @@ const String CHILD_ENTRY = "Bé";
 const String PREGNANCY_ENTRY = "Thai kì";
 
 final num MAX_BIRTHDAY_PARENT = 365 * 100;
-final num MAX_BIRTHDAY_CHILD = 365 * 5;
+final num MAX_BIRTHDAY_CHILD = 365 * 6;
 final num PREGNANCY_WEEK = 40;
 final num PREGNANCY_DAY = 9 * 30 + 10;

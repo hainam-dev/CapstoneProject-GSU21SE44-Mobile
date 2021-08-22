@@ -54,6 +54,7 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
       child: ScopedModelDescendant(
         builder: (BuildContext context, Widget child, ChildViewModel model) {
           return Scaffold(
+            resizeToAvoidBottomInset: true,
             extendBody: true,
             appBar: AppBar(
               leading: IconButton(
@@ -80,18 +81,18 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                       ),
                       if (CurrentMember.pregnancyFlag == true) PregnancyInfo(),
                       if (CurrentMember.pregnancyFlag == false) ChildInfo(),
+                      CustomBottomButton(
+                          titleCancel: 'Hủy',
+                          titleSave: 'Lưu thông tin',
+                          cancelFunction: () => {Navigator.pop(context)},
+                          saveFunction: () async {
+                            if (formKey.currentState.validate()) {}
+                          }),
                     ],
                   ),
                 ),
               ),
             ),
-            bottomNavigationBar: CustomBottomButton(
-                titleCancel: 'Hủy',
-                titleSave: 'Lưu thông tin',
-                cancelFunction: () => {Navigator.pop(context)},
-                saveFunction: () async {
-                  if (formKey.currentState.validate()) {}
-                }),
           );
         },
       ),

@@ -371,10 +371,11 @@ Widget createButtonWhite(
       color: Colors.white,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20))),
-      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Text(
         title,
         style: BOLDPINK_16,
+        textAlign: TextAlign.center,
       ),
     ),
   );
@@ -471,7 +472,9 @@ Widget createTextAlign(String text, TextStyle textStyle) {
       top: 8,
     ),
     child: Align(
-        alignment: Alignment.topLeft, child: Text(text, style: textStyle)),
+      alignment: Alignment.topLeft,
+      child: Text(text, style: textStyle),
+    ),
   );
 }
 
@@ -484,7 +487,6 @@ Widget createTextAlignInformation(
     child: Column(
       children: <Widget>[
         createTextAlign("Thông tin", BOLD_18),
-        createTextAlign("Răng số " + position, SEMIBOLD_16),
         createTextAlign("Tên gọi: " + name, SEMIBOLD_16),
         createTextAlign("Thời gian mọc: " + growTime, SEMIBOLD_16),
       ],
@@ -720,12 +722,15 @@ class Pair<T, E> {
 }
 
 ///[Pair] with [Pair.first] is true if success else false, [Pair.second] is error message if [Pair.first] is false
-void showCustomProgressDialog(BuildContext context, Future<dynamic> future,
+void showCustomProgressDialog(
+    BuildContext context,
+    String message,
+    Future<dynamic> future,
     Pair<bool, String> Function(dynamic) onHasData) async {
   ProgressDialog dialog = ProgressDialog(context,
       type: ProgressDialogType.Normal, isDismissible: false);
   dialog.style(
-    message: "Vui lòng đợi",
+    message: message,
   );
   if (future != null) {
     dialog.show();

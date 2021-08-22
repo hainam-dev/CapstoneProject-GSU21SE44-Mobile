@@ -181,7 +181,7 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: ListTile(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
@@ -192,24 +192,21 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(
-                    _text,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style:
-                        TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0),
-                  ),
+                Text(
+                  _text,
+                  maxLines: 1,
+                  textAlign: TextAlign.start,
+
+                  // overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0),
                 ),
                 if (_subText != "")
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(vertical: 5),
                     child: Text(
                       _subText,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      textAlign: TextAlign.start,
                       style: TextStyle(color: GREY_COLOR, fontSize: 14.0),
                     ),
                   ),

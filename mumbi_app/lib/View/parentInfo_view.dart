@@ -50,7 +50,7 @@ class _ParentInfoState extends State<ParentInfo> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: CustomText(
           text: '$appbarTitle',
@@ -67,6 +67,7 @@ class _ParentInfoState extends State<ParentInfo> {
       body: Form(
         key: formKey,
         child: SingleChildScrollView(
+          reverse: true,
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Column(
@@ -159,60 +160,61 @@ class _ParentInfoState extends State<ParentInfo> {
                     ),
                   ],
                 ),
+                CustomBottomButton(
+                  titleCancel: 'Hủy',
+                  titleSave: widget.action == UPDATE_STATE
+                      ? 'Cập nhật thông tin'
+                      : 'Lưu thông tin',
+                  cancelFunction: () => {Navigator.pop(context)},
+                  saveFunction: () async {
+                    if (formKey.currentState.validate()) {
+                      showProgressDialogue(context);
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      String fileContentBase64 = prefs.getString('UserImage');
+                      if (fileContentBase64 != null) {
+                        String url = await uploadImageToFirebase(
+                            "AvatarParent",
+                            widget.action == UPDATE_STATE
+                                ? widget.model.id
+                                : dadModel.id);
+                        if (url != null) {
+                          if (widget.action == UPDATE_STATE) {
+                            widget.model.imageURL = url;
+                          } else {
+                            dadModel.imageURL = url;
+                          }
+                        }
+                      } else {
+                        if (widget.action == CREATE_STATE) {
+                          dadModel.imageURL = defaultImage;
+                        }
+                      }
+                      bool result = false;
+                      if (appbarTitle == MOM_APP_BAR_TITLE) {
+                        result = await MomViewModel().updateMom(widget.model);
+                      } else {
+                        if (widget.action == UPDATE_STATE) {
+                          result = await DadViewModel().updateDad(widget.model);
+                        } else {
+                          result = await DadViewModel().addDad(dadModel);
+                          Navigator.pop(context);
+                        }
+                      }
+                      Navigator.pop(context);
+                      showResult(
+                          context,
+                          result,
+                          widget.action == UPDATE_STATE
+                              ? "Cập nhật thông tin thành công"
+                              : "Lưu thông tin thành công");
+                    }
+                  },
+                ),
               ],
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: CustomBottomButton(
-        titleCancel: 'Hủy',
-        titleSave: widget.action == UPDATE_STATE
-            ? 'Cập nhật thông tin'
-            : 'Lưu thông tin',
-        cancelFunction: () => {Navigator.pop(context)},
-        saveFunction: () async {
-          if (formKey.currentState.validate()) {
-            showProgressDialogue(context);
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            String fileContentBase64 = prefs.getString('UserImage');
-            if (fileContentBase64 != null) {
-              String url = await uploadImageToFirebase(
-                  "AvatarParent",
-                  widget.action == UPDATE_STATE
-                      ? widget.model.id
-                      : dadModel.id);
-              if (url != null) {
-                if (widget.action == UPDATE_STATE) {
-                  widget.model.imageURL = url;
-                } else {
-                  dadModel.imageURL = url;
-                }
-              }
-            } else {
-              if (widget.action == CREATE_STATE) {
-                dadModel.imageURL = defaultImage;
-              }
-            }
-            bool result = false;
-            if (appbarTitle == MOM_APP_BAR_TITLE) {
-              result = await MomViewModel().updateMom(widget.model);
-            } else {
-              if (widget.action == UPDATE_STATE) {
-                result = await DadViewModel().updateDad(widget.model);
-              } else {
-                result = await DadViewModel().addDad(dadModel);
-                Navigator.pop(context);
-              }
-            }
-            Navigator.pop(context);
-            showResult(
-                context,
-                result,
-                widget.action == UPDATE_STATE
-                    ? "Cập nhật thông tin thành công"
-                    : "Lưu thông tin thành công");
-          }
-        },
       ),
     );
   }

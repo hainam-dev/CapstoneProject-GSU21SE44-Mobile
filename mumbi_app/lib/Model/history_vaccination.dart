@@ -53,7 +53,7 @@ class HistoryVaccination {
     data['thu_tu_mui_tiem'] = this.thu_tu_mui_tiem;
     data['co_so_tiem_chung'] = this.co_so_tiem_chung;
     data['seo'] = this.seo;
-    data['truoc_24h'] = truoc_24h;
+    // data['truoc_24h'] = truoc_24h;
     data['lo_vacxin'] = lo_vacxin;
     data['phan_ung_sau_tiem'] = phan_ung_sau_tiem;
     return data;

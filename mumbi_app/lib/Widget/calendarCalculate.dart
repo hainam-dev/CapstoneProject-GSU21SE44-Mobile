@@ -75,8 +75,8 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            width: SizeConfig.blockSizeHorizontal * 60,
+          Flexible(
+            flex: 4,
             child: GestureDetector(
               onTap: () => _selectDate(context),
               child: AbsorbPointer(
@@ -100,28 +100,31 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
             ),
           ),
           SizedBox(
-            width: 10,
+            width: 17,
           ),
-          Container(
-            height: 50,
-            width: SizeConfig.blockSizeHorizontal * 28,
-            child: RaisedButton(
-              child: new Text(
-                "Tính ngày",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Lato',
+          Flexible(
+            flex: 3,
+            child: Container(
+              width: SizeConfig.blockSizeHorizontal * 100,
+              height: 55.0,
+              child: RaisedButton(
+                child: new Text(
+                  "Tính ngày",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Lato',
+                  ),
                 ),
+                textColor: Colors.white,
+                color: PINK_COLOR,
+                onPressed: () {
+                  _awaitReturnValueFromSecondScreen(context);
+                },
+                shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(15.0)),
               ),
-              textColor: Colors.white,
-              color: PINK_COLOR,
-              onPressed: () {
-                _awaitReturnValueFromSecondScreen(context);
-              },
-              shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(15.0)),
             ),
           )
         ],
