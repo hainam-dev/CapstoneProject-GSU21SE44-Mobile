@@ -6,6 +6,7 @@ import 'package:mumbi_app/Model/childHistory_model.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/standard_index_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
+import 'package:mumbi_app/View/bottomNavBar_view.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
 import 'package:mumbi_app/ViewModel/action_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/childHistory_viewmodel.dart';
@@ -42,6 +43,8 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
 
   ChildHistoryViewModel childHistoryViewModel;
   ActionViewModel actionViewModel;
+  List<ActionModel> listActFine;
+  List<ActionModel> listActGross;
 
   @override
   void initState() {
@@ -62,9 +65,14 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
     // listHisChild = childHistoryViewModel.childListHistoryChild;
 
     actionViewModel = ActionViewModel.getInstance();
-    actionViewModel.getActionByType("Thô");
-    actionViewModel.getAllActionByChildId();
 
+    actionViewModel.getActionGross();
+    listActGross= actionViewModel.listGross;
+
+    actionViewModel.getActionFine();
+    listActFine= actionViewModel.listFine;
+
+    actionViewModel.getAllActionByChildId();
     getChild();
   }
 
@@ -79,10 +87,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Theo dõi bé'),
-        leading: IconButton(
-          icon: Icon(Icons.keyboard_backspace),
-          onPressed: () => {Navigator.pop(context)},
-        ),
+        leading: backButton(context, BotNavBar())
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -136,16 +141,17 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                       child: ScopedModelDescendant(
                         builder: (BuildContext context, Widget child,
                             ChildHistoryViewModel modelChild) {
-                          if (modelChild.childListHistoryChild != null)
-                            modelChild.childListHistoryChild.forEach((e) => e
+                          List<ChildHistoryModel> listChild = modelChild.childListHistoryChild;
+                          if ( listChild!= null){
+                            listChild.forEach((e) => e
                                     .date =
                                 DateTimeConvert.calculateChildMonth(e.date));
                           curentBMI = DateTimeConvert.caculateBMI(
-                              modelChild.childListHistoryChild.first.weight,
-                              modelChild.childListHistoryChild.first.height);
+                              listChild.first.weight,
+                              listChild.first.height);
                           status = DateTimeConvert.caculateBMIdata(
-                              modelChild.childListHistoryChild.first.weight,
-                              modelChild.childListHistoryChild.first.height);
+                              listChild.first.weight,
+                              listChild.first.height);
                           for (var child in modelChild.childListHistoryChild) {
                             if (child.date != null) {
                               resultChildWeight.add(
@@ -155,6 +161,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                               resultChildHead.add(new ChildDataModel(
                                   child.date, child.headCircumference));
                             }
+                          }
                           }
                           return ScopedModel<StandardIndexViewModel>(
                             model: standardIndexViewModel,
@@ -252,20 +259,48 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                         model: actionViewModel,
                         child: ScopedModelDescendant<ActionViewModel>(
                           builder: (context, child, model) {
-                            List<ActionModel> listType = model.list;
-                            List<ActionModel> list = model.listAllAction;
-                            var result = {
-                              for (var month in list)
-                                month: listType
-                                    .where((data) => data.month == month)
-                            };
-                            double percent = result.length / listType.length;
+                            List<ActionModel> listAll = model.listAllAction;
+                            List<ActionModel> listGross = listActGross;
+                            double percentGross = 0;
+                            if(listAll != null && listGross != null)
+                              {
+                                  for (var child in listGross)
+                                    for (var all in listAll)
+                                    {
+                                      if(all.id == child.id && all.checkedFlag == true)
+                                        percentGross++;
+                                    }
+                                percentGross = percentGross/(listGross.length);
+                              }
                             return createLinear(
-                                "Vận động thô", percent, Colors.green);
+                                "Vận động thô", percentGross, Colors.green);
                           },
                         ),
                       ),
-                      createLinear("Vận động tinh", 0.5, Colors.orange),
+                      ScopedModel<ActionViewModel>(
+                        model: actionViewModel,
+                        child: ScopedModelDescendant<ActionViewModel>(
+                          builder: (context, child, model) {
+                            List<ActionModel> listAll = model.listAllAction;
+                            List<ActionModel> listFine = listActFine;
+                            double percentFine = 0;
+                            int resultFine = 0;
+                            if(listAll != null && listFine != null)
+                            {
+                              for (var child in listFine)
+                                for (var all in listAll)
+                                {
+                                  if(all.id == child.id && all.checkedFlag == true)
+                                    resultFine++;
+                                }
+                              percentFine = resultFine/(listFine.length);
+                            }
+                            return createLinear(
+                                "Vận động tinh", percentFine, Colors.orange);
+                          },
+                        ),
+                      ),
+
                       Container(
                           padding: EdgeInsets.only(top: 16),
                           child: createFlatButton(context,
@@ -296,43 +331,3 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
   }
 }
 
-class DrawProgress extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        margin: EdgeInsets.only(top: 16),
-        color: Colors.white,
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: <Widget>[
-            Container(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Mốc phát triển',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                )),
-            Container(
-                padding: EdgeInsets.only(top: 16),
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Bé của bạn đã có tiến bộ gì hơn chưa? ',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-                )),
-            ScopedModel(
-              model: ActionViewModel.getInstance(),
-              child: ScopedModelDescendant<ActionViewModel>(
-                builder: (context, child, model) {
-                  model.getAllActionByChildId();
-                  return createLinear("Vận động thô", 0.5, Colors.green);
-                },
-              ),
-            ),
-            createLinear("Vận động tinh", 0.5, Colors.orange),
-            Container(
-                padding: EdgeInsets.only(top: 16),
-                child: createFlatButton(
-                    context, 'Cập nhật sự vận động của bé', ActivityDetail())),
-          ],
-        ));
-  }
-}

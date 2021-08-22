@@ -149,7 +149,11 @@ class _TeethDetailState extends State<TeethDetail> {
                   url += getUrl;
                 }
               }
-              toothModel.imageURL += url;
+              if (toothModel.imageURL != null && toothModel.imageURL != "") {
+                toothModel.imageURL += url;
+              } else {
+                toothModel.imageURL = url;
+              }
             }
             if (growTimePick != "--") {
               toothModel.grownDate =

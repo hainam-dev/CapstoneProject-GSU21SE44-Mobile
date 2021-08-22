@@ -30,7 +30,8 @@ class _FineMotorSkillState extends State<FineMotorSkill> {
     if (actionViewModel.list != null) actionViewModel.list.clear();
     actionViewModel.getActionByType("Tinh");
     actionViewModel.getAllActionByChildId();
-    listFlag = actionViewModel.listAllAction;
+
+    setState(() {});
   }
 
   @override
@@ -66,111 +67,102 @@ class _FineMotorSkillState extends State<FineMotorSkill> {
                 ],
               ),
             ),
-            ScopedModel(
-              model: actionViewModel,
-              child: ScopedModelDescendant<ActionViewModel>(
-                builder: (context, child, model) {
-                  list = model.list;
-                  listMonth.clear();
-                  if (list != null)
-                    for (int i = 0; i < list.length; i++) {
-                      listMonth.add(list[i].month);
-                    }
-                  Set<int> set = LinkedHashSet<int>.of(listMonth);
-                  result = {
-                    for (var month in set)
-                      month: list.where((data) => data.month == month)
-                  };
-                  return Container(
-                    padding: EdgeInsets.only(top: 16),
-                    child: ListView.separated(
-                        separatorBuilder: (context, index) => Divider(),
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemCount: result.keys.length,
-                        itemBuilder: (context, index) {
-                          // for (var value in result.values.elementAt(index))
-                          //   value.checkedFlag = false;
-                          for (var value in result.values.elementAt(index))
-                            if (listFlag != null)
-                              for (var flag in listFlag)
-                                if (value.id == flag.id &&
-                                    flag.checkedFlag == true)
-                                  value.checkedFlag = true;
-                          return Row(
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.only(left: 16),
-                                child: Text(
-                                    result.keys.elementAt(index).toString() +
-                                        ' Tháng'),
-                                width: SizeConfig.safeBlockHorizontal *
-                                    20, //SET width
-                              ),
-                              Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    for (var values
+            Builder(
+              builder: (context){
+               return ScopedModel(
+                  model: actionViewModel,
+                  child: ScopedModelDescendant<ActionViewModel>(
+                    builder: (context, child, model) {
+                      listFlag = actionViewModel.listAllAction;
+                      list = model.list;
+                      listMonth.clear();
+                      if (list != null)
+                        for (int i = 0; i < list.length; i++) {
+                          listMonth.add(list[i].month);
+                        }
+                      Set<int> set = LinkedHashSet<int>.of(listMonth);
+                      result = {
+                        for (var month in set)
+                          month: list.where((data) => data.month == month)
+                      };
+                      return Container(
+                        padding: EdgeInsets.only(top: 16),
+                        child: ListView.separated(
+                            separatorBuilder: (context, index) => Divider(),
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: result.keys.length,
+                            itemBuilder: (context, index) {
+                              // for (var value in result.values.elementAt(index))
+                              //   value.checkedFlag = false;
+                              for (var value in result.values.elementAt(index))
+                                if (listFlag != null)
+                                  for (var flag in listFlag)
+                                    if (value.id == flag.id && flag.checkedFlag == true)
+                                      value.checkedFlag = true;
+                              return Row(
+                                children: <Widget>[
+                                  Container(
+                                    padding: EdgeInsets.only(left: 16),
+                                    child: Text(
+                                        result.keys.elementAt(index).toString() +
+                                            ' Tháng'),
+                                    width: SizeConfig.safeBlockHorizontal *
+                                        20, //SET width
+                                  ),
+                                  Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        for (var values
                                         in result.values.elementAt(index))
-                                      Container(
-                                          // height: SizeConfig.safeBlockVertical*result[keys].length,
-                                          width:
+                                          Container(
+                                            // height: SizeConfig.safeBlockVertical*result[keys].length,
+                                              width:
                                               SizeConfig.safeBlockHorizontal *
                                                   50, //SET width
-                                          margin: EdgeInsets.symmetric(
-                                            vertical: 10,
-                                          ),
-                                          child: Text(values.name)),
-                                  ]),
-                              Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    for (var values
+                                              margin: EdgeInsets.symmetric(
+                                                vertical: 10,
+                                              ),
+                                              child: Text(values.name)),
+                                      ]),
+                                  Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        for (var values
                                         in result.values.elementAt(index))
-                                      IconButton(
-                                        onPressed: () async {
-                                          if (values.checkedFlag == null)
-                                            values.checkedFlag = false;
-                                          else
-                                            values.checkedFlag =
-                                                !values.checkedFlag;
-                                          print('values.checkedFlag' +
-                                              values.checkedFlag.toString());
-                                          ActionModel actionModel =
-                                              new ActionModel(
-                                            id: values.id,
-                                            checkedFlag: values.checkedFlag,
-                                          );
-                                          print("actionModel" +
-                                              actionModel.id.toString());
-                                          resultUpdate = await ActionViewModel()
-                                              .upsertAction(actionModel);
-                                          print('chicl');
-                                          showResult(context, resultUpdate, "");
-                                          setState(() {});
-                                        },
-                                        icon:
+                                          IconButton(
+                                            onPressed: () async {
+                                              if (values.checkedFlag == null)
+                                                values.checkedFlag = false;
+                                              else
+                                                values.checkedFlag = await !values.checkedFlag;
+                                              ActionModel actionModel = new ActionModel(
+                                                id: values.id,
+                                                checkedFlag: values.checkedFlag,
+                                              );
+                                              resultUpdate = await ActionViewModel().upsertAction(actionModel);
+                                              showResult(context, resultUpdate, "");
+                                              setState(() {});
+                                            },
+                                            icon:
                                             // values.id == listFlag[index].id
                                             values.checkedFlag == true
-                                                ? Icon(
-                                                    Icons.check_circle,
-                                                    color: GREEN400,
-                                                  )
-                                                : Icon(
-                                                    Icons.check_circle_outline,
-                                                    color: Colors.grey,
-                                                  ),
-                                      )
-                                  ])
-                            ],
-                          );
-                        }),
-                  );
-                },
-              ),
+                                                ? Icon(Icons.check_circle, color: GREEN400,)
+                                                : Icon(Icons.check_circle_outline, color: Colors.grey,
+                                            ),
+                                          )
+                                      ])
+                                ],
+                              );
+                            }),
+                      );
+                    },
+                  ),
+                );
+              }
             ),
           ],
         ),
