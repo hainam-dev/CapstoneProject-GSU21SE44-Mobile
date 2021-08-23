@@ -74,7 +74,7 @@ class _TrackingState extends State<Tracking> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Theo dõi"),
-        actions: [
+        /*actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: IconButton(
@@ -94,7 +94,7 @@ class _TrackingState extends State<Tracking> {
                   )),
             ),
           )
-        ],
+        ],*/
       ),
       drawer: getDrawer(context),
       body: ScopedModel(

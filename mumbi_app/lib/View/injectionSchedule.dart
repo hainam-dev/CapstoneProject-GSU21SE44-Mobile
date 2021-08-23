@@ -11,6 +11,7 @@ import 'package:mumbi_app/Model/injectionSchedule_model.dart';
 import 'package:mumbi_app/Repository/vaccination_respository.dart';
 import 'package:mumbi_app/Utils/rebuildAllChildren.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
+import 'package:mumbi_app/View/vaccinePrice_compare.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/injectionSchedule_viewmodel.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
@@ -109,6 +110,22 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
               )),
           Header(),
           InjectTable(),
+          Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: GestureDetector(
+                    child: Text("So sánh giá Vaccine",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            decoration: TextDecoration.underline,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.pinkAccent)),
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => VaccinePrice(),));
+                    }),
+              )),
         ],
       ),
     );
