@@ -38,10 +38,7 @@ class _TeethProcessState extends State<TeethProcess> {
 
     toothViewModel = ToothViewModel.getInstance();
     toothViewModel.getAllToothByChildId();
-    listTooth = toothViewModel.listTooth;
-    listTooth.sort(
-        (a, b) => b.grownDate.toString().compareTo(a.grownDate.toString()));
-    listTooth.reversed;
+
     print('listTooth' + listTooth.toString());
   }
 
@@ -80,6 +77,10 @@ class _TeethProcessState extends State<TeethProcess> {
               model: toothViewModel,
               child: ScopedModelDescendant<ToothViewModel>(
                 builder: (context, child, model) {
+                  listTooth = model.listTooth;
+                  listTooth.sort(
+                          (a, b) => b.grownDate.toString().compareTo(a.grownDate.toString()));
+                  listTooth.reversed;
                   return listTooth.isEmpty
                       ? Center(
                           child: Text("Chưa có dữ liệu mọc răng của bé.\n"),

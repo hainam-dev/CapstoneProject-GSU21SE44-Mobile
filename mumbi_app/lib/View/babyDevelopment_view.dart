@@ -70,14 +70,10 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
     actionViewModel = ActionViewModel.getInstance();
 
     actionViewModel.getActionGross();
-    listActGross= actionViewModel.listGross;
 
     actionViewModel.getActionFine();
-    listActFine= actionViewModel.listFine;
 
     actionViewModel.getAllActionByChildId();
-    resultChildWeight.clear();
-    listChild = childHistoryViewModel.childListHistoryChild;
 
     getChild();
   }
@@ -146,7 +142,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                       model: childHistoryViewModel,
                       child: ScopedModelDescendant(
                         builder: (BuildContext context, Widget child, ChildHistoryViewModel modelChild) {
-
+                          listChild = modelChild.childListHistoryChild;
                           if (listChild?.isNotEmpty ?? false) {
                             // listChild.forEach((e) => e.date = DateTimeConvert.calculateChildMonth(e.date));
                             curentBMI = DateTimeConvert.caculateBMI(listChild.last.weight, listChild.last.height);
@@ -304,7 +300,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                         child: ScopedModelDescendant<ActionViewModel>(
                           builder: (context, child, model) {
                             List<ActionModel> listAll = model.listAllAction;
-                            List<ActionModel> listGross = listActGross;
+                            List<ActionModel> listGross = model.listGross;
                             double percentGross = 0;
                             if(listAll != null && listGross != null)
                               {
@@ -326,7 +322,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                         child: ScopedModelDescendant<ActionViewModel>(
                           builder: (context, child, model) {
                             List<ActionModel> listAll = model.listAllAction;
-                            List<ActionModel> listFine = listActFine;
+                            List<ActionModel> listFine = model.listFine;
                             double percentFine = 0;
                             int resultFine = 0;
                             if(listAll != null && listFine != null)
