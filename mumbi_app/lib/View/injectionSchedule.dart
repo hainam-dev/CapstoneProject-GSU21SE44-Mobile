@@ -39,19 +39,23 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
   @override
   void initState() {
     super.initState();
-    VaccinationRespository.getToken().then((value) async {
-      if (value != null && value != "") {
-        if (injectionScheduleViewModel.injectionScheduleListModel == null) {
-          await getHistorySchedule();
-        }
-        isLogin = true;
-      }
-    });
     childViewModel = ChildViewModel.getInstance();
     childViewModel.getChildByID(CurrentMember.pregnancyFlag == true
         ? CurrentMember.pregnancyID
         : CurrentMember.id);
     injectionScheduleViewModel = InjectionScheduleViewModel.getInstance();
+    VaccinationRespository.getToken().then((value) async {
+      if (value != null && value != "") {
+        if (injectionScheduleViewModel.injectionScheduleListModel == null) {
+          await showCustomProgressDialog(
+              context, "Đang lấy dữ liệu", getHistorySchedule(), (value) {
+            return Pair(value, "Có lỗi xảy ra, vui lòng thử lại!");
+          });
+        }
+        isLogin = true;
+        setState(() {});
+      }
+    });
   }
 
   void getInjectionSchedule() {
@@ -123,7 +127,11 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                             fontStyle: FontStyle.italic,
                             color: Colors.pinkAccent)),
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => VaccinePrice(),));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VaccinePrice(),
+                          ));
                     }),
               )),
         ],
@@ -297,7 +305,10 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Align(alignment: Alignment.center,child: Text("Vui lòng nhập số điện thoại và mật khẩu đã đăng ký với các cơ sở tiêm chủng để cập nhật lịch sử tiêm chủng cho bé")),
+                      Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                              "Vui lòng nhập số điện thoại và mật khẩu đã đăng ký với các cơ sở tiêm chủng để cập nhật lịch sử tiêm chủng cho bé")),
                       SizedBox(
                         height: 10.0,
                       ),
