@@ -3,6 +3,7 @@ import 'package:mumbi_app/Constant/saveKey.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/tooth_model.dart';
+import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/tooth_viewmodel.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
@@ -38,8 +39,6 @@ class _TeethProcessState extends State<TeethProcess> {
 
     toothViewModel = ToothViewModel.getInstance();
     toothViewModel.getAllToothByChildId();
-
-    print('listTooth' + listTooth.toString());
   }
 
   @override
@@ -118,35 +117,7 @@ class _TeethProcessState extends State<TeethProcess> {
       birthday = childModel.birthday;
       imageUrl = childModel.imageURL;
       try {
-        DateTime dayCurrent =
-            DateTime.parse(birthday.split('/').reversed.join());
-        Duration dur = DateTime.now().difference(dayCurrent);
-        double durInMoth = dur.inDays / 30;
-        double durInDay = dur.inDays / 30 - 12 * dur.inDays / 30 / 12;
-        int durDay = (DateTime.now().day - dayCurrent.day);
-        if (durDay < 0) durDay *= -1;
-        if (durInMoth < 12 && durInMoth >= 1) {
-          day = durInMoth.floor().toString() +
-              " tháng " +
-              durDay.toString() +
-              " ngày";
-        } else if (durInMoth > 12) {
-          day = (durInMoth / 12).floor().toString() +
-              " năm " +
-              durInDay.floor().toString() +
-              " tháng " +
-              durDay.toString() +
-              " ngày";
-        } else if (durInMoth > 0) {
-          day = durDay.toString() + " ngày";
-        } else if (durInMoth < 0) {
-          durInMoth *= -1;
-          day = "Còn " +
-              durInMoth.floor().toString() +
-              " tháng " +
-              durDay.toString().toString() +
-              " ngày bé ra đời";
-        }
+        day = DateTimeConvert.calculateChildAge(birthday);
       } catch (e) {
         return "";
       }

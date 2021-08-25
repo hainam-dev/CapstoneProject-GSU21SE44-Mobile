@@ -365,7 +365,8 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
       name = childModel.fullName;
       birthday = childModel.birthday;
       imageUrl = childModel.imageURL;
-
+      // if(imageUrl?.isNotEmpty ??false)
+      //   imageUrl = 'https://image.flaticon.com/icons/png/512/747/747376.png';
       day = DateTimeConvert.calculateChildAge(birthday);
     }
   }
@@ -374,9 +375,9 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
 num converData(double weightData, double maxValue, double minValue) {
   double weight = weightData;
   if(weight >= maxValue)
-    weight = maxValue*0.99;
+    weight = maxValue;
   else if(weight <= minValue)
-    weight = minValue*0.99;
+    weight = minValue;
   return weight;
 }
 
