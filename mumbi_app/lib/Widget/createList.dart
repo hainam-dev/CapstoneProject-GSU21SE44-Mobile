@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
@@ -196,7 +197,6 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
                   _text,
                   maxLines: 1,
                   textAlign: TextAlign.start,
-
                   // overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16.0),
                 ),
@@ -212,13 +212,12 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
                   ),
                 if (role == PREGNANCY_ROLE)
                   LinearPercentIndicator(
+                    padding: EdgeInsets.zero,
                     backgroundColor: WHITE_COLOR,
                     width: SizeConfig.blockSizeHorizontal * 53,
-                    lineHeight: 7.0,
                     percent: getOpposite(calculatePercent(PREGNANCY_DAY, day)),
                     progressColor: PINK_COLOR,
                   ),
-
                 /*Text(
                   "Tìm hiểu thêm",
                   style: TextStyle(color: BLUE_COLOR, fontSize: 13.0),
@@ -550,6 +549,7 @@ Widget createDiaryItem(BuildContext context, DiaryModel diaryModel,
     ),
   );
 }
+
 
 // Widget create(){
 //   return DataRow(

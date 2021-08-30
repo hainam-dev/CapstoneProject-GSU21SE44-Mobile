@@ -243,13 +243,13 @@ Widget createFamilyCard(BuildContext context, String _imageURL, String _name,
                   child: Stack(
                     children: [
                       CircleAvatar(
-                          radius: 39,
+                          radius: 37,
                           backgroundColor: PINK_COLOR,
                           backgroundImage:
                               CachedNetworkImageProvider(_imageURL)),
                       Positioned(
-                        top: -2,
-                        right: -2,
+                        top: -1,
+                        right: -1,
                         child: Container(
                           child: SvgPicture.asset(
                             editpencil,
@@ -403,7 +403,7 @@ Widget createAddFamilyCard(BuildContext context, String _title,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               CircleAvatar(
-                radius: 39,
+                radius: 35,
                 backgroundColor: Colors.transparent,
                 backgroundImage: AssetImage(empty),
               ),

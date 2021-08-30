@@ -120,6 +120,9 @@ flutter:
     - family: Lato
       fonts:
         - asset: assets/fonts/Lato-Regular.ttf
+    - family: Mulish
+      fonts:
+        - asset: assets/fonts/Mulish-Regular.ttf
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Light.ttf

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
@@ -69,7 +70,7 @@ class _DashBoardState extends State<DashBoard> {
       ),
       drawer: getDrawer(context),
       body: Padding(
-        padding: const EdgeInsets.all(3.0),
+        padding: EdgeInsets.all(6.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -189,59 +190,69 @@ class _DashBoardState extends State<DashBoard> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => _screen));
       },
-      child: Padding(
-        padding: const EdgeInsets.all(2.0),
-        child: Card(
-          elevation: 2,
-          child: Scaffold(
-            backgroundColor: WHITE_COLOR,
-            body: SingleChildScrollView(
-              physics: NeverScrollableScrollPhysics(),
-              child: ClipRRect(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(4.0),
-                  ),
-                  child: CachedNetworkImage(imageUrl: _imageURL)),
+      child: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: LIGHT_GREY_COLOR,
+              blurRadius: 10,
+              offset: Offset(2, 3), // Shadow position
             ),
-            bottomNavigationBar: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: 5,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 8, right: 4),
-                  child: Text(
-                    _title,
-                    textAlign: TextAlign.left,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          ],
+        ),
+        child: Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: 125,
                   ),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(15.0),
+                      ),
+                      child: CachedNetworkImage(imageUrl: _imageURL,)),
                 ),
-                Row(
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10,right: 5),
+                child: Text(
+                  _title,
+                  textAlign: TextAlign.left,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 8,left: 4),
+                child: Row(
                   children: [
                     SizedBox(
                       width: 8,
                     ),
-                    Icon(
-                      Icons.auto_stories_outlined,
-                      color: GREY_COLOR,
-                      size: 20,
-                    ),
+                    Container(child: SvgPicture.asset(readIcon,height: 16, width: 16)),
                     SizedBox(width: 5),
                     Text(
                       _estimatedTime + " phút đọc",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style:
-                          TextStyle(fontSize: 13, color: LIGHT_DARK_GREY_COLOR),
+                      TextStyle(fontSize: 14, color: LIGHT_DARK_GREY_COLOR),
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -366,8 +377,8 @@ class _DashBoardState extends State<DashBoard> {
                   child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                           maxCrossAxisExtent: 250,
-                          crossAxisSpacing: 5,
-                          mainAxisSpacing: 5),
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8),
                       itemCount: model.newsListModel != null
                           ? model.newsListModel.length
                           : 0,
