@@ -46,9 +46,9 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
   ActionViewModel actionViewModel;
   List<ActionModel> listActFine;
   List<ActionModel> listActGross;
-  double weightPercent;
-  double heightPercent;
-  double headPercent;
+  double weightPercent = 0;
+  double heightPercent = 0;
+  double headPercent = 0;
 
   @override
   void initState() {
@@ -80,7 +80,6 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
 
   @override
   void dispose() {
-    //
     super.dispose();
   }
 
@@ -143,7 +142,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                       child: ScopedModelDescendant(
                         builder: (BuildContext context, Widget child, ChildHistoryViewModel modelChild) {
                           listChild = modelChild.childListHistoryChild;
-                          if (listChild?.isNotEmpty ?? false) {
+                          if (listChild.isNotEmpty) {
                             // listChild.forEach((e) => e.date = DateTimeConvert.calculateChildMonth(e.date));
                             curentBMI = DateTimeConvert.caculateBMI(listChild.last.weight, listChild.last.height);
                             status = DateTimeConvert.caculateBMIdata(listChild.last.weight, listChild.last.height);
@@ -160,6 +159,12 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                               }
                             }
                             print('resultChildWeight'+resultChildWeight.length.toString());
+                          } else if(listChild.isEmpty){
+                            curentBMI = 0;
+                            status = "Không có";
+                            resultChildWeight = [];
+                            resultChildWeight = [];
+                            resultChildWeight = [];
                           }
                           return ScopedModel<StandardIndexViewModel>(
                             model: standardIndexViewModel,
@@ -192,7 +197,17 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                                     }
                                     for (var index in heightList)
                                     {
-                                      double height = converData(listChild.last.height.toDouble(), index.maxValue, index.minValue);
+                                      double height;
+                                      if(listChild.isNotEmpty)
+                                        {
+                                          height = converData(listChild.last.height.toDouble(), index.maxValue, index.minValue);
+                                          print('chay 1');
+                                        }
+                                      else if(listChild.isEmpty)
+                                        {
+                                          print('height = 0;');
+                                          height = index.minValue;
+                                        }
                                       if(index.month.toString() == date.toString())
                                       {
                                         heightPercent = (height - index.minValue)/(index.maxValue - index.minValue);
@@ -228,7 +243,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
                                     curentBMI == null || status == ""
                                         ? loadingProgress()
                                         : createBabyCondition(context,
-                                              status, curentBMI.toString(),),
+                                              curentBMI.toString(),status, ),
                                     result == null || resultChildWeight == null
                                         ? loadingProgress()
                                         : Container(
@@ -365,8 +380,6 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
       name = childModel.fullName;
       birthday = childModel.birthday;
       imageUrl = childModel.imageURL;
-      // if(imageUrl?.isNotEmpty ??false)
-      //   imageUrl = 'https://image.flaticon.com/icons/png/512/747/747376.png';
       day = DateTimeConvert.calculateChildAge(birthday);
     }
   }
