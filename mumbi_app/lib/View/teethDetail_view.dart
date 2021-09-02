@@ -136,7 +136,7 @@ class _TeethDetailState extends State<TeethDetail> {
                               fileName: toothModel.childId.toString(),
                               thread: "ToothImages",
                               files: _files);
-                          if (listUrl?.isNotEmpty ?? false) {
+                          if (listUrl != null && listUrl != "") {
                             String url = "";
                             for (var getUrl in listUrl) {
                               if (getUrl != listUrl.last) {
@@ -405,7 +405,7 @@ class _TeethDetailState extends State<TeethDetail> {
           actionBarTitle: "Thêm hình ảnh",
           allViewTitle: "Tất cả hình ảnh",
           useDetailsView: true,
-          selectCircleStrokeColor: "#000000",
+          selectCircleStrokeColor: "#ffffff",
         ),
       );
     } on Exception catch (e) {

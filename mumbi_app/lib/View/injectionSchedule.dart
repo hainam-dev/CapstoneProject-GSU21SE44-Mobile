@@ -11,6 +11,7 @@ import 'package:mumbi_app/Model/injectionSchedule_model.dart';
 import 'package:mumbi_app/Repository/vaccination_respository.dart';
 import 'package:mumbi_app/Utils/rebuildAllChildren.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
+import 'package:mumbi_app/View/vaccinePrice_compare.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/injectionSchedule_viewmodel.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
@@ -38,19 +39,23 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
   @override
   void initState() {
     super.initState();
-    VaccinationRespository.getToken().then((value) async {
-      isLogin = value != null && value != "";
-      if (isLogin) {
-        if (injectionScheduleViewModel.injectionScheduleListModel == null) {
-          await getHistorySchedule();
-        }
-      }
-    });
     childViewModel = ChildViewModel.getInstance();
     childViewModel.getChildByID(CurrentMember.pregnancyFlag == true
         ? CurrentMember.pregnancyID
         : CurrentMember.id);
     injectionScheduleViewModel = InjectionScheduleViewModel.getInstance();
+    VaccinationRespository.getToken().then((value) async {
+      if (value != null && value != "") {
+        if (injectionScheduleViewModel.injectionScheduleListModel == null) {
+          await showCustomProgressDialog(
+              context, "Đang lấy dữ liệu", getHistorySchedule(), (value) {
+            return Pair(value, "Có lỗi xảy ra, vui lòng thử lại!");
+          });
+        }
+        isLogin = true;
+        setState(() {});
+      }
+    });
   }
 
   void getInjectionSchedule() {
@@ -109,6 +114,26 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
               )),
           Header(),
           InjectTable(),
+          Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: GestureDetector(
+                    child: Text("So sánh giá Vaccine",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            decoration: TextDecoration.underline,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.pinkAccent)),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VaccinePrice(),
+                          ));
+                    }),
+              )),
         ],
       ),
     );
@@ -278,8 +303,12 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                 builder: (context, setState) {
                   _setStateLoginDialog = setState;
                   return Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text("Đăng nhập"),
+                      Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                              "Vui lòng nhập số điện thoại và mật khẩu đã đăng ký với các cơ sở tiêm chủng để cập nhật lịch sử tiêm chủng cho bé")),
                       SizedBox(
                         height: 10.0,
                       ),
@@ -355,7 +384,7 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                         width: SizeConfig.safeBlockHorizontal * 40,
                         onPressed: () => login(),
                         child: Text(
-                          "LOGIN",
+                          "Đăng nhập",
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       )

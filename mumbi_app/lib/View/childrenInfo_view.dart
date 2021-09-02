@@ -102,49 +102,6 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     });
                   },
                 ),
-                if (widget.action == UPDATE_STATE &&
-                        widget.model.bornFlag == true ||
-                    selectedStatusValue.toString() == born)
-                  CalendarBirthday(
-                    CHILD_BIRTHDAY_FIELD,
-                    widget.action == UPDATE_STATE ? widget.model.birthday : "",
-                    function: (value) {
-                      if (value.isEmpty) {
-                        return "Vui lòng chọn ngày sinh cho bé";
-                      } else {
-                        setState(() {
-                          if (widget.action == UPDATE_STATE) {
-                            widget.model.birthday = value;
-                          } else {
-                            childModel.birthday = value;
-                          }
-                        });
-                        return null;
-                      }
-                    },
-                  ),
-                if (widget.action == UPDATE_STATE &&
-                        widget.model.bornFlag == false ||
-                    selectedStatusValue.toString() == notBorn)
-                  CalendarCalculate(
-                    widget.action == UPDATE_STATE
-                        ? widget.model.estimatedBornDate
-                        : "",
-                    function: (value) {
-                      if (value.isEmpty) {
-                        return "Vui lòng chọn ngày dự sinh cho bé";
-                      } else {
-                        setState(() {
-                          if (widget.action == UPDATE_STATE) {
-                            widget.model.estimatedBornDate = value;
-                          } else {
-                            childModel.estimatedBornDate = value;
-                          }
-                        });
-                        return null;
-                      }
-                    },
-                  ),
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -199,6 +156,49 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     ),
                   ],
                 ),
+                if (widget.action == UPDATE_STATE &&
+                        widget.model.bornFlag == true ||
+                    selectedStatusValue.toString() == born)
+                  CalendarBirthday(
+                    CHILD_BIRTHDAY_FIELD,
+                    widget.action == UPDATE_STATE ? widget.model.birthday : "",
+                    function: (value) {
+                      if (value.isEmpty) {
+                        return "Vui lòng chọn ngày sinh cho bé";
+                      } else {
+                        setState(() {
+                          if (widget.action == UPDATE_STATE) {
+                            widget.model.birthday = value;
+                          } else {
+                            childModel.birthday = value;
+                          }
+                        });
+                        return null;
+                      }
+                    },
+                  ),
+                if (widget.action == UPDATE_STATE &&
+                        widget.model.bornFlag == false ||
+                    selectedStatusValue.toString() == notBorn)
+                  CalendarCalculate(
+                    widget.action == UPDATE_STATE
+                        ? widget.model.estimatedBornDate
+                        : "",
+                    function: (value) {
+                      if (value.isEmpty) {
+                        return "Vui lòng chọn ngày dự sinh cho bé";
+                      } else {
+                        setState(() {
+                          if (widget.action == UPDATE_STATE) {
+                            widget.model.estimatedBornDate = value;
+                          } else {
+                            childModel.estimatedBornDate = value;
+                          }
+                        });
+                        return null;
+                      }
+                    },
+                  ),
                 if (widget.action == UPDATE_STATE &&
                         widget.model.bornFlag == true ||
                     selectedStatusValue.toString() == born)

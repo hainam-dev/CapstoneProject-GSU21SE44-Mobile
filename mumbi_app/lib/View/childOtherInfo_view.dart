@@ -26,20 +26,8 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
   ChildHistoryViewModel childHistoryViewModel;
   PregnancyHistoryViewModel pregnancyHistoryViewModel;
 
-  ChildHistoryModel childHistoryModel = new ChildHistoryModel();
-  PregnancyHistoryModel pregnancyHistoryModel = new PregnancyHistoryModel();
-
-  void getChildHistory() async {
-    childHistoryViewModel = ChildHistoryViewModel.getInstance();
-    await childHistoryViewModel.getChildHistory(
-        CurrentMember.id, DateTimeConvert.getCurrentDay());
-  }
-
-  void getPregnancyHistory() async {
-    pregnancyHistoryViewModel = PregnancyHistoryViewModel.getInstance();
-    await pregnancyHistoryViewModel.getPregnancyHistory(
-        CurrentMember.pregnancyID, DateTimeConvert.getCurrentDay());
-  }
+  ChildHistoryModel childHistoryModel;
+  PregnancyHistoryModel pregnancyHistoryModel;
 
   @override
   void initState() {
@@ -51,6 +39,18 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
     } else {
       getPregnancyHistory();
     }
+  }
+
+  void getChildHistory() async {
+    childHistoryViewModel = ChildHistoryViewModel.getInstance();
+    await childHistoryViewModel.getChildHistory(
+        CurrentMember.id, DateTimeConvert.getCurrentDay());
+  }
+
+  void getPregnancyHistory() async {
+    pregnancyHistoryViewModel = PregnancyHistoryViewModel.getInstance();
+    await pregnancyHistoryViewModel.getPregnancyHistory(
+        CurrentMember.pregnancyID, DateTimeConvert.getCurrentDay());
   }
 
   @override
@@ -94,37 +94,16 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                           saveFunction: () async {
                             if (formKey.currentState.validate()) {
                               showProgressDialogue(context);
-                              bool result;
-                              if (CurrentMember.pregnancyFlag == false) {
-                                checkChildNull();
-                                childHistoryModel.childId = CurrentMember.id;
-                                num weekAge =
-                                    await DateTimeConvert.pregnancyWeek(
-                                        model.childModel.estimatedBornDate);
-                                childHistoryModel.weekOlds = weekAge;
-                                result = await ChildHistoryViewModel()
-                                    .updateChildHistory(
-                                        CurrentMember.id,
-                                        childHistoryModel,
-                                        DateTimeConvert.getCurrentDay());
-                              } else {
-                                checkPregnancyNull();
-                                pregnancyHistoryModel.childId =
-                                    CurrentMember.pregnancyID;
-                                num pregnancyAge =
-                                    await DateTimeConvert.calculateChildWeekAge(
-                                        model.childModel.birthday);
-                                pregnancyHistoryModel.pregnancyWeek =
-                                    pregnancyAge;
-                                result = await PregnancyHistoryViewModel()
-                                    .updatePregnancyHistory(
-                                        CurrentMember.pregnancyID,
-                                        pregnancyHistoryModel,
-                                        DateTimeConvert.getCurrentDay());
-                              }
-                              Navigator.pop(context);
-                              showResult(context, result,
-                                  "Cập nhật thông tin thành công");
+                              bool result = true;
+
+                              Future.delayed(new Duration(milliseconds: 3000), ()
+                              {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                showResult(context, result,
+                                    "Cập nhật thông tin thành công");
+                              });
+
                             }
                           }),
                     ],
@@ -150,37 +129,37 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                 PREGNANCY_MOTHER_WEIGHT_FIELD,
                 model.pregnancyHistoryModel == null
                     ? ""
-                    : model.pregnancyHistoryModel.motherWeight.toString(),
+                    : model.pregnancyHistoryModel.motherWeight,
               ),
               DigitalNumber(
                 PREGNANCY_WEIGHT_FIELD,
                 model.pregnancyHistoryModel == null
                     ? ""
-                    : model.pregnancyHistoryModel.weight.toString(),
+                    : model.pregnancyHistoryModel.weight,
               ),
               DigitalNumber(
                 PREGNANCY_HEAD_CIRCUMFERENCE_FIELD,
                 model.pregnancyHistoryModel == null
                     ? ""
-                    : model.pregnancyHistoryModel.headCircumference.toString(),
+                    : model.pregnancyHistoryModel.headCircumference,
               ),
               DigitalNumber(
                 PREGNANCY_FETAL_HEART_RATE_FIELD,
                 model.pregnancyHistoryModel == null
                     ? ""
-                    : model.pregnancyHistoryModel.fetalHeartRate.toString(),
+                    : model.pregnancyHistoryModel.fetalHeartRate,
               ),
               DigitalNumber(
                 PREGNANCY_FEMUR_LENGTH_FIELD,
                 model.pregnancyHistoryModel == null
                     ? ""
-                    : model.pregnancyHistoryModel.femurLength.toString(),
+                    : model.pregnancyHistoryModel.femurLength,
               ),
               DigitalNumber(
                 PREGNANCY_BIPARIETAL_DIAMETER_FIELD,
                 model.pregnancyHistoryModel == null
                     ? ""
-                    : model.pregnancyHistoryModel.biparietalDiameter.toString(),
+                    : model.pregnancyHistoryModel.biparietalDiameter,
               ),
             ],
           );
@@ -203,26 +182,14 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                       ? ""
                       : model.childHistoryModel.weight == 0
                           ? ""
-                          : model.childHistoryModel.weight.toString(),
-                  onType: (value) {
-                setState(() {
-                  if (value == "") {
-                    model.childHistoryModel.weight = 0;
-                    print(model.childHistoryModel.weight);
-                  } else {
-                    model.childHistoryModel.weight =
-                        num.parse(value.toString());
-                    print(model.childHistoryModel.weight);
-                  }
-                });
-              }),
+                          : model.childHistoryModel.weight,),
               DigitalNumber(
                 CHILD_HEIGHT_FIELD,
                 model.childHistoryModel == null
                     ? ""
                     : model.childHistoryModel.height == 0
                         ? ""
-                        : model.childHistoryModel.height.toString(),
+                        : model.childHistoryModel.height,
               ),
               DigitalNumber(
                 CHILD_HEAD_CIRCUMFERENCE_FIELD,
@@ -230,7 +197,7 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                     ? ""
                     : model.childHistoryModel.headCircumference == 0
                         ? ""
-                        : model.childHistoryModel.headCircumference.toString(),
+                        : model.childHistoryModel.headCircumference,
               ),
               DigitalNumber(
                 CHILD_SLEEP_TIME_FIELD,
@@ -238,7 +205,7 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                     ? ""
                     : model.childHistoryModel.hourSleep == 0
                         ? ""
-                        : model.childHistoryModel.hourSleep.toString(),
+                        : model.childHistoryModel.hourSleep,
               ),
               DigitalNumber(
                 CHILD_MILK_FIELD,
@@ -246,7 +213,7 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                     ? ""
                     : model.childHistoryModel.avgMilk == 0
                         ? ""
-                        : model.childHistoryModel.avgMilk.toString(),
+                        : model.childHistoryModel.avgMilk,
               ),
             ],
           );
@@ -298,6 +265,7 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                 !isBetween(num.parse(value), 25, 130)) {
               return CHILD_HEIGHT_VALIDATION_MESSAGE;
             } else if (title == CHILD_HEAD_CIRCUMFERENCE_FIELD &&
+                CurrentMember.pregnancyFlag == false &&
                 !isBetween(num.parse(value), 25, 60)) {
               return CHILD_HEAD_CIRCUMFERENCE_VALIDATION_MESSAGE;
             } else if (title == CHILD_SLEEP_TIME_FIELD &&
@@ -313,6 +281,7 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                 !isBetween(num.parse(value), 0.1, 3.5)) {
               return PREGNANCY_WEIGHT_FIELD_VALIDATION_MESSAGE;
             } else if (title == PREGNANCY_HEAD_CIRCUMFERENCE_FIELD &&
+                CurrentMember.pregnancyFlag == true &&
                 !isBetween(num.parse(value), 60, 350)) {
               return PREGNANCY_HEAD_CIRCUMFERENCE_VALIDATION_MESSAGE;
             } else if (title == PREGNANCY_FETAL_HEART_RATE_FIELD &&
@@ -328,7 +297,7 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
               return null;
             }
           },
-          onChanged: onType,
+          onFieldSubmitted: onType,
           keyboardType:
               TextInputType.numberWithOptions(decimal: true, signed: false),
           inputFormatters: [

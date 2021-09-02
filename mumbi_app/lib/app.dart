@@ -73,8 +73,12 @@ class _MyApp extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: ColorTheme,
-        fontFamily: 'Lato',
+        fontFamily: 'Mulish',
         iconTheme: new IconThemeData(color: Colors.white, size: 24.0),
+        appBarTheme: AppBarTheme(
+          elevation: 0,
+
+        )
       ),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,

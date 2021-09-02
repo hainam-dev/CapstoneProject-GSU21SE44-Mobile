@@ -21,15 +21,10 @@ class ChildHistoryViewModel extends Model {
     _instance = null;
   }
 
-  ChildHistoryModel _childHistoryModel;
-  List<dynamic> _childHistoryList;
-  List<ChildHistoryModel> _childHistoryListModel;
-  List<ChildHistoryModel> _childListHistoryChild;
-
-  ChildHistoryModel get childHistoryModel => _childHistoryModel;
-  List<dynamic> get childHistoryList => _childHistoryList;
-  List<ChildHistoryModel> get childHistoryListModel => _childHistoryListModel;
-  List<ChildHistoryModel> get childListHistoryChild => _childListHistoryChild;
+  ChildHistoryModel childHistoryModel;
+  List<dynamic> childHistoryList;
+  List<ChildHistoryModel> childHistoryListModel;
+  List<ChildHistoryModel> childListHistoryChild;
 
   void getChildHistory(String childId, String date) async {
     print('Chay cua Duy');
@@ -40,16 +35,16 @@ class ChildHistoryViewModel extends Model {
         print('data getListChildHistory' + data.toString());
 
         Map<String, dynamic> jsonList = json.decode(data);
-        _childHistoryList = jsonList['data'];
+        childHistoryList = jsonList['data'];
         if (childHistoryList != null) {
-          _childHistoryListModel = childHistoryList
+          childHistoryListModel = childHistoryList
               .map((e) => ChildHistoryModel.fromJson(e))
               .toList();
           if (date != "") {
-            _childHistoryModel = childHistoryListModel[0];
+            childHistoryModel = childHistoryListModel[0];
           }
         } else {
-          _childHistoryModel = null;
+          childHistoryModel = ChildHistoryModel();
         }
         notifyListeners();
       } catch (e) {
@@ -73,26 +68,25 @@ class ChildHistoryViewModel extends Model {
   void getListChildHistory() async {
     print('Chay 4');
     var childId = await storage.read(key: childIdKey);
-      try {
-        var data = await ChildHistoryRepository.apiGetChildHistory(childId, "");
+    try {
+      var data = await ChildHistoryRepository.apiGetChildHistory(childId, "");
 
-        Map<String, dynamic> jsonList = json.decode(data);
-        _childHistoryList = jsonList['data'];
+      Map<String, dynamic> jsonList = json.decode(data);
+      childHistoryList = jsonList['data'];
 
-        if (_childHistoryList != null) {
-          _childListHistoryChild = childHistoryList
-              .map((e) => ChildHistoryModel.fromJson(e))
-              .toList();
-          if (_childListHistoryChild.length > 1) {
-            await _childListHistoryChild.sort((a, b) => DateFormat("dd/MM/yyyy")
-                .parse(a.date)
-                .compareTo(DateFormat("dd/MM/yyyy").parse(b.date)));
-          }
-          notifyListeners();
-        } else
-          _childListHistoryChild = <ChildHistoryModel>[];
-      } catch (e) {
-        print("error getListChildHistory: " + e.toString());
-      }
+      if (childHistoryList != null) {
+        childListHistoryChild =
+            childHistoryList.map((e) => ChildHistoryModel.fromJson(e)).toList();
+        if (childListHistoryChild.length > 1) {
+          await childListHistoryChild.sort((a, b) => DateFormat("dd/MM/yyyy")
+              .parse(a.date)
+              .compareTo(DateFormat("dd/MM/yyyy").parse(b.date)));
+        }
+        notifyListeners();
+      } else
+        childListHistoryChild = <ChildHistoryModel>[];
+    } catch (e) {
+      print("error getListChildHistory: " + e.toString());
     }
+  }
 }

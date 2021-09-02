@@ -30,6 +30,7 @@ class _GuideBookState extends State<GuideBook> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: WHITE_COLOR,
       appBar: AppBar(
         title: Text('Cẩm nang'),
         actions: [
