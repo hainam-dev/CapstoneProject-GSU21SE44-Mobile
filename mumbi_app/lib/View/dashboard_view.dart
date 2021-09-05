@@ -47,9 +47,6 @@ class _DashBoardState extends State<DashBoard> {
     _momViewModel = MomViewModel.getInstance();
     _momViewModel.getMomByID();
 
-    _dadViewModel = DadViewModel.getInstance();
-    _dadViewModel.getDadByMom();
-
     _childViewModel = ChildViewModel.getInstance();
     _childViewModel.getChildByMom();
 

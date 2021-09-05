@@ -151,10 +151,7 @@ Widget createButtonTextImageLink(
       padding: EdgeInsets.all(10.0),
       child: Column(
         children: <Widget>[
-          Image(
-            image: AssetImage(_image),
-            filterQuality: FilterQuality.high,
-          ),
+          SvgPicture.asset(_image),
           SizedBox(height: 8),
           Text(
             _text,
@@ -187,9 +184,7 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
             ),
-            leading: Image(
-              image: AssetImage(_imageName),
-            ),
+            leading: SvgPicture.asset(_imageName),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -418,9 +413,7 @@ Widget createEmptyDiary(BuildContext context) {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image(
-                    image: AssetImage(emptyDiary),
-                  ),
+                  SvgPicture.asset(emptyDiary),
                   SizedBox(
                     height: 10,
                   ),

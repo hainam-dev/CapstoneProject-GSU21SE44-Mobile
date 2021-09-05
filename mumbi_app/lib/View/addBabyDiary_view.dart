@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:full_screen_image/full_screen_image.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
@@ -225,10 +226,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
         padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 10),
         child: Row(
           children: [
-            Image(
-              image: AssetImage(community),
-              width: 24,
-            ),
+            SvgPicture.asset(community,width: 25,height: 25,),
             SizedBox(
               width: 8,
             ),

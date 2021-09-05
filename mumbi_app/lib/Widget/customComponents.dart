@@ -402,11 +402,7 @@ Widget createAddFamilyCard(BuildContext context, String _title,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              CircleAvatar(
-                radius: 35,
-                backgroundColor: Colors.transparent,
-                backgroundImage: AssetImage(empty),
-              ),
+              SvgPicture.asset(empty),
               Text(
                 _title,
                 maxLines: 1,

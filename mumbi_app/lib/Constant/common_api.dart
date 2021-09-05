@@ -1,5 +1,5 @@
 //final String HOST_ADDRESS = "https://192.168.97.6:45455";
-final String HOST_ADDRESS = "https://service.mumbi.xyz";
+final String HOST_ADDRESS = "https://mumbi.xyz";
 
 final String LOGIN = getApiPath("/api/Authentication/Authenticate");
 
