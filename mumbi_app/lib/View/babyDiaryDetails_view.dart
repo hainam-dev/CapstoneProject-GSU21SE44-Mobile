@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:full_screen_image/full_screen_image.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
@@ -104,11 +105,7 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
 
   Widget PublicFunction() {
     return ListTile(
-      leading: Image(
-        image: AssetImage(community),
-        height: 20,
-        width: 20,
-      ),
+      leading: SvgPicture.asset(community,height: 25,width: 25,),
       title: Text(
         widget.model.publicFlag ? "Bỏ chia sẻ cộng đồng" : "Chia sẻ cộng đồng",
         style: TextStyle(color: YELLOW_COLOR),

@@ -14,6 +14,9 @@ class CustomDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pop(context);
+    });
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(Consts.padding),
@@ -72,10 +75,16 @@ class CustomDialog extends StatelessWidget {
                 description,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 14.0,
+                  fontSize: 15.0,
                 ),
               ),
-
+              Text(
+                "(Tự đóng sau 2s)",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 13.0,fontStyle: FontStyle.italic
+                ),
+              ),
             ],
           ),
         ),
@@ -87,6 +96,7 @@ class CustomDialog extends StatelessWidget {
 void showResult(BuildContext context, bool result, String SuccessResult) {
   if (result) {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) => CustomDialog(
         title: "Thành công!",
@@ -96,6 +106,7 @@ void showResult(BuildContext context, bool result, String SuccessResult) {
     );
   } else {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) => CustomDialog(
         title: "Thất bại",
@@ -112,3 +123,5 @@ class Consts {
   static const double padding = 16.0;
   static const double avatarRadius = 66.0;
 }
+
+
