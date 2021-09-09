@@ -47,6 +47,7 @@ class _BotNavBarState extends State<BotNavBar> {
 
   Widget getBotNavBar() {
     return BottomNavigationBar(
+      elevation: 0.0,
       backgroundColor: WHITE_COLOR,
       type: BottomNavigationBarType.fixed,
       currentIndex: this.selectedIndex,

@@ -35,7 +35,6 @@ class _DashBoardState extends State<DashBoard> {
   ChildModel pregnancyModel;
   NewsViewModel _newsViewModel;
   MomViewModel _momViewModel;
-  DadViewModel _dadViewModel;
   ChildViewModel _childViewModel;
 
   @override
@@ -189,15 +188,17 @@ class _DashBoardState extends State<DashBoard> {
       },
       child: Container(
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
               color: LIGHT_GREY_COLOR,
               blurRadius: 10,
-              offset: Offset(2, 3), // Shadow position
+              offset: Offset(4, 8), // Shadow position
             ),
           ],
         ),
         child: Card(
+          clipBehavior: Clip.antiAlias,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
@@ -207,19 +208,9 @@ class _DashBoardState extends State<DashBoard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: 125,
-                  ),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(15.0),
-                      ),
-                      child: CachedNetworkImage(imageUrl: _imageURL,)),
-                ),
-              ),
+              Stack(children: [
+                Ink.image(image: CachedNetworkImageProvider(_imageURL,),height: 120,fit: BoxFit.cover,),
+              ],),
               Padding(
                 padding: EdgeInsets.only(left: 10,right: 5),
                 child: Text(
@@ -341,11 +332,7 @@ class _DashBoardState extends State<DashBoard> {
 
   Widget checkEntryInjectionSchedule() {
     if (CurrentMember.role == MOM_ROLE) {
-      if (CurrentMember.pregnancyFlag == true) {
-        return InjectionSchedule();
-      } else {
-        return ChangeAccount(2);
-      }
+      return ChangeAccount(2);
     } else {
       return InjectionSchedule();
     }
@@ -374,8 +361,8 @@ class _DashBoardState extends State<DashBoard> {
                   child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                           maxCrossAxisExtent: 250,
-                          crossAxisSpacing: 8,
-                          mainAxisSpacing: 8),
+                          crossAxisSpacing: 6,
+                          mainAxisSpacing: 6),
                       itemCount: model.newsListModel != null
                           ? model.newsListModel.length
                           : 0,

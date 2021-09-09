@@ -623,22 +623,19 @@ Widget createTextTitle(String title) {
 
 Widget createTextBlueHyperlink(
     BuildContext context, String title, Widget screen) {
-  return Padding(
-    padding: const EdgeInsets.all(10.0),
-    child: GestureDetector(
-        child: Text(title,
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                decoration: TextDecoration.underline,
-                color: Colors.blue)),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => screen),
-          );
-        }),
-  );
+  return GestureDetector(
+      child: Text(title,
+          style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              decoration: TextDecoration.underline,
+              color: Colors.lightBlueAccent)),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => screen),
+        );
+      });
 }
 
 Widget createTextBlue(BuildContext context, String title, ontap) {
