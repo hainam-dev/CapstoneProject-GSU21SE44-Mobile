@@ -294,6 +294,11 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     saveFunction: () async {
                       if (formKey.currentState.validate()) {
                         showProgressDialogue(context);
+                        if(widget.model.bornFlag == false && widget.entry == CHILD_ENTRY){
+                          widget.model.bornFlag = true;
+                          CurrentMember.pregnancyFlag = false;
+                          CurrentMember.pregnancyID = null;
+                        }
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         String fileContentBase64 = prefs.getString('UserImage');

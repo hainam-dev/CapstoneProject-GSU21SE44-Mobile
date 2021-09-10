@@ -341,11 +341,11 @@ class _DashBoardState extends State<DashBoard> {
 
   Widget checkEntryBabyDevelopment() {
     if (CurrentMember.role == MOM_ROLE) {
-      if (CurrentMember.pregnancyFlag == true) {
+      /*if (CurrentMember.pregnancyFlag == true) {
         return BabyDevelopment();
-      } else {
+      } else {*/
         return ChangeAccount(2);
-      }
+      /*}*/
     } else {
       return BabyDevelopment();
     }
