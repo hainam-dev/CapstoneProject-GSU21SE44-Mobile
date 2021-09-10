@@ -4,6 +4,7 @@ import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
+import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/Utils/upload_image.dart';
@@ -89,50 +90,31 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     });
                   },
                 ),
-                CustomInputText(
-                  HOME_NAME_FIELD,
-                  widget.action == UPDATE_STATE ? widget.model.nickname : "",
-                  function: (value) {
-                    setState(() {
-                      if (widget.action == UPDATE_STATE) {
-                        widget.model.nickname = value;
-                      } else {
-                        childModel.nickname = value;
-                      }
-                    });
-                  },
-                ),
                 Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Flexible(
-                      child: CustomStatusDropdown(
-                        STATUS_FIELD,
-                        itemsStatus,
-                        widget.action == UPDATE_STATE
-                            ? showStatus(widget.model.bornFlag)
-                            : null,
+                      child: CustomInputText(
+                        HOME_NAME_FIELD,
+                        widget.action == UPDATE_STATE ? widget.model.nickname : "",
                         function: (value) {
-                          setState(
-                            () {
-                              selectedStatusValue = value;
-                              if (widget.action == UPDATE_STATE) {
-                                widget.model.bornFlag =
-                                    (value == born ? true : false);
-                              } else {
-                                childModel.bornFlag =
-                                    (value == born ? true : false);
-                              }
-                            },
-                          );
+                          setState(() {
+                            if (widget.action == UPDATE_STATE) {
+                              widget.model.nickname = value;
+                            } else {
+                              childModel.nickname = value;
+                            }
+                          });
                         },
                       ),
-                      flex: 4,
+                      flex: 2,
                     ),
+                    if (widget.entry == CHILD_ENTRY)
                     const SizedBox(
                       width: 17,
                     ),
+                    if (widget.entry == CHILD_ENTRY)
                     Flexible(
                       child: CustomStatusDropdown(
                         GENDER_FIELD,
@@ -142,7 +124,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                             : null,
                         function: (value) {
                           setState(
-                            () {
+                                () {
                               if (widget.action == UPDATE_STATE) {
                                 widget.model.gender = getGender(value);
                               } else {
@@ -152,34 +134,11 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                           );
                         },
                       ),
-                      flex: 3,
+                      flex: 2,
                     ),
                   ],
                 ),
-                if (widget.action == UPDATE_STATE &&
-                        widget.model.bornFlag == true ||
-                    selectedStatusValue.toString() == born)
-                  CalendarBirthday(
-                    CHILD_BIRTHDAY_FIELD,
-                    widget.action == UPDATE_STATE ? widget.model.birthday : "",
-                    function: (value) {
-                      if (value.isEmpty) {
-                        return "Vui lòng chọn ngày sinh cho bé";
-                      } else {
-                        setState(() {
-                          if (widget.action == UPDATE_STATE) {
-                            widget.model.birthday = value;
-                          } else {
-                            childModel.birthday = value;
-                          }
-                        });
-                        return null;
-                      }
-                    },
-                  ),
-                if (widget.action == UPDATE_STATE &&
-                        widget.model.bornFlag == false ||
-                    selectedStatusValue.toString() == notBorn)
+                if (widget.entry == PREGNANCY_ENTRY)
                   CalendarCalculate(
                     widget.action == UPDATE_STATE
                         ? widget.model.estimatedBornDate
@@ -199,9 +158,26 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                       }
                     },
                   ),
-                if (widget.action == UPDATE_STATE &&
-                        widget.model.bornFlag == true ||
-                    selectedStatusValue.toString() == born)
+                if (widget.entry == CHILD_ENTRY)
+                  CalendarBirthday(
+                    CHILD_BIRTHDAY_FIELD,
+                    widget.action == UPDATE_STATE ? widget.model.birthday : "",
+                    function: (value) {
+                      if (value.isEmpty) {
+                        return "Vui lòng chọn ngày sinh cho bé";
+                      } else {
+                        setState(() {
+                          if (widget.action == UPDATE_STATE) {
+                            widget.model.birthday = value;
+                          } else {
+                            childModel.birthday = value;
+                          }
+                        });
+                        return null;
+                      }
+                    },
+                  ),
+                if (widget.entry == CHILD_ENTRY)
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -222,7 +198,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                             }
                           });
                         }),
-                        flex: 4,
+                        flex: 2,
                       ),
                       const SizedBox(
                         width: 17,
@@ -243,13 +219,11 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                             }
                           });
                         }),
-                        flex: 3,
+                        flex: 2,
                       ),
                     ],
                   ),
-                if (widget.action == UPDATE_STATE &&
-                        widget.model.bornFlag == true ||
-                    selectedStatusValue.toString() == born)
+                if (widget.entry == CHILD_ENTRY)
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -278,7 +252,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                             }
                           });
                         }),
-                        flex: 4,
+                        flex: 2,
                       ),
                       const SizedBox(
                         width: 17,
@@ -307,7 +281,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                             }
                           });
                         }),
-                        flex: 3,
+                        flex: 2,
                       ),
                     ],
                   ),
@@ -415,6 +389,10 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
           showProgressDialogue(context);
           bool result = true;
           result = await ChildViewModel().deleteChild(widget.model.id);
+          if(widget.entry == PREGNANCY_ENTRY){
+            CurrentMember.pregnancyFlag = false;
+            CurrentMember.pregnancyID = null;
+          }
           Navigator.pop(context);
           Navigator.pop(context);
           showResult(context, result, "Xóa thành viên thành công");

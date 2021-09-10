@@ -12,6 +12,7 @@ import 'package:mumbi_app/Model/news_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/babyDevelopment_view.dart';
+import 'package:mumbi_app/View/calculateDate_view.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/View/community_view.dart';
 import 'package:mumbi_app/View/injectionSchedule.dart';
@@ -122,7 +123,7 @@ class _DashBoardState extends State<DashBoard> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              ChildrenInfo("", CREATE_STATE, PREGNANCY_ENTRY),
+                          CalculateDate(),
                         ),
                       );
                       await _childViewModel.getChildByMom();

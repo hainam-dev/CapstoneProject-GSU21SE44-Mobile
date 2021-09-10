@@ -30,7 +30,7 @@ class _CustomBottomButtonState extends State<CustomBottomButton> {
 
   Widget _getActionButtons(String titleCancel, String titleSave) => Container(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+          padding: const EdgeInsets.symmetric(vertical: 20),
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
@@ -56,7 +56,7 @@ class _CustomBottomButtonState extends State<CustomBottomButton> {
                 width: 8,
               ),
               Expanded(
-                flex: 3,
+                flex: 5,
                 child: Container(
                   height: 50.0,
                   child: new FlatButton(

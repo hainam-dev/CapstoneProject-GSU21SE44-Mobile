@@ -11,6 +11,7 @@ import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/injectionSchedule_model.dart';
 import 'package:mumbi_app/Repository/vaccination_respository.dart';
+import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/rebuildAllChildren.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/vaccinePrice_compare.dart';
@@ -98,21 +99,11 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
               },),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            //ChildInfo(childViewModel.childModel),
-            if (isLogin)
-              Align(
-                alignment: Alignment.topRight,
-                child: TextButton(
-                  child: Text("Logout"),
-
-                ),
-              ),
-            InjectTable(),
-          ],
-        ),
+      body: Column(
+        children: <Widget>[
+          ChildInfo(childViewModel.childModel),
+          InjectTable(),
+        ],
       ),
     );
   }
@@ -130,7 +121,11 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
         title: Text(
           childModel == null ? "..." : childModel.fullName,
           style: TextStyle(fontWeight: FontWeight.w600),
-        ));
+        ),
+      subtitle: Text(
+        childModel == null ? "..." : DateTimeConvert.calculateChildAge(childModel.birthday),
+        style: TextStyle(fontWeight: FontWeight.w600),
+      ),);
   }
 
   Widget InjectTable() {
@@ -150,10 +145,15 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                   ],
                 )),
               )
-              : Column(
-                children: [
-                  Header(),
-                  Expanded(
+              : Expanded(
+                child: Column(
+                  children: [
+                    Header(),
+                    Divider(
+                      height: 1,
+                      thickness: 2,
+                    ),
+                    Expanded(
                       child: ListView.builder(
                           shrinkWrap: true,
                           itemCount: model.injectionScheduleListModel == null
@@ -165,7 +165,8 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                             return Body(injectModel);
                           }),
                     ),
-                ],
+                  ],
+                ),
               );
         },
       ),
@@ -175,9 +176,9 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
   Widget Header() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      decoration: BoxDecoration(
+      /*decoration: BoxDecoration(
         color: PINK_COLOR,
-      ),
+      ),*/
       child: Row(
         children: <Widget>[
           HeaderItem(25, "Ngày tiêm"),
@@ -190,14 +191,18 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
   }
 
   Widget HeaderItem(num size, String name) {
-    return Container(
-      width: SizeConfig.safeBlockHorizontal * size,
-      child: Center(
-        child: Text(name,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: WHITE_COLOR, fontSize: 15, fontWeight: FontWeight.w600)),
-      ),
+    return Column(
+      children: [
+        Container(
+          width: SizeConfig.safeBlockHorizontal * size,
+          child: Center(
+            child: Text(name,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                     fontSize: 15, fontWeight: FontWeight.w600)),
+          ),
+        ),
+      ],
     );
   }
 
@@ -231,7 +236,7 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
               ))
           : IconButton(
               icon: Icon(Icons.visibility),
-              color: BLACK_COLOR,
+              color: LIGHT_DARK_GREY_COLOR,
               onPressed: () {
                 Navigator.push(
                     context,

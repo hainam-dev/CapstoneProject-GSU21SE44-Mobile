@@ -99,7 +99,7 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
               ),
             ),
           ),
-          SizedBox(
+          /*SizedBox(
             width: 17,
           ),
           Flexible(
@@ -126,7 +126,7 @@ class _CalendarCalculateState extends State<CalendarCalculate> {
                     borderRadius: new BorderRadius.circular(15.0)),
               ),
             ),
-          )
+          )*/
         ],
       ),
     );
