@@ -247,12 +247,24 @@ Widget createFamilyCard(BuildContext context, String _imageURL, String _name,
                           backgroundColor: PINK_COLOR,
                           backgroundImage:
                               CachedNetworkImageProvider(_imageURL)),
-                      Positioned(
+                      /*Positioned(
                         top: -1,
                         right: -1,
                         child: Container(
                           child: SvgPicture.asset(
                             editpencil,
+                            width: 25,
+                            height: 25,
+                          ),
+                        ),
+                      ),*/
+                      if(_labelText == "Mẹ bầu")
+                      Positioned(
+                        bottom: -1,
+                        left: 1,
+                        child: Container(
+                          child: SvgPicture.asset(
+                            mecobau,
                             width: 25,
                             height: 25,
                           ),

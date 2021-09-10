@@ -45,6 +45,7 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
     childViewModel = ChildViewModel.getInstance();
     childViewModel.getChildByID(CurrentMember.id);
     injectionScheduleViewModel = InjectionScheduleViewModel.getInstance();
+    injectionScheduleViewModel.getInjectionSchedule(CurrentMember.id);
     VaccinationRespository.getToken().then((value) async {
       if (value != null && value != "") {
         if (injectionScheduleViewModel.injectionScheduleListModel == null) {

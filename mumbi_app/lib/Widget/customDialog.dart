@@ -79,7 +79,7 @@ class CustomDialog extends StatelessWidget {
                 ),
               ),
               Text(
-                "(Tự đóng sau 2s)",
+                "(Tự động đóng sau 2 giây)",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 13.0,fontStyle: FontStyle.italic

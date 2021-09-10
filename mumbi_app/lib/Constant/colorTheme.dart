@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 const Color PINK_COLOR = Color.fromRGBO(251, 102, 138, 1);
+const Color DARK_PINK_COLOR = Colors.pink;
 const Color LIGHT_PINK_COLOR = Color.fromRGBO(255, 240, 243, 1);
 const Color BLUE_COLOR = Color.fromRGBO(52, 174, 239, 1);
 const Color LIGHT_BLUE_COLOR = Color.fromRGBO(226, 246, 253, 1);

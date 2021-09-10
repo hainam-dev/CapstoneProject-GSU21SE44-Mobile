@@ -24,7 +24,7 @@ class _MyFamilyState extends State<MyFamily> {
   MomViewModel _momViewModel;
   DadViewModel _dadViewModel;
   ChildViewModel _childViewModel;
-
+  bool isPregnant = false;
 
   @override
   void initState() {
@@ -91,7 +91,7 @@ class _MyFamilyState extends State<MyFamily> {
                           model.momModel.imageURL,
                           model.momModel.fullName,
                           LIGHT_PINK_COLOR,
-                          "Mẹ",
+                          isPregnant == false ? "Mẹ" : "Mẹ bầu",
                           PINK_COLOR,
                           onClick:() async{
                             await Navigator.push(
@@ -110,7 +110,9 @@ class _MyFamilyState extends State<MyFamily> {
                   for(int i = model.childListModel.length - 1; i >= 0 ; i--){
                     ChildModel childModel = model.childListModel[i];
                     if(childModel.bornFlag == false){
+                      isPregnant = true;
                       model.childListModel.removeAt(i);
+                      break;
                     }
                   }
                 }

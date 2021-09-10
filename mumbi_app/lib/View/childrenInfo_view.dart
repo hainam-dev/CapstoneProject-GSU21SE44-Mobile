@@ -37,16 +37,14 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
   final formKey = GlobalKey<FormState>();
   String selectedStatusValue;
   String pickImage = chooseImage;
-  String born = "Bé chào đời";
-  String notBorn = "Thai nhi";
   ChildModel childModel;
 
   @override
   void initState() {
-    if (widget.action == CREATE_STATE) {
-      childModel = ChildModel();
-    }
     super.initState();
+    if (widget.action == CREATE_STATE) {
+      childModel = new ChildModel();
+    }
   }
 
   @override
@@ -294,11 +292,14 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                     saveFunction: () async {
                       if (formKey.currentState.validate()) {
                         showProgressDialogue(context);
-                        if(widget.model.bornFlag == false && widget.entry == CHILD_ENTRY){
-                          widget.model.bornFlag = true;
-                          CurrentMember.pregnancyFlag = false;
-                          CurrentMember.pregnancyID = null;
+                        if(widget.action == UPDATE_STATE){
+                          if(widget.model.bornFlag == false && widget.entry == CHILD_ENTRY){
+                            widget.model.bornFlag = true;
+                            CurrentMember.pregnancyFlag = false;
+                            CurrentMember.pregnancyID = null;
+                          }
                         }
+
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         String fileContentBase64 = prefs.getString('UserImage');
@@ -326,10 +327,9 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
                               .updateChildInfo(widget.model);
                           Navigator.pop(context);
                         } else {
-                          if (childModel.fingertips == null)
-                            childModel.fingertips = 0;
-                          if (childModel.headVortex == null)
-                            childModel.headVortex = 0;
+                          childModel.fingertips = 0;
+                          childModel.headVortex = 0;
+                          childModel.bornFlag = true;
                           result = await ChildViewModel().addChild(childModel);
                           if (result == true) {
                             Navigator.pop(context);
@@ -392,12 +392,14 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
             ContinueFunction: () async {
           Navigator.pop(context);
           showProgressDialogue(context);
-          bool result = true;
-          result = await ChildViewModel().deleteChild(widget.model.id);
+          bool result = false;
           if(widget.entry == PREGNANCY_ENTRY){
             CurrentMember.pregnancyFlag = false;
             CurrentMember.pregnancyID = null;
+          }else if(widget.entry == CHILD_ENTRY){
+            CurrentMember.role = MOM_ROLE;
           }
+          result = await ChildViewModel().deleteChild(widget.model.id);
           Navigator.pop(context);
           Navigator.pop(context);
           showResult(context, result, "Xóa thành viên thành công");
@@ -405,15 +407,6 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
       },
     );
   }
-
-  String showStatus(bool value) {
-    if (value) {
-      return born;
-    } else {
-      return notBorn;
-    }
-  }
-
   String showGender(int num) {
     switch (num) {
       /*case 0:
