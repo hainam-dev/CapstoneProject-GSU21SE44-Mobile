@@ -38,11 +38,12 @@ class _CommunityState extends State<Community> {
 
     _momViewModel = MomViewModel.getInstance();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      getImages.forEach((url) {
-        precacheImage(NetworkImage(url), context);
+    if(getImages != null && getImages != "")
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        getImages.forEach((url) {
+          precacheImage(NetworkImage(url), context);
+        });
       });
-    });
   }
 
   @override
@@ -131,7 +132,7 @@ class _CommunityState extends State<Community> {
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
               ),
               subtitle:
-                  Text(DateTimeConvert.timeAgoSinceDate(postModel.approveTime)),
+                  Text(DateTimeConvert.timeAgoSinceDate(postModel.approvedTime)),
               trailing: postModel.userId == _momViewModel.momModel.id
                   ? PopupMenuButton<String>(
                       onSelected: (value) async {

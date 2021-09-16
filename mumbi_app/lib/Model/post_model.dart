@@ -8,7 +8,7 @@ class PostModel{
   String createdTime;
   String lastModifiedTime;
   String reviewedBy;
-  String approveTime;
+  String approvedTime;
 
   PostModel(
       {this.id,
@@ -20,7 +20,7 @@ class PostModel{
       this.createdTime,
       this.lastModifiedTime,
       this.reviewedBy,
-      this.approveTime});
+      this.approvedTime});
 
   factory PostModel.fromJson(dynamic json){
     return PostModel(
@@ -32,7 +32,7 @@ class PostModel{
       createdTime: json['createdTime'],
       lastModifiedTime: json['lastModifiedTime'],
       reviewedBy: json['reviewedBy'],
-      approveTime: json['approveTime'],
+      approvedTime: json['approvedTime'],
     );
   }
 

@@ -245,7 +245,7 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
             itemCount: getImages.length,
             options: CarouselOptions(
                 viewportFraction: 1,
-                autoPlay: false,
+                autoPlay: true,
                 enableInfiniteScroll: false,
                 onPageChanged: (index, reason) {
                   setState(() {
