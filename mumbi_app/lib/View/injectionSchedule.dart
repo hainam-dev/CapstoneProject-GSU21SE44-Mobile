@@ -19,6 +19,7 @@ import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/injectionSchedule_viewmodel.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 import 'package:mumbi_app/View/injectiondetail_view.dart';
+import 'package:mumbi_app/Widget/customConfirmDialog.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -82,22 +83,26 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                 _loginDialog(context);
               }},
           ),
-          IconButton(
+          /*IconButton(
               icon: Icon(Icons.compare_outlined),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => VaccinePrice())
                 );
-              }),
+              }),*/
           if (isLogin)
             IconButton(
               icon: Icon(Icons.logout_rounded),
               onPressed: () {
-                VaccinationRespository.logout();
-                setState(() {
-                  isLogin = false;
+                showConfirmDialog(context, "Đăng xuất", "Bạn có muốn đăng xuất khỏi số điện thoại hiện tại",ContinueFunction: (){
+                  VaccinationRespository.logout();
+                  setState(() {
+                    isLogin = false;
+                  });
+                  _InjectionScheduleState();
+                  Navigator.pop(context);
                 });
-                _InjectionScheduleState();
               },),
+          SizedBox(width: 10),
         ],
       ),
       body: Column(
@@ -194,13 +199,24 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
   Widget HeaderItem(num size, String name) {
     return Column(
       children: [
-        Container(
-          width: SizeConfig.safeBlockHorizontal * size,
-          child: Center(
-            child: Text(name,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                     fontSize: 15, fontWeight: FontWeight.w600)),
+        GestureDetector(
+          onTap: (){
+            if(name == "Kháng nguyên"){
+              injectionScheduleViewModel.injectionScheduleListModel
+                  .sort((a, b) => a.antigen.compareTo(b.antigen));
+              setState(() {});
+            }else{
+              null;
+            }
+          },
+          child: Container(
+            width: SizeConfig.safeBlockHorizontal * size,
+            child: Center(
+              child: Text(name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                       fontSize: 15, fontWeight: FontWeight.w600)),
+            ),
           ),
         ),
       ],
@@ -212,7 +228,7 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
       children: [
         ListTile(
             title: Row(children: <Widget>[
-          BodyItem(25, CutDate(model.injectionDate), model),
+          BodyItem(25, CutDate(model.injectionDateTime), model),
           BodyItem(45, model.antigen, model),
           BodyItem(10, model.orderOfInjection.toString(), model),
           Expanded(child: BodyItem(5, "", model)),
@@ -236,7 +252,7 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                 fontWeight: FontWeight.w500,
               ))
           : IconButton(
-              icon: Icon(Icons.visibility),
+              icon: Icon(Icons.info_outline),
               color: LIGHT_DARK_GREY_COLOR,
               onPressed: () {
                 Navigator.push(
@@ -301,7 +317,7 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                         Align(
                             alignment: Alignment.center,
                             child: Text(
-                                "Nhập số điện thoại để cập nhật lịch sử tiêm chủng cho bé")),
+                                "Cập nhật lịch sử tiêm chủng cho bé",style: TextStyle(fontWeight: FontWeight.w600),)),
                         SizedBox(
                           height: 15.0,
                         ),

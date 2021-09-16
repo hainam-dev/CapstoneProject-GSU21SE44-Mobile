@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mumbi_app/Model/guidebook_model.dart';
@@ -50,9 +51,7 @@ class _GuideBookState extends State<GuideBook> {
               return model.guidebookListModel == null
                   ? loadingProgress()
                   : ListView.builder(
-                      itemCount: model.guidebookListModel.length <= 7
-                          ? model.guidebookListModel.length
-                          : 7,
+                      itemCount: model.guidebookListModel.length,
                       itemBuilder: (BuildContext context, index) {
                         GuidebookModel guidebookModel =
                             model.guidebookListModel[index];
@@ -94,68 +93,78 @@ Widget GuidebookFirstItem(context, GuidebookModel guidebookModel) {
             builder: (context) => GuidebookDetail(guidebookModel),
           ));
     },
-    child: Column(
-      children: [
-        Container(
-          color: WHITE_COLOR,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-            child: Column(
-              children: [
-                ConstrainedBox(
-                  constraints: new BoxConstraints(
-                    maxHeight: SizeConfig.blockSizeVertical * 30,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: CachedNetworkImage(
-                      imageUrl: guidebookModel.imageURL,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+    child: Container(
+      color: WHITE_COLOR,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Card(
+                clipBehavior: Clip.antiAlias,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      guidebookModel.title,
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
-                    )),
-                SizedBox(
-                  height: 4,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      DateTimeConvert.convertDatetimeDMY(
-                          guidebookModel.createTime),
-                      style:
-                          TextStyle(fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
-                    ),
-                    SizedBox(width: 5),
-                    Icon(
-                      Icons.fiber_manual_record,
-                      color: GREY_COLOR,
-                      size: 6,
-                    ),
-                    SizedBox(width: 6),
-                    Text(
-                      guidebookModel.estimatedFinishTime.toString() +
-                          " phút đọc",
-                      style: TextStyle(fontSize: 15,color: LIGHT_DARK_GREY_COLOR),
-                    ),
-                  ],
-                ),
-              ],
+                child: Ink.image(
+                  image: CachedNetworkImageProvider(guidebookModel.imageURL,),height: 200,fit: BoxFit.cover,)
             ),
-          ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+              child: Text(
+                guidebookModel.title,
+                textAlign: TextAlign.center,
+                style:
+                    TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    DateTimeConvert.convertDatetimeDMY(
+                        guidebookModel.createTime),
+                    style:
+                        TextStyle(fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
+                  ),
+                  SizedBox(width: 5),
+                  Icon(
+                    Icons.fiber_manual_record,
+                    color: GREY_COLOR,
+                    size: 6,
+                  ),
+                  SizedBox(width: 6),
+                  Text(
+                    guidebookModel.estimatedFinishTime.toString() +
+                        " phút đọc",
+                    style: TextStyle(fontSize: 15,color: LIGHT_DARK_GREY_COLOR),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 44,
+                child: Html(data: guidebookModel.guidebookContent,)
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Text(
+                  "Xem tiếp",
+                  style: TextStyle(
+                    fontStyle: FontStyle.italic,color: DARK_BLUE_COLOR,decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
-      ],
+      ),
     ),
   );
 }
@@ -169,78 +178,74 @@ Widget GuidebookItem(context, GuidebookModel guidebookModel) {
             builder: (context) => GuidebookDetail(guidebookModel),
           ));
     },
-    child: Container(
-      child: Stack(
-        children: <Widget>[
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: CachedNetworkImage(
-                    imageUrl: guidebookModel.imageURL,
-                    fit: BoxFit.cover,
-                    height: 75,
-                    width: 95,
-                  ),
+    child: Stack(
+      children: <Widget>[
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                  imageUrl: guidebookModel.imageURL,
+                  fit: BoxFit.cover,
+                  height: 75,
+                  width: 100,
                 ),
-                const SizedBox(width: 15.0),
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          guidebookModel.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 19.0,
-                          ),
-                        ),
+              ),
+              const SizedBox(width: 15.0),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      guidebookModel.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 19.0,
                       ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                              DateTimeConvert.convertDatetimeDMY(
-                                  guidebookModel.createTime),
-                              style: TextStyle(
-                                  fontSize: 14.0,
-                                  color: LIGHT_DARK_GREY_COLOR)),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Icon(
-                            Icons.fiber_manual_record,
-                            color: GREY_COLOR,
-                            size: 6,
-                          ),
-                          SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            guidebookModel.estimatedFinishTime.toString() +
-                                " phút đọc",
+                    ),
+                    SizedBox(
+                      height: 6,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                            DateTimeConvert.convertDatetimeDMY(
+                                guidebookModel.createTime),
                             style: TextStyle(
-                                fontSize: 14, color: LIGHT_DARK_GREY_COLOR),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                                fontSize: 14.0,
+                                color: LIGHT_DARK_GREY_COLOR)),
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Icon(
+                          Icons.fiber_manual_record,
+                          color: GREY_COLOR,
+                          size: 6,
+                        ),
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Text(
+                          guidebookModel.estimatedFinishTime.toString() +
+                              " phút đọc",
+                          style: TextStyle(
+                              fontSize: 14, color: LIGHT_DARK_GREY_COLOR),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     ),
   );
 }

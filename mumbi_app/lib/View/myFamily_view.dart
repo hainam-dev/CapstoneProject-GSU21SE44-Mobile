@@ -38,6 +38,7 @@ class _MyFamilyState extends State<MyFamily> {
 
     _childViewModel = ChildViewModel.getInstance();
     _childViewModel.getChildByMom();
+
   }
 
   @override

@@ -7,34 +7,37 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/diary_model.dart';
+import 'package:mumbi_app/Model/post_model.dart';
 import 'package:mumbi_app/Utils/upload_multipleImage.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/communityPost_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
 import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-class AddBabyDiary extends StatefulWidget {
+class AddCommunityPost extends StatefulWidget {
   @override
-  _AddBabyDiaryState createState() => _AddBabyDiaryState();
+  _AddCommunityPostState createState() => _AddCommunityPostState();
 }
 
-class _AddBabyDiaryState extends State<AddBabyDiary> {
+class _AddCommunityPostState extends State<AddCommunityPost> {
   List<Asset> images = <Asset>[];
   List<File> _files = <File>[];
   CollectionReference imgRef;
   firebase_storage.Reference ref;
-  DiaryModel diaryModel;
-  ChildViewModel childViewModel;
+  PostModel postModel;
+  MomViewModel momViewModel;
   bool postFlag;
   @override
   void initState() {
     super.initState();
-    diaryModel = DiaryModel();
+    postModel = new PostModel();
 
-    childViewModel = ChildViewModel.getInstance();
+    momViewModel = MomViewModel.getInstance();
   }
 
   @override
@@ -44,7 +47,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
         backgroundColor: WHITE_COLOR,
         appBar: AppBar(
           title: Text(
-            "Viết nhật ký",
+            "Tạo bài viết cộng đồng",
           ),
           actions: [
             AddButton(),
@@ -54,7 +57,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ChildInfo(),
+              MomInfo(),
               InputPostContent(),
               if (_files != null && _files != "") showMultipleImagePicked()
             ],
@@ -80,8 +83,8 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
   void handlePost() async {
     showProgressDialogue(context);
     List<String> listUrl = await uploadMultipleImage(
-        fileName: CurrentMember.id.toString(),
-        thread: "DiaryImages",
+        fileName: momViewModel.momModel.id,
+        thread: "PostImages",
         files: _files);
     if (listUrl != "" && listUrl != null) {
       String url = "";
@@ -92,14 +95,13 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
           url += getUrl;
         }
       }
-      diaryModel.imageURL = url;
+      postModel.imageURL = url;
     }
     bool result = false;
-    diaryModel.childId = CurrentMember.id;
-    result = await DiaryViewModel().addDiary(diaryModel);
+    result = await CommunityViewModel().addCommunityPost(postModel);
     Navigator.pop(context);
     Navigator.pop(context);
-    showResult(context, result, "Thêm nhật ký thành công");
+    showResult(context, result, "Bài viết đã được tạo thành công và đang ở trạng thái chờ duyệt");
   }
 
   Widget AddButton() {
@@ -110,7 +112,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
         splashColor: postFlag == true ? LIGHT_GREY_COLOR : Colors.transparent,
         focusColor: postFlag == true ? LIGHT_GREY_COLOR : Colors.transparent,
         highlightColor:
-            postFlag == true ? LIGHT_GREY_COLOR : Colors.transparent,
+        postFlag == true ? LIGHT_GREY_COLOR : Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
@@ -128,13 +130,13 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
     );
   }
 
-  Widget ChildInfo() {
+  Widget MomInfo() {
     return ScopedModel(
-        model: childViewModel,
+        model: momViewModel,
         child: ScopedModelDescendant(
-          builder: (BuildContext context, Widget child, ChildViewModel model) {
-            return createListTileDiaryPost(model.childModel.imageURL,
-                model.childModel.fullName);
+          builder: (BuildContext context, Widget child, MomViewModel model) {
+            return createListTileDiaryPost(model.momModel.imageURL,
+                model.momModel.fullName);
           },
         ));
   }
@@ -154,7 +156,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
                     autofocus: false,
                     style: TextStyle(fontSize: 19),
                     decoration: InputDecoration(
-                      hintText: "Nội dung nhật ký...",
+                      hintText: "Nội dung bài viết...",
                       focusColor: LIGHT_PINK_COLOR,
                       focusedBorder: InputBorder.none,
                       enabledBorder: InputBorder.none,
@@ -164,10 +166,10 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
                     onChanged: (value) {
                       setState(() {
                         if (value != "") {
-                          diaryModel.diaryContent = value;
+                          postModel.postContent = value;
                           postFlag = true;
                         } else {
-                          diaryModel.diaryContent = "";
+                          postModel.postContent = "";
                           postFlag = false;
                         }
                       });
@@ -213,7 +215,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
           crossAxisCount: 2,
           children: List.generate(
             _files.length,
-            (index) {
+                (index) {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 2),
                 child: FullScreenWidget(
@@ -285,7 +287,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
     try {
       for (Asset asset in images) {
         final filePath =
-            await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+        await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
         files.add(File(filePath));
       }
     } on Exception catch (e) {

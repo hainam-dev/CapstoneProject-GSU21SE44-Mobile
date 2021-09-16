@@ -56,11 +56,11 @@ class _SavedPostState extends State<SavedPost> {
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Container(
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
                 height: 45,
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
@@ -83,17 +83,16 @@ class _SavedPostState extends State<SavedPost> {
                   ],
                 ),
               ),
-              // tab bar view here
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    SavedNewsList(),
-                    SavedGuidebookList(),
-                  ],
-                ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  SavedNewsList(),
+                  SavedGuidebookList(),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

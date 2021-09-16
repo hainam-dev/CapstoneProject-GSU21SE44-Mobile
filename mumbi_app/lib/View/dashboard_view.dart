@@ -66,29 +66,26 @@ class _DashBoardState extends State<DashBoard> {
         ],
       ),
       drawer: getDrawer(context),
-      body: Padding(
-        padding: EdgeInsets.all(6.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (CurrentMember.role == MOM_ROLE) PregnancyInfo(),
-            if (CurrentMember.role == CHILD_ROLE) ChildInfo(),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-              child: Align(
-                  alignment: Alignment.topLeft,
-                  child: createTitle("Tính năng nổi bật")),
-            ),
-            SalientFeatures(),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-              child: Align(
-                  alignment: Alignment.topLeft,
-                  child: createTitle("Tin tức mới nhất")),
-            ),
-            GridViewNews(),
-          ],
-        ),
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (CurrentMember.role == MOM_ROLE) PregnancyInfo(),
+          if (CurrentMember.role == CHILD_ROLE) ChildInfo(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+            child: Align(
+                alignment: Alignment.topLeft,
+                child: createTitle("Tính năng nổi bật")),
+          ),
+          SalientFeatures(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+            child: Align(
+                alignment: Alignment.topLeft,
+                child: createTitle("Tin tức mới nhất")),
+          ),
+          GridViewNews(),
+        ],
       ),
     );
   }
@@ -182,66 +179,59 @@ class _DashBoardState extends State<DashBoard> {
 
   Widget createNewsItem(
       String _imageURL, String _title, String _estimatedTime, Widget _screen) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => _screen));
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: LIGHT_GREY_COLOR,
-              blurRadius: 10,
-              offset: Offset(4, 8), // Shadow position
-            ),
-          ],
-        ),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 2,horizontal: 2),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => _screen));
+        },
         child: Card(
           clipBehavior: Clip.antiAlias,
-          elevation: 0,
+          elevation: 0.6,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Stack(children: [
-                Ink.image(image: CachedNetworkImageProvider(_imageURL,),height: 120,fit: BoxFit.cover,),
-              ],),
-              Padding(
-                padding: EdgeInsets.only(left: 10,right: 5),
-                child: Text(
-                  _title,
-                  textAlign: TextAlign.left,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 8,left: 4),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Container(child: SvgPicture.asset(readIcon,height: 16, width: 16)),
-                    SizedBox(width: 5),
-                    Text(
-                      _estimatedTime + " phút đọc",
-                      maxLines: 1,
+          child: Scaffold(
+            backgroundColor: WHITE_COLOR,
+            body: Ink.image(image: CachedNetworkImageProvider(_imageURL,),height: 130,fit: BoxFit.cover,),
+            bottomNavigationBar: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10,right: 5,top: 5,bottom: 5),
+                    child: Text(
+                      _title,
+                      textAlign: TextAlign.left,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style:
-                      TextStyle(fontSize: 14, color: LIGHT_DARK_GREY_COLOR),
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                     ),
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 10,left: 4),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Container(child: SvgPicture.asset(readIcon,height: 16, width: 16)),
+                        SizedBox(width: 5),
+                        Text(
+                          _estimatedTime + " phút đọc",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                          TextStyle(fontSize: 14, color: LIGHT_DARK_GREY_COLOR),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -325,8 +315,6 @@ class _DashBoardState extends State<DashBoard> {
         createButtonTextImageLink(
             context, "Tiêm chủng", injection, checkEntryInjectionSchedule()),
         createButtonTextImageLink(context, "Cộng đồng", community, Community()),
-        createButtonTextImageLink(context, "Mốc phát triển",
-            developmentMilestone, checkEntryBabyDevelopment()),
       ],
     );
   }
@@ -339,18 +327,6 @@ class _DashBoardState extends State<DashBoard> {
     }
   }
 
-  Widget checkEntryBabyDevelopment() {
-    if (CurrentMember.role == MOM_ROLE) {
-      /*if (CurrentMember.pregnancyFlag == true) {
-        return BabyDevelopment();
-      } else {*/
-        return ChangeAccount(2);
-      /*}*/
-    } else {
-      return BabyDevelopment();
-    }
-  }
-
   Widget GridViewNews() {
     return ScopedModel(
       model: _newsViewModel,
@@ -360,10 +336,10 @@ class _DashBoardState extends State<DashBoard> {
               ? loadingProgress()
               : Expanded(
                   child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 250,
-                          crossAxisSpacing: 6,
-                          mainAxisSpacing: 6),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                      crossAxisSpacing: 3,
+                      mainAxisSpacing: 3),
                       itemCount: model.newsListModel != null
                           ? model.newsListModel.length
                           : 0,

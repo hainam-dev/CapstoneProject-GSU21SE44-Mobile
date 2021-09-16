@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,19 +38,20 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
   firebase_storage.Reference ref;
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      getImages.forEach((url) {
-        precacheImage(NetworkImage(url), context);
-      });
-    });
     super.initState();
+    if(getImages != null && getImages != "")
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        getImages.forEach((url) {
+          precacheImage(NetworkImage(url), context);
+        });
+      });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(DateTimeConvert.getDayOfWeek(widget.model.createTime) +
+        title: Text(DateTimeConvert.getDayOfWeek(widget.model.createTime) + ", " +
             DateTimeConvert.convertDatetimeFullFormat(widget.model.createTime)),
         actions: [
           editFlag == false ? MoreButton() : OkAndCancelButton(),
@@ -57,7 +59,6 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
       ),
       body: Scaffold(
         body: SingleChildScrollView(
-          padding: EdgeInsets.all(15),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -95,43 +96,11 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              PublicFunction(),
               EditFunction(),
               DeleteFunction(),
             ],
           );
         });
-  }
-
-  Widget PublicFunction() {
-    return ListTile(
-      leading: SvgPicture.asset(community,height: 25,width: 25,),
-      title: Text(
-        widget.model.publicFlag ? "Bỏ chia sẻ cộng đồng" : "Chia sẻ cộng đồng",
-        style: TextStyle(color: YELLOW_COLOR),
-      ),
-      onTap: () async {
-        Navigator.pop(context);
-        showProgressDialogue(context);
-        bool result = false;
-        widget.model.publicDate = "1900-01-01T00:00:00.000";
-        if (widget.model.publicFlag) {
-          widget.model.publicFlag = false;
-          widget.model.approvedFlag = false;
-          result = await DiaryViewModel().updateDiary(widget.model);
-        } else {
-          widget.model.publicFlag = true;
-          result = await DiaryViewModel().updateDiary(widget.model);
-        }
-        Navigator.pop(context);
-        showResult(
-            context,
-            result,
-            widget.model.publicFlag == false
-                ? UN_PUBLIC_POST_MESSAGE
-                : PUBLIC_POST_MESSAGE);
-      },
-    );
   }
 
   Widget EditFunction() {
@@ -190,10 +159,6 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
                   editFlag = false;
                 });
                 bool result = false;
-                if (widget.model.publicDate == null)
-                  widget.model.publicDate = "1900-01-01T00:00:00.000";
-                widget.model.publicFlag = false;
-                widget.model.approvedFlag = false;
                 result = await DiaryViewModel().updateDiary(widget.model);
                 Navigator.pop(context);
                 showResult(context, result, "Chỉnh sửa nhật ký thành công");
@@ -236,102 +201,102 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
   }
 
   Widget DiaryContent() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          TextFormField(
-            initialValue: widget.model.diaryContent,
-            minLines: 1,
-            maxLines: null,
-            autofocus: editFlag,
-            enabled: editFlag,
-            style: TextStyle(fontSize: 18),
-            decoration: InputDecoration(
-              hintText: "Nội dung nhật ký...",
-              focusColor: LIGHT_PINK_COLOR,
-              focusedBorder: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            TextFormField(
+              initialValue: widget.model.diaryContent,
+              minLines: 1,
+              maxLines: null,
+              autofocus: editFlag,
+              enabled: editFlag,
+              style: TextStyle(fontSize: 18),
+              decoration: InputDecoration(
+                hintText: "Nội dung nhật ký...",
+                focusColor: LIGHT_PINK_COLOR,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+              ),
+              onChanged: (value) {
+                setState(() {
+                  widget.model.diaryContent = value;
+                });
+              },
             ),
-            onChanged: (value) {
-              setState(() {
-                widget.model.diaryContent = value;
-              });
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget getDiaryImage(String _image) {
     getImages = _image.split(";");
-    return Column(
+    return Stack(
+      alignment: Alignment.center,
       children: [
-        Stack(children: [
-          Card(
-            child: CarouselSlider.builder(
-              itemCount: getImages.length,
-              options: CarouselOptions(
-                  aspectRatio: 1,
-                  autoPlay: false,
-                  viewportFraction: 1.0,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      currentPos = index;
-                    });
-                  }),
-              itemBuilder: (context, index, _) {
-                return Stack(children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2),
-                    child: FullScreenWidget(
-                      backgroundColor: WHITE_COLOR,
-                      child: Center(
-                        child: Hero(
-                          tag: getImages[index].toString(),
-                          child: Container(
-                            child: Image.network(
-                              getImages[index],
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+        Stack(
+            alignment: Alignment.center,
+            children: [
+            CarouselSlider.builder(
+            itemCount: getImages.length,
+            options: CarouselOptions(
+                viewportFraction: 1,
+                autoPlay: false,
+                enableInfiniteScroll: false,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    currentPos = index;
+                  });
+                }),
+            itemBuilder: (context, index, _) {
+              return Stack(
+                  children: <Widget>[
+                  FullScreenWidget(
+                    backgroundColor: WHITE_COLOR,
+                    child: Center(
+                      child: Hero(
+                        tag: getImages[index].toString(),
+                        child: CachedNetworkImage(
+                          imageUrl: getImages[index],
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
                   ),
-                  if (editFlag)
-                    Positioned(
-                      right: 5,
-                      top: 5,
-                      child: InkWell(
-                        child: Icon(
-                          Icons.cancel,
-                          size: 30,
-                          color: PINK_COLOR,
-                        ),
-                        onTap: () {
-                          setState(() {
-                            getImages.removeAt(index);
-                            String url = "";
-                            for (var getUrl in getImages) {
-                              if (getUrl != getImages.last) {
-                                url += getUrl + ";";
-                              } else {
-                                url += getUrl;
-                              }
-                            }
-                            widget.model.imageURL = url;
-                          });
-                        },
+                if (editFlag)
+                  Positioned(
+                    right: 5,
+                    top: 5,
+                    child: InkWell(
+                      child: Icon(
+                        Icons.cancel,
+                        size: 30,
+                        color: PINK_COLOR,
                       ),
+                      onTap: () {
+                        setState(() {
+                          getImages.removeAt(index);
+                          String url = "";
+                          for (var getUrl in getImages) {
+                            if (getUrl != getImages.last) {
+                              url += getUrl + ";";
+                            } else {
+                              url += getUrl;
+                            }
+                          }
+                          widget.model.imageURL = url;
+                        });
+                      },
                     ),
-                ]);
-              },
-            ),
+                  ),
+              ]);
+            },
           ),
-          if (editFlag == false)
+            if (editFlag == false)
             Positioned(
               right: 10,
               top: 10,
@@ -340,35 +305,46 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
                 padding: EdgeInsets.all(5),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: PINK_COLOR,
+                  color: BLACK_COLOR.withOpacity(0.5),
                   borderRadius: BorderRadius.all(Radius.circular(15.0)),
                 ),
                 child: Text(
                   (currentPos + 1).toString() +
                       "/" +
                       getImages.length.toString(),
-                  style: TextStyle(fontSize: 11),
+                  style: TextStyle(fontSize: 13,color: WHITE_COLOR),
                 ),
               ),
             ),
+            Positioned(
+            bottom: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: getImages.map((pic) {
+                int index = getImages.indexOf(pic);
+                return Container(
+                  width: currentPos == index ? 8.0 : 6.0,
+                  height: currentPos == index ? 8.0 : 6.0,
+                  margin: EdgeInsets.symmetric(vertical: 15.0, horizontal: 4.0),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: GREY_COLOR.withOpacity(0.6),
+                        spreadRadius: 2,
+                        blurRadius: 4,
+                        offset: Offset(1, 1), // changes position of shadow
+                      ),
+                    ],
+                    color: currentPos == index
+                        ? WHITE_COLOR
+                        : WHITE_COLOR.withOpacity(0.6),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
         ]),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: getImages.map((pic) {
-            int index = getImages.indexOf(pic);
-            return Container(
-              width: currentPos == index ? 8.0 : 4.0,
-              height: currentPos == index ? 8.0 : 4.0,
-              margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: currentPos == index
-                    ? PINK_COLOR
-                    : Color.fromRGBO(0, 0, 0, 0.4),
-              ),
-            );
-          }).toList(),
-        ),
       ],
     );
   }

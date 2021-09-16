@@ -41,10 +41,14 @@ final String GET_SAVED_GUIDEBOOK_BY_MOM_ID =
 
 final String ADD_DIARY = getApiPath("/api/Diaries/AddDiary");
 final String UPDATE_DIARY = getApiPath("/api/Diaries/UpdateDiary/");
-final String GET_ALL_DIARY_OF_CHILD =
-    getApiPath("/api/Diaries/GetDiaryOfChildren/");
-final String GET_ALL_PUBLIC_DIARY = getApiPath("/api/Diaries/GetDiaryPublic");
+final String GET_ALL_DIARY_OF_CHILD = getApiPath("/api/Diaries/GetDiaryOfChildren/");
 final String DELETE_DIARY = getApiPath("/api/Diaries/DeleteDiary/");
+
+final String ADD_COMMUNITY_POST = getApiPath("/api/CommunityPost/AddCommunityPost");
+final String GET_COMMUNITY_POST = getApiPath("/api/CommunityPost/GetCommunityPost");
+final String GET_USER_COMMUNITY_POST = getApiPath("/api​/CommunityPost​/GetUserCommunityPost");
+final String UPDATE_COMMUNITY_POST = getApiPath("/api/CommunityPost/UpdateCommunityPost/");
+final String DELETE_COMMUNITY_POST = getApiPath("/api/CommunityPost/DeleteCommunityPost/");
 
 final String GET_TOOTHINFO_BY_ID = getApiPath("/api/ToothInfo/GetToothInfoBy/");
 final String GET_TOOTH_BY_CHILD_ID = getApiPath("/api/Tooth/GetToothByToothId/");

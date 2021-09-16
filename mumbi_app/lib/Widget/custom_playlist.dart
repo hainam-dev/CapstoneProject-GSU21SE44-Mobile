@@ -5,14 +5,9 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 
 Widget customActivity({String icon, String title, Widget widget}){
   return InkWell(
-    child: Container(
-      margin: EdgeInsets.only(top: 5,bottom: 5),
-      decoration: BoxDecoration(
-        color: WHITE_COLOR,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        boxShadow: [
-          BoxShadow(color: GREY_COLOR, spreadRadius: 0, blurRadius: 5),
-        ],
+    child: Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
         children: <Widget>[

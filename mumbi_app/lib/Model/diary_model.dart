@@ -3,30 +3,19 @@ class DiaryModel {
   String childId;
   String imageURL;
   String diaryContent;
-  String avatarUser;
-  String createdByName;
-  String createdByID;
+  String createdBy;
   String createTime;
-  String lastModifiedBy;
   String lastModifiedTime;
-  String publicDate;
-  bool publicFlag;
-  bool approvedFlag;
 
   DiaryModel(
       {this.id,
       this.childId,
       this.imageURL,
       this.diaryContent,
-      this.avatarUser,
-      this.createdByName,
-      this.createdByID,
+      this.createdBy,
       this.createTime,
-      this.lastModifiedBy,
       this.lastModifiedTime,
-      this.publicDate,
-      this.publicFlag,
-      this.approvedFlag});
+      });
 
   factory DiaryModel.fromJson(dynamic json) {
     return DiaryModel(
@@ -34,15 +23,9 @@ class DiaryModel {
       childId: json['childId'],
       imageURL: json['imageURL'],
       diaryContent: json['diaryContent'],
-      avatarUser: json['imageURLCreateBy'],
-      createdByName: json['nameCreatedBy'],
-      createdByID: json['createdBy'],
+      createdBy: json['createdBy'],
       createTime: json['createdTime'],
-      lastModifiedBy: json['lastModifiedBy'],
       lastModifiedTime: json['lastModifiedTime'],
-      publicDate: json['publicDate'],
-      publicFlag: json['publicFlag'],
-      approvedFlag: json['approvedFlag'],
     );
   }
 
@@ -51,10 +34,10 @@ class DiaryModel {
     'childId': childId,
     'imageURL': imageURL,
     'diaryContent': diaryContent,
-    'createdBy': createdByID,
-    'lastModifiedBy': lastModifiedBy,
-    'publicDate': publicDate,
-    'publicFlag': publicFlag,
-    'approvedFlag': approvedFlag,
+    'createdBy': createdBy,
+    'createdTime': createTime,
+    'lastModifiedBy': lastModifiedTime,
   };
+
+
 }

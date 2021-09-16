@@ -133,13 +133,33 @@ class DateTimeConvert {
     return date2;
   }
 
+  static String getTime(String date) {
+    date = DateFormat('H:mm').format(DateTime.parse(date));
+    return date;
+  }
+
+  static String getDay(String date) {
+    date = DateFormat('d').format(DateTime.parse(date));
+    return date;
+  }
+
+  static String getMonth(String date) {
+    date = DateFormat('M').format(DateTime.parse(date));
+    return date;
+  }
+
+  static String getYear(String date) {
+    date = DateFormat('yyyy').format(DateTime.parse(date));
+    return date;
+  }
+
   static String convertDatetimeDMY(String date) {
     date = DateFormat('d/M/yyyy').format(DateTime.parse(date));
     return date;
   }
 
   static String convertDatetimeFullFormat(String date) {
-    date = DateFormat(', d/M/yyyy H:mm').format(DateTime.parse(date));
+    date = DateFormat('d/M/yyyy H:mm').format(DateTime.parse(date));
     return date;
   }
 

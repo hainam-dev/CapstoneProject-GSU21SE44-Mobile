@@ -89,7 +89,6 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
     return Scaffold(
       appBar: AppBar(
           title: Text('Theo dõi bé'),
-          leading: backButton(context, BotNavBar())
       ),
       body: SingleChildScrollView(
         child: Container(

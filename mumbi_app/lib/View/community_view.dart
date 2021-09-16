@@ -1,11 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:full_screen_image/full_screen_image.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/diary_model.dart';
+import 'package:mumbi_app/Model/post_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
-import 'package:mumbi_app/ViewModel/community_viewmodel.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
+import 'package:mumbi_app/View/addCommunityPost.dart';
+import 'package:mumbi_app/ViewModel/communityPost_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
@@ -29,15 +34,15 @@ class _CommunityState extends State<Community> {
   void initState() {
     super.initState();
     _communityViewModel = CommunityViewModel.getInstance();
-    _communityViewModel.getPublicDiary();
+    _communityViewModel.getCommunityPost();
 
     _momViewModel = MomViewModel.getInstance();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getImages.forEach((url) {
         precacheImage(NetworkImage(url), context);
       });
     });
-    super.initState();
   }
 
   @override
@@ -52,26 +57,63 @@ class _CommunityState extends State<Community> {
   }
 
   Widget listCommunityPost() {
-    return ScopedModel(
-      model: _communityViewModel,
-      child: ScopedModelDescendant(
-        builder:
-            (BuildContext context, Widget child, CommunityViewModel model) {
-          return model.publicDiaryListModel == null
-              ? loadingProgress()
-              : ListView.builder(
-                  itemCount: model.publicDiaryListModel.length,
-                  itemBuilder: (context, index) {
-                    DiaryModel diaryModel = model.publicDiaryListModel[index];
-                    return showCommunityPost(diaryModel);
-                  },
-                );
-        },
-      ),
+    return Column(
+      children: [
+        Card(
+          margin: EdgeInsets.zero,
+          elevation: 0,
+          child: ListTile(
+            leading: _momViewModel.momModel == null
+                ? CircleAvatar(radius: 22, backgroundColor: LIGHT_GREY_COLOR)
+                : CircleAvatar(
+              radius: 22,
+              backgroundColor: LIGHT_GREY_COLOR,
+              backgroundImage:
+              CachedNetworkImageProvider(_momViewModel.momModel.imageURL),
+            ),
+            title: GestureDetector(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddCommunityPost(),));
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                  color: LIGHT_GREY_COLOR,
+                ),
+                width: SizeConfig.safeBlockHorizontal * 100,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Hôm nay bạn có gì?",style: TextStyle(color: GREY_COLOR),),
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 10,),
+        ScopedModel(
+          model: _communityViewModel,
+          child: ScopedModelDescendant(
+            builder:
+                (BuildContext context, Widget child, CommunityViewModel model) {
+              return model.postListModel == null
+                  ? loadingProgress()
+                  : Expanded(
+                    child: ListView.builder(
+                        itemCount: model.postListModel.length,
+                        itemBuilder: (context, index) {
+                          PostModel postModel = model.postListModel[index];
+                          return showCommunityPost(postModel);
+                        },
+                      ),
+                  );
+            },
+          ),
+        ),
+      ],
     );
   }
 
-  Widget showCommunityPost(DiaryModel diaryModel) {
+  Widget showCommunityPost(PostModel postModel) {
     return Padding(
       padding: EdgeInsets.only(bottom: 14),
       child: Container(
@@ -82,35 +124,31 @@ class _CommunityState extends State<Community> {
               leading: CircleAvatar(
                 radius: 23,
                 backgroundColor: Colors.transparent,
-                backgroundImage: NetworkImage(diaryModel.avatarUser),
+                backgroundImage: NetworkImage(postModel.avatar),
               ),
               title: Text(
-                diaryModel.createdByName,
+                postModel.fullName,
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
               ),
               subtitle:
-                  Text(DateTimeConvert.timeAgoSinceDate(diaryModel.publicDate)),
-              trailing: diaryModel.createdByID == _momViewModel.momModel.id
+                  Text(DateTimeConvert.timeAgoSinceDate(postModel.approveTime)),
+              trailing: postModel.userId == _momViewModel.momModel.id
                   ? PopupMenuButton<String>(
                       onSelected: (value) async {
                         switch (value) {
-                          case 'Bỏ chia sẻ cộng đồng':
+                          case 'Xóa bài viết':
                             showProgressDialogue(context);
                             bool result = false;
-                            diaryModel.publicDate = "1900-01-01T00:00:00.000";
-                            diaryModel.publicFlag = false;
-                            diaryModel.approvedFlag = false;
-                            result =
-                                await DiaryViewModel().updateDiary(diaryModel);
-                            await _communityViewModel.getPublicDiary();
+                            result = await CommunityViewModel().deleteCommunityPost(postModel.id);
+                            await _communityViewModel.getCommunityPost();
                             Navigator.pop(context);
                             showResult(context, result,
-                                "Bài viết đã được gỡ khỏi mục cộng đồng");
+                                "Bài viết đã được xóa khỏi mục cộng đồng");
                             break;
                         }
                       },
                       itemBuilder: (BuildContext context) {
-                        return {'Bỏ chia sẻ cộng đồng'}.map((String choice) {
+                        return {'Xóa bài viết'}.map((String choice) {
                           return PopupMenuItem<String>(
                             value: choice,
                             child: Text(choice),
@@ -120,14 +158,14 @@ class _CommunityState extends State<Community> {
                     )
                   : SizedBox.shrink(),
             ),
-            if (diaryModel.imageURL != null && diaryModel.imageURL != "")
-              getDiaryImage(diaryModel.imageURL),
+            if (postModel.imageURL != null && postModel.imageURL != "")
+              getPostImage(postModel.imageURL),
             Align(
               alignment: Alignment.topLeft,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(14, 10, 14, 18),
                 child: ReadMoreText(
-                  diaryModel.diaryContent,
+                  postModel.postContent,
                   trimLength: 250,
                   colorClickableText: BLACK_COLOR,
                   delimiter: "",
@@ -145,38 +183,43 @@ class _CommunityState extends State<Community> {
     );
   }
 
-  Widget getDiaryImage(String _image) {
+  Widget getPostImage(String _image) {
     getImages = _image.split(";");
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
+      alignment: Alignment.center,
       children: [
-        Stack(children: [
-          Card(
-            child: CarouselSlider.builder(
-              itemCount: getImages.length,
-              options: CarouselOptions(
-                  aspectRatio: 1,
-                  autoPlay: false,
-                  viewportFraction: 1.0,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      currentPos = index;
-                    });
-                  }),
-              itemBuilder: (context, index, _) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2),
-                  child: Center(
-                    child: Container(
-                      child: Image.network(
-                        getImages[index],
-                        fit: BoxFit.cover,
+        Stack(
+            alignment: Alignment.center,
+            children: [
+          CarouselSlider.builder(
+            itemCount: getImages.length,
+            options: CarouselOptions(
+                viewportFraction: 1,
+                autoPlay: false,
+                enableInfiniteScroll: false,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    currentPos = index;
+                  });
+                }),
+            itemBuilder: (context, index, _) {
+              return Stack(
+                children: [
+                  FullScreenWidget(
+                    backgroundColor: WHITE_COLOR,
+                    child: Center(
+                      child: Hero(
+                        tag: getImages[index].toString(),
+                        child: CachedNetworkImage(
+                          imageUrl: getImages[index],
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
-                );
-              },
-            ),
+                ],
+              );
+            },
           ),
           Positioned(
             right: 10,
@@ -186,32 +229,43 @@ class _CommunityState extends State<Community> {
               padding: EdgeInsets.all(5),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: PINK_COLOR,
+                color: BLACK_COLOR.withOpacity(0.5),
                 borderRadius: BorderRadius.all(Radius.circular(15.0)),
               ),
               child: Text(
                 (currentPos + 1).toString() + "/" + getImages.length.toString(),
-                style: TextStyle(fontSize: 11),
+                style: TextStyle(fontSize: 13,color: WHITE_COLOR),
               ),
             ),
           ),
         ]),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: getImages.map((pic) {
-            int index = getImages.indexOf(pic);
-            return Container(
-              width: currentPos == index ? 8.0 : 4.0,
-              height: currentPos == index ? 8.0 : 4.0,
-              margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: currentPos == index
-                    ? PINK_COLOR
-                    : Color.fromRGBO(0, 0, 0, 0.4),
-              ),
-            );
-          }).toList(),
+        Positioned(
+          bottom: 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: getImages.map((pic) {
+              int index = getImages.indexOf(pic);
+              return Container(
+                width: currentPos == index ? 8.0 : 6.0,
+                height: currentPos == index ? 8.0 : 6.0,
+                margin: EdgeInsets.symmetric(vertical: 15.0, horizontal: 4.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: GREY_COLOR.withOpacity(0.6),
+                      spreadRadius: 2,
+                      blurRadius: 4,
+                      offset: Offset(1, 1), // changes position of shadow
+                    ),
+                  ],
+                  color: currentPos == index
+                      ? WHITE_COLOR
+                      : WHITE_COLOR.withOpacity(0.6),
+                ),
+              );
+            }).toList(),
+          ),
         ),
       ],
     );

@@ -46,34 +46,44 @@ class _BotNavBarState extends State<BotNavBar> {
   }
 
   Widget getBotNavBar() {
-    return BottomNavigationBar(
-      elevation: 0.0,
-      backgroundColor: WHITE_COLOR,
-      type: BottomNavigationBarType.fixed,
-      currentIndex: this.selectedIndex,
-      unselectedItemColor: GREY_COLOR,
-      selectedIconTheme: IconThemeData(
-        color: PINK_COLOR,
-        opacity: 1.0,
+    return Container(
+      decoration: BoxDecoration(
+        color: WHITE_COLOR,
+        boxShadow: [
+          BoxShadow(
+            color: GREY_COLOR,
+          ),
+        ],
       ),
-      unselectedIconTheme: IconThemeData(
-        color: GREY_COLOR,
-        opacity: 1.0,
+      child: BottomNavigationBar(
+        elevation: 0.0,
+        backgroundColor: WHITE_COLOR,
+        type: BottomNavigationBarType.fixed,
+        currentIndex: this.selectedIndex,
+        unselectedItemColor: GREY_COLOR,
+        selectedIconTheme: IconThemeData(
+          color: PINK_COLOR,
+          opacity: 1.0,
+        ),
+        unselectedIconTheme: IconThemeData(
+          color: GREY_COLOR,
+          opacity: 1.0,
+        ),
+        items: [
+          item(Icon(Icons.home_outlined), "Trang Chủ"),
+          item(
+              Icon(
+                Icons.article_outlined,
+              ),
+              "Cẩm Nang"),
+          item(Icon(Icons.equalizer_outlined), "Theo Dõi"),
+        ],
+        onTap: (int index) {
+          this.setState(() {
+            this.selectedIndex = index;
+          });
+        },
       ),
-      items: [
-        item(Icon(Icons.home_outlined), "Trang Chủ"),
-        item(
-            Icon(
-              Icons.article_outlined,
-            ),
-            "Cẩm Nang"),
-        item(Icon(Icons.equalizer_outlined), "Theo Dõi"),
-      ],
-      onTap: (int index) {
-        this.setState(() {
-          this.selectedIndex = index;
-        });
-      },
     );
   }
 

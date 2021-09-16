@@ -21,10 +21,6 @@ class _InjectionDetailState extends State<InjectionDetail> {
           child: Column(
             children: <Widget>[
               InjectionTableDetail(),
-              SizedBox(
-                height: 10,
-              ),
-              VaccineTableDetail(),
             ],
           ),
         ));
@@ -36,34 +32,19 @@ class _InjectionDetailState extends State<InjectionDetail> {
         margin: EdgeInsets.zero,
         child: Column(
           children: [
-            HeaderItem('Chi tiết mũi tiêm'),
+            BodyItem(Icon(Icons.bubble_chart_outlined), 'Tên Vaccine',
+                widget.model.vaccineName),
             BodyItem(Icon(Icons.coronavirus_outlined), 'Kháng nguyên',
                 widget.model.antigen),
             BodyItem(Icon(Icons.colorize), 'Mũi số',
                 widget.model.orderOfInjection.toString()),
             BodyItem(Icon(Icons.access_time), 'Ngày tiêm',
-                widget.model.injectionDate),
+                widget.model.injectionDateTime),
             BodyItem(Icon(Icons.location_on_outlined), 'Nơi tiêm',
                 widget.model.vaccinationFacility),
             BodyItem(Icon(Icons.check_circle_outline), 'Đã tiêm', ""),
           ],
         ));
-  }
-
-  Widget VaccineTableDetail() {
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      child: Column(
-        children: [
-          HeaderItem('Thông tin vaccine'),
-          BodyItem(Icon(Icons.bubble_chart_outlined), 'Tên Vaccine',
-              widget.model.vaccineName),
-          BodyItem(Icon(Icons.inventory_2_outlined), 'Số lô',
-              widget.model.vaccineBatch),
-        ],
-      ),
-    );
   }
 
   Widget HeaderItem(String name) {

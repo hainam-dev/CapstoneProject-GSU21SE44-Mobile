@@ -9,8 +9,10 @@ import 'package:mumbi_app/Model/activity_model.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
+import 'package:mumbi_app/View/babyDevelopment_view.dart';
 import 'package:mumbi_app/View/childHistory_view.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
+import 'package:mumbi_app/View/teethTrack_view.dart';
 import 'package:mumbi_app/ViewModel/activity_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
@@ -71,74 +73,43 @@ class _TrackingState extends State<Tracking> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Theo dõi"),
-        /*actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChildHistory(),
-                    ));
-              },
-              icon: CircleAvatar(
-                  backgroundColor: WHITE_COLOR,
-                  child: Icon(
-                    Icons.update,
-                    size: 25,
-                    color: BLACK_COLOR,
-                  )),
-            ),
-          )
-        ],*/
-      ),
-      drawer: getDrawer(context),
-      body: ScopedModel(
-          model: _childViewModel,
-          child: ScopedModelDescendant(
-            builder:
-                (BuildContext context, Widget child, ChildViewModel model) {
-              return model.childModel == null
-                  ? loadingProgress()
-                  : SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(13, 0, 13, 10),
-                      child: Column(
-                        children: <Widget>[
-                          CalendarHeader(model.childModel),
-                          CalendarBody(),
-                          CircleThing(model.childModel),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                'Các hoạt động cho bé:',
-                                style: BOLD_20,
-                              )),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          ListenToMusic(),
-                          TellTheStory(),
-                          ReadPoetry(),
-                        ],
+    return ScopedModel(
+      model: _childViewModel,
+      child: ScopedModelDescendant(builder: (BuildContext context, Widget child, ChildViewModel model) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("Theo dõi"),
+          ),
+          drawer: getDrawer(context),
+          body: model.childModel == null
+              ? loadingProgress()
+              : SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.fromLTRB(13, 30, 13, 10),
+                  child: Column(
+                    children: <Widget>[
+                      CircleThing(model.childModel),
+                      SizedBox(
+                        height: 23,
                       ),
-                    ),
-                  ],
+                      ListTileFunction(developmentMilestone,"Mốc phát triển",BabyDevelopment()),
+                      if(CurrentMember.role == CHILD_ROLE)
+                      ListTileFunction(ic_tooth_color,"Mọc răng", TeethTrack()),
+                      ListenToMusic(),
+                      TellTheStory(),
+                      ReadPoetry(),
+                    ],
+                  ),
                 ),
-              );
-            },
-          )),
-      bottomNavigationBar: currentSong != "" ? MusicPlaying() : null,
+              ],
+            ),
+          ),
+          bottomNavigationBar: currentSong != "" ? MusicPlaying() : null,
+        );
+      },),
     );
   }
 
@@ -189,7 +160,7 @@ class _TrackingState extends State<Tracking> {
   Widget slider() {
     return ConstrainedBox(
       constraints: BoxConstraints(
-          maxHeight: 5, maxWidth: SizeConfig.blockSizeHorizontal * 70),
+          maxHeight: 7, maxWidth: SizeConfig.blockSizeHorizontal * 70),
       child: SliderTheme(
         data: SliderThemeData(
           thumbColor: BLACK_COLOR.withOpacity(0.9),
@@ -199,7 +170,7 @@ class _TrackingState extends State<Tracking> {
           activeTrackColor: BLACK_COLOR.withOpacity(0.5),
           inactiveTrackColor: GREY_COLOR.withOpacity(0.5),
           trackShape: RectangularSliderTrackShape(),
-          trackHeight: 4.0,
+          trackHeight: 5.0,
         ),
         child: Slider(
             min: 0,
@@ -207,8 +178,7 @@ class _TrackingState extends State<Tracking> {
             value: position.inSeconds.toDouble(),
             onChanged: (double value) {
               setState(() {
-                Duration newDuration = Duration(seconds: value.toInt());
-                audioPlayer.seek(newDuration);
+                audioPlayer.seek(Duration(seconds: value.toInt()));
                 value = value;
               });
             }),
@@ -283,69 +253,13 @@ class _TrackingState extends State<Tracking> {
     });
   }
 
-  Widget CalendarHeader(ChildModel childModel) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          CurrentMember.pregnancyFlag == true
-              ? createFlatButton(context, 'Bé đã ra đời',
-              ChildrenInfo(childModel, UPDATE_STATE, CHILD_ENTRY))
-              : Container(),
-          Row(
-            children: [
-              Text(
-                "Tháng ${DateTimeConvert.getCurrentMonth()}",
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-              ),
-              SizedBox(
-                width: 4,
-              ),
-              Icon(
-                Icons.calendar_today_outlined,
-                color: BLACK_COLOR,
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget CalendarBody() {
-    return TableCalendar(
-      locale: 'vi',
-      firstDay: DateTime.now().subtract(new Duration(days: 30)),
-      lastDay: DateTime.now().add(new Duration(days: 30)),
-      focusedDay: DateTime.now(),
-      calendarFormat: CalendarFormat.week,
-      startingDayOfWeek: StartingDayOfWeek.monday,
-      calendarStyle: CalendarStyle(
-        defaultTextStyle: TextStyle(color: PINK_COLOR),
-      ),
-      headerVisible: false,
-      availableGestures: AvailableGestures.none,
-      calendarBuilders: CalendarBuilders(
-        todayBuilder: (context, date, events) => Container(
-            margin: const EdgeInsets.all(4.0),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: PINK_COLOR, borderRadius: BorderRadius.circular(30.0)),
-            child: Text(
-              date.day.toString(),
-              style: TextStyle(color: Colors.white),
-            )),
-      ),
-    );
-  }
-
   Widget CircleThing(ChildModel childModel) {
     return Container(
-      height: 250,
-      width: 250,
+      height: 230,
+      width: 230,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(150),
+        border: Border.all(color: PINK_COLOR),
         color: Color(0xFFFC95AE),
       ),
       child: Column(
@@ -377,13 +291,12 @@ class _TrackingState extends State<Tracking> {
                     ? DateTimeConvert.pregnancyWeekAndDay(
                     childModel.estimatedBornDate)
                     : DateTimeConvert.calculateChildAge(childModel.birthday),
-                style: BOLDWHITE_20,
+                style: TextStyle(fontSize: 18,color: WHITE_COLOR,fontWeight: FontWeight.w600),
               )),
-          SizedBox(
-            height: 10.0,
-          ),
-          createButtonWhite(
-              context, 'Cập nhật thông tin', 180, ChildInfoUpdate()),
+          CurrentMember.pregnancyFlag == true
+              ? createFlatButton(context, 'Bé đã ra đời',
+              ChildrenInfo(childModel, UPDATE_STATE, CHILD_ENTRY))
+              : Container(),
         ],
       ),
     );
@@ -444,7 +357,7 @@ class _TrackingState extends State<Tracking> {
 
   Widget ReadPoetry() {
     return customActivity(
-      title: "Đọc thơ",
+      title: "Nghe đọc thơ",
       icon: ic_poet,
       widget: ScopedModel(
           model: _activityViewModel,
@@ -483,7 +396,7 @@ class _TrackingState extends State<Tracking> {
 
   Widget TellTheStory() {
     return customActivity(
-      title: "Kể Chuyện",
+      title: "Nghe kể chuyện",
       icon: ic_kechuyen,
       widget: ScopedModel(
           model: _activityViewModel,
@@ -517,6 +430,26 @@ class _TrackingState extends State<Tracking> {
               );
             },
           )),
+    );
+  }
+
+  Widget ListTileFunction(String image, String name, Widget _screen){
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(3.0),
+        child: ListTile(
+          leading: SvgPicture.asset(image,height: 32,),
+          title: Text(name,style: TextStyle(fontSize: 17),),
+          trailing: Icon(Icons.arrow_forward_ios, size: 15,color: BLACK_COLOR,),
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => _screen));
+          },
+        ),
+      ),
     );
   }
 

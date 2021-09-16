@@ -92,16 +92,9 @@ Widget getDrawer(BuildContext context) {
           createListTileNavigator(
               context,
               babyDiary,
-              'Nhật ký của bé',
+              'Nhật ký',
               CurrentMember.role == CHILD_ROLE
                   ? BabyDiary()
-                  : ChangeAccount(2)),
-          createListTileNavigator(
-              context,
-              teethGrow,
-              'Mọc răng',
-              CurrentMember.role == CHILD_ROLE
-                  ? TeethTrack()
                   : ChangeAccount(2)),
           createListTileNavigator(
               context, contact, 'Liên Hệ Hỗ Trợ', Contact()),

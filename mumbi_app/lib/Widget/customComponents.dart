@@ -260,7 +260,7 @@ Widget createFamilyCard(BuildContext context, String _imageURL, String _name,
                       ),*/
                       if(_labelText == "Mẹ bầu")
                       Positioned(
-                        bottom: -1,
+                        bottom: 1,
                         left: 1,
                         child: Container(
                           child: SvgPicture.asset(

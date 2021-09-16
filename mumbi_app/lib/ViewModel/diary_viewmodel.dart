@@ -41,8 +41,8 @@ class DiaryViewModel extends Model{
   }
 
   Future<bool> addDiary(DiaryModel diaryModel) async {
-    String createByID = await UserViewModel.getUserID();
-    diaryModel.createdByID = createByID;
+    String userId = await UserViewModel.getUserID();
+    diaryModel.createdBy = userId;
     try {
       String data = await DiaryRepository.apiAddDiary(diaryModel);
       notifyListeners();

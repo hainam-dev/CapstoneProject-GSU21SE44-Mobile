@@ -55,7 +55,7 @@ Widget createListTileWithBlueTextTrailing(
 }
 
 Widget createListTileDiaryPost(
-    String _imageURL, String _name, bool publicFlag) {
+    String _imageURL, String _name) {
   return Card(
     elevation: 0,
     margin: EdgeInsets.zero,
@@ -75,15 +75,6 @@ Widget createListTileDiaryPost(
               DateTimeConvert.getCurrentDay(),
               style: TextStyle(color: LIGHT_DARK_GREY_COLOR),
             ),
-            SizedBox(width: 2),
-            if (publicFlag == true)
-              Icon(
-                Icons.fiber_manual_record,
-                color: GREY_COLOR,
-                size: 6,
-              ),
-            SizedBox(width: 2),
-            if (publicFlag == true) Text("Cộng đồng: Đã bật"),
           ],
         )),
   );
@@ -247,14 +238,17 @@ Widget createListTileSelectedAccount(BuildContext context, String _imageURL,
       elevation: 2,
       margin: EdgeInsets.zero,
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor:
-              CurrentMember.id == id ? PINK_COLOR : Colors.transparent,
-          radius: 23,
-          child: CircleAvatar(
-            radius: 22,
-            backgroundImage: CachedNetworkImageProvider(_imageURL),
-          ),
+        leading: Stack(
+          children: [
+            CircleAvatar(
+            backgroundColor:
+            CurrentMember.id == id ? PINK_COLOR : Colors.transparent,
+              radius: 23,
+              child: CircleAvatar(
+                radius: 22,
+                backgroundImage: CachedNetworkImageProvider(_imageURL),
+            ),),
+          ],
         ),
         title: Text(
           _title,
@@ -263,7 +257,7 @@ Widget createListTileSelectedAccount(BuildContext context, String _imageURL,
         ),
         subtitle: Row(
           children: [
-            Text(role),
+            Text(role == MOM_ROLE && pregnancyId != "" ? "Mẹ bầu" : role),
             if (CurrentMember.id == id)
               Text(
                 " (Đang chọn)",
@@ -460,119 +454,118 @@ Widget createDiaryItem(BuildContext context, DiaryModel diaryModel,
       onClick();
     },
     child: Padding(
-      padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        elevation: 1,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+      child: Stack(
+        children: [
+          Card(
+            elevation: 1,
+            shadowColor: GREY_COLOR,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              side: BorderSide(color: BLACK_COLOR),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        DateTimeConvert.getDayOfWeek(diaryModel.createTime) +
-                            DateTimeConvert.convertDatetimeFullFormat(
-                                diaryModel.createTime),
-                        style: TextStyle(
-                            color: LIGHT_DARK_GREY_COLOR,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(
-                        width: 3,
-                      ),
-                      if (diaryModel.publicFlag == true &&
-                              diaryModel.approvedFlag == true ||
-                          diaryModel.publicFlag == true &&
-                              diaryModel.approvedFlag == false)
-                        Icon(
-                          Icons.fiber_manual_record,
-                          color: LIGHT_DARK_GREY_COLOR,
-                          size: 5,
+                  Container(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text("Ngày ${DateTimeConvert.getDay(diaryModel.createTime)} "
+                                    "tháng ${DateTimeConvert.getMonth(diaryModel.createTime)}, "
+                                    "${DateTimeConvert.getYear(diaryModel.createTime)}",
+                                  style: TextStyle( fontSize: 19.0, color: DARK_PINK_COLOR,fontWeight: FontWeight.w600),
+                                ),
+                                SizedBox(height: 5,),
+                                Row(
+                                  children: [
+                                    Text("vào lúc ${DateTimeConvert.getTime(diaryModel.createTime)}",
+                                      style: TextStyle( fontSize: 14.0, color: LIGHT_DARK_GREY_COLOR),
+                                    ),
+                                    if (diaryModel.imageURL != null && diaryModel.imageURL != "" && CountImage(diaryModel.imageURL) >= 1)
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 3),
+                                            child: Icon(
+                                              Icons.fiber_manual_record,color: GREY_COLOR,size: 6,
+                                            ),
+                                          ),
+                                          Text(
+                                            CountImage(diaryModel.imageURL).toString(),style: TextStyle(color: LIGHT_DARK_GREY_COLOR,fontSize: 16),
+                                          ),
+                                          Icon(
+                                            Icons.photo_outlined,color: LIGHT_DARK_GREY_COLOR,size: 15,
+                                          ),
+                                        ],
+                                      )
+                                  ],
+                                ),
+                                SizedBox(height: 10,),
+                                Text(
+                                  diaryModel.diaryContent,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: BLACK_COLOR,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      SizedBox(
-                        width: 3,
-                      ),
-                      if (diaryModel.publicFlag == true &&
-                          diaryModel.approvedFlag == true)
-                        Expanded(
-                            child: Text(
-                          "Đã chia sẻ",
-                          style: TextStyle(
-                            color: LIGHT_DARK_GREY_COLOR,
+                        if (diaryModel.imageURL != null && diaryModel.imageURL != "")
+                          Stack(
+                            children: [
+                              SvgPicture.asset(
+                                rectFrame,height: 115,
+                              ),
+                              Positioned(
+                                top: 38,
+                                left: 19,
+                                child: CachedNetworkImage(
+                                  imageUrl: diaryModel.imageURL.split(";").first,
+                                  fit: BoxFit.cover,
+                                  height: 58,
+                                  width: 77,
+                                ),
+                              ),
+                            ],
                           ),
-                        )),
-                      if (diaryModel.publicFlag == true &&
-                          diaryModel.approvedFlag == false)
-                        Expanded(
-                            child: Text(
-                          "Đang chờ duyệt",
-                          style: TextStyle(
-                            color: LIGHT_DARK_GREY_COLOR,
-                          ),
-                        ))
-                    ],
-                  ),
-                  Divider(),
-                  Text(
-                    diaryModel.diaryContent,
-                    maxLines: 5,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(color: BLACK_COLOR, fontSize: 16),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-            if (diaryModel.imageURL != null && diaryModel.imageURL != "")
-              ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                child: CachedNetworkImage(
-                    imageUrl: diaryModel.imageURL.split(";").first),
-              ),
-          ],
-        ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            child: SvgPicture.asset(
+              edgeFrame,height: 40,
+            ),
+          ),
+        ],
       ),
     ),
   );
 }
 
-
-// Widget create(){
-//   return DataRow(
-//     selected: true,
-//     cells: <DataCell>[
-//       DataCell(Text('Tháng 1')),
-//       DataCell(
-//           Row(
-//             // mainAxisSize: MainAxisSize.max,
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Text('1.28'),
-//                 Text('1.26'),
-//               ])),
-//       DataCell(
-//           Row(
-//             // mainAxisSize: MainAxisSize.max,
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Text('1.28'),
-//                 Text('1.26'),
-//               ])),
-//       DataCell(
-//           Row(
-//             // mainAxisSize: MainAxisSize.max,
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 Text('1.28'),
-//                 Text('1.26'),
-//               ])),
-//     ],
-//   );
-// }
+num CountImage(String url){
+  List<String> list = new List();
+  list = url.split(";");
+  num imageCount = list.length;
+  return imageCount;
+}

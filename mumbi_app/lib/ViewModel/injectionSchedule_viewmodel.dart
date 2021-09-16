@@ -33,7 +33,7 @@ class InjectionScheduleViewModel extends Model {
             .map((e) => InjectionScheduleModel.fromJson(e))
             .toList();
         injectionScheduleListModel
-            .sort((a, b) => b.injectionDate.compareTo(a.injectionDate));
+            .sort((a, b) => b.date.compareTo(a.date));
       } else {
         injectionScheduleListModel = null;
       }

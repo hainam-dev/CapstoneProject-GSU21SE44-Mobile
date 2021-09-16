@@ -19,20 +19,46 @@ class _ActivityDetailState extends State<ActivityDetail> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: WHITE_COLOR,
         appBar: AppBar(
-          title: Text('Cập nhật hoạt động'),
-          bottom: TabBar(
-            tabs: <Widget>[
-              Tab(child: Text('Vận động thô'),),
-              Tab(child: Text('Vận động tinh'),),
-            ],
-          ),
-          leading: backButton(context, BabyDevelopment()),
+          title: Text('Vận động'),
         ),
-        body: TabBarView(
-          children: <Widget>[
-            GrossMotorSkill(),
-            FineMotorSkill(),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: 45,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(
+                    25.0,
+                  ),
+                ),
+                child: TabBar(
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      25.0,
+                    ),
+                    color: PINK_COLOR,
+                  ),
+                  labelColor: WHITE_COLOR,
+                  unselectedLabelColor: BLACK_COLOR,
+                  tabs: [
+                    Tab(text: 'Thô',),
+                    Tab(text: 'Tinh',),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: <Widget>[
+                  GrossMotorSkill(),
+                  FineMotorSkill(),
+                ],
+              ),
+            ),
           ],
         ),
       ),
