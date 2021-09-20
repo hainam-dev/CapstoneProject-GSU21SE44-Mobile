@@ -37,16 +37,18 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
   List<ChildDataModel> resultChildWeight = <ChildDataModel>[];
   List<ChildDataModel> resultChildHeight = <ChildDataModel>[];
   List<ChildDataModel> resultChildHead = <ChildDataModel>[];
+  List<ChildHistoryModel> listChildHistory;
+  List<StandardIndexModel> listStandardIndex;
 
   ChildModel childModel;
   ChildViewModel childViewModel;
   StandardIndexViewModel standardIndexViewModel;
-  List<ChildHistoryModel> listChild;
-
   ChildHistoryViewModel childHistoryViewModel;
+
   ActionViewModel actionViewModel;
   List<ActionModel> listActFine;
   List<ActionModel> listActGross;
+
   double weightPercent = 0;
   double heightPercent = 0;
   double headPercent = 0;
@@ -76,7 +78,9 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
 
     actionViewModel.getAllActionByChildId();
 
-    getChild();
+    resultChildWeight.clear();
+    resultChildHeight.clear();
+    resultChildHead.clear();
   }
 
   @override
@@ -88,309 +92,317 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Theo dõi bé'),
+        title: Text('Theo dõi bé'),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Container(
-                        // margin: EdgeInsets.all(18),
-                          decoration: new BoxDecoration(
-                            color: Colors.white,
-                          ),
-                          child: ScopedModel(
-                              model: childViewModel,
-                              child: ScopedModelDescendant(
-                                builder: (BuildContext context, Widget child,
-                                    ChildViewModel modelChild) {
-                                  childModel = modelChild.childModel;
-                                  storage.write(
-                                      key: childIdKey, value: childModel.id);
-                                  if (childModel == null) {
-                                    return loadingProgress();
-                                  }
-                                  getChild();
-                                  return createListTileDetail(
-                                      name, day.toString(), imageUrl);
-                                },
-                              ))),
-                      ScopedModel(
-                        //todo
-                          model: childViewModel,
-                          child: ScopedModelDescendant(
-                            builder: (BuildContext context, Widget child,
-                                ChildViewModel model) {
-                              String dateNow = "Ngày " + DateTime.now().day.toString()+ " Tháng " + DateTime.now().month.toString()+ " Năm " +DateTime.now().year.toString();
-                              return createListTileNext(
-                                  context,
-                                  dateNow,
-                                  'Cập nhật dữ liệu cho bé',
-                                  ChildInfoUpdate());
-                            },
-                          )),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-                    color: Colors.white,
-                    child: ScopedModel(
-                      model: childHistoryViewModel,
-                      child: ScopedModelDescendant(
-                        builder: (BuildContext context, Widget child, ChildHistoryViewModel modelChild) {
-                          listChild = modelChild.childListHistoryChild;
-                          if (listChild?.isNotEmpty ?? false) {                            // listChild.forEach((e) => e.date = DateTimeConvert.calculateChildMonth(e.date));
-                            curentBMI = DateTimeConvert.caculateBMI(listChild.last.weight, listChild.last.height);
-                            status = DateTimeConvert.caculateBMIdata(listChild.last.weight, listChild.last.height);
-                            resultChildWeight.clear();
-                            resultChildHeight.clear();
-                            resultChildHead.clear();
-                            for (var child in listChild) {
-                              if (child.date != null) {
-                                final date = DateTimeConvert.calculateChildMonth(child.date,DateFormat("dd/MM/yyyy").parse(childModel.birthday));
-                                print('date'+date.toString());
-                                resultChildWeight.add(new ChildDataModel(date, child.weight));
-                                resultChildHeight.add(new ChildDataModel(date, child.height));
-                                resultChildHead.add(new ChildDataModel(date, child.headCircumference));
+        child: Column(
+          children: <Widget>[
+            Container(
+              child: ScopedModel(
+                model: childViewModel,
+                child: ScopedModelDescendant(
+                  builder: (BuildContext context, Widget child,
+                      ChildViewModel modelChild) {
+                    childModel = modelChild.childModel;
+                    if (childModel == null) {
+                      return Text(
+                          "Vui lòng thêm thai kỳ hoặc bé để sử dụng chức năng theo dõi sức khỏe!");
+                    }
+                    storage.write(key: childIdKey, value: childModel.id);
+                    getChild();
+                    return createListTileDetail(name, day.toString(), imageUrl);
+                  },
+                ),
+              ),
+            ),
+            ScopedModel(
+              model: childViewModel,
+              child: ScopedModelDescendant(
+                builder:
+                    (BuildContext context, Widget child, ChildViewModel model) {
+                  String dateNow = "Ngày " +
+                      DateTime.now().day.toString() +
+                      " Tháng " +
+                      DateTime.now().month.toString() +
+                      " Năm " +
+                      DateTime.now().year.toString();
+                  return createListTileNext(context, dateNow,
+                      'Cập nhật dữ liệu cho bé', ChildInfoUpdate());
+                },
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+              color: Colors.white,
+              child: ScopedModel(
+                model: childHistoryViewModel,
+                child: ScopedModelDescendant(
+                  builder: (BuildContext context, Widget child,
+                      ChildHistoryViewModel modelChild) {
+                    listChildHistory = modelChild.childListHistoryChild;
+                    if (listChildHistory?.isNotEmpty ?? false) {
+                      curentBMI = DateTimeConvert.caculateBMI(
+                          listChildHistory.last.weight,
+                          listChildHistory.last.height);
+                      status = DateTimeConvert.caculateBMIdata(
+                          listChildHistory.last.weight,
+                          listChildHistory.last.height);
+                      resultChildWeight.clear();
+                      resultChildHeight.clear();
+                      resultChildHead.clear();
+                      for (var childHistory in listChildHistory) {
+                        if (childHistory.date != null) {
+                          final date = DateTimeConvert.calculateChildMonth(
+                              childHistory.date,
+                              DateFormat("dd/MM/yyyy")
+                                  .parse(childModel.birthday));
+                          print('date' + date.toString());
+                          resultChildWeight.add(
+                              new ChildDataModel(date, childHistory.weight));
+                          resultChildHeight.add(
+                              new ChildDataModel(date, childHistory.height));
+                          resultChildHead.add(new ChildDataModel(
+                              date, childHistory.headCircumference));
+                        }
+                      }
+                      print('resultChildWeight' +
+                          resultChildWeight.length.toString());
+                    } else if (listChildHistory?.isEmpty ?? false) {
+                      curentBMI = 0;
+                      status = "Vui lòng cập nhật dữ liệu!";
+                      resultChildWeight = [];
+                      resultChildWeight = [];
+                      resultChildWeight = [];
+                    }
+                    return ScopedModel<StandardIndexViewModel>(
+                      model: standardIndexViewModel,
+                      child: ScopedModelDescendant<StandardIndexViewModel>(
+                        builder: (context, child, modelStand) {
+                          listStandardIndex = modelStand.listStandIndex;
+                          List<String> listType = ["Weight", "Height", "Head"];
+
+                          listStandardIndex == null
+                              ? loadingProgress()
+                              : result = {
+                                  for (var type in listType)
+                                    type: listStandardIndex
+                                        .where((data) => data.type == type)
+                                };
+                          if (result != null &&
+                              (listChildHistory?.isNotEmpty ?? false)) {
+                            Iterable<StandardIndexModel> weightList =
+                                result["Weight"];
+                            Iterable<StandardIndexModel> heightList =
+                                result["Height"];
+                            Iterable<StandardIndexModel> headList =
+                                result["Head"];
+                            final date = DateTimeConvert.calculateChildMonth(
+                                modelChild.childListHistoryChild.last.date,
+                                DateFormat("dd/MM/yyyy")
+                                    .parse(childModel.birthday));
+                            for (var index in weightList) {
+                              if (index.month.toString() == date.toString()) {
+                                double weight = converData(
+                                    listChildHistory.last.weight.toDouble(),
+                                    index.maxValue,
+                                    index.minValue);
+                                weightPercent = (weight - index.minValue) /
+                                    (index.maxValue - index.minValue);
                               }
                             }
-                            print('resultChildWeight'+resultChildWeight.length.toString());
-                          } else if(listChild?.isEmpty ?? false){
-                            curentBMI = 0;
-                            status = "Không có";
-                            resultChildWeight = [];
-                            resultChildWeight = [];
-                            resultChildWeight = [];
+                            for (var index in heightList) {
+                              double height;
+                              if (listChildHistory.isNotEmpty) {
+                                height = converData(
+                                    listChildHistory.last.height.toDouble(),
+                                    index.maxValue,
+                                    index.minValue);
+                                print('chay 1');
+                              } else if (listChildHistory.isEmpty) {
+                                print('height = 0;');
+                                height = index.minValue;
+                              }
+                              if (index.month.toString() == date.toString()) {
+                                heightPercent = (height - index.minValue) /
+                                    (index.maxValue - index.minValue);
+                              }
+                            }
+                            for (var index in headList) {
+                              double head = converData(
+                                  listChildHistory.last.headCircumference
+                                      .toDouble(),
+                                  index.maxValue,
+                                  index.minValue);
+                              if (index.month.toString() == date.toString()) {
+                                headPercent = (head - index.minValue) /
+                                    (index.maxValue - index.minValue);
+                              }
+                            }
                           }
-                          return ScopedModel<StandardIndexViewModel>(
-                            model: standardIndexViewModel,
-                            child:
-                            ScopedModelDescendant<StandardIndexViewModel>(
-                              builder: (context, child, modelStand) {
-                                List<StandardIndexModel> list = modelStand.listStandIndex;
-                                List<String> listType = ["Weight", "Height", "Head"];
-
-                                list == null || listChild == null
-                                    ? loadingProgress()
-                                    : result = {
-                                  for (var type in listType)
-                                    type: list.where(
-                                            (data) => data.type == type)
-                                };
-                                if(result != null && (listChild?.isNotEmpty ?? false))
-                                {
-                                  Iterable<StandardIndexModel> weightList = result["Weight"];
-                                  Iterable<StandardIndexModel> heightList = result["Height"];
-                                  Iterable<StandardIndexModel> headList = result["Head"];
-                                  final date = DateTimeConvert.calculateChildMonth(modelChild.childListHistoryChild.last.date,DateFormat("dd/MM/yyyy").parse(childModel.birthday));
-                                  for (var index in weightList)
-                                  {
-                                    if(index.month.toString() == date.toString())
-                                    {
-                                      double weight = converData(listChild.last.weight.toDouble(), index.maxValue, index.minValue);
-                                      weightPercent = (weight - index.minValue)/(index.maxValue - index.minValue);
-                                    }
-                                  }
-                                  for (var index in heightList)
-                                  {
-                                    double height;
-                                    if(listChild.isNotEmpty)
-                                    {
-                                      height = converData(listChild.last.height.toDouble(), index.maxValue, index.minValue);
-                                      print('chay 1');
-                                    }
-                                    else if(listChild.isEmpty)
-                                    {
-                                      print('height = 0;');
-                                      height = index.minValue;
-                                    }
-                                    if(index.month.toString() == date.toString())
-                                    {
-                                      heightPercent = (height - index.minValue)/(index.maxValue - index.minValue);
-                                    }
-                                  }
-                                  for (var index in headList)
-                                  {
-                                    double head = converData(listChild.last.headCircumference.toDouble(), index.maxValue, index.minValue);
-                                    if(index.month.toString() == date.toString())
-                                    {
-                                      headPercent = (head - index.minValue)/(index.maxValue - index.minValue);
-                                    }
-                                  }
-                                }
-                                String dataWeight;
-                                String dataHeight;
-                                String dataHead;
-                                if(weightPercent!= null){
-                                  weightPercent*=100;
-                                  dataWeight = weightPercent.floor().toString();
-                                }
-                                if(heightPercent!= null){
-                                  heightPercent*=100;
-                                  dataHeight = heightPercent.floor().toString();
-                                }
-                                if(headPercent!= null){
-                                  headPercent*=100;
-                                  dataHead = headPercent.floor().toString();
-                                }
-                                return Column(
-                                  children: <Widget>[
-                                    //Thể trạng của bé
-                                    curentBMI == null || status == ""
-                                        ? loadingProgress()
-                                        : createBabyCondition(context,
-                                      curentBMI.toString(),status, ),
-                                    result == null || resultChildWeight == null
-                                        ? loadingProgress()
-                                        : Container(
-                                        child: new Column(
-                                            children: <Widget>[
-                                              new SizedBox(
-                                                  height: 350.0,
-                                                  child: StackedAreaLineChart
-                                                      .withSampleData(
-                                                      "Cân nặng",
-                                                      "Bé nặng hơn $dataWeight% trẻ ",
-                                                      result["Weight"],
-                                                      resultChildWeight)),
-                                            ])),
-                                    result == null || resultChildHeight == null
-                                        ? loadingProgress()
-                                        : new SizedBox(
-                                        height: 350.0,
-                                        child: StackedAreaLineChart
-                                            .withSampleData(
-                                            "Chiều cao",
-                                            "Bé cao hơn $dataHeight% trẻ ",
-                                            result["Height"],
-                                            resultChildHeight)),
-                                    result == null || resultChildHead == null
-                                        ? loadingProgress()
-                                        : new SizedBox(
-                                        height: 350.0,
-                                        child: StackedAreaLineChart
-                                            .withSampleData(
-                                            "Chu vi đầu",
-                                            "Bé có chu vi đầu lớn hơn $dataHead% trẻ cùng lứa",
-                                            result["Head"],
-                                            resultChildHead)),
-                                  ],
-                                );
-                              },
-                            ),
+                          String dataWeight;
+                          String dataHeight;
+                          String dataHead;
+                          if (weightPercent != null) {
+                            weightPercent *= 100;
+                            dataWeight = weightPercent.floor().toString();
+                          }
+                          if (heightPercent != null) {
+                            heightPercent *= 100;
+                            dataHeight = heightPercent.floor().toString();
+                          }
+                          if (headPercent != null) {
+                            headPercent *= 100;
+                            dataHead = headPercent.floor().toString();
+                          }
+                          return Column(
+                            children: <Widget>[
+                              //Thể trạng của bé
+                              createBabyCondition(
+                                context,
+                                curentBMI.toString(),
+                                status,
+                              ),
+                              result == null || resultChildWeight == null
+                                  ? loadingProgress()
+                                  : Container(
+                                      child: new Column(children: <Widget>[
+                                      new SizedBox(
+                                          height: 350.0,
+                                          child: StackedAreaLineChart
+                                              .withSampleData(
+                                                  "Cân nặng",
+                                                  "Bé nặng hơn $dataWeight% trẻ ",
+                                                  result["Weight"],
+                                                  resultChildWeight)),
+                                    ])),
+                              result == null || resultChildHeight == null
+                                  ? loadingProgress()
+                                  : new SizedBox(
+                                      height: 350.0,
+                                      child:
+                                          StackedAreaLineChart.withSampleData(
+                                              "Chiều cao",
+                                              "Bé cao hơn $dataHeight% trẻ ",
+                                              result["Height"],
+                                              resultChildHeight)),
+                              result == null || resultChildHead == null
+                                  ? loadingProgress()
+                                  : new SizedBox(
+                                      height: 350.0,
+                                      child: StackedAreaLineChart.withSampleData(
+                                          "Chu vi đầu",
+                                          "Bé có chu vi đầu lớn hơn $dataHead% trẻ cùng lứa",
+                                          result["Head"],
+                                          resultChildHead)),
+                            ],
                           );
                         },
                       ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 16),
+              color: Colors.white,
+              padding: EdgeInsets.all(16),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Mốc phát triển',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w700),
+                      )),
+                  Container(
+                      padding: EdgeInsets.only(top: 16),
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Bé của bạn đã có tiến bộ gì hơn chưa? ',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w400),
+                      )),
+                  ScopedModel<ActionViewModel>(
+                    model: actionViewModel,
+                    child: ScopedModelDescendant<ActionViewModel>(
+                      builder: (context, child, model) {
+                        List<ActionModel> listAll = model.listAllAction;
+                        List<ActionModel> listGross = model.listGross;
+                        double percentGross = 0;
+                        if (listAll != null && listGross != null) {
+                          for (var child in listGross)
+                            for (var all in listAll) {
+                              if (all.id == child.id && all.checkedFlag == true)
+                                percentGross++;
+                            }
+                          percentGross = percentGross / (listGross.length);
+                        }
+                        return createLinear(
+                            "Vận động thô", percentGross, Colors.green);
+                      },
                     ),
-                  )
+                  ),
+                  ScopedModel<ActionViewModel>(
+                    model: actionViewModel,
+                    child: ScopedModelDescendant<ActionViewModel>(
+                      builder: (context, child, model) {
+                        List<ActionModel> listAll = model.listAllAction;
+                        List<ActionModel> listFine = model.listFine;
+                        double percentFine = 0;
+                        int resultFine = 0;
+                        if (listAll != null && listFine != null) {
+                          for (var child in listFine)
+                            for (var all in listAll) {
+                              if (all.id == child.id && all.checkedFlag == true)
+                                resultFine++;
+                            }
+                          percentFine = resultFine / (listFine.length);
+                        }
+                        return createLinear(
+                            "Vận động tinh", percentFine, Colors.orange);
+                      },
+                    ),
+                  ),
+                  Container(
+                      padding: EdgeInsets.only(top: 16),
+                      child: createFlatButton(context,
+                          'Cập nhật sự vận động của bé', ActivityDetail())),
                 ],
               ),
-              Container(
-                  margin: EdgeInsets.only(top: 16),
-                  color: Colors.white,
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Mốc phát triển',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w700),
-                          )),
-                      Container(
-                          padding: EdgeInsets.only(top: 16),
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            'Bé của bạn đã có tiến bộ gì hơn chưa? ',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w400),
-                          )),
-                      ScopedModel<ActionViewModel>(
-                        model: actionViewModel,
-                        child: ScopedModelDescendant<ActionViewModel>(
-                          builder: (context, child, model) {
-                            List<ActionModel> listAll = model.listAllAction;
-                            List<ActionModel> listGross = model.listGross;
-                            double percentGross = 0;
-                            if(listAll != null && listGross != null)
-                            {
-                              for (var child in listGross)
-                                for (var all in listAll)
-                                {
-                                  if(all.id == child.id && all.checkedFlag == true)
-                                    percentGross++;
-                                }
-                              percentGross = percentGross/(listGross.length);
-                            }
-                            return createLinear(
-                                "Vận động thô", percentGross, Colors.green);
-                          },
-                        ),
-                      ),
-                      ScopedModel<ActionViewModel>(
-                        model: actionViewModel,
-                        child: ScopedModelDescendant<ActionViewModel>(
-                          builder: (context, child, model) {
-                            List<ActionModel> listAll = model.listAllAction;
-                            List<ActionModel> listFine = model.listFine;
-                            double percentFine = 0;
-                            int resultFine = 0;
-                            if(listAll != null && listFine != null)
-                            {
-                              for (var child in listFine)
-                                for (var all in listAll)
-                                {
-                                  if(all.id == child.id && all.checkedFlag == true)
-                                    resultFine++;
-                                }
-                              percentFine = resultFine/(listFine.length);
-                            }
-                            return createLinear(
-                                "Vận động tinh", percentFine, Colors.orange);
-                          },
-                        ),
-                      ),
-
-                      Container(
-                          padding: EdgeInsets.only(top: 16),
-                          child: createFlatButton(context,
-                              'Cập nhật sự vận động của bé', ActivityDetail())),
-                    ],
-                  )),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   getChild() async {
-    if (imageUrl == null) {
-      imageUrl = "";
-    }
     if (childModel != null) {
       if (childModel.gender != null)
         await storage.write(
             key: childGenderKey, value: childModel.gender.toString());
       name = childModel.fullName;
       birthday = childModel.birthday;
+      if (birthday != null) {
+        day = DateTimeConvert.calculateChildAge(birthday);
+      } else {
+        day =
+            "Bạn còn ${DateTimeConvert.dayUntil(childModel.estimatedBornDate)} ngày để gặp được bé";
+      }
+
       imageUrl = childModel.imageURL;
-      day = DateTimeConvert.calculateChildAge(birthday);
     }
   }
+
+  getHealthyHistory() {}
 }
 
 num converData(double weightData, double maxValue, double minValue) {
   double weight = weightData;
-  if(weight >= maxValue)
+  if (weight >= maxValue)
     weight = maxValue;
-  else if(weight <= minValue)
-    weight = minValue;
+  else if (weight <= minValue) weight = minValue;
   return weight;
 }
-

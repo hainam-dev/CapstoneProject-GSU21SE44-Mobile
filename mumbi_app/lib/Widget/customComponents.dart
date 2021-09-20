@@ -131,7 +131,6 @@ Widget createListTileNext(
     BuildContext context, String day, String title, Widget screen) {
   return GestureDetector(
     onTap: () {
-      print("ahihi");
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => screen),
@@ -145,12 +144,14 @@ Widget createListTileNext(
       child: ListTile(
         leading: CircleAvatar(
             backgroundColor: Colors.grey, child: SvgPicture.asset(ic_needle)),
-        subtitle: Text(day, style: BOLD_16),
+        subtitle: Text(
+          day,
+          style: BOLD_15,
+        ),
         title: Text(
           title,
           style: SEMIBOLD_16,
         ),
-        // onTap: () => {},
         trailing: Icon(Icons.navigate_next),
       ),
     ),
@@ -258,18 +259,18 @@ Widget createFamilyCard(BuildContext context, String _imageURL, String _name,
                           ),
                         ),
                       ),*/
-                      if(_labelText == "Mẹ bầu")
-                      Positioned(
-                        bottom: 1,
-                        left: 1,
-                        child: Container(
-                          child: SvgPicture.asset(
-                            mecobau,
-                            width: 25,
-                            height: 25,
+                      if (_labelText == "Mẹ bầu")
+                        Positioned(
+                          bottom: 1,
+                          left: 1,
+                          child: Container(
+                            child: SvgPicture.asset(
+                              mecobau,
+                              width: 25,
+                              height: 25,
+                            ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ),

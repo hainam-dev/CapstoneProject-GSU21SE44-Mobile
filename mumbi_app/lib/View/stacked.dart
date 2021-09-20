@@ -106,10 +106,6 @@ class StackedAreaLineChart extends StatelessWidget {
   /// Create one series with sample hard coded data.
   static List<charts.Series<LinearSales, int>> _createSampleData(
       Iterable<StandardIndexModel> model, List<ChildDataModel> child) {
-    // print(model.toString());
-    // Iterable<StandardIndexModel> modelWeight = model['Weight'];
-    // Iterable<StandardIndexModel> modelHeight = model['Height'];
-    // Iterable<StandardIndexModel> modelHead = model['Head'];
     List<LinearSales> listLinearMax = <LinearSales>[];
     List<LinearSales> listLinearMin = <LinearSales>[];
     List<LinearSales> listLinearBaby = <LinearSales>[];
