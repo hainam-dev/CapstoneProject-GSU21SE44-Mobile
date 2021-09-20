@@ -1,47 +1,48 @@
-class PostModel{
+class CommentModel{
   num id;
+  num postId;
   String userId;
   String fullName;
   String avatar;
-  String postContent;
+  String commentContent;
   String imageURL;
   String createdTime;
   String lastModifiedTime;
-  String reviewedBy;
-  String approvedTime;
-  num totalReaction;
+  num replyCommentId;
 
-  PostModel(
+  CommentModel(
       {this.id,
-        this.userId,
+      this.postId,
+      this.userId,
       this.fullName,
       this.avatar,
-      this.postContent,
+      this.commentContent,
       this.imageURL,
       this.createdTime,
       this.lastModifiedTime,
-      this.reviewedBy,
-      this.approvedTime,
-      this.totalReaction});
+      this.replyCommentId});
 
-  factory PostModel.fromJson(dynamic json){
-    return PostModel(
+  factory CommentModel.fromJson(dynamic json){
+    return CommentModel(
       id: json['id'],
+      postId: json['postId'],
       userId: json['userId'],
       fullName: json['userProfile']['fullName'],
       avatar: json['userProfile']['avatar'],
-      postContent: json['postContent'],
+      commentContent: json['commentContent'],
       imageURL: json['imageURL'],
       createdTime: json['createdTime'],
       lastModifiedTime: json['lastModifiedTime'],
-      reviewedBy: json['reviewedBy'],
-      approvedTime: json['approvedTime'],
+      replyCommentId: json['replyCommentId'],
     );
   }
 
   Map<String, dynamic> toJson() => {
+    'postId' : postId,
     'userId' : userId,
-    'postContent' : postContent,
+    'commentContent' : commentContent,
     'imageURL' : imageURL,
+    if(replyCommentId != null)
+    'replyCommentId' : replyCommentId,
   };
 }

@@ -147,7 +147,7 @@ Widget GuidebookFirstItem(context, GuidebookModel guidebookModel) {
               ),
             ),
             Container(
-              height: 44,
+              height: 46,
                 child: Html(data: guidebookModel.guidebookContent,)
             ),
             Padding(
@@ -155,7 +155,7 @@ Widget GuidebookFirstItem(context, GuidebookModel guidebookModel) {
               child: Align(
                 alignment: Alignment.topRight,
                 child: Text(
-                  "Xem tiếp",
+                  "Xem thêm",
                   style: TextStyle(
                     fontStyle: FontStyle.italic,color: DARK_BLUE_COLOR,decoration: TextDecoration.underline,
                   ),

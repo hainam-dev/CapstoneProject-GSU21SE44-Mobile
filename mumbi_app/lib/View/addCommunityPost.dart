@@ -47,7 +47,7 @@ class _AddCommunityPostState extends State<AddCommunityPost> {
         backgroundColor: WHITE_COLOR,
         appBar: AppBar(
           title: Text(
-            "Tạo bài viết cộng đồng",
+            "Tạo bài viết",
           ),
           actions: [
             AddButton(),
@@ -120,7 +120,7 @@ class _AddCommunityPostState extends State<AddCommunityPost> {
           postFlag == true ? handlePost() : null;
         },
         child: Text(
-          "Lưu",
+          "Đăng",
           style: TextStyle(
             color: postFlag == true ? PINK_COLOR : GREY_COLOR,
             fontSize: 18,
