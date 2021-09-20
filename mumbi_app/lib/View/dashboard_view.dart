@@ -131,7 +131,7 @@ class _DashBoardState extends State<DashBoard> {
                     LIGHT_PINK_COLOR,
                     pregnancy,
                     "Tuần thứ ${DateTimeConvert.pregnancyWeek(pregnancyModel.estimatedBornDate)} của thai kì",
-                    "Bạn còn ${DateTimeConvert.dayUntil(pregnancyModel.estimatedBornDate)} ngày để gặp được bé",
+                    "${DateTimeConvert.dayUntil(pregnancyModel.estimatedBornDate)} ngày để gặp bé",
                     DateTimeConvert.dayUntil(pregnancyModel.estimatedBornDate),
                     PREGNANCY_ROLE,
                     onClick: () async {
@@ -188,16 +188,21 @@ class _DashBoardState extends State<DashBoard> {
         },
         child: Card(
           clipBehavior: Clip.antiAlias,
-          elevation: 0.6,
+          elevation: 0.1,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+            side: BorderSide(
+              color: LIGHT_DARK_GREY_COLOR.withOpacity(0.2),
+            ),
+            borderRadius: BorderRadius.circular(10.0),
           ),
           child: Scaffold(
             backgroundColor: WHITE_COLOR,
-            body: Ink.image(image: CachedNetworkImageProvider(_imageURL,),height: 130,fit: BoxFit.cover,),
+            body: Ink.image(image: CachedNetworkImageProvider(_imageURL,),height: 125,fit: BoxFit.cover,),
             bottomNavigationBar: Container(
+              height: 70,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
@@ -336,10 +341,10 @@ class _DashBoardState extends State<DashBoard> {
               ? loadingProgress()
               : Expanded(
                   child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                      crossAxisSpacing: 3,
-                      mainAxisSpacing: 3),
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 250,
+                          crossAxisSpacing: 3,
+                          mainAxisSpacing: 3),
                       itemCount: model.newsListModel != null
                           ? model.newsListModel.length
                           : 0,

@@ -195,7 +195,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
             ),
             Text(
               "Hình ảnh",
-              style: TextStyle(fontWeight: FontWeight.w600),
+              style: TextStyle(fontWeight: FontWeight.w600,fontSize: 17),
             ),
           ],
         ),

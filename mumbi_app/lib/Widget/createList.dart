@@ -461,8 +461,7 @@ Widget createDiaryItem(BuildContext context, DiaryModel diaryModel,
             elevation: 1,
             shadowColor: GREY_COLOR,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-              side: BorderSide(color: BLACK_COLOR),
+              borderRadius: BorderRadius.circular(10.0),
             ),
             child: Padding(
               padding: const EdgeInsets.all(15.0),

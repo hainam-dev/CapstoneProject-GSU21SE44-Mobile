@@ -1,10 +1,9 @@
 import 'dart:convert';
 
-import 'package:mumbi_app/Model/diary_model.dart';
 import 'package:mumbi_app/Model/post_model.dart';
-import 'package:mumbi_app/Repository/diary_repository.dart';
+import 'package:mumbi_app/Model/reaction_model.dart';
 import 'package:mumbi_app/Repository/post_repository.dart';
-import 'package:mumbi_app/View/community_view.dart';
+import 'package:mumbi_app/Repository/reaction_repository.dart';
 import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -32,6 +31,8 @@ class CommunityViewModel extends Model{
       Map<String, dynamic> jsonList = json.decode(data);
       postList = jsonList['data'];
       postListModel = postList.map((e) => PostModel.fromJson(e)).toList();
+      //var dataReact = await ReactionRepository.apiGetPostReaction(postListModel.single.id);
+      //postListModel.single.totalReaction = json.decode(dataReact)['total'];
       notifyListeners();
     }catch (e){
       print("error: " + e.toString());
@@ -63,7 +64,7 @@ class CommunityViewModel extends Model{
 
   Future<bool> deleteCommunityPost(num id) async {
     try {
-      String data = await DiaryRepository.apiDeleteDiary(id);
+      String data = await PostRepository.apiDeletePost(id);
       return true;
     } catch (e) {
       print("error: " + e.toString());

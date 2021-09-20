@@ -40,7 +40,7 @@ class PostRepository{
     }
   }
 
-  static Future<dynamic> apiDeleteDiary(num id) async {
+  static Future<dynamic> apiDeletePost(num id) async {
     var response = await http.put(
       Uri.parse("${DELETE_COMMUNITY_POST}${id}"),
       headers: <String, String>{
