@@ -129,30 +129,33 @@ Widget createListTileDetail(String name, String detail, String image) {
 
 Widget createListTileNext(
     BuildContext context, String day, String title, Widget screen) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => screen),
-      );
-    },
-    child: Container(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: new BoxDecoration(
-        color: LIGHT_BLUE_COLOR,
-      ),
-      child: ListTile(
-        leading: CircleAvatar(
-            backgroundColor: Colors.grey, child: SvgPicture.asset(ic_needle)),
-        subtitle: Text(
-          day,
-          style: BOLD_15,
+  return Container(
+    color: WHITE_COLOR,
+    child: GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => screen),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: new BoxDecoration(
+          color: LIGHT_BLUE_COLOR,
         ),
-        title: Text(
-          title,
-          style: SEMIBOLD_16,
+        child: ListTile(
+          leading: CircleAvatar(
+              backgroundColor: Colors.grey, child: SvgPicture.asset(ic_needle)),
+          subtitle: Text(
+            day,
+            style: BOLD_15,
+          ),
+          title: Text(
+            title,
+            style: SEMIBOLD_16,
+          ),
+          trailing: Icon(Icons.navigate_next),
         ),
-        trailing: Icon(Icons.navigate_next),
       ),
     ),
   );

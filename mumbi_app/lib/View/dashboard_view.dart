@@ -119,8 +119,7 @@ class _DashBoardState extends State<DashBoard> {
                       await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                          CalculateDate(),
+                          builder: (context) => CalculateDate(),
                         ),
                       );
                       await _childViewModel.getChildByMom();
@@ -180,7 +179,7 @@ class _DashBoardState extends State<DashBoard> {
   Widget createNewsItem(
       String _imageURL, String _title, String _estimatedTime, Widget _screen) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2,horizontal: 2),
+      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
       child: GestureDetector(
         onTap: () {
           Navigator.push(
@@ -197,39 +196,49 @@ class _DashBoardState extends State<DashBoard> {
           ),
           child: Scaffold(
             backgroundColor: WHITE_COLOR,
-            body: Ink.image(image: CachedNetworkImageProvider(_imageURL,),height: 125,fit: BoxFit.cover,),
+            body: Ink.image(
+              image: CachedNetworkImageProvider(
+                _imageURL,
+              ),
+              height: 125,
+              fit: BoxFit.cover,
+            ),
             bottomNavigationBar: Container(
-              height: 70,
+              height: 80,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 10,right: 5,top: 5,bottom: 5),
+                    padding:
+                        EdgeInsets.only(left: 10, right: 5, top: 5, bottom: 5),
                     child: Text(
                       _title,
                       textAlign: TextAlign.left,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(bottom: 10,left: 4),
+                    padding: EdgeInsets.only(bottom: 10, left: 4),
                     child: Row(
                       children: [
                         SizedBox(
                           width: 8,
                         ),
-                        Container(child: SvgPicture.asset(readIcon,height: 16, width: 16)),
+                        Container(
+                            child: SvgPicture.asset(readIcon,
+                                height: 16, width: 16)),
                         SizedBox(width: 5),
                         Text(
                           _estimatedTime + " phút đọc",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style:
-                          TextStyle(fontSize: 14, color: LIGHT_DARK_GREY_COLOR),
+                          style: TextStyle(
+                              fontSize: 14, color: LIGHT_DARK_GREY_COLOR),
                         ),
                       ],
                     ),
