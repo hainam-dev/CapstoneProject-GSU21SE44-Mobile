@@ -5,12 +5,26 @@ import 'package:mumbi_app/Constant/common_api.dart';
 import 'package:mumbi_app/Model/comment_model.dart';
 
 class CommentRepository{
-  static Future<dynamic> apiGetPostComment(num postId, num replyCommentId) async{
+  static Future<dynamic> apiGetPostComment(num postId) async{
     var response = await http.get(
-      Uri.parse("${GET_POST_COMMENT}").replace(
-          queryParameters: <String, String>{
+      Uri.parse("${GET_COMMENT}").replace(
+          queryParameters: {
             "PostId": postId.toString(),
-            "ReplyCommentId": replyCommentId.toString()
+          }),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },);
+    if(response.statusCode == 200){
+      return response.body;
+    }
+  }
+
+  static Future<dynamic> apiCountPostComment(num postId) async{
+    var response = await http.get(
+      Uri.parse("${GET_COMMENT}").replace(
+          queryParameters: {
+            "PostId": postId.toString(),
+            "PageSize": "1",
           }),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

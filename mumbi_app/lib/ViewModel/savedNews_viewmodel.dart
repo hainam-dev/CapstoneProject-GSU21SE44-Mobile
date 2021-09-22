@@ -25,7 +25,7 @@ class SavedNewsViewModel extends Model{
   List<SavedNewsModel> savedNewsListModel;
 
   Future<bool> saveNews(String newsId) async {
-    SavedNewsModel savedNewsModel = SavedNewsModel();
+    SavedNewsModel savedNewsModel = new SavedNewsModel();
 
     String momId = await UserViewModel.getUserID();
     savedNewsModel.momId = momId;

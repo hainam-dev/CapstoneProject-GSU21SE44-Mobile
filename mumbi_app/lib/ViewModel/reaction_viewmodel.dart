@@ -22,27 +22,28 @@ class ReactionViewModel extends Model{
     _instance = null;
   }
 
-  num totalReaction;
   List<dynamic> reactionList;
   List<ReactionModel> reactionListModel;
 
-  void getPostReaction(num postId, num commentId) async {
+  void getPostReaction(num postId) async {
     try{
       var data = await ReactionRepository.apiGetPostReaction(postId);
       Map<String, dynamic> jsonList = json.decode(data);
-      totalReaction = jsonList['total'];
       reactionList = jsonList['data'];
       if(reactionList != null);
-      reactionListModel = reactionListModel.map((e) => ReactionModel.fromJson(e)).toList();
+      reactionListModel = reactionList.map((e) => ReactionModel.fromJson(e)).toList();
       notifyListeners();
     }catch (e){
       print("error: " + e.toString());
     }
   }
 
-  Future<bool> addPostReaction(ReactionModel reactionModel) async {
+  Future<bool> addPostReaction(num postId) async {
     String userId = await UserViewModel.getUserID();
+    ReactionModel reactionModel = new ReactionModel();
     reactionModel.userId = userId;
+    reactionModel.postId = postId;
+    reactionModel.typeId = 1;
     try {
       String data = await ReactionRepository.apiAddPostReaction(reactionModel);
       notifyListeners();
@@ -53,9 +54,12 @@ class ReactionViewModel extends Model{
     return false;
   }
 
-  Future<bool> addCommentReaction(ReactionModel reactionModel) async {
+  Future<bool> addCommentReaction(num commentId) async {
     String userId = await UserViewModel.getUserID();
+    ReactionModel reactionModel = new ReactionModel();
     reactionModel.userId = userId;
+    reactionModel.postId = commentId;
+    reactionModel.typeId = 1;
     try {
       String data = await ReactionRepository.apiAddCommentReaction(reactionModel);
       notifyListeners();
