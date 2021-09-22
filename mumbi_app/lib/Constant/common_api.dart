@@ -50,15 +50,15 @@ final String GET_USER_COMMUNITY_POST = getApiPath("/api​/CommunityPost​/GetU
 final String UPDATE_COMMUNITY_POST = getApiPath("/api/CommunityPost/UpdateCommunityPost/");
 final String DELETE_COMMUNITY_POST = getApiPath("/api/CommunityPost/DeleteCommunityPost/");
 
-final String ADD_POST_COMMENT = getApiPath("/api​/PostComment​/AddPostComment");
+final String ADD_POST_COMMENT = getApiPath("/api/PostComment/AddPostComment");
 final String ADD_REPLY_POST_COMMENT = getApiPath("/api​/PostComment​/AddReplyPostComment");
-final String GET_POST_COMMENT = getApiPath("/api​/PostComment​/GetPostComment");
+final String GET_COMMENT = getApiPath("/api/PostComment/GetPostComment");
 final String UPDATE_COMMENT = getApiPath("/api​/PostComment​/UpdatePostComment​/");
-final String DELETE_COMMENT = getApiPath("/api​/PostComment​/DeletePostComment​/");
+final String DELETE_COMMENT = getApiPath("/api/PostComment/DeletePostComment/");
 
-final String ADD_POST_REACTION = getApiPath("/api​/Reaction​/AddReactionPost");
+final String ADD_POST_REACTION = getApiPath("/api/Reaction/AddReactionPost");
 final String ADD_COMMENT_REACTION = getApiPath("/api/Reaction/AddReactionComment");
-final String GET_REACTION = getApiPath("/api​/Reaction​/GetReaction");
+final String GET_REACTION = getApiPath("/api/Reaction/GetReaction");
 final String DELETE_REACTION = getApiPath("/api/Reaction/DeleteReaction/");
 
 final String GET_TOOTHINFO_BY_ID = getApiPath("/api/ToothInfo/GetToothInfoBy/");

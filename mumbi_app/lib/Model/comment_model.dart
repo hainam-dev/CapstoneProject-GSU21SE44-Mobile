@@ -42,7 +42,6 @@ class CommentModel{
     'userId' : userId,
     'commentContent' : commentContent,
     'imageURL' : imageURL,
-    if(replyCommentId != null)
     'replyCommentId' : replyCommentId,
   };
 }

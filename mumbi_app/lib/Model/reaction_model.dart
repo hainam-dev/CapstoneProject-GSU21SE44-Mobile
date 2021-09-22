@@ -16,10 +16,8 @@ class ReactionModel {
   }
 
   Map<String, dynamic> toJson() => {
-    if(postId != null)
     'postId' : postId,
-    if(commentId != null)
-    "commentId" : commentId,
+    'commentId' : commentId,
     'userId' : userId,
     'typeId': typeId,
   };

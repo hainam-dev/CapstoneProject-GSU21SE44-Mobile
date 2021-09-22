@@ -20,18 +20,23 @@ class CommentViewModel extends Model{
     _instance = null;
   }
 
+  bool isLoading;
   num totalComment;
   List<dynamic> commentList;
   List<CommentModel> commentListModel;
 
-  void getPostComment(num postId, num replyCommentId) async {
+  void getPostComment(num postId) async {
     try{
-      var data = await CommentRepository.apiGetPostComment(postId, replyCommentId);
+      isLoading = false;
+      var data = await CommentRepository.apiGetPostComment(postId);
       Map<String, dynamic> jsonList = json.decode(data);
       totalComment = jsonList['total'];
       commentList = jsonList['data'];
-      if(commentList != null);
-      commentListModel = commentList.map((e) => CommentModel.fromJson(e)).toList();
+      if(commentList != null){
+        commentListModel = commentList.map((e) => CommentModel.fromJson(e)).toList();
+      }else{
+        commentListModel = null;
+      }
       notifyListeners();
     }catch (e){
       print("error: " + e.toString());

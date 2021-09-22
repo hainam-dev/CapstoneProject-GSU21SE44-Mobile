@@ -257,7 +257,7 @@ Widget createListTileSelectedAccount(BuildContext context, String _imageURL,
         ),
         subtitle: Row(
           children: [
-            Text(role == MOM_ROLE && pregnancyId != "" ? "Mẹ bầu" : role),
+            Text(role == MOM_ROLE && pregnancyId != "" && pregnancyId != null  ? "Mẹ bầu" : role),
             if (CurrentMember.id == id)
               Text(
                 " (Đang chọn)",

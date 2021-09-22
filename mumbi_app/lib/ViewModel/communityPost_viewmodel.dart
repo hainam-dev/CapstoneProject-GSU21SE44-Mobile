@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:mumbi_app/Model/post_model.dart';
 import 'package:mumbi_app/Model/reaction_model.dart';
+import 'package:mumbi_app/Repository/comment_repository.dart';
 import 'package:mumbi_app/Repository/post_repository.dart';
 import 'package:mumbi_app/Repository/reaction_repository.dart';
 import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
@@ -22,19 +23,27 @@ class CommunityViewModel extends Model{
     _instance = null;
   }
 
+  bool isLoading = true;
   List<dynamic> postList;
   List<PostModel> postListModel;
 
   void getCommunityPost() async {
     try{
-      var data = await PostRepository.apiGetCommunityPost();
+      isLoading = true;
+      var data = await PostRepository.apiGetCommunityPost(10);
       Map<String, dynamic> jsonList = json.decode(data);
       postList = jsonList['data'];
       postListModel = postList.map((e) => PostModel.fromJson(e)).toList();
-      //var dataReact = await ReactionRepository.apiGetPostReaction(postListModel.single.id);
-      //postListModel.single.totalReaction = json.decode(dataReact)['total'];
+      await postListModel.forEach((element) async{
+        var dataReact = await ReactionRepository.apiCountPostReaction(element.id);
+        element.totalReaction = json.decode(dataReact)['total'];
+        var dataComment = await CommentRepository.apiCountPostComment(element.id);
+        element.totalComment = json.decode(dataComment)['total'];
+      });
+      isLoading = false;
       notifyListeners();
     }catch (e){
+      isLoading = false;
       print("error: " + e.toString());
     }
   }
