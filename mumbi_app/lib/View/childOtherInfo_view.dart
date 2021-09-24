@@ -33,6 +33,8 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
   void initState() {
     super.initState();
     childViewModel = ChildViewModel.getInstance();
+    childHistoryModel = new ChildHistoryModel();
+    pregnancyHistoryModel = new PregnancyHistoryModel();
 
     if (CurrentMember.pregnancyFlag == false) {
       getChildHistory();
@@ -95,15 +97,15 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                             if (formKey.currentState.validate()) {
                               showProgressDialogue(context);
                               bool result = true;
-
-                              Future.delayed(new Duration(milliseconds: 3000), ()
-                              {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                showResult(context, result,
-                                    "Cập nhật thông tin thành công");
-                              });
-
+                              if(CurrentMember.pregnancyFlag == true){
+                                result = await PregnancyHistoryViewModel().
+                                updatePregnancyHistory(CurrentMember.pregnancyID, pregnancyHistoryModel, "23/09/2021");
+                              }else{
+                                childHistoryModel.childId = CurrentMember.id;
+                                checkChildNull();
+                                result = await ChildHistoryViewModel().updateChildHistory(childHistoryModel, "23/09/2021");
+                              }
+                              Navigator.pop(context);
                             }
                           }),
                     ],

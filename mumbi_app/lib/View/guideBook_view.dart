@@ -4,7 +4,6 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:mumbi_app/Model/guidebook_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
-import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/guidebookDetails_view.dart';
 import 'package:mumbi_app/ViewModel/guidebook_viewmodel.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
@@ -147,7 +146,7 @@ Widget GuidebookFirstItem(context, GuidebookModel guidebookModel) {
               ),
             ),
             Container(
-              height: 46,
+              height: 44,
                 child: Html(data: guidebookModel.guidebookContent,)
             ),
             Padding(

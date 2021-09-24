@@ -43,7 +43,6 @@ class ChildHistoryModel{
     'avgMilk' : avgMilk,
     'weekOlds' : weekOlds,
   };
-
 }
 class ChildDataModel{
   String month;

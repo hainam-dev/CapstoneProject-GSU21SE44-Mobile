@@ -23,7 +23,6 @@ class DadViewModel extends Model{
   DadModel dadModel;
 
   void getDadByMom() async{
-    if(_instance != null){
       String momID = await UserViewModel.getUserID();
       try{
         var data = await DadRepository.apiGetDadByMomID(momID);
@@ -35,7 +34,6 @@ class DadViewModel extends Model{
       }catch (e){
         print("error: " + e.toString());
       }
-    }
   }
 
   Future<bool> addDad(DadModel dadModel) async {

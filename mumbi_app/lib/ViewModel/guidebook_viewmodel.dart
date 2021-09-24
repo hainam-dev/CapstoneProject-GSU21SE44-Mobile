@@ -24,11 +24,10 @@ class GuidebookViewModel extends Model{
 
   void getAllGuidebook() async{
     try{
-      String data = await GuidebookRepository.apiGetAllGuidebook();
+      String data = await GuidebookRepository.apiGetGuidebook();
       Map<String, dynamic> jsonList = json.decode(data);
       guidebookList = jsonList['data'];
       guidebookListModel = guidebookList.map((e) => GuidebookModel.fromJson(e)).toList();
-      guidebookListModel.sort((a,b) => b.createTime.compareTo(a.createTime));
       notifyListeners();
     }catch(e){
       print("error: " + e.toString());

@@ -19,7 +19,8 @@ class ChildRepository{
 
 
   static Future<dynamic> apiGetChildByMom(String momID) async{
-    var response = await http.get(Uri.parse("${GET_CHILD_BY_MOM}${momID}"),
+    var response = await http.get(Uri.parse("${GET_CHILD}")
+        .replace(queryParameters: {'MomId': momID}),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },);
@@ -30,18 +31,7 @@ class ChildRepository{
 
   static Future<dynamic> apiGetChildByID(String id) async{
     var response = await http.get(
-      Uri.parse("${GET_CHILD_BY_ID}${id}"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8'
-      },);
-    if (response.statusCode == 200) {
-      return response.body;
-    }
-  }
-
-  static Future<dynamic> apiGetChildById2(String id) async{
-    var response = await http.get(
-      Uri.parse("${GET_CHILD_BY_ID}${id}"),
+      Uri.parse("${GET_CHILD}").replace(queryParameters: {'Id': id}),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },);

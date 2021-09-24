@@ -10,7 +10,6 @@ import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/babyDevelopment_view.dart';
-import 'package:mumbi_app/View/childHistory_view.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/View/teethTrack_view.dart';
 import 'package:mumbi_app/ViewModel/activity_viewmodel.dart';
@@ -18,12 +17,10 @@ import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Widget/custom_playlist.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 import 'drawer_view.dart';
-import 'childOtherInfo_view.dart';
 
 class Tracking extends StatefulWidget {
   @override
@@ -259,7 +256,6 @@ class _TrackingState extends State<Tracking> {
       width: 230,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(150),
-        border: Border.all(color: PINK_COLOR),
         color: Color(0xFFFC95AE),
       ),
       child: Column(

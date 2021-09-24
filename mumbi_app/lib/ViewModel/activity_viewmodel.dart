@@ -32,7 +32,6 @@ class ActivityViewModel extends Model{
 
 
   Future<void> getActivityByType(num id) async {
-    if (_instance != null) {
       if(id == 1){
         loadingActivityMusicListModel = true;
         try {
@@ -77,6 +76,4 @@ class ActivityViewModel extends Model{
         }
       }
     }
-  }
-
 }

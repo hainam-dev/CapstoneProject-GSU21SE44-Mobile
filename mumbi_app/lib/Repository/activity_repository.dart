@@ -4,7 +4,7 @@ import 'package:mumbi_app/Constant/common_api.dart';
 
 class ActivityRepository{
   static Future<dynamic> apiGetActivityByType(num typeID) async{
-    var response = await http.get(Uri.parse("${GET_ACTIVITY_BY_TYPE}")
+    var response = await http.get(Uri.parse("${GET_ACTIVITY}")
         .replace(queryParameters: <String, String>{'TypeId': typeID.toString()}),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'

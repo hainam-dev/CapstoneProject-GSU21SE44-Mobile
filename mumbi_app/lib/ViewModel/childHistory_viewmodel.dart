@@ -27,8 +27,6 @@ class ChildHistoryViewModel extends Model {
   List<ChildHistoryModel> childListHistoryChild;
 
   void getChildHistory(String childId, String date) async {
-    print('Chay cua Duy');
-    if (_instance != null) {
       try {
         var data =
             await ChildHistoryRepository.apiGetChildHistory(childId, date);
@@ -50,14 +48,11 @@ class ChildHistoryViewModel extends Model {
       } catch (e) {
         print("error: " + e.toString());
       }
-    }
   }
 
-  Future<bool> updateChildHistory(
-      String childId, ChildHistoryModel childHistoryModel, String date) async {
+  Future<bool> updateChildHistory(ChildHistoryModel childHistoryModel, String date) async {
     try {
-      String data = await ChildHistoryRepository.apiUpdateChildHistory(
-          childId, childHistoryModel, date);
+      String data = await ChildHistoryRepository.apiUpdateChildHistory(childHistoryModel, date);
       return true;
     } catch (e) {
       print("error: " + e.toString());

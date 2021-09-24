@@ -51,7 +51,6 @@ class SavedGuidebookViewModel extends Model{
   }
 
   void getSavedGuidebookByMom() async{
-    if(_instance != null){
       String momId = await UserViewModel.getUserID();
       loadingSavedGuidebookListModel = true;
       try{
@@ -67,6 +66,5 @@ class SavedGuidebookViewModel extends Model{
       }catch(e){
         print("error: " + e.toString());
       }
-    }
   }
 }

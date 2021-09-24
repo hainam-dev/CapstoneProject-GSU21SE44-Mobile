@@ -50,7 +50,6 @@ class SavedNewsViewModel extends Model{
   }
 
   void getSavedNewsByMom() async{
-    if(_instance != null){
       String momId = await UserViewModel.getUserID();
       loadingSavedNewsListModel = true;
       try{
@@ -66,7 +65,6 @@ class SavedNewsViewModel extends Model{
       }catch(e){
         print("error: " + e.toString());
       }
-    }
   }
 
 

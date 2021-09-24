@@ -21,7 +21,6 @@ class ChildViewModel extends Model {
 
   ChildModel childModel;
   List<dynamic> childList;
-  bool loadingChildListModel;
   List<ChildModel> childListModel;
 
   Future<bool> addChild(ChildModel childModel) async {
@@ -37,11 +36,15 @@ class ChildViewModel extends Model {
     return false;
   }
 
-  void getChildByID(String id) async {
+  Future<void> getChildByID(String id) async {
     try {
       var data = await ChildRepository.apiGetChildByID(id);
-      data = json.decode(data);
-      childModel = ChildModel.fromJson(data, true);
+      Map<String, dynamic> jsonList = json.decode(data);
+      childList = jsonList['data'];
+      if (childList != null) {
+        childListModel = childList.map((e) => ChildModel.fromJson(e)).toList();
+        childModel = childListModel[0];
+      }
       notifyListeners();
     } catch (e) {
       print("error: " + e.toString());
@@ -49,22 +52,17 @@ class ChildViewModel extends Model {
   }
 
   Future<void> getChildByMom() async {
-    if (_instance != null) {
-      loadingChildListModel = true;
-      String momID = await UserViewModel.getUserID();
-      try {
-        String data = await ChildRepository.apiGetChildByMom(momID);
-        Map<String, dynamic> jsonList = json.decode(data);
-        childList = jsonList['data'];
-        if (childList != null) {
-          childListModel =
-              childList.map((e) => ChildModel.fromJson(e, false)).toList();
-        }
-        notifyListeners();
-        loadingChildListModel = false;
-      } catch (e) {
-        print("error: " + e.toString());
+    String momID = await UserViewModel.getUserID();
+    try {
+      String data = await ChildRepository.apiGetChildByMom(momID);
+      Map<String, dynamic> jsonList = json.decode(data);
+      childList = jsonList['data'];
+      if (childList != null) {
+        childListModel = childList.map((e) => ChildModel.fromJson(e)).toList();
       }
+      notifyListeners();
+    } catch (e) {
+      print("error: " + e.toString());
     }
   }
 

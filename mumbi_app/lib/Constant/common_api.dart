@@ -1,4 +1,3 @@
-//final String HOST_ADDRESS = "https://192.168.97.6:45455";
 final String HOST_ADDRESS = "https://mumbi.xyz";
 
 final String LOGIN = getApiPath("/api/Authentication/Authenticate");
@@ -12,27 +11,22 @@ final String UPDATE_DAD = getApiPath("/api/DadInfo/UpdateDadInfo/");
 final String DELETE_DAD = getApiPath("/api/DadInfo/DeleteDadInfo/");
 
 final String ADD_CHILD = getApiPath("/api/ChildInfo/AddChildInfo");
-final String GET_CHILD_BY_ID = getApiPath("/api/ChildInfo/GetChildInfoById/");
-final String GET_CHILD_BY_MOM =
-    getApiPath("/api/ChildInfo/GetChildInfoByMomId/");
+final String GET_CHILD = getApiPath("/api/ChildInfo/GetChildInfo");
 final String UPDATE_CHILD_INFO = getApiPath("/api/ChildInfo/UpdateChildInfo/");
 final String DELETE_CHILD = getApiPath("/api/ChildInfo/DeleteChildInfo/");
 
 final String GET_CHILD_HISTORY = getApiPath("/api/ChildHistory/GetChildHistoryByChildId/");
-final String UPDATE_CHILD_HISTORY = getApiPath("​/api​/ChildHistory​/UpdateChildHistory/");
+final String UPDATE_CHILD_HISTORY = getApiPath("/api/ChildHistory/UpdateChildHistory");
 final String GET_PREGNANCY_HISTORY = getApiPath("/api/PregnancyHistory/GetPregnancyHistoryByChildId/");
 final String UPDATE_PREGNANCY_HISTORY = getApiPath("​/api​/PregnancyHistory​/UpdatePregnancyHistory/");
 
-final String GET_NEWS_BY_ID = getApiPath("/api/News/GetNewsBy/");
-final String GET_ALL_NEWS = getApiPath("/api/News/GetAllNews");
+final String GET_NEWS = getApiPath("/api/News/GetNews");
 final String SAVE_NEWS = getApiPath("/api/NewsMom/AddNewsMom");
 final String UNSAVED_NEWS = getApiPath("/api/NewsMom/DeleteNewsMom/");
 final String GET_SAVED_NEWS_BY_MOM_ID =
     getApiPath("/api/NewsMom/GetNewsMomBy/");
 
-final String GET_GUIDEBOOK_BY_ID =
-    getApiPath("/api​/Guidebooks​/GetGuidebookBy​/");
-final String GET_ALL_GUIDEBOOK = getApiPath("/api/Guidebooks/GetAllGuidebook");
+final String GET_GUIDEBOOK = getApiPath("/api/Guidebooks/GetGuidebook");
 final String SAVE_GUIDEBOOK = getApiPath("/api/GuidebookMom/AddGuidebookMom");
 final String UNSAVED_GUIDEBOOK =
     getApiPath("/api/GuidebookMom/DeleteGuidebookMom/");
@@ -66,7 +60,7 @@ final String GET_TOOTH_BY_CHILD_ID = getApiPath("/api/Tooth/GetToothByToothId/")
 final String GET_ALL_TOOTH_BY_CHILD_ID = getApiPath("/api/Tooth/GetToothByChildId/");
 final String UPSERT_TOOTH_BY_TOOTH_ID = getApiPath("/api/Tooth/UpsertTooth/");
 
-final String GET_ACTIVITY_BY_TYPE = getApiPath("/api/Activity/GetActivityByType/");
+final String GET_ACTIVITY = getApiPath("/api/Activity/GetActivity");
 
 final String GET_STAND_INDEX_BY_GENDER = getApiPath("/api/StandardIndex/GetStandardIndexBy/");
 

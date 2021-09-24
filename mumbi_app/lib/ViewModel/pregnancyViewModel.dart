@@ -23,7 +23,6 @@ class PregnancyHistoryViewModel extends Model{
   List<PregnancyHistoryModel> pregnancyHistoryListModel;
 
   void getPregnancyHistory(String childId, String date) async{
-    if(_instance != null){
       try{
         var data = await PregnancyHistoryRepository.apiGetPregnancyHistory(childId, date);
         Map<String, dynamic> jsonList = json.decode(data);
@@ -40,7 +39,6 @@ class PregnancyHistoryViewModel extends Model{
       }catch (e){
         print("error: " + e.toString());
       }
-    }
   }
 
   Future<bool> updatePregnancyHistory(String childId, PregnancyHistoryModel pregnancyHistoryModel, String date) async {

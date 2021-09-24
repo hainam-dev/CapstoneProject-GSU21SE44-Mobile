@@ -24,7 +24,6 @@ class DiaryViewModel extends Model{
   List<DiaryModel> childDiaryListModel;
 
   void getChildDiary(String id) async {
-    if(_instance != null){
       try{
         var data = await DiaryRepository.apiGetChildDiary(id);
         Map<String, dynamic> jsonList = json.decode(data);
@@ -37,7 +36,6 @@ class DiaryViewModel extends Model{
       }catch (e){
         print("error: " + e.toString());
       }
-    }
   }
 
   Future<bool> addDiary(DiaryModel diaryModel) async {

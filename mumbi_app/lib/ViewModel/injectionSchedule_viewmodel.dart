@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:mumbi_app/Model/injectionSchedule_model.dart';
-import 'package:mumbi_app/Model/news_model.dart';
 import 'package:mumbi_app/Repository/vaccination_respository.dart';
 import 'package:scoped_model/scoped_model.dart';
 

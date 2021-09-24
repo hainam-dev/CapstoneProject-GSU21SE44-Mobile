@@ -12,16 +12,6 @@ class ChildModel {
   num headVortex;
   String momID;
   bool bornFlag;
-  num weight;
-  num height;
-  num headCircumference;
-  num hourSleep;
-  num avgMilk;
-  num femurLength;
-  num fetalHeartRate;
-  num pregnancyWeek;
-  num motherWeight;
-
 
   ChildModel(
       {this.id,
@@ -36,43 +26,10 @@ class ChildModel {
       this.fingertips,
       this.headVortex,
       this.momID,
-      this.bornFlag,
-      this.weight,
-      this.height,
-      this.headCircumference,
-      this.hourSleep,
-      this.avgMilk,
-      this.femurLength,
-      this.fetalHeartRate,
-      this.pregnancyWeek,
-      this.motherWeight});
+      this.bornFlag,});
 
-  factory ChildModel.fromJson(dynamic json, bool single){
-    return single
-        ? ChildModel(
-      id : json['data']['id'],
-      fullName : json['data']['fullName'],
-      nickname : json['data']['nickname'],
-      imageURL : json['data']['imageURL'],
-      gender : json['data']['gender'],
-      estimatedBornDate : json['data']['estimatedBornDate'],
-      birthday : json['data']['birthday'],
-      bloodGroup : json['data']['bloodGroup'],
-      rhBloodGroup : json['data']['rhBloodGroup'],
-      fingertips : json['data']['fingertips'],
-      headVortex: json['data']['headVortex'],
-      momID : json['data']['momId'],
-      bornFlag : json['data']['bornFlag'],
-      weight : json['data']['weight'],
-      height : json['data']['height'],
-      headCircumference : json['data']['headCircumference'],
-      hourSleep : json['data']['hourSleep'],
-      avgMilk : json['data']['avgMilk'],
-      femurLength : json['data']['femurLength'],
-      fetalHeartRate : json['data']['fetalHeartRate'],
-      pregnancyWeek : json['data']['pregnancyWeek'],
-      motherWeight : json['data']['motherWeight'],)
-    : ChildModel(
+  factory ChildModel.fromJson(dynamic json){
+    return ChildModel(
       id : json['id'],
       fullName : json['fullName'],
       nickname : json['nickname'],
@@ -85,42 +42,8 @@ class ChildModel {
       fingertips : json['fingertips'],
       headVortex: json['headVortex'],
       momID : json['momId'],
-      bornFlag : json['bornFlag'],
-      weight : json['weight'],
-      height : json['height'],
-      headCircumference : json['headCircumference'],
-      hourSleep : json['hourSleep'],
-      avgMilk : json['avgMilk'],
-      femurLength : json['femurLength'],
-      fetalHeartRate : json['fetalHeartRate'],
-      pregnancyWeek : json['pregnancyWeek'],
-      motherWeight : json['motherWeight'],);
+      bornFlag : json['bornFlag'],);
   }
-
-  /*ChildModel.fromJson(Map<String,dynamic> json):
-        childID = json['data']['id'],
-        fullName = json['data']['fullName'],
-        nickname = json['data']['nickname'],
-        image = json['data']['image'],
-        gender = json['data']['gender'],
-        birthday = json['data']['birthDay'],
-        bloodGroup = json['data']['bloodGroup'],
-        rhBloodGroup = json['data']['rhBloodGroup'],
-        fingertips = json['data']['fingertips'],
-        weight = json['data']['weight'],
-        height = json['data']['height'],
-        headCircumference = json['data']['headCircumference'],
-        hourSleep = json['data']['hourSleep'],
-        avgMilk = json['data']['avgMilk'],
-        momID = json['data']['momId'],
-        calculatedBornDate = json['data']['calculatedBornDate'],
-        femurLength = json['data']['femurLength'],
-        fetalHeartRate = json['data']['fetalHeartRate'],
-        pregnancyWeek = json['data']['pregnancyWeek'],
-        pregnancyType = json['data']['pregnancyType'],
-        motherMenstrualCycleTime = json['data']['motherMenstrualCycleTime'],
-        motherWeight = json['data']['motherWeight'],
-        isBorn =  json['data']["isBorn"];*/
 
   Map<String, dynamic> toJson() =>
       {
@@ -136,15 +59,6 @@ class ChildModel {
         'fingertips': fingertips,
         'headVortex' : headVortex,
         'momID': momID,
-        'weight': weight,
-        'height': height,
-        'headCircumference': headCircumference,
-        'hourSleep': hourSleep,
-        'avgMilk': avgMilk,
-        'femurLength': femurLength,
-        'fetalHeartRate': fetalHeartRate,
-        'pregnancyWeek': pregnancyWeek,
-        'motherWeight': motherWeight,
         'childrenStatus': bornFlag == true ? 2 : 1,
       };
 }
