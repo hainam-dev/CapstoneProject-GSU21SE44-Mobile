@@ -13,20 +13,21 @@ import 'package:mumbi_app/ViewModel/comment_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
 import 'package:mumbi_app/Widget/customConfirmDialog.dart';
+import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:readmore/readmore.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class PostDetails extends StatefulWidget {
+class PostComment extends StatefulWidget {
   final postModel;
 
-  const PostDetails(this.postModel);
+  const PostComment(this.postModel);
 
   @override
-  _PostDetailsState createState() => _PostDetailsState();
+  _PostCommentState createState() => _PostCommentState();
 }
 
-class _PostDetailsState extends State<PostDetails> {
+class _PostCommentState extends State<PostComment> {
 
   bool commentFlag = false;
   MomViewModel _momViewModel;
@@ -39,7 +40,6 @@ class _PostDetailsState extends State<PostDetails> {
     _momViewModel = MomViewModel.getInstance();
     commentViewModel = new CommentViewModel();
     commentViewModel.getPostComment(widget.postModel.id);
-
   }
 
   @override
@@ -54,7 +54,9 @@ class _PostDetailsState extends State<PostDetails> {
         body: ScopedModel(
           model: commentViewModel,
           child: ScopedModelDescendant(builder: (BuildContext context, Widget child, CommentViewModel model) {
-            return model.commentListModel == null
+            return model.isLoading == true
+            ? loadingProgress()
+            : model.commentListModel == null
                 ? Empty()
                 : SingleChildScrollView(
                     child: Column(
@@ -146,19 +148,42 @@ class _PostDetailsState extends State<PostDetails> {
                       SizedBox(
                         width: 15,
                       ),
+                      Text(commentModel.totalReaction == 0 ? "" : commentModel.totalReaction.toString(),
+                        style: TextStyle(color: commentModel.idReaction != 0 ? PINK_COLOR : LIGHT_DARK_GREY_COLOR.withOpacity(0.7)),),
+                      SizedBox(
+                        width: 2,
+                      ),
                       GestureDetector(
                         onTap: () async {
                           showProgressDialogue(context);
-                          bool result = await ReactionViewModel().addCommentReaction(commentModel.id);
-                          commentViewModel.getPostComment(widget.postModel.id);
+                          if(commentModel.idReaction != 0){
+                            await ReactionViewModel().deleteReaction(commentModel.idReaction);
+                            await ReactionViewModel().checkCommentReaction(commentModel);
+                            commentModel.totalReaction--;
+                          }else{
+                            await ReactionViewModel().addCommentReaction(commentModel.id);
+                            await ReactionViewModel().checkCommentReaction(commentModel);
+                            commentModel.totalReaction++;
+                          }
                           Navigator.pop(context);
+                          setState(() {});
                         },
-                        child: Text("Thích"),
+                        child: Text("Thích",
+                          style: TextStyle(color: commentModel.idReaction != 0 ? PINK_COLOR : LIGHT_DARK_GREY_COLOR.withOpacity(0.7)),),
                       ),
                       SizedBox(
                         width: 15,
                       ),
-                      Text('0 Trả lời'),
+                      Text(commentModel.totalReply == 0 ? "" : commentModel.totalReply.toString()),
+                      SizedBox(
+                        width: 2,
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+
+                        },
+                        child: Text("Trả lời"),
+                      ),
                       SizedBox(
                         width: 15,
                       ),
@@ -169,8 +194,9 @@ class _PostDetailsState extends State<PostDetails> {
                             Navigator.pop(context);
                             showProgressDialogue(context);
                             bool result = await CommentViewModel().deleteComment(commentModel.id);
-                            commentViewModel.getPostComment(widget.postModel.id);
+                            commentViewModel.commentListModel.remove(commentModel);
                             Navigator.pop(context);
+                            setState(() {});
                           });
                         },
                           child: Text("Xóa",style: TextStyle(color: LIGHT_DARK_GREY_COLOR.withOpacity(0.5)
@@ -307,6 +333,12 @@ class _PostDetailsState extends State<PostDetails> {
     showProgressDialogue(context);
     CommentModel commentModel = new CommentModel();
     commentModel.postId = widget.postModel.id;
+    commentModel.fullName = _momViewModel.momModel.fullName;
+    commentModel.avatar = _momViewModel.momModel.imageURL;
+    commentModel.createdTime = DateTime.now().toString();
+    commentModel.idReaction = 0;
+    commentModel.totalReply = 0;
+    commentModel.totalReaction = 0;
     commentModel.commentContent = _controller.text;
     _controller.clear();
     commentModel.imageURL = null;
@@ -314,7 +346,7 @@ class _PostDetailsState extends State<PostDetails> {
     bool result = await CommentViewModel().addPostComment(commentModel);
     Navigator.pop(context);
     setState(() {});
-    commentViewModel.getPostComment(widget.postModel.id);
+    commentViewModel.commentListModel.add(commentModel);
   }
 
   Widget Empty(){

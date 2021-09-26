@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:mumbi_app/Model/comment_model.dart';
+import 'package:mumbi_app/Model/post_model.dart';
 import 'package:mumbi_app/Repository/comment_repository.dart';
+import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -27,20 +29,36 @@ class CommentViewModel extends Model{
 
   void getPostComment(num postId) async {
     try{
-      isLoading = false;
+      isLoading = true;
       var data = await CommentRepository.apiGetPostComment(postId);
       Map<String, dynamic> jsonList = json.decode(data);
       totalComment = jsonList['total'];
       commentList = jsonList['data'];
       if(commentList != null){
         commentListModel = commentList.map((e) => CommentModel.fromJson(e)).toList();
+        await Future.forEach(commentListModel, (commentModel) async {
+          await ReactionViewModel().countCommentReaction(commentModel);
+          await CommentViewModel().countReply(commentModel);
+          await ReactionViewModel().checkCommentReaction(commentModel);
+        });
       }else{
         commentListModel = null;
       }
+      isLoading = false;
       notifyListeners();
     }catch (e){
       print("error: " + e.toString());
     }
+  }
+
+  void countCommentPost(PostModel postModel) async {
+    var countComment = await CommentRepository.apiCountPostComment(postModel.id);
+    postModel.totalComment = json.decode(countComment)['total'];
+  }
+
+  void countReply(CommentModel commentModel) async {
+    var countReply = await CommentRepository.apiCountReply(commentModel.id);
+    commentModel.totalReply = json.decode(countReply)['total'];
   }
 
   Future<bool> addPostComment(CommentModel commentModel) async {

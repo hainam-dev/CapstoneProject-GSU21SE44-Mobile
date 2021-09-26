@@ -9,6 +9,10 @@ class CommentModel{
   String createdTime;
   String lastModifiedTime;
   num replyCommentId;
+  num totalReaction;
+  num totalReply;
+  List replyList;
+  num idReaction;
 
   CommentModel(
       {this.id,
@@ -40,8 +44,13 @@ class CommentModel{
   Map<String, dynamic> toJson() => {
     'postId' : postId,
     'userId' : userId,
+    'userProfile': {
+      'fullName' : fullName,
+      'avatar' : avatar,
+    },
     'commentContent' : commentContent,
     'imageURL' : imageURL,
     'replyCommentId' : replyCommentId,
   };
+
 }

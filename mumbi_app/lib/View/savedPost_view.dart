@@ -78,8 +78,8 @@ class _SavedPostState extends State<SavedPost> {
                   labelColor: WHITE_COLOR,
                   unselectedLabelColor: BLACK_COLOR,
                   tabs: [
-                    Tab(text: 'Tin Tức',),
                     Tab(text: 'Cẩm Nang',),
+                    Tab(text: 'Tin Tức',),
                   ],
                 ),
               ),
@@ -87,8 +87,8 @@ class _SavedPostState extends State<SavedPost> {
             Expanded(
               child: TabBarView(
                 children: [
-                  SavedNewsList(),
                   SavedGuidebookList(),
+                  SavedNewsList(),
                 ],
               ),
             ),
@@ -108,12 +108,11 @@ class _SavedPostState extends State<SavedPost> {
                 ? loadingProgress()
                 : model.savedNewsListModel == null
                 ? EmptyWithText("Chưa có tin tức được lưu")
-                : ListView.builder(
-              itemCount: model.savedNewsListModel.length,
-              itemBuilder: (BuildContext context, index) {
-                SavedNewsModel savedNewsModel = model.savedNewsListModel[index];
-                return NewsItem(context, savedNewsModel);
-              },
+                : Column(
+              children: [
+                for(var item in model.savedNewsListModel)
+                  NewsItem(context, item),
+              ],
             );
           },
         ));
@@ -129,12 +128,11 @@ class _SavedPostState extends State<SavedPost> {
                 ? loadingProgress()
                 : model.savedGuidebookListModel == null
                 ? EmptyWithText("Chưa có cẩm nang được lưu")
-                : ListView.builder(
-              itemCount: model.savedGuidebookListModel.length,
-              itemBuilder: (BuildContext context, index) {
-                SavedGuidebookModel savedGuidebookModel = model.savedGuidebookListModel[index];
-                return GuidebookItem(context, savedGuidebookModel);
-              },
+                : Column(
+              children: [
+                for(var item in model.savedGuidebookListModel)
+                  GuidebookItem(context, item),
+              ],
             );
           },
         ));
@@ -142,14 +140,17 @@ class _SavedPostState extends State<SavedPost> {
 
   Widget NewsItem(context, SavedNewsModel savedNewsModel) {
     return GestureDetector(
-      onTap: () {
+      onTap: ()  async {
         Navigator.push(
             context,
-            MaterialPageRoute(
+            await MaterialPageRoute(
               builder: (context) => NewsDetail(savedNewsModel),
-            ));
+            ),
+        );_savedNewsViewModel.getSavedNewsByMom();
+        setState(() {});
       },
       child: Container(
+        key: UniqueKey(),
         child: Stack(
           children: <Widget>[
             Container(
@@ -163,8 +164,8 @@ class _SavedPostState extends State<SavedPost> {
                     child: CachedNetworkImage(
                       imageUrl: savedNewsModel.imageURL,
                       fit: BoxFit.cover,
-                      height: 100,
-                      width: 90,
+                      height: 75,
+                      width: 100,
                     ),
                   ),
                   const SizedBox(width: 15.0),
@@ -227,14 +228,16 @@ class _SavedPostState extends State<SavedPost> {
 
   Widget GuidebookItem(context, SavedGuidebookModel savedGuidebookModel) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         Navigator.push(
             context,
-            MaterialPageRoute(
+            await MaterialPageRoute(
               builder: (context) => GuidebookDetail(savedGuidebookModel),
-            ));
+            ));_savedGuidebookViewModel.getSavedGuidebookByMom();
+            setState(() {});
       },
       child: Container(
+        key: UniqueKey(),
         child: Stack(
           children: <Widget>[
             Container(
@@ -248,8 +251,8 @@ class _SavedPostState extends State<SavedPost> {
                     child: CachedNetworkImage(
                       imageUrl: savedGuidebookModel.imageURL,
                       fit: BoxFit.cover,
-                      height: 100,
-                      width: 90,
+                      height: 75,
+                      width: 100,
                     ),
                   ),
                   const SizedBox(width: 15.0),

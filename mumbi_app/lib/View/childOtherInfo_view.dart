@@ -11,7 +11,6 @@ import 'package:mumbi_app/ViewModel/childHistory_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/pregnancyViewModel.dart';
 import 'package:mumbi_app/Widget/customBottomButton.dart';
-import 'package:mumbi_app/Widget/customDialog.dart';
 import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -98,12 +97,17 @@ class _ChildInfoUpdateState extends State<ChildInfoUpdate> {
                               showProgressDialogue(context);
                               bool result = true;
                               if(CurrentMember.pregnancyFlag == true){
-                                result = await PregnancyHistoryViewModel().
-                                updatePregnancyHistory(CurrentMember.pregnancyID, pregnancyHistoryModel, "23/09/2021");
+                                pregnancyHistoryModel.childId = CurrentMember.id;
+                                pregnancyHistoryModel.date = await DateTimeConvert.getCurrentDay();
+                                pregnancyHistoryModel.pregnancyWeek = await DateTimeConvert.pregnancyWeek(model.childModel.estimatedBornDate);
+                                checkPregnancyNull();
+                                result = await PregnancyHistoryViewModel().updatePregnancyHistory(CurrentMember.pregnancyID, pregnancyHistoryModel, "23/09/2021");
                               }else{
                                 childHistoryModel.childId = CurrentMember.id;
+                                childHistoryModel.date = await DateTimeConvert.getCurrentDay();
+                                childHistoryModel.weekOlds = await DateTimeConvert.calculateChildWeekAge(model.childModel.birthday);
                                 checkChildNull();
-                                result = await ChildHistoryViewModel().updateChildHistory(childHistoryModel, "23/09/2021");
+                                result = await ChildHistoryViewModel().updateChildHistory(childHistoryModel, childHistoryModel.date);
                               }
                               Navigator.pop(context);
                             }

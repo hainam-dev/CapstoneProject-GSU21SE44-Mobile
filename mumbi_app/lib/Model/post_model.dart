@@ -11,6 +11,7 @@ class PostModel{
   String approvedTime;
   num totalReaction;
   num totalComment;
+  num idReaction;
 
   PostModel(
       {this.id,

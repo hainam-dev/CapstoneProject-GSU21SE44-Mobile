@@ -1,15 +1,18 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:full_screen_image/full_screen_image.dart';
+import 'package:http/io_client.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/post_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/addCommunityPost.dart';
-import 'package:mumbi_app/View/postDetails_view.dart';
+import 'package:mumbi_app/View/postComment_view.dart';
 import 'package:mumbi_app/ViewModel/communityPost_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
@@ -20,6 +23,7 @@ import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readmore/readmore.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:signalr_core/signalr_core.dart';
 
 class Community extends StatefulWidget {
   @override
@@ -32,6 +36,9 @@ class _CommunityState extends State<Community> {
   CommunityViewModel _communityViewModel;
   MomViewModel _momViewModel;
 
+  /*final serverURL = "https://mumbi.xyz/api/commentHub";
+  HubConnection hubConnection;*/
+
   @override
   void initState() {
     super.initState();
@@ -39,14 +46,25 @@ class _CommunityState extends State<Community> {
     _communityViewModel.getCommunityPost();
 
     _momViewModel = MomViewModel.getInstance();
+    /*initSignalR();*/
   }
+
+  /*void initSignalR() async{
+    final connection = HubConnectionBuilder().withUrl(serverURL,
+        HttpConnectionOptions(
+          client: IOClient(HttpClient()..badCertificateCallback = (x, y, z) => true),
+          logging: (level, message) => print(message),
+        )).build();
+
+    await connection.start();
+  }*/
 
   RefreshController _refreshController =
   RefreshController(initialRefresh: false);
 
   void _onRefresh() async{
     _communityViewModel.getCommunityPost();
-    await Future.delayed(Duration(milliseconds: 2000));
+    await Future.delayed(Duration(milliseconds: 5000));
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }
@@ -207,8 +225,8 @@ class _CommunityState extends State<Community> {
                     showProgressDialogue(context);
                     bool result = false;
                     result = await CommunityViewModel()
-                        .deleteCommunityPost(postModel.id);
-                    CommunityViewModel().getCommunityPost();
+                        .deleteCommunityPost(postModel);
+                    Navigator.pop(context);
                     showResult(context, result,
                         "Bài viết đã được xóa khỏi cộng đồng");
                     setState(() {});
@@ -350,14 +368,22 @@ class _CommunityState extends State<Community> {
       color: WHITE_COLOR,
       child: InkWell(
         onTap: () async{
-          bool result = false;
           if(action == "Thích") {
             showProgressDialogue(context);
-            result = await ReactionViewModel().addPostReaction(postModel.id);
+            if(postModel.idReaction != 0){
+              await ReactionViewModel().deleteReaction(postModel.idReaction);
+              await ReactionViewModel().checkPostReaction(postModel);
+              postModel.totalReaction--;
+            }else{
+              await ReactionViewModel().addPostReaction(postModel.id);
+              await ReactionViewModel().checkPostReaction(postModel);
+              postModel.totalReaction++;
+            }
             Navigator.pop(context);
           }else if(action == "Bình luận"){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => PostDetails(postModel),));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => PostComment(postModel),));
           }
+          setState(() {});
         },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 12),
@@ -367,7 +393,9 @@ class _CommunityState extends State<Community> {
             children: [
               Icon(
                 icon,
-                color: LIGHT_DARK_GREY_COLOR.withOpacity(0.6),
+                color: action == "Thích" ? postModel.idReaction != 0
+                    ? PINK_COLOR : LIGHT_DARK_GREY_COLOR.withOpacity(0.6)
+                    : LIGHT_DARK_GREY_COLOR.withOpacity(0.6),
                 size: 20,
               ),
               SizedBox(
@@ -375,7 +403,9 @@ class _CommunityState extends State<Community> {
               ),
               Text(
                 "${count(action, postModel)}",
-                style: TextStyle(color: LIGHT_DARK_GREY_COLOR,fontSize: 16),
+                style: TextStyle(color: action == "Thích" ? postModel.idReaction != 0
+                    ? PINK_COLOR : LIGHT_DARK_GREY_COLOR.withOpacity(0.6)
+                    : LIGHT_DARK_GREY_COLOR.withOpacity(0.6),fontSize: 16),
               ),
             ],
           ),

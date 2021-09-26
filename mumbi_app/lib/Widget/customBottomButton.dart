@@ -47,7 +47,7 @@ class _CustomBottomButtonState extends State<CustomBottomButton> {
                     color: WHITE_COLOR,
                     onPressed: widget.cancelFunction,
                     shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(25.0),
+                        borderRadius: new BorderRadius.circular(10.0),
                         side: BorderSide(color: PINK_COLOR)),
                   ),
                 ),
@@ -70,7 +70,7 @@ class _CustomBottomButtonState extends State<CustomBottomButton> {
                     color: PINK_COLOR,
                     onPressed: widget.saveFunction,
                     shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(25.0)),
+                        borderRadius: new BorderRadius.circular(10.0)),
                   ),
                 ),
               ),

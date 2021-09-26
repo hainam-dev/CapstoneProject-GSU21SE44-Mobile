@@ -5,6 +5,8 @@ import 'package:mumbi_app/Model/reaction_model.dart';
 import 'package:mumbi_app/Repository/comment_repository.dart';
 import 'package:mumbi_app/Repository/post_repository.dart';
 import 'package:mumbi_app/Repository/reaction_repository.dart';
+import 'package:mumbi_app/ViewModel/comment_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -30,15 +32,14 @@ class CommunityViewModel extends Model{
   void getCommunityPost() async {
     try{
       isLoading = true;
-      var data = await PostRepository.apiGetCommunityPost(10);
+      var data = await PostRepository.apiGetCommunityPost(8);
       Map<String, dynamic> jsonList = json.decode(data);
       postList = jsonList['data'];
       postListModel = postList.map((e) => PostModel.fromJson(e)).toList();
-      await postListModel.forEach((element) async{
-        var dataReact = await ReactionRepository.apiCountPostReaction(element.id);
-        element.totalReaction = json.decode(dataReact)['total'];
-        var dataComment = await CommentRepository.apiCountPostComment(element.id);
-        element.totalComment = json.decode(dataComment)['total'];
+      await Future.forEach(postListModel, (postModel) async {
+        await ReactionViewModel().countPostReaction(postModel);
+        await CommentViewModel().countCommentPost(postModel);
+        await ReactionViewModel().checkPostReaction(postModel);
       });
       isLoading = false;
       notifyListeners();
@@ -47,6 +48,7 @@ class CommunityViewModel extends Model{
       print("error: " + e.toString());
     }
   }
+
 
   Future<bool> addCommunityPost(PostModel postModel) async {
     String userId = await UserViewModel.getUserID();
@@ -71,9 +73,12 @@ class CommunityViewModel extends Model{
     return false;
   }
 
-  Future<bool> deleteCommunityPost(num id) async {
+  Future<bool> deleteCommunityPost(PostModel postModel) async {
     try {
-      String data = await PostRepository.apiDeletePost(id);
+      String data = await PostRepository.apiDeletePost(postModel.id);
+      if(data!=null){
+        postListModel.remove(postModel);
+      }
       return true;
     } catch (e) {
       print("error: " + e.toString());

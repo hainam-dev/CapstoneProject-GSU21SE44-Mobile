@@ -106,13 +106,13 @@ class _CalculateDateState extends State<CalculateDate> {
       }
     },
     child: Container(
-      margin: EdgeInsets.symmetric(horizontal: 90,vertical: 20),
+      margin: EdgeInsets.symmetric(horizontal: 30,vertical: 20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(10),
         color: PINK_COLOR,
       ),
       child: Padding(
-        padding: EdgeInsets.all(15.0),
+        padding: EdgeInsets.all(13.0),
         child: Text(
           "Tính ngày",
           textAlign: TextAlign.center,

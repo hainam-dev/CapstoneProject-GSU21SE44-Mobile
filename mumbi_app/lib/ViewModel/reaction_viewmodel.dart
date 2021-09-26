@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:comment_tree/data/comment.dart';
 import 'package:mumbi_app/Model/comment_model.dart';
+import 'package:mumbi_app/Model/post_model.dart';
 import 'package:mumbi_app/Model/reaction_model.dart';
 import 'package:mumbi_app/Repository/comment_repository.dart';
 import 'package:mumbi_app/Repository/reaction_repository.dart';
@@ -38,6 +40,40 @@ class ReactionViewModel extends Model{
     }
   }
 
+  void countPostReaction(PostModel postModel) async {
+    var countReact = await ReactionRepository.apiCountPostReaction(postModel.id);
+    postModel.totalReaction = json.decode(countReact)['total'];
+  }
+
+  void checkPostReaction(PostModel postModel) async {
+    String userId = await UserViewModel.getUserID();
+    var checkReact = await ReactionRepository.apiCheckPostReaction(userId, postModel.id);
+    List checkReactJsonList = json.decode(checkReact)['data'];
+    if(checkReactJsonList != null){
+      List reactionModelList = checkReactJsonList.map((e) => ReactionModel.fromJson(e)).toList();
+      postModel.idReaction = reactionModelList[0].id;
+    }else{
+      postModel.idReaction = 0;
+    }
+  }
+
+  void countCommentReaction(CommentModel commentModel) async {
+    var countReact = await ReactionRepository.apiCountCommentReaction(commentModel.id);
+    commentModel.totalReaction = json.decode(countReact)['total'];
+  }
+
+  void checkCommentReaction(CommentModel commentModel) async {
+    String userId = await UserViewModel.getUserID();
+    var checkReact = await ReactionRepository.apiCheckCommentReaction(userId, commentModel.id);
+    List checkReactJsonList = json.decode(checkReact)['data'];
+    if(checkReactJsonList != null){
+      List reactionModelList = checkReactJsonList.map((e) => ReactionModel.fromJson(e)).toList();
+      commentModel.idReaction = reactionModelList[0].id;
+    }else{
+      commentModel.idReaction = 0;
+    }
+  }
+
   Future<bool> addPostReaction(num postId) async {
     String userId = await UserViewModel.getUserID();
     ReactionModel reactionModel = new ReactionModel();
@@ -58,7 +94,7 @@ class ReactionViewModel extends Model{
     String userId = await UserViewModel.getUserID();
     ReactionModel reactionModel = new ReactionModel();
     reactionModel.userId = userId;
-    reactionModel.postId = commentId;
+    reactionModel.commentId = commentId;
     reactionModel.typeId = 1;
     try {
       String data = await ReactionRepository.apiAddCommentReaction(reactionModel);

@@ -76,7 +76,7 @@ Widget GotoSavePostButton(context) {
           onPressed: () => {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SavedPost(1)),
+                  MaterialPageRoute(builder: (context) => SavedPost(0)),
                 )
               }),
     ),

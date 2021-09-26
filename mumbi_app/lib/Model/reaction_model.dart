@@ -1,13 +1,15 @@
 class ReactionModel {
+  num id;
   num postId;
   num commentId;
   String userId;
   num typeId;
 
-  ReactionModel({this.postId, this.commentId, this.userId, this.typeId});
+  ReactionModel({this.id,this.postId, this.commentId, this.userId, this.typeId});
 
   factory ReactionModel.fromJson(dynamic json){
     return ReactionModel(
+      id: json['id'],
       postId: json['postId'],
       commentId: json['commentId'],
       userId: json['userId'],

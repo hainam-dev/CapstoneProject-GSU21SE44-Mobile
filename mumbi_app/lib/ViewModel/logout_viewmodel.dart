@@ -4,6 +4,7 @@ import 'package:mumbi_app/ViewModel/action_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/activity_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/childHistory_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/communityPost_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/dad_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/injectionSchedule_viewmodel.dart';
@@ -28,6 +29,7 @@ class LogoutViewModel {
     ChildHistoryViewModel.destroyInstance();
     PregnancyHistoryViewModel.destroyInstance();
     InjectionScheduleViewModel.destroyInstance();
+    CommunityViewModel.destroyInstance();
 
     CurrentMember.id = null;
     CurrentMember.pregnancyFlag = false;

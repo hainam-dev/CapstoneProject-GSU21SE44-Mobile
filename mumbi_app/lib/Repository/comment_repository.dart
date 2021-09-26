@@ -34,6 +34,21 @@ class CommentRepository{
     }
   }
 
+  static Future<dynamic> apiCountReply(num replyCommentId) async{
+    var response = await http.get(
+      Uri.parse("${GET_COMMENT}").replace(
+          queryParameters: {
+            "ReplyCommentId": replyCommentId.toString(),
+            "PageSize": "1",
+          }),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },);
+    if(response.statusCode == 200){
+      return response.body;
+    }
+  }
+
   static Future<dynamic> apiAddPostComment(CommentModel commentModel) async{
     var response = await http.post(
         Uri.parse("${ADD_POST_COMMENT}"),

@@ -119,6 +119,7 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
                 } else {
                   getFlushBar(context, ERROR_MESSAGE);
                 }
+                setState(() {});
               },
             );
           },
@@ -127,15 +128,8 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
 
   Widget Thumbnail() {
     return Center(
-      child: ConstrainedBox(
-        constraints: new BoxConstraints(
-          maxHeight: 350,
-        ),
-        child: Image(
-            image: CachedNetworkImageProvider(
-          widget.model.imageURL,
-        )),
-      ),
+      child: Ink.image(
+        image: CachedNetworkImageProvider(widget.model.imageURL,),height: 300,fit: BoxFit.cover,),
     );
   }
 
