@@ -31,13 +31,13 @@ class Community extends StatefulWidget {
 }
 
 class _CommunityState extends State<Community> {
-
   int currentPos = 0;
   CommunityViewModel _communityViewModel;
   MomViewModel _momViewModel;
+  PostModel _postModel;
 
-  /*final serverURL = "https://mumbi.xyz/api/commentHub";
-  HubConnection hubConnection;*/
+  final serverURL = "https://mumbi.xyz/api/commentHub";
+  HubConnection hubConnection;
 
   @override
   void initState() {
@@ -46,78 +46,99 @@ class _CommunityState extends State<Community> {
     _communityViewModel.getCommunityPost();
 
     _momViewModel = MomViewModel.getInstance();
-    /*initSignalR();*/
+    initSignalR();
   }
 
-  /*void initSignalR() async{
-    final connection = HubConnectionBuilder().withUrl(serverURL,
-        HttpConnectionOptions(
-          client: IOClient(HttpClient()..badCertificateCallback = (x, y, z) => true),
-          logging: (level, message) => print(message),
-        )).build();
+  void initSignalR() async {
+    final hubConnection = new HubConnectionBuilder()
+        .withUrl(
+            serverURL,
+            HttpConnectionOptions(
+              transport: HttpTransportType.webSockets,
+              client: IOClient(
+                  HttpClient()..badCertificateCallback = (x, y, z) => true),
+              logging: (level, message) => print(message),
+            ))
+        .withAutomaticReconnect()
+        .build();
 
-    await connection.start();
-  }*/
+    if (hubConnection.state == HubConnectionState.connecting) {
+      await hubConnection.stop();
+    }
+    await hubConnection
+        .start()
+        .then((value) => {print('SignalR Connected!')})
+        .catchError((e) => {
+              print('Error while establishing SignalR Connection: ' +
+                  e.toString())
+            });
+
+    hubConnection.on(
+        "BroadcastComment",
+        (data) => {
+              print("SignalR: " + data[0]['fullName'].toString()),
+              print("SignalR: " + data[0]['avatar'].toString()),
+              print("SignalR: " + data[1].toString()) //comment nha
+            });
+
+    /*
+          Tạo 1 method getUserInfo và getMessage xong gán model vào mấy cái data đó
+          đặt method ở hubConnection.on, mỗi khi có comment nó sẽ load lại
+        */
+  }
 
   RefreshController _refreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
 
-  void _onRefresh() async{
+  void _onRefresh() async {
     _communityViewModel.getCommunityPost();
     await Future.delayed(Duration(milliseconds: 5000));
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }
 
-  void _onLoading() async{
+  void _onLoading() async {
     await Future.delayed(Duration(milliseconds: 2000));
     // if failed,use loadFailed(),if no data return,use LoadNodata()
     //items.add((items.length+1).toString());
-    if(mounted)
-      setState(() {
-
-      });
+    if (mounted) setState(() {});
     _refreshController.loadComplete();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: LIGHT_GREY_COLOR,
-      appBar: AppBar(
-        title: Text("Cộng đồng"),
-      ),
-      body: SmartRefresher(
-        enablePullDown: true,
-        enablePullUp: true,
-        header: MaterialClassicHeader(),
-        footer: CustomFooter(
-          builder: (BuildContext context,LoadStatus mode){
-            Widget body;
-            if(mode==LoadStatus.loading){
-              body =  CupertinoActivityIndicator();
-            }
-            else if(mode == LoadStatus.failed){
-              body = Text("Load Failed!Click retry!");
-            }
-            else if(mode == LoadStatus.canLoading){
-              body = Text("release to load more");
-            }
-            else{
-              body = Text("Không còn bài viết nào");
-            }
-            return Container(
-              height: 55.0,
-              child: Center(child:body),
-            );
-          },
+        backgroundColor: LIGHT_GREY_COLOR,
+        appBar: AppBar(
+          title: Text("Cộng đồng"),
         ),
-        controller: _refreshController,
-        onRefresh: _onRefresh,
-        onLoading: _onLoading,
-        child: listCommunityPost(),
-      )
-    );
+        body: SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          header: MaterialClassicHeader(),
+          footer: CustomFooter(
+            builder: (BuildContext context, LoadStatus mode) {
+              Widget body;
+              if (mode == LoadStatus.loading) {
+                body = CupertinoActivityIndicator();
+              } else if (mode == LoadStatus.failed) {
+                body = Text("Load Failed!Click retry!");
+              } else if (mode == LoadStatus.canLoading) {
+                body = Text("release to load more");
+              } else {
+                body = Text("Không còn bài viết nào");
+              }
+              return Container(
+                height: 55.0,
+                child: Center(child: body),
+              );
+            },
+          ),
+          controller: _refreshController,
+          onRefresh: _onRefresh,
+          onLoading: _onLoading,
+          child: listCommunityPost(),
+        ));
   }
 
   Widget listCommunityPost() {
@@ -132,10 +153,9 @@ class _CommunityState extends State<Community> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     PostBar(),
-                    for (var model in model.postListModel)
-                      CommunityPost(model),
+                    for (var model in model.postListModel) CommunityPost(model),
                   ],
-          );
+                );
         },
       ),
     );
@@ -214,36 +234,36 @@ class _CommunityState extends State<Community> {
       trailing: _momViewModel == null
           ? SizedBox.shrink()
           : postModel.userId == _momViewModel.momModel.id
-          ? PopupMenuButton<String>(
-        onSelected: (value) async {
-          switch (value) {
-            case 'Xóa bài viết':
-              showConfirmDialog(context, "Xóa bài viết",
-                  "Bạn có muốn xóa bài viết này?",
-                  ContinueFunction: () async {
-                    Navigator.pop(context);
-                    showProgressDialogue(context);
-                    bool result = false;
-                    result = await CommunityViewModel()
-                        .deleteCommunityPost(postModel);
-                    Navigator.pop(context);
-                    showResult(context, result,
-                        "Bài viết đã được xóa khỏi cộng đồng");
-                    setState(() {});
-                  });
-              break;
-          }
-        },
-        itemBuilder: (BuildContext context) {
-          return {'Xóa bài viết'}.map((String choice) {
-            return PopupMenuItem<String>(
-              value: choice,
-              child: Text(choice),
-            );
-          }).toList();
-        },
-      )
-          : SizedBox.shrink(),
+              ? PopupMenuButton<String>(
+                  onSelected: (value) async {
+                    switch (value) {
+                      case 'Xóa bài viết':
+                        showConfirmDialog(context, "Xóa bài viết",
+                            "Bạn có muốn xóa bài viết này?",
+                            ContinueFunction: () async {
+                          Navigator.pop(context);
+                          showProgressDialogue(context);
+                          bool result = false;
+                          result = await CommunityViewModel()
+                              .deleteCommunityPost(postModel);
+                          Navigator.pop(context);
+                          showResult(context, result,
+                              "Bài viết đã được xóa khỏi cộng đồng");
+                          setState(() {});
+                        });
+                        break;
+                    }
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return {'Xóa bài viết'}.map((String choice) {
+                      return PopupMenuItem<String>(
+                        value: choice,
+                        child: Text(choice),
+                      );
+                    }).toList();
+                  },
+                )
+              : SizedBox.shrink(),
     );
   }
 
@@ -355,33 +375,38 @@ class _CommunityState extends State<Community> {
       children: [
         Row(
           children: [
-            InteractiveButton(Icons.thumb_up_off_alt_outlined,"Thích",postModel),
-            InteractiveButton(Icons.comment_outlined,"Bình luận",postModel),
+            InteractiveButton(
+                Icons.thumb_up_off_alt_outlined, "Thích", postModel),
+            InteractiveButton(Icons.comment_outlined, "Bình luận", postModel),
           ],
         ),
       ],
     );
   }
 
-  Widget InteractiveButton(IconData icon,String action,PostModel postModel) {
+  Widget InteractiveButton(IconData icon, String action, PostModel postModel) {
     return Material(
       color: WHITE_COLOR,
       child: InkWell(
-        onTap: () async{
-          if(action == "Thích") {
+        onTap: () async {
+          if (action == "Thích") {
             showProgressDialogue(context);
-            if(postModel.idReaction != 0){
+            if (postModel.idReaction != 0) {
               await ReactionViewModel().deleteReaction(postModel.idReaction);
               await ReactionViewModel().checkPostReaction(postModel);
               postModel.totalReaction--;
-            }else{
+            } else {
               await ReactionViewModel().addPostReaction(postModel.id);
               await ReactionViewModel().checkPostReaction(postModel);
               postModel.totalReaction++;
             }
             Navigator.pop(context);
-          }else if(action == "Bình luận"){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => PostComment(postModel),));
+          } else if (action == "Bình luận") {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PostComment(postModel),
+                ));
           }
           setState(() {});
         },
@@ -393,8 +418,10 @@ class _CommunityState extends State<Community> {
             children: [
               Icon(
                 icon,
-                color: action == "Thích" ? postModel.idReaction != 0
-                    ? PINK_COLOR : LIGHT_DARK_GREY_COLOR.withOpacity(0.6)
+                color: action == "Thích"
+                    ? postModel.idReaction != 0
+                        ? PINK_COLOR
+                        : LIGHT_DARK_GREY_COLOR.withOpacity(0.6)
                     : LIGHT_DARK_GREY_COLOR.withOpacity(0.6),
                 size: 20,
               ),
@@ -403,9 +430,13 @@ class _CommunityState extends State<Community> {
               ),
               Text(
                 "${count(action, postModel)}",
-                style: TextStyle(color: action == "Thích" ? postModel.idReaction != 0
-                    ? PINK_COLOR : LIGHT_DARK_GREY_COLOR.withOpacity(0.6)
-                    : LIGHT_DARK_GREY_COLOR.withOpacity(0.6),fontSize: 16),
+                style: TextStyle(
+                    color: action == "Thích"
+                        ? postModel.idReaction != 0
+                            ? PINK_COLOR
+                            : LIGHT_DARK_GREY_COLOR.withOpacity(0.6)
+                        : LIGHT_DARK_GREY_COLOR.withOpacity(0.6),
+                    fontSize: 16),
               ),
             ],
           ),
@@ -414,16 +445,12 @@ class _CommunityState extends State<Community> {
     );
   }
 
-  num count(String action, PostModel postModel){
-    if(action == "Thích"){
-      return postModel.totalReaction == null
-          ? 0
-          : postModel.totalReaction;
-    }else if(action == "Bình luận"){
-      return postModel.totalComment == null
-          ? 0
-          : postModel.totalComment;
-    }else{
+  num count(String action, PostModel postModel) {
+    if (action == "Thích") {
+      return postModel.totalReaction == null ? 0 : postModel.totalReaction;
+    } else if (action == "Bình luận") {
+      return postModel.totalComment == null ? 0 : postModel.totalComment;
+    } else {
       return 0;
     }
   }
