@@ -30,6 +30,7 @@ class PostComment extends StatefulWidget {
 class _PostCommentState extends State<PostComment> {
 
   bool commentFlag = false;
+  String replyUser = "";
   MomViewModel _momViewModel;
   CommentViewModel commentViewModel;
   TextEditingController _controller = TextEditingController();
@@ -39,7 +40,7 @@ class _PostCommentState extends State<PostComment> {
     super.initState();
     _momViewModel = MomViewModel.getInstance();
     commentViewModel = new CommentViewModel();
-    commentViewModel.getPostComment(widget.postModel.id);
+    commentViewModel.getPostComment(widget.postModel);
   }
 
   @override
@@ -55,16 +56,16 @@ class _PostCommentState extends State<PostComment> {
           model: commentViewModel,
           child: ScopedModelDescendant(builder: (BuildContext context, Widget child, CommentViewModel model) {
             return model.isLoading == true
-            ? loadingProgress()
-            : model.commentListModel == null
+                ? loadingProgress()
+                : model.commentListModel == null
                 ? Empty()
                 : SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        for(var comment in model.commentListModel)
-                          postComment(comment),
-                      ],
-            ));
+                child: Column(
+                  children: [
+                    for(var comment in model.commentListModel)
+                      postComment(comment),
+                  ],
+                ));
           },),
         ),
         bottomNavigationBar: Container(
@@ -180,7 +181,8 @@ class _PostCommentState extends State<PostComment> {
                       ),
                       GestureDetector(
                         onTap: () async {
-
+                          replyUser = commentModel.fullName;
+                          setState(() {});
                         },
                         child: Text("Trả lời"),
                       ),
@@ -188,20 +190,23 @@ class _PostCommentState extends State<PostComment> {
                         width: 15,
                       ),
                       if(commentModel.userId == _momViewModel.momModel.id)
-                      GestureDetector(
-                        onTap: (){
-                          showConfirmDialog(context, "Xoá bình luận", "Bạn có muốn xóa bình luận này",ContinueFunction: () async{
-                            Navigator.pop(context);
-                            showProgressDialogue(context);
-                            bool result = await CommentViewModel().deleteComment(commentModel.id);
-                            commentViewModel.commentListModel.remove(commentModel);
-                            Navigator.pop(context);
-                            setState(() {});
-                          });
-                        },
+                        GestureDetector(
+                          onTap: (){
+                            showConfirmDialog(context, "Xoá bình luận", "Bạn có muốn xóa bình luận này",ContinueFunction: () async{
+                              Navigator.pop(context);
+                              showProgressDialogue(context);
+                              bool result = await CommentViewModel().deleteComment(commentModel.id);
+                              if(result){
+                                commentViewModel.commentListModel.remove(commentModel);
+                                widget.postModel.totalComment--;
+                              }
+                              Navigator.pop(context);
+                              setState(() {});
+                            });
+                          },
                           child: Text("Xóa",style: TextStyle(color: LIGHT_DARK_GREY_COLOR.withOpacity(0.5)
                           ),),
-                      ),
+                        ),
                     ],
                   ),
                 ),
@@ -282,49 +287,69 @@ class _PostCommentState extends State<PostComment> {
   }
 
   Widget CommentSection() {
-    return ListTile(
-      leading: _momViewModel.momModel == null
-          ? CircleAvatar(radius: 20, backgroundColor: LIGHT_GREY_COLOR)
-          : CircleAvatar(
-        radius: 20,
-        backgroundColor: LIGHT_GREY_COLOR,
-        backgroundImage:
-        CachedNetworkImageProvider(_momViewModel.momModel.imageURL),
-      ),
-      title: TextFormField(
-        autofocus: true,
-        minLines: 1,
-        maxLines: 4,
-        controller: _controller,
-        decoration: InputDecoration(
-          hintText: 'Viết bình luận...',
-          fillColor: LIGHT_GREY_COLOR,
-          filled: true,
-          focusedBorder:OutlineInputBorder(
-            borderSide: const BorderSide(color: TRANSPARENT_COLOR),
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: TRANSPARENT_COLOR),
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 15),
-          suffixIcon: IconButton(
-              icon: Icon(Icons.send_rounded,color: commentFlag == true ? PINK_COLOR : GREY_COLOR,size: 28,),
-              onPressed: () async{
-                commentFlag == true ? handleComment() : null;
-              }
-          ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5,top: 5),
+      child: ListTile(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if(replyUser != "")
+            GestureDetector(
+              onTap: (){
+                replyUser = "";
+                setState(() {});
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 5, 8, 10),
+                child: Text("Hủy",style: TextStyle(color: LIGHT_DARK_GREY_COLOR.withOpacity(0.5)
+                ),),
+              ),
+            ),
+            TextFormField(
+              autofocus: true,
+              minLines: 1,
+              maxLines: 4,
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: replyUser != "" ? "Phản hồi ${replyUser}" : 'Viết bình luận...',
+                fillColor: LIGHT_GREY_COLOR,
+                filled: true,
+                focusedBorder:OutlineInputBorder(
+                  borderSide: const BorderSide(color: TRANSPARENT_COLOR),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: TRANSPARENT_COLOR),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 15),
+                /*prefixIcon: _momViewModel.momModel == null
+                  ? CircleAvatar(radius: 20, backgroundColor: LIGHT_GREY_COLOR)
+                      : CircleAvatar(
+                  radius: 20,
+                  backgroundColor: LIGHT_GREY_COLOR,
+                  backgroundImage:
+                  CachedNetworkImageProvider(_momViewModel.momModel.imageURL),),*/
+                suffixIcon: IconButton(
+                    icon: Icon(Icons.send_rounded,color: commentFlag == true ? PINK_COLOR : GREY_COLOR,size: 28,),
+                    onPressed: () async{
+                      commentFlag == true ? handleComment() : null;
+                    }
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  if (value != "") {
+                    commentFlag = true;
+                  } else {
+                    commentFlag = false;
+                  }
+                });
+              },
+            ),
+          ],
         ),
-        onChanged: (value) {
-          setState(() {
-            if (value != "") {
-              commentFlag = true;
-            } else {
-              commentFlag = false;
-            }
-          });
-        },
       ),
     );
   }
@@ -344,9 +369,12 @@ class _PostCommentState extends State<PostComment> {
     commentModel.imageURL = null;
     commentFlag = false;
     bool result = await CommentViewModel().addPostComment(commentModel);
+    if(result){
+      commentViewModel.getPostComment(widget.postModel);
+      widget.postModel.totalComment++;
+    }
     Navigator.pop(context);
     setState(() {});
-    commentViewModel.commentListModel.add(commentModel);
   }
 
   Widget Empty(){
@@ -354,13 +382,13 @@ class _PostCommentState extends State<PostComment> {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SvgPicture.asset(comment,height: 120,),
-              SizedBox(height: 10,),
-              Text("Bài viết hiện chưa có bình luận",style: TextStyle(fontSize: 19),),
-              SizedBox(height: 50,),
-            ],
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(comment,height: 120,),
+            SizedBox(height: 10,),
+            Text("Bài viết hiện chưa có bình luận",style: TextStyle(fontSize: 19),),
+            SizedBox(height: 50,),
+          ],
         ),
       ),
     );

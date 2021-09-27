@@ -10,7 +10,7 @@ import 'package:mumbi_app/Model/diary_model.dart';
 import 'package:mumbi_app/Model/post_model.dart';
 import 'package:mumbi_app/Utils/upload_multipleImage.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/communityPost_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/community_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';

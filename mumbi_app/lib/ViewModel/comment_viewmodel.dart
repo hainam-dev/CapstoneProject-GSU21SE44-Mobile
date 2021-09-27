@@ -27,10 +27,10 @@ class CommentViewModel extends Model{
   List<dynamic> commentList;
   List<CommentModel> commentListModel;
 
-  void getPostComment(num postId) async {
+  void getPostComment(PostModel postModel) async {
     try{
       isLoading = true;
-      var data = await CommentRepository.apiGetPostComment(postId);
+      var data = await CommentRepository.apiGetPostComment(postModel.id);
       Map<String, dynamic> jsonList = json.decode(data);
       totalComment = jsonList['total'];
       commentList = jsonList['data'];
@@ -42,7 +42,7 @@ class CommentViewModel extends Model{
           await ReactionViewModel().checkCommentReaction(commentModel);
         });
       }else{
-        commentListModel = null;
+        commentListModel = new List();
       }
       isLoading = false;
       notifyListeners();

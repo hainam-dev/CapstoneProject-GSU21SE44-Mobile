@@ -1,10 +1,9 @@
 import 'package:mumbi_app/Global/CurrentMember.dart';
-import 'package:mumbi_app/View/injectionSchedule.dart';
 import 'package:mumbi_app/ViewModel/action_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/activity_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/childHistory_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/communityPost_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/community_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/dad_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/injectionSchedule_viewmodel.dart';

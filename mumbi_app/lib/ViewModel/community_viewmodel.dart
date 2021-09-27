@@ -1,10 +1,7 @@
 import 'dart:convert';
 
 import 'package:mumbi_app/Model/post_model.dart';
-import 'package:mumbi_app/Model/reaction_model.dart';
-import 'package:mumbi_app/Repository/comment_repository.dart';
 import 'package:mumbi_app/Repository/post_repository.dart';
-import 'package:mumbi_app/Repository/reaction_repository.dart';
 import 'package:mumbi_app/ViewModel/comment_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/user_viewmodel.dart';

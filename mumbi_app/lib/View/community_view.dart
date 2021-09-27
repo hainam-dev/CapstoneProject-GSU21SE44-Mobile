@@ -13,7 +13,7 @@ import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/addCommunityPost.dart';
 import 'package:mumbi_app/View/postComment_view.dart';
-import 'package:mumbi_app/ViewModel/communityPost_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/community_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
 import 'package:mumbi_app/Widget/customConfirmDialog.dart';
@@ -402,7 +402,7 @@ class _CommunityState extends State<Community> {
             }
             Navigator.pop(context);
           } else if (action == "Bình luận") {
-            Navigator.push(
+            await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => PostComment(postModel),
