@@ -72,14 +72,12 @@ class _MyApp extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: ColorTheme,
-        fontFamily: 'Mulish',
-        iconTheme: new IconThemeData(color: Colors.white, size: 24.0),
-        appBarTheme: AppBarTheme(
-          elevation: 0,
-
-        )
-      ),
+          primarySwatch: ColorTheme,
+          fontFamily: 'Mulish',
+          iconTheme: new IconThemeData(color: Colors.white, size: 24.0),
+          appBarTheme: AppBarTheme(
+            elevation: 0,
+          )),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

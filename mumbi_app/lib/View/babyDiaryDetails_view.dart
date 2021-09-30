@@ -39,7 +39,7 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
   @override
   void initState() {
     super.initState();
-    if(getImages != null && getImages != "")
+    if (getImages != null && getImages != "")
       WidgetsBinding.instance.addPostFrameCallback((_) {
         getImages.forEach((url) {
           precacheImage(NetworkImage(url), context);
@@ -51,7 +51,8 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(DateTimeConvert.getDayOfWeek(widget.model.createTime) + ", " +
+        title: Text(DateTimeConvert.getDayOfWeek(widget.model.createTime) +
+            ", " +
             DateTimeConvert.convertDatetimeFullFormat(widget.model.createTime)),
         actions: [
           editFlag == false ? MoreButton() : OkAndCancelButton(),
@@ -234,120 +235,147 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
   }
 
   Widget getDiaryImage(String _image) {
-    getImages = _image.split(";");
-    return Stack(
-      alignment: Alignment.center,
+    List<String> getImages = _image.split(";");
+    return Column(
       children: [
-        Stack(
-            alignment: Alignment.center,
-            children: [
-            CarouselSlider.builder(
-            itemCount: getImages.length,
-            options: CarouselOptions(
-                viewportFraction: 1,
-                autoPlay: true,
-                enableInfiniteScroll: false,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    currentPos = index;
-                  });
-                }),
-            itemBuilder: (context, index, _) {
-              return Stack(
-                  children: <Widget>[
-                  FullScreenWidget(
-                    backgroundColor: WHITE_COLOR,
-                    child: Center(
-                      child: Hero(
-                        tag: getImages[index].toString(),
-                        child: CachedNetworkImage(
-                          imageUrl: getImages[index],
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: getImages.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Column(
+              children: [
+                FullScreenWidget(
+                  backgroundColor: WHITE_COLOR,
+                  child: Center(
+                    child: CachedNetworkImage(
+                      imageUrl: getImages[index],
+                      fit: BoxFit.cover,
                     ),
                   ),
-                if (editFlag)
-                  Positioned(
-                    right: 5,
-                    top: 5,
-                    child: InkWell(
-                      child: Icon(
-                        Icons.cancel,
-                        size: 30,
-                        color: PINK_COLOR,
-                      ),
-                      onTap: () {
-                        setState(() {
-                          getImages.removeAt(index);
-                          String url = "";
-                          for (var getUrl in getImages) {
-                            if (getUrl != getImages.last) {
-                              url += getUrl + ";";
-                            } else {
-                              url += getUrl;
-                            }
-                          }
-                          widget.model.imageURL = url;
-                        });
-                      },
-                    ),
-                  ),
-              ]);
-            },
-          ),
-            if (editFlag == false)
-            Positioned(
-              right: 10,
-              top: 10,
-              child: Container(
-                width: 32.0,
-                padding: EdgeInsets.all(5),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: BLACK_COLOR.withOpacity(0.5),
-                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
                 ),
-                child: Text(
-                  (currentPos + 1).toString() +
-                      "/" +
-                      getImages.length.toString(),
-                  style: TextStyle(fontSize: 13,color: WHITE_COLOR),
-                ),
-              ),
-            ),
-            Positioned(
-            bottom: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: getImages.map((pic) {
-                int index = getImages.indexOf(pic);
-                return Container(
-                  width: currentPos == index ? 8.0 : 6.0,
-                  height: currentPos == index ? 8.0 : 6.0,
-                  margin: EdgeInsets.symmetric(vertical: 15.0, horizontal: 4.0),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: GREY_COLOR.withOpacity(0.6),
-                        spreadRadius: 2,
-                        blurRadius: 4,
-                        offset: Offset(1, 1), // changes position of shadow
-                      ),
-                    ],
-                    color: currentPos == index
-                        ? WHITE_COLOR
-                        : WHITE_COLOR.withOpacity(0.6),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        ]),
+              ],
+            );
+          },
+        ),
       ],
     );
   }
+
+  // Widget getDiaryImage(String _image) {
+  //   getImages = _image.split(";");
+  //   return Stack(
+  //     alignment: Alignment.center,
+  //     children: [
+  //       Stack(
+  //           alignment: Alignment.center,
+  //           children: [
+  //           CarouselSlider.builder(
+  //           itemCount: getImages.length,
+  //           options: CarouselOptions(
+  //               viewportFraction: 1,
+  //               autoPlay: true,
+  //               enableInfiniteScroll: false,
+  //               onPageChanged: (index, reason) {
+  //                 setState(() {
+  //                   currentPos = index;
+  //                 });
+  //               }),
+  //           itemBuilder: (context, index, _) {
+  //             return Stack(
+  //                 children: <Widget>[
+  //                 FullScreenWidget(
+  //                   backgroundColor: WHITE_COLOR,
+  //                   child: Center(
+  //                     child: Hero(
+  //                       tag: getImages[index].toString(),
+  //                       child: CachedNetworkImage(
+  //                         imageUrl: getImages[index],
+  //                         fit: BoxFit.cover,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               if (editFlag)
+  //                 Positioned(
+  //                   right: 5,
+  //                   top: 5,
+  //                   child: InkWell(
+  //                     child: Icon(
+  //                       Icons.cancel,
+  //                       size: 30,
+  //                       color: PINK_COLOR,
+  //                     ),
+  //                     onTap: () {
+  //                       setState(() {
+  //                         getImages.removeAt(index);
+  //                         String url = "";
+  //                         for (var getUrl in getImages) {
+  //                           if (getUrl != getImages.last) {
+  //                             url += getUrl + ";";
+  //                           } else {
+  //                             url += getUrl;
+  //                           }
+  //                         }
+  //                         widget.model.imageURL = url;
+  //                       });
+  //                     },
+  //                   ),
+  //                 ),
+  //             ]);
+  //           },
+  //         ),
+  //           if (editFlag == false)
+  //           Positioned(
+  //             right: 10,
+  //             top: 10,
+  //             child: Container(
+  //               width: 32.0,
+  //               padding: EdgeInsets.all(5),
+  //               alignment: Alignment.center,
+  //               decoration: BoxDecoration(
+  //                 color: BLACK_COLOR.withOpacity(0.5),
+  //                 borderRadius: BorderRadius.all(Radius.circular(15.0)),
+  //               ),
+  //               child: Text(
+  //                 (currentPos + 1).toString() +
+  //                     "/" +
+  //                     getImages.length.toString(),
+  //                 style: TextStyle(fontSize: 13,color: WHITE_COLOR),
+  //               ),
+  //             ),
+  //           ),
+  //           Positioned(
+  //           bottom: 0,
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: getImages.map((pic) {
+  //               int index = getImages.indexOf(pic);
+  //               return Container(
+  //                 width: currentPos == index ? 8.0 : 6.0,
+  //                 height: currentPos == index ? 8.0 : 6.0,
+  //                 margin: EdgeInsets.symmetric(vertical: 15.0, horizontal: 4.0),
+  //                 decoration: BoxDecoration(
+  //                   shape: BoxShape.circle,
+  //                   boxShadow: [
+  //                     BoxShadow(
+  //                       color: GREY_COLOR.withOpacity(0.6),
+  //                       spreadRadius: 2,
+  //                       blurRadius: 4,
+  //                       offset: Offset(1, 1), // changes position of shadow
+  //                     ),
+  //                   ],
+  //                   color: currentPos == index
+  //                       ? WHITE_COLOR
+  //                       : WHITE_COLOR.withOpacity(0.6),
+  //                 ),
+  //               );
+  //             }).toList(),
+  //           ),
+  //         ),
+  //       ]),
+  //     ],
+  //   );
+  // }
 
   Widget ChooseImageButton() {
     return InkWell(

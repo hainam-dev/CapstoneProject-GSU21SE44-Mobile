@@ -101,7 +101,8 @@ class _AddCommunityPostState extends State<AddCommunityPost> {
     result = await CommunityViewModel().addCommunityPost(postModel);
     Navigator.pop(context);
     Navigator.pop(context);
-    showResult(context, result, "Bài viết đã được tạo thành công và đang ở trạng thái chờ duyệt");
+    showResult(context, result,
+        "Bài viết đã được tạo thành công và đang ở trạng thái chờ duyệt");
   }
 
   Widget AddButton() {
@@ -112,7 +113,7 @@ class _AddCommunityPostState extends State<AddCommunityPost> {
         splashColor: postFlag == true ? LIGHT_GREY_COLOR : Colors.transparent,
         focusColor: postFlag == true ? LIGHT_GREY_COLOR : Colors.transparent,
         highlightColor:
-        postFlag == true ? LIGHT_GREY_COLOR : Colors.transparent,
+            postFlag == true ? LIGHT_GREY_COLOR : Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
@@ -135,8 +136,8 @@ class _AddCommunityPostState extends State<AddCommunityPost> {
         model: momViewModel,
         child: ScopedModelDescendant(
           builder: (BuildContext context, Widget child, MomViewModel model) {
-            return createListTileDiaryPost(model.momModel.imageURL,
-                model.momModel.fullName);
+            return createListTileDiaryPost(
+                model.momModel.imageURL, model.momModel.fullName);
           },
         ));
   }
@@ -205,7 +206,6 @@ class _AddCommunityPostState extends State<AddCommunityPost> {
     );
   }
 
-
   Widget showMultipleImagePicked() {
     return Column(
       children: [
@@ -215,7 +215,7 @@ class _AddCommunityPostState extends State<AddCommunityPost> {
           crossAxisCount: 2,
           children: List.generate(
             _files.length,
-                (index) {
+            (index) {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 2),
                 child: FullScreenWidget(
@@ -257,7 +257,7 @@ class _AddCommunityPostState extends State<AddCommunityPost> {
     List<Asset> resultList = <Asset>[];
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 5,
+        maxImages: 30,
         enableCamera: true,
         selectedAssets: images,
         cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
@@ -287,7 +287,7 @@ class _AddCommunityPostState extends State<AddCommunityPost> {
     try {
       for (Asset asset in images) {
         final filePath =
-        await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+            await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
         files.add(File(filePath));
       }
     } on Exception catch (e) {

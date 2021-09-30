@@ -70,6 +70,8 @@ dependencies:
   cross_file: ^0.3.1+4
   multi_image_picker: ^4.7.14
   full_screen_image: ^1.0.2
+  extended_image: ^4.0.0
+  photo_view: ^0.12.0
   worm_indicator: ^0.2.4
   flutter_absolute_path: ^1.0.6
   flutter_image_compress: ^1.1.0

@@ -1,5 +1,6 @@
+import 'dart:async';
 import 'dart:io';
-
+import 'dart:ui' as ui;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +19,7 @@ import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
 import 'package:mumbi_app/Widget/customConfirmDialog.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
+import 'package:mumbi_app/Widget/customGridLayoutPhoto.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -34,8 +36,8 @@ class _CommunityState extends State<Community> {
   int currentPos = 0;
   CommunityViewModel _communityViewModel;
   MomViewModel _momViewModel;
-  PostModel _postModel;
-
+  int imageWidth = 0;
+  int imageHeight = 0;
   final serverURL = "https://mumbi.xyz/api/commentHub";
   HubConnection hubConnection;
 
@@ -62,9 +64,25 @@ class _CommunityState extends State<Community> {
         .withAutomaticReconnect()
         .build();
 
-    if (hubConnection.state == HubConnectionState.connecting) {
-      await hubConnection.stop();
-    }
+    hubConnection.onclose((exception) {
+      print("SignalR lost connection: " + exception.toString());
+    });
+
+    hubConnection.on(
+        "BroadcastComment",
+        (data) => {
+              print("SignalR: " + data[0]['fullName'].toString()),
+              print("SignalR: " + data[0]['avatar'].toString()),
+              print("SignalR: " + data[1]['commentId'].toString()),
+              print("SignalR: " + data[1]['commentContent'].toString()),
+              print(
+                  "SignalR: " + data[1]['createdTime'].toString()) //comment nha
+            });
+
+    /*
+          Tạo 1 method getUserInfo và getMessage xong gán model vào mấy cái data đó
+          đặt method ở hubConnection.on, mỗi khi có comment nó sẽ load lại
+    */
     await hubConnection
         .start()
         .then((value) => {print('SignalR Connected!')})
@@ -72,19 +90,6 @@ class _CommunityState extends State<Community> {
               print('Error while establishing SignalR Connection: ' +
                   e.toString())
             });
-
-    hubConnection.on(
-        "BroadcastComment",
-        (data) => {
-              print("SignalR: " + data[0]['fullName'].toString()),
-              print("SignalR: " + data[0]['avatar'].toString()),
-              print("SignalR: " + data[1].toString()) //comment nha
-            });
-
-    /*
-          Tạo 1 method getUserInfo và getMessage xong gán model vào mấy cái data đó
-          đặt method ở hubConnection.on, mỗi khi có comment nó sẽ load lại
-        */
   }
 
   RefreshController _refreshController =
@@ -171,7 +176,7 @@ class _CommunityState extends State<Community> {
             UserInfo(postModel),
             PostContent(postModel.postContent),
             if (postModel.imageURL != null && postModel.imageURL != "")
-              getPostImage(postModel.imageURL),
+              CustomGridLayoutPhoto(postModel.imageURL),
             PostInteraction(postModel),
           ],
         ),
@@ -284,89 +289,6 @@ class _CommunityState extends State<Community> {
           style: TextStyle(color: BLACK_COLOR, fontSize: 15),
         ),
       ),
-    );
-  }
-
-  Widget getPostImage(String _image) {
-    List<String> getImages = _image.split(";");
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Stack(alignment: Alignment.center, children: [
-          CarouselSlider.builder(
-            itemCount: getImages.length,
-            options: CarouselOptions(
-                viewportFraction: 1,
-                autoPlay: false,
-                enableInfiniteScroll: false,
-                onPageChanged: (index, reason) {
-                  setState(() {
-                    currentPos = index;
-                  });
-                }),
-            itemBuilder: (context, index, _) {
-              return Stack(
-                children: [
-                  FullScreenWidget(
-                    backgroundColor: WHITE_COLOR,
-                    child: Center(
-                      child: CachedNetworkImage(
-                        imageUrl: getImages[index],
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-          Positioned(
-            right: 10,
-            top: 10,
-            child: Container(
-              width: 32.0,
-              padding: EdgeInsets.all(5),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: BLACK_COLOR.withOpacity(0.5),
-                borderRadius: BorderRadius.all(Radius.circular(15.0)),
-              ),
-              child: Text(
-                (currentPos + 1).toString() + "/" + getImages.length.toString(),
-                style: TextStyle(fontSize: 13, color: WHITE_COLOR),
-              ),
-            ),
-          ),
-        ]),
-        Positioned(
-          bottom: 0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: getImages.map((pic) {
-              int index = getImages.indexOf(pic);
-              return Container(
-                width: currentPos == index ? 8.0 : 6.0,
-                height: currentPos == index ? 8.0 : 6.0,
-                margin: EdgeInsets.symmetric(vertical: 15.0, horizontal: 4.0),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: GREY_COLOR.withOpacity(0.6),
-                      spreadRadius: 2,
-                      blurRadius: 4,
-                      offset: Offset(1, 1), // changes position of shadow
-                    ),
-                  ],
-                  color: currentPos == index
-                      ? WHITE_COLOR
-                      : WHITE_COLOR.withOpacity(0.6),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ],
     );
   }
 

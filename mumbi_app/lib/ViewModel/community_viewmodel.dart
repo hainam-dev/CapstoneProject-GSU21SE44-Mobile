@@ -7,8 +7,7 @@ import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class CommunityViewModel extends Model{
-
+class CommunityViewModel extends Model {
   static CommunityViewModel _instance;
 
   static CommunityViewModel getInstance() {
@@ -27,9 +26,9 @@ class CommunityViewModel extends Model{
   List<PostModel> postListModel;
 
   void getCommunityPost() async {
-    try{
+    try {
       isLoading = true;
-      var data = await PostRepository.apiGetCommunityPost(8);
+      var data = await PostRepository.apiGetCommunityPost(10);
       Map<String, dynamic> jsonList = json.decode(data);
       postList = jsonList['data'];
       postListModel = postList.map((e) => PostModel.fromJson(e)).toList();
@@ -40,12 +39,11 @@ class CommunityViewModel extends Model{
       });
       isLoading = false;
       notifyListeners();
-    }catch (e){
+    } catch (e) {
       isLoading = false;
       print("error: " + e.toString());
     }
   }
-
 
   Future<bool> addCommunityPost(PostModel postModel) async {
     String userId = await UserViewModel.getUserID();
@@ -73,7 +71,7 @@ class CommunityViewModel extends Model{
   Future<bool> deleteCommunityPost(PostModel postModel) async {
     try {
       String data = await PostRepository.apiDeletePost(postModel.id);
-      if(data!=null){
+      if (data != null) {
         postListModel.remove(postModel);
       }
       return true;
@@ -82,5 +80,4 @@ class CommunityViewModel extends Model{
     }
     return false;
   }
-
 }
