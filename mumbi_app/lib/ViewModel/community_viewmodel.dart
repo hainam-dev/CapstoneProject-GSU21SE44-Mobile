@@ -29,7 +29,7 @@ class CommunityViewModel extends Model{
   void getCommunityPost() async {
     try{
       isLoading = true;
-      var data = await PostRepository.apiGetCommunityPost(8);
+      var data = await PostRepository.apiGetCommunityPost(10);
       Map<String, dynamic> jsonList = json.decode(data);
       postList = jsonList['data'];
       postListModel = postList.map((e) => PostModel.fromJson(e)).toList();

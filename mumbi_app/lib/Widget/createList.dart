@@ -15,7 +15,11 @@ import 'package:mumbi_app/View/bottomNavBar_view.dart';
 import 'package:mumbi_app/ViewModel/changeAccount_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/logout_viewmodel.dart';
+import 'package:mumbi_app/Widget/customConfirmDialog.dart';
+import 'package:mumbi_app/Widget/customProgressDialog.dart';
+import 'package:mumbi_app/main.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../app.dart';
 
@@ -86,9 +90,9 @@ Widget createTitleCard(String _text) {
     margin: EdgeInsets.zero,
     child: ListTile(
         leading: Text(
-      _text,
-      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-    )),
+          _text,
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+        )),
   );
 }
 
@@ -191,18 +195,31 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
                     padding: const EdgeInsets.symmetric(vertical: 5),
                     child: Text(
                       _subText,
-                      maxLines: 2,
+                      maxLines: 1,
                       textAlign: TextAlign.start,
                       style: TextStyle(color: GREY_COLOR, fontSize: 14.0),
                     ),
                   ),
                 if (role == PREGNANCY_ROLE)
-                  LinearPercentIndicator(
-                    padding: EdgeInsets.zero,
-                    backgroundColor: WHITE_COLOR,
-                    width: SizeConfig.blockSizeHorizontal * 53,
-                    percent: getOpposite(calculatePercent(PREGNANCY_DAY, day)),
-                    progressColor: PINK_COLOR,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: Text(
+                      day < 280 ? "${day} ngày đề gặp bé" : "Bé của bạn đã ra đời chưa?",
+                      maxLines: 1,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(color: GREY_COLOR, fontSize: 14.0),
+                    ),
+                  ),
+                if (role == PREGNANCY_ROLE)
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 3),
+                    child: LinearPercentIndicator(
+                      padding: EdgeInsets.zero,
+                      backgroundColor: WHITE_COLOR,
+                      width: SizeConfig.blockSizeHorizontal * 53,
+                      percent: getOpposite(calculatePercent(PREGNANCY_DAY, day < 280 ? day : 280)),
+                      progressColor: PINK_COLOR,
+                    ),
                   ),
                 /*Text(
                   "Tìm hiểu thêm",
@@ -218,9 +235,9 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
 }
 
 item(
-  Icon _icon,
-  String _name,
-) {
+    Icon _icon,
+    String _name,
+    ) {
   return BottomNavigationBarItem(
     icon: _icon,
     title: Text(
@@ -235,19 +252,25 @@ Widget createListTileSelectedAccount(BuildContext context, String _imageURL,
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
     child: Card(
-      elevation: 2,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: CurrentMember.id == id ? PINK_COLOR : LIGHT_DARK_GREY_COLOR.withOpacity(0.2),
+        ),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
       margin: EdgeInsets.zero,
       child: ListTile(
         leading: Stack(
           children: [
             CircleAvatar(
-            backgroundColor:
-            CurrentMember.id == id ? PINK_COLOR : Colors.transparent,
+              backgroundColor:
+              CurrentMember.id == id ? PINK_COLOR : Colors.transparent,
               radius: 23,
               child: CircleAvatar(
                 radius: 22,
                 backgroundImage: CachedNetworkImageProvider(_imageURL),
-            ),),
+              ),),
           ],
         ),
         title: Text(
@@ -269,23 +292,33 @@ Widget createListTileSelectedAccount(BuildContext context, String _imageURL,
         ),
         trailing: CurrentMember.id == id
             ? Icon(
-                Icons.check,
-                size: 25,
-                color: PINK_COLOR,
-              )
+          Icons.check,
+          size: 25,
+          color: PINK_COLOR,
+        )
             : SizedBox.shrink(),
         onTap: () async {
+          showProgressDialogue(context);
+          SharedPreferences prefs = await SharedPreferences.getInstance();
           if (pregnancyId != "") {
+            CurrentMember.id = id;
+            await prefs.setString(CURRENT_MEMBER_ID, id);
             CurrentMember.pregnancyFlag = true;
+            await prefs.setBool(CURRENT_MEMBER_PREGNANCY_FLAG, true);
             CurrentMember.pregnancyID = pregnancyId;
-            CurrentMember.id = id;
+            await prefs.setString(CURRENT_MEMBER_PREGNANCY_ID, pregnancyId);
           } else {
-            CurrentMember.pregnancyFlag = false;
-            CurrentMember.pregnancyID = null;
             CurrentMember.id = id;
+            await prefs.setString(CURRENT_MEMBER_ID, id);
+            CurrentMember.pregnancyFlag = false;
+            await prefs.setBool(CURRENT_MEMBER_PREGNANCY_FLAG, false);
+            CurrentMember.pregnancyID = null;
+            await prefs.setString(CURRENT_MEMBER_PREGNANCY_ID, "");
           }
           CurrentMember.role = role;
+          await prefs.setString(CURRENT_MEMBER_ROLE, role);
 
+          Navigator.pop(context);
           ChangeAccountViewModel().destroyInstance();
           if (_num == 1) {
             Navigator.pop(context);
@@ -309,9 +342,15 @@ Widget createListTileUnselectedAccount(
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
     child: Card(
+      elevation: 0,
       color: LIGHT_GREY_COLOR,
-      elevation: 2,
       margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: LIGHT_DARK_GREY_COLOR.withOpacity(0.2),
+        ),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
       child: ListTile(
         leading: CircleAvatar(
           radius: 22,
@@ -372,14 +411,15 @@ Widget createListTileNavigatorNoTrailing(
       ),
       title: Text(_text),
       onTap: () async {
-        await LoginViewModel().signOut();
-        VaccinationRespository.logout();
-        LogoutViewModel().destroyInstance();
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MyApp()));
-        print("Logout");
+        showConfirmDialog(context, "Đăng xuất", "Bạn có muốn đăng xuất khỏi tài khoản này?",
+            ContinueFunction: () async {
+              await LoginViewModel().signOut();
+              await LogoutViewModel().destroyInstance();
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => MyApp()));
+            });
       },
     ),
   );

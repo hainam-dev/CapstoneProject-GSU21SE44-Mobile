@@ -110,7 +110,7 @@ class _DashBoardState extends State<DashBoard> {
                     LIGHT_GREY_COLOR,
                     empty,
                     "Chưa có thông tin",
-                    "Nhấp vào để thêm thông tin thai kì.",
+                    "Nhấp vào để thêm thông tin thai.",
                     0,
                     "",
                     onClick: () async {
@@ -128,7 +128,7 @@ class _DashBoardState extends State<DashBoard> {
                     LIGHT_PINK_COLOR,
                     pregnancy,
                     "Tuần thứ ${DateTimeConvert.pregnancyWeek(pregnancyModel.estimatedBornDate)} của thai kì",
-                    "${DateTimeConvert.dayUntil(pregnancyModel.estimatedBornDate)} ngày để gặp bé",
+                    "",
                     DateTimeConvert.dayUntil(pregnancyModel.estimatedBornDate),
                     PREGNANCY_ROLE,
                     onClick: () async {

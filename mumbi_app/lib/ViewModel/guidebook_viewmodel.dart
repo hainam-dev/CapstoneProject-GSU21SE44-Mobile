@@ -19,6 +19,7 @@ class GuidebookViewModel extends Model{
     _instance = null;
   }
 
+  bool isLoading;
   List<dynamic> guidebookList;
   List<GuidebookModel> guidebookListModel;
 
@@ -28,6 +29,24 @@ class GuidebookViewModel extends Model{
       Map<String, dynamic> jsonList = json.decode(data);
       guidebookList = jsonList['data'];
       guidebookListModel = guidebookList.map((e) => GuidebookModel.fromJson(e)).toList();
+      notifyListeners();
+    }catch(e){
+      print("error: " + e.toString());
+    }
+  }
+
+  void getGuidebookByType(num typeId) async{
+    try{
+      isLoading = true;
+      String data = await GuidebookRepository.apiGetGuidebookByType(typeId);
+      Map<String, dynamic> jsonList = json.decode(data);
+      guidebookList = jsonList['data'];
+      if(guidebookList != null){
+        guidebookListModel = guidebookList.map((e) => GuidebookModel.fromJson(e)).toList();
+      }else{
+        guidebookListModel = null;
+      }
+      isLoading = false;
       notifyListeners();
     }catch(e){
       print("error: " + e.toString());

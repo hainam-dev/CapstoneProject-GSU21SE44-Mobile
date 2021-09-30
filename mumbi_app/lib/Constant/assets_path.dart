@@ -59,6 +59,7 @@ final String emptyPhone = _getImagePath('empty.svg');
 final String vaccination = _getImagePath('vaccination.svg');
 final String mecobau = _getImagePath('mecobau.svg');
 final String comment = _getImagePath('comment.svg');
+final String emptybox = _getImagePath('emptybox.svg');
 
 final String chooseImage = "https://firebasestorage.googleapis.com/v0/b/mumbi-app-84d15.appspot.com/o/DefautImage%2FImage.png?alt=media&token=a50383eb-c411-4747-8fa3-0fa9916cd70c";
 final String defaultImage = "https://firebasestorage.googleapis.com/v0/b/mumbi-app-84d15.appspot.com/o/DefautImage%2FdefaultAvatar.png?alt=media&token=7b5bedcc-5330-48af-a317-9e846cc65a58";

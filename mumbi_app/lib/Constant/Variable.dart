@@ -35,6 +35,11 @@ const String PREGNANCY_BIPARIETAL_DIAMETER_FIELD = 'Đường kính lưỡng đ�
 const String CHILD_ENTRY = "Bé";
 const String PREGNANCY_ENTRY = "Thai kì";
 
+const String CURRENT_MEMBER_ID = "Id";
+const String CURRENT_MEMBER_ROLE = "Role";
+const String CURRENT_MEMBER_PREGNANCY_FLAG = "PregnancyFlag";
+const String CURRENT_MEMBER_PREGNANCY_ID = "PregnancyId";
+
 final num MAX_BIRTHDAY_PARENT = 365 * 100;
 final num MAX_BIRTHDAY_CHILD = 365 * 6;
 final num PREGNANCY_WEEK = 40;

@@ -3,9 +3,9 @@ import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/View/changeAccount_view.dart';
+import 'package:mumbi_app/View/guidebookCategory_view.dart';
 import 'package:mumbi_app/View/tracking_view.dart';
 import 'dashboard_view.dart';
-import 'guideBook_view.dart';
 
 class BotNavBar extends StatefulWidget {
   @override
@@ -15,7 +15,7 @@ class BotNavBar extends StatefulWidget {
 class _BotNavBarState extends State<BotNavBar> {
   int selectedIndex = 0;
   Widget _dashBoard = DashBoard();
-  Widget _guildBook = GuideBook();
+  Widget _guideBook = GuidebookCategory();
   Widget _tracking = Tracking();
   Widget _changeAccount = ChangeAccount(1);
 
@@ -31,7 +31,7 @@ class _BotNavBarState extends State<BotNavBar> {
     if (this.selectedIndex == 0) {
       return this._dashBoard;
     } else if (this.selectedIndex == 1) {
-      return this._guildBook;
+      return this._guideBook;
     } else {
       if(CurrentMember.role == MOM_ROLE){
         if(CurrentMember.pregnancyFlag == true){

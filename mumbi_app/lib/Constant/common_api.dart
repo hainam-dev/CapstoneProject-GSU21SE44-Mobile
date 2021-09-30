@@ -27,6 +27,7 @@ final String GET_SAVED_NEWS_BY_MOM_ID =
     getApiPath("/api/NewsMom/GetNewsMomBy/");
 
 final String GET_GUIDEBOOK = getApiPath("/api/Guidebooks/GetGuidebook");
+final String GET_ALL_TYPE_Of_GUIDEBOOK = getApiPath("/api/GuidebooksType/GetGuidebookType");
 final String SAVE_GUIDEBOOK = getApiPath("/api/GuidebookMom/AddGuidebookMom");
 final String UNSAVED_GUIDEBOOK =
     getApiPath("/api/GuidebookMom/DeleteGuidebookMom/");
@@ -45,9 +46,9 @@ final String UPDATE_COMMUNITY_POST = getApiPath("/api/CommunityPost/UpdateCommun
 final String DELETE_COMMUNITY_POST = getApiPath("/api/CommunityPost/DeleteCommunityPost/");
 
 final String ADD_POST_COMMENT = getApiPath("/api/PostComment/AddPostComment");
-final String ADD_REPLY_POST_COMMENT = getApiPath("/api​/PostComment​/AddReplyPostComment");
+final String ADD_REPLY_POST_COMMENT = getApiPath("/api/PostComment/AddReplyPostComment");
 final String GET_COMMENT = getApiPath("/api/PostComment/GetPostComment");
-final String UPDATE_COMMENT = getApiPath("/api​/PostComment​/UpdatePostComment​/");
+final String UPDATE_COMMENT = getApiPath("/api/PostComment/UpdatePostComment/");
 final String DELETE_COMMENT = getApiPath("/api/PostComment/DeletePostComment/");
 
 final String ADD_POST_REACTION = getApiPath("/api/Reaction/AddReactionPost");
