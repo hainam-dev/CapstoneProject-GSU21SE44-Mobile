@@ -12,5 +12,14 @@ class NewsRepository{
     }
   }
 
-
+  static Future<dynamic> apiGetNewsByType(num typeId) async{
+    var response = await http.get(Uri.parse("${GET_NEWS}").replace(queryParameters: {
+      "TypeId" : typeId.toString()}),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },);
+    if(response.statusCode == 200){
+      return response.body;
+    }
+  }
 }

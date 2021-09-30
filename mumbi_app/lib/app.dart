@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/View/bottomNavBar_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Constant/colorTheme.dart';
@@ -95,17 +96,18 @@ class _MyApp extends State<MyApp> {
 }
 
 class MainScreen extends StatelessWidget {
-  Future<String> get jwtOrEmpty async {
+  Future<String> get checkJwtAndCurrentMember async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userInfo = prefs.getString('UserInfo') ?? "";
+    await CurrentMember().getCurrentMember();
     return userInfo;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: jwtOrEmpty,
-      builder: (context, snapshot) {
+      future: checkJwtAndCurrentMember,
+      builder: (context, snapshot)  {
         if (!snapshot.hasData) return SplashScreen();
         if (snapshot.data != "") {
           var userInfo = jsonDecode(snapshot.data);
@@ -117,7 +119,7 @@ class MainScreen extends StatelessWidget {
                 .decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
             if (DateTime.fromMillisecondsSinceEpoch(payload["exp"] * 1000)
                 .isAfter(DateTime.now())) {
-              return new BotNavBar();
+              return BotNavBar();
             } else {
               return LoginScreen();
             }

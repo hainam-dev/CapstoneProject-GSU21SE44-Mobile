@@ -42,6 +42,7 @@ class CommentModel{
   }
 
   Map<String, dynamic> toJson() => {
+    'id' : id,
     'postId' : postId,
     'userId' : userId,
     'userProfile': {
@@ -50,7 +51,6 @@ class CommentModel{
     },
     'commentContent' : commentContent,
     'imageURL' : imageURL,
-    'replyCommentId' : replyCommentId,
   };
 
 }

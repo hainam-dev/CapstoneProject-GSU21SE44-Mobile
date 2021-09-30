@@ -9,6 +9,7 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/comment_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
+import 'package:mumbi_app/View/editComment.dart';
 import 'package:mumbi_app/ViewModel/comment_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
@@ -31,6 +32,7 @@ class _PostCommentState extends State<PostComment> {
 
   bool commentFlag = false;
   String replyUser = "";
+  num replyCommentId;
   MomViewModel _momViewModel;
   CommentViewModel commentViewModel;
   TextEditingController _controller = TextEditingController();
@@ -57,7 +59,7 @@ class _PostCommentState extends State<PostComment> {
           child: ScopedModelDescendant(builder: (BuildContext context, Widget child, CommentViewModel model) {
             return model.isLoading == true
                 ? loadingProgress()
-                : model.commentListModel == null
+                : model.commentListModel.length == 0
                 ? Empty()
                 : SingleChildScrollView(
                 child: Column(
@@ -81,7 +83,7 @@ class _PostCommentState extends State<PostComment> {
 
   Widget postComment(CommentModel commentModel) {
     return Container(
-      padding: EdgeInsets.fromLTRB(15, 5, 15, 10),
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 4),
       child: CommentTreeWidget<Comment, Comment>(
         Comment(
           avatar: commentModel.avatar,
@@ -92,7 +94,7 @@ class _PostCommentState extends State<PostComment> {
         treeThemeData: TreeThemeData(lineColor: TRANSPARENT_COLOR, lineWidth: 3),
         avatarRoot: (context, data) => PreferredSize(
           child: CircleAvatar(
-            radius: 18,
+            radius: 20,
             backgroundColor: Colors.grey,
             backgroundImage: CachedNetworkImageProvider(data.avatar),
           ),
@@ -111,17 +113,17 @@ class _PostCommentState extends State<PostComment> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                 decoration: BoxDecoration(
                     color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(19)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       '${data.userName}',
                       style: Theme.of(context).textTheme.caption?.copyWith(
-                          fontWeight: FontWeight.w600, color: Colors.black,fontSize: 14),
+                          fontWeight: FontWeight.w600, color: Colors.black,fontSize: 16),
                     ),
                     SizedBox(
                       height: 4,
@@ -130,16 +132,16 @@ class _PostCommentState extends State<PostComment> {
                         ? Text(
                         '${data.content}',
                         style: Theme.of(context).textTheme.caption?.copyWith(
-                            fontWeight: FontWeight.w300, color: Colors.black,fontSize: 14))
+                            fontWeight: FontWeight.w300, color: Colors.black,fontSize: 16))
                         : CommentContent(data.content),
                   ],
                 ),
               ),
               DefaultTextStyle(
                 style: Theme.of(context).textTheme.caption?.copyWith(
-                    color: LIGHT_DARK_GREY_COLOR.withOpacity(0.7), fontWeight: FontWeight.bold),
+                    color: LIGHT_DARK_GREY_COLOR, fontWeight: FontWeight.bold),
                 child: Padding(
-                  padding: EdgeInsets.only(top: 4),
+                  padding: EdgeInsets.only(top: 6),
                   child: Row(
                     children: [
                       SizedBox(
@@ -150,7 +152,7 @@ class _PostCommentState extends State<PostComment> {
                         width: 15,
                       ),
                       Text(commentModel.totalReaction == 0 ? "" : commentModel.totalReaction.toString(),
-                        style: TextStyle(color: commentModel.idReaction != 0 ? PINK_COLOR : LIGHT_DARK_GREY_COLOR.withOpacity(0.7)),),
+                        style: TextStyle(color: commentModel.idReaction != 0 ? PINK_COLOR : LIGHT_DARK_GREY_COLOR),),
                       SizedBox(
                         width: 2,
                       ),
@@ -170,7 +172,7 @@ class _PostCommentState extends State<PostComment> {
                           setState(() {});
                         },
                         child: Text("Thích",
-                          style: TextStyle(color: commentModel.idReaction != 0 ? PINK_COLOR : LIGHT_DARK_GREY_COLOR.withOpacity(0.7)),),
+                          style: TextStyle(color: commentModel.idReaction != 0 ? PINK_COLOR : LIGHT_DARK_GREY_COLOR),),
                       ),
                       SizedBox(
                         width: 15,
@@ -182,6 +184,7 @@ class _PostCommentState extends State<PostComment> {
                       GestureDetector(
                         onTap: () async {
                           replyUser = commentModel.fullName;
+                          replyCommentId = commentModel.id;
                           setState(() {});
                         },
                         child: Text("Trả lời"),
@@ -192,7 +195,7 @@ class _PostCommentState extends State<PostComment> {
                       if(commentModel.userId == _momViewModel.momModel.id)
                         GestureDetector(
                           onTap: (){
-                            showConfirmDialog(context, "Xoá bình luận", "Bạn có muốn xóa bình luận này",ContinueFunction: () async{
+                            showConfirmDialog(context, "Xoá", "Bạn có muốn xóa bình luận này?",ContinueFunction: () async{
                               Navigator.pop(context);
                               showProgressDialogue(context);
                               bool result = await CommentViewModel().deleteComment(commentModel.id);
@@ -204,8 +207,18 @@ class _PostCommentState extends State<PostComment> {
                               setState(() {});
                             });
                           },
-                          child: Text("Xóa",style: TextStyle(color: LIGHT_DARK_GREY_COLOR.withOpacity(0.5)
-                          ),),
+                          child: Text("Xóa"),
+                        ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      if(commentModel.userId == _momViewModel.momModel.id)
+                        GestureDetector(
+                          onTap: () async{
+                            await Navigator.push(context, MaterialPageRoute(builder: (context) => EditComment(commentModel),));
+                            setState(() {});
+                          },
+                          child: Text("Sửa"),
                         ),
                     ],
                   ),
@@ -281,7 +294,7 @@ class _PostCommentState extends State<PostComment> {
         moreStyle: TextStyle(fontWeight: FontWeight.w600),
         lessStyle: TextStyle(fontWeight: FontWeight.w600),
         style: Theme.of(context).textTheme.caption?.copyWith(
-            fontWeight: FontWeight.w300, color: Colors.black,fontSize: 14),
+            fontWeight: FontWeight.w300, color: Colors.black,fontSize: 15),
       ),
     );
   }
@@ -302,12 +315,11 @@ class _PostCommentState extends State<PostComment> {
               },
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(8, 5, 8, 10),
-                child: Text("Hủy",style: TextStyle(color: LIGHT_DARK_GREY_COLOR.withOpacity(0.5)
+                child: Text("Hủy",style: TextStyle(color: LIGHT_DARK_GREY_COLOR
                 ),),
               ),
             ),
             TextFormField(
-              autofocus: true,
               minLines: 1,
               maxLines: 4,
               controller: _controller,
@@ -360,20 +372,25 @@ class _PostCommentState extends State<PostComment> {
     commentModel.postId = widget.postModel.id;
     commentModel.fullName = _momViewModel.momModel.fullName;
     commentModel.avatar = _momViewModel.momModel.imageURL;
-    commentModel.createdTime = DateTime.now().toString();
-    commentModel.idReaction = 0;
-    commentModel.totalReply = 0;
-    commentModel.totalReaction = 0;
     commentModel.commentContent = _controller.text;
     _controller.clear();
     commentModel.imageURL = null;
     commentFlag = false;
-    bool result = await CommentViewModel().addPostComment(commentModel);
-    if(result){
-      commentViewModel.getPostComment(widget.postModel);
-      widget.postModel.totalComment++;
+    if(replyUser == ""){
+      bool result = await CommentViewModel().addPostComment(commentModel);
+      if(result){
+        commentViewModel.getPostComment(widget.postModel);
+        widget.postModel.totalComment++;
+      }
+    }else{
+      commentModel.replyCommentId = replyCommentId;
+      bool result = await CommentViewModel().addReplyPostComment(commentModel);
+      if(result){
+        commentViewModel.getPostComment(widget.postModel);
+      }
     }
     Navigator.pop(context);
+    replyUser = "";
     setState(() {});
   }
 

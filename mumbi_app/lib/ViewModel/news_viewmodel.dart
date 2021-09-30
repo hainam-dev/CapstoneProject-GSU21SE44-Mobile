@@ -30,7 +30,31 @@ class NewsViewModel extends Model {
       Map<String, dynamic> jsonList = json.decode(data);
       newsList = jsonList['data'];
       newsListModel = newsList.map((e) => NewsModel.fromJson(e)).toList();
-      newsListModel.sort((a, b) => b.createTime.compareTo(a.createTime));
+      notifyListeners();
+      loadingNewsListModel = false;
+    } catch (e) {
+      print("error: " + e.toString());
+    }
+  }
+
+  void getNewsByType(NewsModel newsModel) async {
+    loadingNewsListModel = true;
+    try {
+      String data = await NewsRepository.apiGetNewsByType(newsModel.typeId);
+      Map<String, dynamic> jsonList = json.decode(data);
+      newsList = jsonList['data'];
+      if(newsList != null){
+        newsListModel = newsList.map((e) => NewsModel.fromJson(e)).toList();
+        for(int i = newsListModel.length - 1; i >= 0 ; i--){
+          NewsModel newsModelFromList = newsListModel[i];
+          if(newsModelFromList.newsId == newsModel.newsId){
+            newsListModel.removeAt(i);
+            break;
+          }
+        }
+      }else{
+        newsListModel = null;
+      }
       notifyListeners();
       loadingNewsListModel = false;
     } catch (e) {

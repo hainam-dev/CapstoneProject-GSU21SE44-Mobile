@@ -392,10 +392,13 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
             ContinueFunction: () async {
           Navigator.pop(context);
           showProgressDialogue(context);
+          SharedPreferences prefs = await SharedPreferences.getInstance();
           bool result = false;
           if(widget.entry == PREGNANCY_ENTRY){
             CurrentMember.pregnancyFlag = false;
+            await prefs.remove(CURRENT_MEMBER_PREGNANCY_FLAG);
             CurrentMember.pregnancyID = null;
+            await prefs.remove(CURRENT_MEMBER_PREGNANCY_ID);
           }else if(widget.entry == CHILD_ENTRY){
             CurrentMember.role = MOM_ROLE;
           }

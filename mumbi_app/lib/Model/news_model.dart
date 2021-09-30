@@ -6,7 +6,7 @@ class NewsModel{
   num estimatedFinishTime;
   String createTime;
   num typeId;
-
+  String typeName;
 
   NewsModel(
       {this.newsId,
@@ -15,7 +15,8 @@ class NewsModel{
       this.imageURL,
       this.estimatedFinishTime,
       this.createTime,
-      this.typeId});
+      this.typeId,
+      this.typeName});
 
   factory NewsModel.fromJson(dynamic json){
     return NewsModel(
@@ -25,7 +26,8 @@ class NewsModel{
       imageURL: json['imageURL'],
       estimatedFinishTime: json['estimatedFinishTime'],
       createTime: json['createdTime'],
-      typeId: json['typeId'],
+      typeId: json['type']['typeId'],
+      typeName: json['type']['typeName'],
     );
   }
 
