@@ -254,7 +254,7 @@ class _DashBoardState extends State<DashBoard> {
     return FlatButton(
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ChangeAccount(2)));
+              MaterialPageRoute(builder: (context) => ChangeAccount()));
         },
         child: Row(
           children: [
@@ -333,7 +333,7 @@ class _DashBoardState extends State<DashBoard> {
 
   Widget checkEntryInjectionSchedule() {
     if (CurrentMember.role == MOM_ROLE) {
-      return ChangeAccount(2);
+      return ChangeAccount();
     } else {
       return InjectionSchedule();
     }

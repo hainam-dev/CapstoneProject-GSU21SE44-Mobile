@@ -55,7 +55,7 @@ class CurrentMember{
   }
 
   void getCurrentMemberPI() {
-    if(cm_FI != null){
+    if(cm_FI != "" && cm_FI != null){
       pregnancyID = cm_FI;
     }else{
       pregnancyID = null;

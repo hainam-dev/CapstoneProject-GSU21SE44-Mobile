@@ -1,12 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui' as ui;
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:full_screen_image/full_screen_image.dart';
 import 'package:http/io_client.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/post_model.dart';
@@ -96,8 +93,10 @@ class _CommunityState extends State<Community> {
       RefreshController(initialRefresh: false);
 
   void _onRefresh() async {
+    _communityViewModel.postListModel.clear();
     _communityViewModel.getCommunityPost();
     await Future.delayed(Duration(milliseconds: 5000));
+    setState(() {});
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }
@@ -243,14 +242,17 @@ class _CommunityState extends State<Community> {
                   onSelected: (value) async {
                     switch (value) {
                       case 'Xóa bài viết':
-                        showConfirmDialog(context, "Xóa bài viết",
+                        showConfirmDialog(context, "Xóa",
                             "Bạn có muốn xóa bài viết này?",
                             ContinueFunction: () async {
                           Navigator.pop(context);
                           showProgressDialogue(context);
                           bool result = false;
-                          result = await CommunityViewModel()
-                              .deleteCommunityPost(postModel);
+                          result = await CommunityViewModel().deleteCommunityPost(postModel);
+                          if(result){
+                            _communityViewModel.postListModel.remove(postModel);
+                            setState(() {});
+                          }
                           Navigator.pop(context);
                           showResult(context, result,
                               "Bài viết đã được xóa khỏi cộng đồng");
@@ -266,7 +268,7 @@ class _CommunityState extends State<Community> {
                         child: Text(choice),
                       );
                     }).toList();
-                  },
+                  },icon: Icon(Icons.more_horiz),
                 )
               : SizedBox.shrink(),
     );
@@ -286,7 +288,7 @@ class _CommunityState extends State<Community> {
           trimExpandedText: ' Thu gọn',
           moreStyle: TextStyle(fontWeight: FontWeight.w600),
           lessStyle: TextStyle(fontWeight: FontWeight.w600),
-          style: TextStyle(color: BLACK_COLOR, fontSize: 15),
+          style: TextStyle(color: BLACK_COLOR, fontSize: 16),
         ),
       ),
     );

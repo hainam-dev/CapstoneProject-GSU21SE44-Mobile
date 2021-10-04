@@ -10,6 +10,7 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/comment_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/View/editComment.dart';
+import 'package:mumbi_app/View/replyComment_view.dart';
 import 'package:mumbi_app/ViewModel/comment_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
@@ -91,7 +92,7 @@ class _PostCommentState extends State<PostComment> {
           content: commentModel.commentContent,),
         [
         ],
-        treeThemeData: TreeThemeData(lineColor: TRANSPARENT_COLOR, lineWidth: 3),
+        treeThemeData: TreeThemeData(lineColor: TRANSPARENT_COLOR, lineWidth: 0.5),
         avatarRoot: (context, data) => PreferredSize(
           child: CircleAvatar(
             radius: 20,
@@ -145,7 +146,7 @@ class _PostCommentState extends State<PostComment> {
                   child: Row(
                     children: [
                       SizedBox(
-                        width: 7,
+                        width: 12,
                       ),
                       Text("${DateTimeConvert.timeAgoInShort(commentModel.createdTime)}"),
                       SizedBox(
@@ -183,8 +184,11 @@ class _PostCommentState extends State<PostComment> {
                       ),
                       GestureDetector(
                         onTap: () async {
-                          replyUser = commentModel.fullName;
-                          replyCommentId = commentModel.id;
+                          /*_controller.clear();
+                          commentFlag = false;
+                          replyUser = commentModel.fullName;*/
+                          commentModel.replyCommentId = commentModel.id;
+                          await Navigator.push(context, MaterialPageRoute(builder: (context) => ReplyComment(commentModel),));
                           setState(() {});
                         },
                         child: Text("Trả lời"),
@@ -223,59 +227,12 @@ class _PostCommentState extends State<PostComment> {
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           );
         },
         contentChild: (context, data) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(12)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${data.userName}',
-                      style: Theme.of(context).textTheme.caption?.copyWith(
-                          fontWeight: FontWeight.w600, color: Colors.black,fontSize: 14),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Text(
-                      '${data.content}',
-                      style: Theme.of(context).textTheme.caption?.copyWith(
-                          fontWeight: FontWeight.w300, color: Colors.black,fontSize: 14),
-                    ),
-                  ],
-                ),
-              ),
-              DefaultTextStyle(
-                style: Theme.of(context).textTheme.caption?.copyWith(
-                    color: LIGHT_DARK_GREY_COLOR.withOpacity(0.7), fontWeight: FontWeight.bold),
-                child: Padding(
-                  padding: EdgeInsets.only(top: 4),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 7,
-                      ),
-                      Text("${DateTimeConvert.timeAgoInShort(commentModel.createdTime)}"),
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Text('0 Thích'),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          );
+          return Container();
         },
       ),
     );
@@ -311,6 +268,8 @@ class _PostCommentState extends State<PostComment> {
             GestureDetector(
               onTap: (){
                 replyUser = "";
+                commentFlag = false;
+                _controller.clear();
                 setState(() {});
               },
               child: Padding(
@@ -373,24 +332,18 @@ class _PostCommentState extends State<PostComment> {
     commentModel.fullName = _momViewModel.momModel.fullName;
     commentModel.avatar = _momViewModel.momModel.imageURL;
     commentModel.commentContent = _controller.text;
-    _controller.clear();
     commentModel.imageURL = null;
-    commentFlag = false;
-    if(replyUser == ""){
-      bool result = await CommentViewModel().addPostComment(commentModel);
-      if(result){
-        commentViewModel.getPostComment(widget.postModel);
-        widget.postModel.totalComment++;
-      }
-    }else{
-      commentModel.replyCommentId = replyCommentId;
-      bool result = await CommentViewModel().addReplyPostComment(commentModel);
-      if(result){
-        commentViewModel.getPostComment(widget.postModel);
-      }
+
+    bool result = await CommentViewModel().addPostComment(commentModel);
+    if(result){
+      commentViewModel.getPostComment(widget.postModel);
+      widget.postModel.totalComment++;
     }
+
     Navigator.pop(context);
-    replyUser = "";
+    _controller.clear();
+    commentFlag = false;
+    //replyUser = "";
     setState(() {});
   }
 

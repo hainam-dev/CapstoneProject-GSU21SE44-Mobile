@@ -1,7 +1,6 @@
 class GuidebookTypeModel{
   num id;
   String type;
-  num postQuantity;
 
   GuidebookTypeModel({this.id, this.type});
 

@@ -28,7 +28,7 @@ class CommunityViewModel extends Model {
   void getCommunityPost() async {
     try {
       isLoading = true;
-      var data = await PostRepository.apiGetCommunityPost(10);
+      var data = await PostRepository.apiGetCommunityPost(3);
       Map<String, dynamic> jsonList = json.decode(data);
       postList = jsonList['data'];
       postListModel = postList.map((e) => PostModel.fromJson(e)).toList();
@@ -71,9 +71,6 @@ class CommunityViewModel extends Model {
   Future<bool> deleteCommunityPost(PostModel postModel) async {
     try {
       String data = await PostRepository.apiDeletePost(postModel.id);
-      if (data != null) {
-        postListModel.remove(postModel);
-      }
       return true;
     } catch (e) {
       print("error: " + e.toString());

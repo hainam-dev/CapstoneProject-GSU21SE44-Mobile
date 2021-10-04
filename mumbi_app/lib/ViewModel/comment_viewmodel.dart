@@ -23,7 +23,6 @@ class CommentViewModel extends Model{
   }
 
   bool isLoading;
-  num totalComment;
   List<dynamic> commentList;
   List<CommentModel> commentListModel;
 
@@ -32,13 +31,34 @@ class CommentViewModel extends Model{
       isLoading = true;
       var data = await CommentRepository.apiGetPostComment(postModel.id);
       Map<String, dynamic> jsonList = json.decode(data);
-      totalComment = jsonList['total'];
       commentList = jsonList['data'];
       if(commentList != null){
         commentListModel = commentList.map((e) => CommentModel.fromJson(e)).toList();
         await Future.forEach(commentListModel, (commentModel) async {
           await ReactionViewModel().countCommentReaction(commentModel);
           await CommentViewModel().countReply(commentModel);
+          await ReactionViewModel().checkCommentReaction(commentModel);
+        });
+      }else{
+        commentListModel = new List();
+      }
+      isLoading = false;
+      notifyListeners();
+    }catch (e){
+      print("error: " + e.toString());
+    }
+  }
+
+  void getReplyPostComment(CommentModel commentModel) async {
+    try{
+      isLoading = true;
+      var data = await CommentRepository.apiGetReplyPostComment(commentModel.replyCommentId);
+      Map<String, dynamic> jsonList = json.decode(data);
+      commentList = jsonList['data'];
+      if(commentList != null){
+        commentListModel = commentList.map((e) => CommentModel.fromJson(e)).toList();
+        await Future.forEach(commentListModel, (commentModel) async {
+          await ReactionViewModel().countCommentReaction(commentModel);
           await ReactionViewModel().checkCommentReaction(commentModel);
         });
       }else{

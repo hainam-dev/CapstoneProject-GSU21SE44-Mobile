@@ -3,7 +3,7 @@ import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/View/changeAccount_view.dart';
-import 'package:mumbi_app/View/guidebookCategory_view.dart';
+import 'package:mumbi_app/View/guidebook_view.dart';
 import 'package:mumbi_app/View/tracking_view.dart';
 import 'dashboard_view.dart';
 
@@ -17,7 +17,7 @@ class _BotNavBarState extends State<BotNavBar> {
   Widget _dashBoard = DashBoard();
   Widget _guideBook = GuidebookCategory();
   Widget _tracking = Tracking();
-  Widget _changeAccount = ChangeAccount(1);
+  Widget _changeAccount = ChangeAccount();
 
   @override
   Widget build(BuildContext context) {

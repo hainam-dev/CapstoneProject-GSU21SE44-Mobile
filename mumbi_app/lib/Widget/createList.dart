@@ -248,7 +248,7 @@ item(
 }
 
 Widget createListTileSelectedAccount(BuildContext context, String _imageURL,
-    String _title, String id, String pregnancyId, String role, num _num) {
+    String _title, String id, String pregnancyId, String role) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
     child: Card(
@@ -298,9 +298,8 @@ Widget createListTileSelectedAccount(BuildContext context, String _imageURL,
         )
             : SizedBox.shrink(),
         onTap: () async {
-          showProgressDialogue(context);
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          if (pregnancyId != "") {
+          if (pregnancyId != null) {
             CurrentMember.id = id;
             await prefs.setString(CURRENT_MEMBER_ID, id);
             CurrentMember.pregnancyFlag = true;
@@ -317,20 +316,8 @@ Widget createListTileSelectedAccount(BuildContext context, String _imageURL,
           }
           CurrentMember.role = role;
           await prefs.setString(CURRENT_MEMBER_ROLE, role);
-
-          Navigator.pop(context);
-          ChangeAccountViewModel().destroyInstance();
-          if (_num == 1) {
-            Navigator.pop(context);
-          } else {
-            Navigator.pop(context);
-            Navigator.pop(context);
-          }
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BotNavBar(),
-              ));
+          await ChangeAccountViewModel().destroyInstance();
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => BotNavBar(),), (route) => false);
         },
       ),
     ),
@@ -412,13 +399,12 @@ Widget createListTileNavigatorNoTrailing(
       title: Text(_text),
       onTap: () async {
         showConfirmDialog(context, "Đăng xuất", "Bạn có muốn đăng xuất khỏi tài khoản này?",
-            ContinueFunction: () async {
-              await LoginViewModel().signOut();
-              await LogoutViewModel().destroyInstance();
+            ContinueFunction: () {
               Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => MyApp()));
+              LoginViewModel().signOut();
+              LogoutViewModel().destroyInstance();
+              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                  MyApp()), (Route<dynamic> route) => false);
             });
       },
     ),

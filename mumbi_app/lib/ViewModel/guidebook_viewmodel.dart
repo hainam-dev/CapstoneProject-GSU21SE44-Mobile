@@ -23,17 +23,9 @@ class GuidebookViewModel extends Model{
   List<dynamic> guidebookList;
   List<GuidebookModel> guidebookListModel;
 
-  void getAllGuidebook() async{
-    try{
-      String data = await GuidebookRepository.apiGetGuidebook();
-      Map<String, dynamic> jsonList = json.decode(data);
-      guidebookList = jsonList['data'];
-      guidebookListModel = guidebookList.map((e) => GuidebookModel.fromJson(e)).toList();
-      notifyListeners();
-    }catch(e){
-      print("error: " + e.toString());
-    }
-  }
+  bool error = false;
+  int currentPage;
+  double totalPage;
 
   void getGuidebookByType(num typeId) async{
     try{
@@ -53,4 +45,24 @@ class GuidebookViewModel extends Model{
     }
   }
 
+  /*Future<void> addEventBy(int type, bool isDecs) async {
+    try{
+      if(currentPage < totalPage){
+        error = false;
+        isLoading = true;
+        notifyListeners();
+        EventDAO dao = new EventDAO();
+        EventWithPage eventWithPage = await dao.addEventBy(type, ++currentPage, isDecs);
+        list.addAll(eventWithPage.list);
+        currentPage = eventWithPage.currentPage;
+        totalPage = eventWithPage.totalPage;
+      }
+    } on Exception{
+      error = true;
+    }
+    finally{
+      isLoading = false;
+      notifyListeners();
+    }
+  }*/
 }

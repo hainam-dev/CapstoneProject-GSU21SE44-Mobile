@@ -51,6 +51,7 @@ class CommentModel{
     },
     'commentContent' : commentContent,
     'imageURL' : imageURL,
+    'replyCommentId' : replyCommentId,
   };
 
 }

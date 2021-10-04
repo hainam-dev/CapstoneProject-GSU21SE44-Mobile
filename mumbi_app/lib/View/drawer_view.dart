@@ -95,7 +95,7 @@ Widget getDrawer(BuildContext context) {
               'Nhật ký',
               CurrentMember.role == CHILD_ROLE
                   ? BabyDiary()
-                  : ChangeAccount(2)),
+                  : ChangeAccount()),
           createListTileNavigator(
               context, contact, 'Liên Hệ Hỗ Trợ', Contact()),
           SizedBox(

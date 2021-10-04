@@ -23,22 +23,16 @@ class GuidebookTypeViewModel extends Model{
   List<GuidebookTypeModel> guidebookTypeListModel;
 
   void getAllType() async {
-    try{
-      String data = await GuidebookRepository.apiGetAllTypeOfGuidebook();
-      Map<String, dynamic> jsonList = json.decode(data);
-      guidebookTypeList = jsonList['data'];
-      guidebookTypeListModel = guidebookTypeList.map((e) => GuidebookTypeModel.fromJson(e)).toList();
-      await Future.forEach(guidebookTypeListModel, (guidebookTypeModel) async {
-        await countPostQuantity(guidebookTypeModel);
-      });
-      notifyListeners();
-    }catch(e){
-      print("error: " + e.toString());
+    if(_instance != null){
+      try{
+        String data = await GuidebookRepository.apiGetAllTypeOfGuidebook();
+        Map<String, dynamic> jsonList = json.decode(data);
+        guidebookTypeList = jsonList['data'];
+        guidebookTypeListModel = guidebookTypeList.map((e) => GuidebookTypeModel.fromJson(e)).toList();
+        notifyListeners();
+      }catch(e){
+        print("error: " + e.toString());
+      }
     }
-  }
-
-  void countPostQuantity(GuidebookTypeModel guidebookTypeModel) async {
-    var countQuantity = await GuidebookRepository.apiCountQuantity(guidebookTypeModel.id);
-    guidebookTypeModel.postQuantity = json.decode(countQuantity)['total'];
   }
 }
