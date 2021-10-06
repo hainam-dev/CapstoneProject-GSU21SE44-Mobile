@@ -10,6 +10,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 
 class ChangeAccount extends StatefulWidget {
+
   @override
   _ChangeAccountState createState() => _ChangeAccountState();
 }
@@ -79,9 +80,9 @@ class _ChangeAccountState extends State<ChangeAccount> {
         model: _momViewModel,
         child: ScopedModelDescendant(builder: (context, child, MomViewModel model) {
           return model.momModel == null
-          ? loadingProgress()
-          : createListTileSelectedAccount(
-            context, model.momModel.imageURL, model.momModel.fullName, model.momModel.id ,pregnancyID,MOM_ROLE
+              ? loadingProgress()
+              : createListTileSelectedAccount(
+              context, model.momModel.imageURL, model.momModel.fullName, model.momModel.id ,pregnancyID,MOM_ROLE
           );
         },));
   }
@@ -92,7 +93,7 @@ class _ChangeAccountState extends State<ChangeAccount> {
         child: ScopedModelDescendant(builder: (context, child, DadViewModel model) {
           return model.dadModel == null
               ? Container()
-              : createListTileUnselectedAccount(context, model.dadModel.imageURL, model.dadModel.fullName,"Cha");
+              : createListTileUnselectedAccount(context, model.dadModel.imageURL, model.dadModel.fullName,DAD_ROLE);
         },));
   }
 

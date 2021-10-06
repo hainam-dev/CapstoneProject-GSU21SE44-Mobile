@@ -7,27 +7,22 @@ showProgressDialogue(BuildContext context) {
   AlertDialog alert = AlertDialog(
     backgroundColor: Colors.transparent,
     elevation: 0,
-    content: Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Stack(
-            children: [
-              Center(child: Image.asset(logoApp,scale: 1.7,)),
-              Center(
-                child: SizedBox(
-                    width: 70,
-                    height: 70,
-                    child: CircularProgressIndicator(
-                      color: PINK_COLOR,
-                      backgroundColor: WHITE_COLOR,
-                      strokeWidth: 2,)
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
+    content: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 50,
+          width: 50,
+          child: CircularProgressIndicator(
+            color: PINK_COLOR,
+            backgroundColor: WHITE_COLOR,
+            strokeWidth: 2,),
+        ),
+        SizedBox(height: 10,),
+        Text("Đang xử lý...", style: TextStyle(color: WHITE_COLOR,fontSize: 20),),
+      ],
     ),
   );
   showDialog(
@@ -35,7 +30,7 @@ showProgressDialogue(BuildContext context) {
     context:context,
     builder: (BuildContext context) {
       return WillPopScope(
-          onWillPop: (){}, // prevent close on back
+          onWillPop: null, // prevent close on back
           child: alert);
     },
   );

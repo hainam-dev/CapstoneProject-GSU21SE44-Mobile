@@ -21,6 +21,7 @@ import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/news_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
+import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'drawer_view.dart';
 import 'changeAccount_view.dart';
@@ -361,7 +362,7 @@ class _DashBoardState extends State<DashBoard> {
                             newsModel.imageURL,
                             newsModel.title,
                             newsModel.estimatedFinishTime.toString(),
-                            NewsDetail(newsModel));
+                            NewsDetail(newsModel,NORMAL_ENTRY));
                       }),
                 );
         },

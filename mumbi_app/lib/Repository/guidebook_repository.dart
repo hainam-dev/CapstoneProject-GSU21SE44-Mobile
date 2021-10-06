@@ -36,7 +36,7 @@ class GuidebookRepository{
   }
 
   static Future<dynamic> apiGetAllTypeOfGuidebook() async{
-    var response = await http.get(Uri.parse("${GET_ALL_TYPE_Of_GUIDEBOOK}").replace(queryParameters: {"PageSize": 20.toString()} ),
+    var response = await http.get(Uri.parse("${GET_ALL_TYPE_OF_GUIDEBOOK}").replace(queryParameters: {"PageSize": 20.toString()} ),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },);

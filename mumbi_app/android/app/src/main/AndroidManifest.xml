@@ -7,7 +7,7 @@
    <application
         android:name=".Application"
         android:label="Mumbi"
-        android:icon="@mipmap/logo">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

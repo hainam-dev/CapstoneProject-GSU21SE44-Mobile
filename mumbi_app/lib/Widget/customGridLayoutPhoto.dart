@@ -13,8 +13,7 @@ class CustomGridLayoutPhoto extends StatefulWidget {
 
   const CustomGridLayoutPhoto(this.listImage);
   @override
-  _CustomGridLayoutPhotoState createState() =>
-      _CustomGridLayoutPhotoState(listImage);
+  _CustomGridLayoutPhotoState createState() => _CustomGridLayoutPhotoState(listImage);
 }
 
 class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {

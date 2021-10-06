@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Repository/login_repository.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,6 +35,8 @@ class LoginViewModel extends Model {
         var token = await user.getIdToken();
         final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
         var fcmToken = await _firebaseMessaging.getToken();
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString(FCM_TOKEN, fcmToken);
         print("idToken: " + token);
         print("fcmToken: " + fcmToken);
         response = await _loginRepository.callAPILoginGoogle(token, fcmToken);

@@ -3,38 +3,41 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
 import 'package:mumbi_app/Model/news_model.dart';
-import 'package:mumbi_app/Model/savedNews_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/ViewModel/news_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/savedNews_viewmodel.dart';
 import 'package:mumbi_app/Widget/customFlushBar.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
-import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class NewsDetail extends StatefulWidget {
   final model;
+  final entry;
 
-  const NewsDetail(this.model);
+  const NewsDetail(this.model, this.entry);
 
   @override
   _NewsDetailState createState() => _NewsDetailState();
 }
 
 class _NewsDetailState extends State<NewsDetail> {
-  bool SavedFlag;
-  num SavedID;
+  bool unsavedFlag = false;
   NewsViewModel newsTypeViewModel;
+  SavedNewsViewModel savedNewsViewModel;
 
   @override
   void initState() {
     super.initState();
     newsTypeViewModel = new NewsViewModel();
-    newsTypeViewModel.getNewsByType(widget.model);
+    newsTypeViewModel.getNewsByType(widget.model.typeId, widget.model.newsId);
+
+    savedNewsViewModel = new SavedNewsViewModel();
+    savedNewsViewModel.checkSavedNews(widget.model.newsId);
   }
 
   @override
@@ -44,7 +47,7 @@ class _NewsDetailState extends State<NewsDetail> {
         appBar: AppBar(
           title: Text("Tin tức"),
           actions: [
-            MoreButton(),
+            SaveFunction(),
           ],
         ),
         body: SingleChildScrollView(
@@ -63,83 +66,6 @@ class _NewsDetailState extends State<NewsDetail> {
               ),
             ],
           ),
-        ));
-  }
-
-  Widget MoreButton() {
-    return Padding(
-        padding: EdgeInsets.only(right: 20.0),
-        child: GestureDetector(
-          onTap: () {
-            showModalBottom();
-          },
-          child: Icon(Icons.more_vert),
-        ));
-  }
-
-  Future<dynamic> showModalBottom() {
-    return showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SaveFunction(),
-            ],
-          );
-        });
-  }
-
-  Widget SaveFunction() {
-    return ScopedModel(
-        model: SavedNewsViewModel.getInstance(),
-        child: ScopedModelDescendant(
-          builder: (context, Widget child, SavedNewsViewModel model) {
-            model.getSavedNewsByMom();
-            SavedFlag = false;
-            if (model.savedNewsListModel != null) {
-              for (int i = 0; i < model.savedNewsListModel.length; i++) {
-                SavedNewsModel savedNewsModel = model.savedNewsListModel[i];
-                if (savedNewsModel.newsId == widget.model.newsId) {
-                  SavedFlag = true;
-                  SavedID = savedNewsModel.id;
-                  break;
-                }
-              }
-            }
-            return ListTile(
-              leading: Icon(
-                SavedFlag == true
-                    ? Icons.bookmark_remove_outlined
-                    : Icons.bookmark_add_outlined,
-                color: BLACK_COLOR,
-              ),
-              title:
-                  Text(SavedFlag == true ? 'Bỏ lưu bài viết' : "Lưu bài viết"),
-              onTap: () async {
-                showProgressDialogue(context);
-                bool result = false;
-                if (SavedFlag == true) {
-                  result = await SavedNewsViewModel().unsavedNews(SavedID);
-                } else {
-                  result =
-                      await SavedNewsViewModel().saveNews(widget.model.newsId);
-                }
-                Navigator.pop(context);
-                Navigator.pop(context);
-                if (result) {
-                  getFlushBar(
-                      context,
-                      SavedFlag == true
-                          ? "Đã bỏ lưu bài viết"
-                          : "Đã lưu bài viết");
-                } else {
-                  getFlushBar(context, ERROR_MESSAGE);
-                }
-                setState(() {});
-              },
-            );
-          },
         ));
   }
 
@@ -253,7 +179,7 @@ class _NewsDetailState extends State<NewsDetail> {
                       newsModel.title,
                       newsModel.estimatedFinishTime
                           .toString(),
-                      NewsDetail(newsModel));
+                      NewsDetail(newsModel,NORMAL_ENTRY));
                 },
               ),
             ],
@@ -339,5 +265,42 @@ class _NewsDetailState extends State<NewsDetail> {
         ),
       ),
     );
+  }
+
+  Widget SaveFunction(){
+    return ScopedModel(
+      model: savedNewsViewModel,
+      child: ScopedModelDescendant(builder: (BuildContext context, Widget child, SavedNewsViewModel model) {
+        return model.isLoading == true
+            ? loadingCheckSaved()
+            : IconButton(
+              icon: Icon(model.savedNewsModel.id == 0
+                  ? Icons.bookmark_border_outlined
+                  : Icons.bookmark ,size: 28,),
+              onPressed: () async {
+                bool result;
+                if(model.savedNewsModel.id == 0){
+                  result = await SavedNewsViewModel().saveNews(widget.model.newsId);
+                }else{
+                  result = await SavedNewsViewModel().unsavedNews(model.savedNewsModel.id);
+                  if(widget.entry == SAVED_ENTRY){
+                    removeItem(context);
+                  }
+                }
+                if (result) {
+                  getFlushBar(context, model.savedNewsModel.id == 0 ? SAVED_NEWS_MESSAGE : UNSAVED_NEWS_MESSAGE);
+                } else {
+                  getFlushBar(context, ERROR_MESSAGE);
+                }
+                savedNewsViewModel.checkSavedNews(widget.model.newsId);
+          },
+        );
+      },)
+    );
+  }
+
+  void removeItem(BuildContext context) {
+    unsavedFlag = true;
+    Navigator.pop(context, unsavedFlag);
   }
 }

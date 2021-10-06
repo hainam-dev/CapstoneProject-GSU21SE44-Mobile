@@ -9,19 +9,21 @@ class SavedNewsModel {
   num estimatedFinishTime;
   String createTime;
   num typeId;
+  String typeName;
 
-  SavedNewsModel({this.id, this.newsId, this.title, this.newsContent, this.imageURL, this.estimatedFinishTime, this.createTime, this.typeId});
+  SavedNewsModel({this.id, this.newsId, this.title, this.newsContent, this.imageURL, this.estimatedFinishTime, this.createTime, this.typeId, this.typeName});
 
   factory SavedNewsModel.fromJson(dynamic json) {
     return SavedNewsModel(
       id: json['id'],
-      newsId: json['newsData']['id'],
-      title: json['newsData']['title'],
-      newsContent: json['newsData']['newsContent'],
-      imageURL: json['newsData']['imageURL'],
-      estimatedFinishTime: json['newsData']['estimatedFinishTime'],
-      createTime: json['newsData']['createdTime'],
-      typeId: json['newsData']['typeId'],
+      newsId: json['news']['id'],
+      title: json['news']['title'],
+      newsContent: json['news']['newsContent'],
+      imageURL: json['news']['imageURL'],
+      estimatedFinishTime: json['news']['estimatedFinishTime'],
+      createTime: json['news']['createdTime'],
+      typeId: json['news']['type']['typeId'],
+      typeName: json['news']['type']['typeName'],
     );
   }
 

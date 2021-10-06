@@ -225,7 +225,7 @@ class _ReplyCommentState extends State<ReplyComment> {
 
   Widget replyComment(CommentModel commentModel) {
     return Container(
-      padding: EdgeInsets.fromLTRB(21, 6, 10, 4),
+      padding: EdgeInsets.fromLTRB(54, 6, 10, 4),
       child: CommentTreeWidget<Comment, Comment>(
         Comment(
           avatar: commentModel.avatar,
@@ -370,7 +370,7 @@ class _ReplyCommentState extends State<ReplyComment> {
           children: [
             SvgPicture.asset(comment,height: 120,),
             SizedBox(height: 10,),
-            Text("Bình luận chưa có phản hồi nào",style: TextStyle(fontSize: 19),),
+            Text("Bình luận chưa có phản hồi nào",style: TextStyle(fontSize: 18),),
             SizedBox(height: 50,),
           ],
         ),

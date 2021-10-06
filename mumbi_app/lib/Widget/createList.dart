@@ -12,6 +12,7 @@ import 'package:mumbi_app/Utils/calculation.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/bottomNavBar_view.dart';
+import 'package:mumbi_app/View/login_view.dart';
 import 'package:mumbi_app/ViewModel/changeAccount_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/logout_viewmodel.dart';
@@ -204,7 +205,7 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
                     child: Text(
-                      day < 280 ? "${day} ngày đề gặp bé" : "Bé của bạn đã ra đời chưa?",
+                      day > 0 ? "${day} ngày đề gặp bé" : "Bé của bạn đã ra đời chưa?",
                       maxLines: 1,
                       textAlign: TextAlign.start,
                       style: TextStyle(color: GREY_COLOR, fontSize: 14.0),
@@ -217,7 +218,7 @@ Widget createListTileHome(BuildContext context, Color _color, String _imageName,
                       padding: EdgeInsets.zero,
                       backgroundColor: WHITE_COLOR,
                       width: SizeConfig.blockSizeHorizontal * 53,
-                      percent: getOpposite(calculatePercent(PREGNANCY_DAY, day < 280 ? day : 280)),
+                      percent: getOpposite(calculatePercent(PREGNANCY_DAY, day > 0 ? day : 0)),
                       progressColor: PINK_COLOR,
                     ),
                   ),
@@ -299,7 +300,7 @@ Widget createListTileSelectedAccount(BuildContext context, String _imageURL,
             : SizedBox.shrink(),
         onTap: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          if (pregnancyId != null) {
+          if (pregnancyId != null && pregnancyId != "") {
             CurrentMember.id = id;
             await prefs.setString(CURRENT_MEMBER_ID, id);
             CurrentMember.pregnancyFlag = true;
@@ -317,7 +318,8 @@ Widget createListTileSelectedAccount(BuildContext context, String _imageURL,
           CurrentMember.role = role;
           await prefs.setString(CURRENT_MEMBER_ROLE, role);
           await ChangeAccountViewModel().destroyInstance();
-          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => BotNavBar(),), (route) => false);
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+              BotNavBar()), (Route<dynamic> route) => false);
         },
       ),
     ),
@@ -399,10 +401,9 @@ Widget createListTileNavigatorNoTrailing(
       title: Text(_text),
       onTap: () async {
         showConfirmDialog(context, "Đăng xuất", "Bạn có muốn đăng xuất khỏi tài khoản này?",
-            ContinueFunction: () {
-              Navigator.pop(context);
-              LoginViewModel().signOut();
-              LogoutViewModel().destroyInstance();
+            ContinueFunction: () async {
+              await LogoutViewModel().destroyInstance();
+              await LoginViewModel().signOut();
               Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                   MyApp()), (Route<dynamic> route) => false);
             });

@@ -29,7 +29,20 @@ class SavedNewsRepository{
   }
 
   static Future<dynamic> apiGetSavedNewsByMom(String momId) async{
-    var response = await http.get(Uri.parse("${GET_SAVED_NEWS_BY_MOM_ID}${momId}"),
+    var response = await http.get(Uri.parse("${GET_SAVED_NEWS}").replace(queryParameters: {
+      "MomId": momId}),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },);
+    if(response.statusCode == 200){
+      return response.body;
+    }
+  }
+
+  static Future<dynamic> apiCheckSavedNews(String momId, String newsId) async{
+    var response = await http.get(Uri.parse("${GET_SAVED_NEWS}").replace(queryParameters: {
+      "MomId": momId,
+      "NewsId": newsId}),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },);

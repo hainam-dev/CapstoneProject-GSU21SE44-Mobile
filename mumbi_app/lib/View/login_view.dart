@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,49 +23,37 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     pr = ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: false);
+        type: ProgressDialogType.Normal, isDismissible: false,);
 
     pr.style(
-      message: "Đang đăng nhập, bạn vui lòng chờ trong giây lát...",
+      message: "Đang xử lý, vui lòng đợi trong giây lát...",
       borderRadius: 10.0,
       backgroundColor: WHITE_COLOR,
       elevation: 10.0,
       messageTextStyle:
-          TextStyle(color: PINK_COLOR, fontSize: 16.0, fontFamily: 'Lato'),
+          TextStyle(color: PINK_COLOR, fontSize: 16.0,),
     );
     SizeConfig().init(context);
     return Scaffold(
-      body: Column(
-        children: [
-          Container(
-            height: SizeConfig.blockSizeVertical * 100,
-            width: SizeConfig.blockSizeHorizontal * 100,
-            decoration: new BoxDecoration(
-              image: new DecorationImage(
-                image: AssetImage(backgroundApp),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Container(
-              margin: EdgeInsets.only(
-                  left: 32,
-                  right: 32,
-                  bottom: SizeConfig.blockSizeVertical * 20),
-              height: SizeConfig.blockSizeVertical * 60,
-              width: SizeConfig.blockSizeHorizontal * 90,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset(
-                    logoApp,
-                    scale: 1,
-                  ),
-                  _btnLogin()
-                ],
-              ),
-            ),
+      body: Container(
+        height: SizeConfig.blockSizeVertical * 100,
+        width: SizeConfig.blockSizeHorizontal * 100,
+        decoration: new BoxDecoration(
+          image: new DecorationImage(
+            image: AssetImage(backgroundApp),
+            fit: BoxFit.cover,
           ),
-        ],
+        ),
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 240,),
+            SvgPicture.asset(
+              textLogoApp,height: 50,
+            ),
+            SizedBox(height: 70,),
+            _btnLogin()
+          ],
+        ),
       ),
     );
   }
@@ -77,20 +65,19 @@ class _LoginScreenState extends State<LoginScreen> {
           textColor: textColor,
           color: backgroundColor,
           elevation: 0.0,
-          shape: new RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(30.0)),
-          padding: EdgeInsets.all(7.0),
+          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
           onPressed: onPressed,
-          child: new Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              logo,
-              Padding(
-                padding: EdgeInsets.only(left: 10.0),
-                child: text,
-              ),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 45,vertical: 13),
+            child: new Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                logo,
+                SizedBox(width: 10,),
+                text,
+              ],
+            ),
           ),
         ),
       );
@@ -100,7 +87,6 @@ class _LoginScreenState extends State<LoginScreen> {
           borderRadius: BorderRadius.circular(30.0),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _btnLoginStyle(
               () async {
@@ -109,14 +95,14 @@ class _LoginScreenState extends State<LoginScreen> {
               new Text(
                 "Đăng nhập qua google",
                 style: TextStyle(
-                    fontSize: 17.0,
+                    fontSize: 19.0,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Lato'),
               ),
               new Image.asset(
                 logoGoogle,
-                height: SizeConfig.safeBlockVertical * 5,
-                width: SizeConfig.safeBlockHorizontal * 8,
+                height: 30,
+                width: 30,
               ),
               Colors.white,
               Color.fromRGBO(79, 79, 79, 1),
@@ -155,9 +141,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
     LoginViewModel loginViewModel = LoginViewModel();
     var userInfo;
-    await pr.show();
     await loginViewModel.signInWithGoogle().then((value) => {userInfo = value});
     if (userInfo != null) {
+      await pr.show();
       storage.write(key: "UserInfo", value: userInfo);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('UserInfo', userInfo);

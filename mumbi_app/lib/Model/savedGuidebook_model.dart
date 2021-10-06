@@ -7,7 +7,11 @@ class SavedGuidebookModel {
   String imageURL;
   num estimatedFinishTime;
   String createTime;
+  num minSuitableAge;
+  num maxSuitableAge;
+  bool usedFor;
   num typeId;
+  String typeName;
 
   SavedGuidebookModel(
       {this.id,
@@ -18,7 +22,11 @@ class SavedGuidebookModel {
       this.imageURL,
       this.estimatedFinishTime,
       this.createTime,
-      this.typeId});
+      this.minSuitableAge,
+      this.maxSuitableAge,
+      this.usedFor,
+      this.typeId,
+      this.typeName});
 
   factory SavedGuidebookModel.fromJson(dynamic json) {
     return SavedGuidebookModel(
@@ -29,7 +37,11 @@ class SavedGuidebookModel {
       imageURL: json['guidebook']['imageURL'],
       estimatedFinishTime: json['guidebook']['estimatedFinishTime'],
       createTime: json['guidebook']['createdTime'],
-      typeId: json['guidebook']['typeId'],
+      minSuitableAge: json['guidebook']['minSuitableAge'],
+      maxSuitableAge: json['guidebook']['maxSuitableAge'],
+      usedFor: json['guidebook']['usedFor'],
+      typeId: json['guidebook']['type']['typeId'],
+      typeName: json['guidebook']['type']['typeName'],
     );
   }
 

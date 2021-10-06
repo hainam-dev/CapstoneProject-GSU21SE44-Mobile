@@ -37,17 +37,17 @@ class NewsViewModel extends Model {
     }
   }
 
-  void getNewsByType(NewsModel newsModel) async {
+  void getNewsByType(num typeId, String newsId) async {
     loadingNewsListModel = true;
     try {
-      String data = await NewsRepository.apiGetNewsByType(newsModel.typeId);
+      String data = await NewsRepository.apiGetNewsByType(typeId);
       Map<String, dynamic> jsonList = json.decode(data);
       newsList = jsonList['data'];
       if(newsList != null){
         newsListModel = newsList.map((e) => NewsModel.fromJson(e)).toList();
         for(int i = newsListModel.length - 1; i >= 0 ; i--){
           NewsModel newsModelFromList = newsListModel[i];
-          if(newsModelFromList.newsId == newsModel.newsId){
+          if(newsModelFromList.newsId == newsId){
             newsListModel.removeAt(i);
             break;
           }

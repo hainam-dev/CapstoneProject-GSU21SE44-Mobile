@@ -1,6 +1,7 @@
 final String HOST_ADDRESS = "https://mumbi.xyz";
 
 final String LOGIN = getApiPath("/api/Authentication/Authenticate");
+final String DELETE_TOKEN = getApiPath("/api/Token/DeleteToken/");
 
 final String GET_MOM_BY_ID = getApiPath("/api/MomInfo/GetMomInfoBy/");
 final String UPDATE_MOM = getApiPath("/api/MomInfo/UpdateMomInfo/");
@@ -23,16 +24,13 @@ final String UPDATE_PREGNANCY_HISTORY = getApiPath("​/api​/PregnancyHistory�
 final String GET_NEWS = getApiPath("/api/News/GetNews");
 final String SAVE_NEWS = getApiPath("/api/NewsMom/AddNewsMom");
 final String UNSAVED_NEWS = getApiPath("/api/NewsMom/DeleteNewsMom/");
-final String GET_SAVED_NEWS_BY_MOM_ID =
-    getApiPath("/api/NewsMom/GetNewsMomBy/");
+final String GET_SAVED_NEWS = getApiPath("/api/NewsMom/SavedNews");
 
 final String GET_GUIDEBOOK = getApiPath("/api/Guidebooks/GetGuidebook");
-final String GET_ALL_TYPE_Of_GUIDEBOOK = getApiPath("/api/GuidebooksType/GetGuidebookType");
+final String GET_ALL_TYPE_OF_GUIDEBOOK = getApiPath("/api/GuidebooksType/GetGuidebookType");
 final String SAVE_GUIDEBOOK = getApiPath("/api/GuidebookMom/AddGuidebookMom");
-final String UNSAVED_GUIDEBOOK =
-    getApiPath("/api/GuidebookMom/DeleteGuidebookMom/");
-final String GET_SAVED_GUIDEBOOK_BY_MOM_ID =
-    getApiPath("/api/GuidebookMom/GetGuidebookMomBy/");
+final String UNSAVED_GUIDEBOOK = getApiPath("/api/GuidebookMom/DeleteGuidebookMom/");
+final String GET_SAVED_GUIDEBOOK = getApiPath("/api/GuidebookMom/SavedGuidebook");
 
 final String ADD_DIARY = getApiPath("/api/Diaries/AddDiary");
 final String UPDATE_DIARY = getApiPath("/api/Diaries/UpdateDiary/");

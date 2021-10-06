@@ -2,8 +2,11 @@ final String ERROR_MESSAGE = "Có lỗi xảy ra vui lòng thử lại sau";
 
 final String DELETE_MEMBER_MESSAGE = "Sau khi xóa sẽ không thể phục hồi thông tin. Bạn có muốn xóa thành viên này không?";
 
-final String PUBLIC_POST_MESSAGE = "Bài viết đang ở trạng thái chờ duyệt lên cộng đồng";
-final String UN_PUBLIC_POST_MESSAGE = "Bỏ chia sẻ cộng đồng thành công";
+final String SAVED_NEWS_MESSAGE = "Đã lưu tin tức";
+final String UNSAVED_NEWS_MESSAGE = "Đã bỏ lưu tin tức";
+
+final String SAVED_GUIDEBOOK_MESSAGE = "Đã lưu cẩm nang";
+final String UNSAVED_GUIDEBOOK_MESSAGE = "Đã bỏ lưu cẩm nang";
 
 final String CHILD_WEIGHT_VALIDATION_MESSAGE = "Giá trị hợp lệ từ 1(kg) - 50(kg)";
 final String CHILD_HEIGHT_VALIDATION_MESSAGE = "Giá trị hợp lệ từ 25(cm) - 130(cm)";
