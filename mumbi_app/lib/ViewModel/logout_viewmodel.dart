@@ -1,5 +1,6 @@
 import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
+import 'package:mumbi_app/Repository/logout_repository.dart';
 import 'package:mumbi_app/Repository/vaccination_respository.dart';
 import 'package:mumbi_app/ViewModel/action_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/activity_viewmodel.dart';
@@ -14,11 +15,28 @@ import 'package:mumbi_app/ViewModel/pregnancyViewModel.dart';
 import 'package:mumbi_app/ViewModel/savedGuidebook_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/savedNews_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/tooth_viewmodel.dart';
+import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LogoutViewModel {
 
+  Future<bool> deleteFcmToken() async {
+    String userId = await UserViewModel.getUserID();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String fcmToken = await prefs.getString(FCM_TOKEN);
+    try {
+      String data = await LogoutRepository.apiDeleteFcmToken(userId, fcmToken);
+      await prefs.remove(FCM_TOKEN);
+      return true;
+    } catch (e) {
+      print("error: " + e.toString());
+    }
+    return false;
+  }
+
   void destroyInstance() async{
+    await deleteFcmToken();
+
     MomViewModel.destroyInstance();
     DadViewModel.destroyInstance();
     ChildViewModel.destroyInstance();

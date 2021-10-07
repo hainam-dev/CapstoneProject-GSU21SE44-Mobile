@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/savedGuidebook_model.dart';
 import 'package:mumbi_app/Model/savedNews_model.dart';
@@ -50,11 +51,7 @@ class _SavedPostState extends State<SavedPost> {
       child: Scaffold(
         backgroundColor: WHITE_COLOR,
         appBar: AppBar(
-          title: Text('Bài viết đã lưu'),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+          title: Text('Đã lưu'),
         ),
         body: Column(
           children: [
@@ -104,7 +101,7 @@ class _SavedPostState extends State<SavedPost> {
         child: ScopedModelDescendant(
           builder:
               (BuildContext context, Widget child, SavedNewsViewModel model) {
-            return model.loadingSavedNewsListModel == true
+            return model.isLoading == true
                 ? loadingProgress()
                 : model.savedNewsListModel == null
                 ? EmptyWithText("Chưa có tin tức được lưu")
@@ -124,7 +121,7 @@ class _SavedPostState extends State<SavedPost> {
         child: ScopedModelDescendant(
           builder: (BuildContext context, Widget child,
               SavedGuidebookViewModel model) {
-            return model.loadingSavedGuidebookListModel == true
+            return model.isLoading == true
                 ? loadingProgress()
                 : model.savedGuidebookListModel == null
                 ? EmptyWithText("Chưa có cẩm nang được lưu")
@@ -141,13 +138,16 @@ class _SavedPostState extends State<SavedPost> {
   Widget NewsItem(context, SavedNewsModel savedNewsModel) {
     return GestureDetector(
       onTap: ()  async {
-        Navigator.push(
+        final result = await Navigator.push(
             context,
             await MaterialPageRoute(
-              builder: (context) => NewsDetail(savedNewsModel),
+              builder: (context) => NewsDetail(savedNewsModel,SAVED_ENTRY),
             ),
-        );_savedNewsViewModel.getSavedNewsByMom();
-        setState(() {});
+        );
+        if(result == true){
+          _savedNewsViewModel.savedNewsListModel.remove(savedNewsModel);
+          setState(() {});
+        }
       },
       child: Container(
         key: UniqueKey(),
@@ -159,13 +159,19 @@ class _SavedPostState extends State<SavedPost> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: CachedNetworkImage(
-                      imageUrl: savedNewsModel.imageURL,
-                      fit: BoxFit.cover,
-                      height: 75,
-                      width: 100,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: LIGHT_GREY_COLOR,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    height: 90,
+                    width: 120,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: CachedNetworkImage(
+                        imageUrl: savedNewsModel.imageURL,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 15.0),
@@ -176,7 +182,7 @@ class _SavedPostState extends State<SavedPost> {
                           alignment: Alignment.topLeft,
                           child: Text(
                             savedNewsModel.title,
-                            maxLines: 2,
+                            maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -229,15 +235,13 @@ class _SavedPostState extends State<SavedPost> {
   Widget GuidebookItem(context, SavedGuidebookModel savedGuidebookModel) {
     return GestureDetector(
       onTap: () async {
-        Navigator.push(
-            context,
-            await MaterialPageRoute(
-              builder: (context) => GuidebookDetail(savedGuidebookModel),
-            ));_savedGuidebookViewModel.getSavedGuidebookByMom();
-            setState(() {});
+        final result = await  Navigator.push(context, MaterialPageRoute(builder: (context) => GuidebookDetail(savedGuidebookModel,SAVED_ENTRY),));
+        if(result == true){
+          _savedGuidebookViewModel.savedGuidebookListModel.remove(savedGuidebookModel);
+          setState(() {});
+        }
       },
       child: Container(
-        key: UniqueKey(),
         child: Stack(
           children: <Widget>[
             Container(
@@ -246,13 +250,19 @@ class _SavedPostState extends State<SavedPost> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: CachedNetworkImage(
-                      imageUrl: savedGuidebookModel.imageURL,
-                      fit: BoxFit.cover,
-                      height: 75,
-                      width: 100,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: LIGHT_GREY_COLOR,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    height: 90,
+                    width: 120,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: CachedNetworkImage(
+                        imageUrl: savedGuidebookModel.imageURL,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 15.0),
@@ -263,7 +273,7 @@ class _SavedPostState extends State<SavedPost> {
                           alignment: Alignment.topLeft,
                           child: Text(
                             savedGuidebookModel.title,
-                            maxLines: 2,
+                            maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,

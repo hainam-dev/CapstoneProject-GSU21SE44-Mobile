@@ -29,7 +29,20 @@ class SavedGuidebookRepository{
   }
 
   static Future<dynamic> apiGetSavedGuidebookByMom(String momId) async{
-    var response = await http.get(Uri.parse("${GET_SAVED_GUIDEBOOK_BY_MOM_ID}${momId}"),
+    var response = await http.get(Uri.parse("${GET_SAVED_GUIDEBOOK}").replace(queryParameters: {
+      "MomId": momId}),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },);
+    if(response.statusCode == 200){
+      return response.body;
+    }
+  }
+
+  static Future<dynamic> apiCheckSavedGuidebook(String momId, String guidebookId) async{
+    var response = await http.get(Uri.parse("${GET_SAVED_GUIDEBOOK}").replace(queryParameters: {
+      "MomId": momId,
+      "GuidebookId": guidebookId}),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },);

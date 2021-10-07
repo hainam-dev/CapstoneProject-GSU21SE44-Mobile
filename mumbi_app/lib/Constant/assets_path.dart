@@ -3,6 +3,7 @@ final String imageTeethAssetsRoot = "assets/images/teeth/";
 
 final String backgroundApp = _getImagePath('background.png');
 final String logoApp = _getImagePath('logo.png');
+final String textLogoApp = _getImagePath("textLogo.svg");
 final String logoFacebook = _getImagePath('apple_logo.jpg');
 final String logoGoogle = _getImagePath('google_logo.png');
 final String iconBoy = _getImagePath('icon_boy.png');

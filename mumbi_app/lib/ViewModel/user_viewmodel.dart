@@ -15,4 +15,16 @@ class UserViewModel extends Model{
     }
     return id;
   }
+
+  static Future<String> getFcmToken() async{
+    String id;
+    dynamic user = await storage.read(key: "UserInfo");
+    if (user == null)
+      return null;
+    else {
+      user = jsonDecode(user);
+      id = user['data']['jwToken'];
+    }
+    return id;
+  }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:mumbi_app/Model/news_model.dart';
 import 'package:mumbi_app/Model/savedNews_model.dart';
 import 'package:mumbi_app/Repository/savedNews_Repository.dart';
 import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
@@ -20,8 +21,9 @@ class SavedNewsViewModel extends Model{
     _instance = null;
   }
 
+  SavedNewsModel savedNewsModel;
   List<dynamic> savedNewsList;
-  bool loadingSavedNewsListModel;
+  bool isLoading;
   List<SavedNewsModel> savedNewsListModel;
 
   Future<bool> saveNews(String newsId) async {
@@ -42,7 +44,6 @@ class SavedNewsViewModel extends Model{
   Future<bool> unsavedNews(num id) async {
     try {
       String data = await SavedNewsRepository.apiUnsavedNews(id);
-      destroyInstance();
       return true;
     } catch (e) {
       print("error: " + e.toString());
@@ -52,7 +53,7 @@ class SavedNewsViewModel extends Model{
 
   void getSavedNewsByMom() async{
       String momId = await UserViewModel.getUserID();
-      loadingSavedNewsListModel = true;
+      isLoading = true;
       try{
         String data = await SavedNewsRepository.apiGetSavedNewsByMom(momId);
         Map<String, dynamic> jsonList = json.decode(data);
@@ -61,13 +62,30 @@ class SavedNewsViewModel extends Model{
           savedNewsListModel = savedNewsList.map((e) => SavedNewsModel.fromJson(e)).toList();
           savedNewsListModel.sort((a,b) => b.id.compareTo(a.id));
         }
+        isLoading = false;
         notifyListeners();
-        loadingSavedNewsListModel = false;
       }catch(e){
         print("error: " + e.toString());
       }
   }
 
-
-
+  void checkSavedNews(String newsId) async {
+    try{
+      isLoading = true;
+      String userId = await UserViewModel.getUserID();
+      var checkSaved = await SavedNewsRepository.apiCheckSavedNews(userId, newsId);
+      List checkSavedJsonList = json.decode(checkSaved)['data'];
+      savedNewsModel = new SavedNewsModel();
+      if(checkSavedJsonList != null){
+        List savedModelList = checkSavedJsonList.map((e) => SavedNewsModel.fromJson(e)).toList();
+        savedNewsModel.id = savedModelList[0].id;
+      }else{
+        savedNewsModel.id = 0;
+      }
+      isLoading = false;
+      notifyListeners();
+    }catch(e){
+      print("error: " + e.toString());
+    }
+  }
 }

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Model/guidebookType_model.dart';
@@ -57,7 +58,6 @@ class _GuidebookCategoryState extends State<GuidebookCategory> {
       drawer: getDrawer(context),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: [
           ScopedModel(
               model: guidebookTypeViewModel,
@@ -67,7 +67,7 @@ class _GuidebookCategoryState extends State<GuidebookCategory> {
                   return model.guidebookTypeListModel == null
                       ? loadingProgress()
                       : Container(
-                    height: 55,
+                    height: 60,
                         child: ListView.builder(
                           shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
@@ -97,9 +97,9 @@ class _GuidebookCategoryState extends State<GuidebookCategory> {
                       itemBuilder: (BuildContext context, index) {
                         GuidebookModel guidebookModel =
                         model.guidebookListModel[index];
-                        /*if (index == 0) {
+                        if (index == 0) {
                                 return GuidebookFirstItem(context, guidebookModel);
-                              }*/
+                              }
                         return GuidebookItem(context, guidebookModel);
                       },
                     ),
@@ -130,8 +130,77 @@ class _GuidebookCategoryState extends State<GuidebookCategory> {
             borderRadius: BorderRadius.circular(15.0),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(child: Text(guidebookTypeModel.type,style: TextStyle(fontSize: 19,color: guidebookTypeModel.id == CurrentTypeId ? DARK_PINK_COLOR : LIGHT_DARK_GREY_COLOR.withOpacity(0.5),),)),
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Center(child: Text(guidebookTypeModel.type,style: TextStyle(fontSize: 18,color: guidebookTypeModel.id == CurrentTypeId ? DARK_PINK_COLOR : LIGHT_DARK_GREY_COLOR.withOpacity(0.5),),)),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget GuidebookFirstItem(context, GuidebookModel guidebookModel) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GuidebookDetail(guidebookModel,NORMAL_ENTRY),
+            ));
+      },
+      child: Container(
+        color: WHITE_COLOR,
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Card(
+                color: LIGHT_GREY_COLOR,
+                  clipBehavior: Clip.antiAlias,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Ink.image(
+                    image: CachedNetworkImageProvider(guidebookModel.imageURL,),height: 200,fit: BoxFit.cover,)
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+                child: Text(
+                  guidebookModel.title,
+                  style:
+                  TextStyle(fontSize: 21, fontWeight: FontWeight.w600),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      DateTimeConvert.convertDatetimeDMY(
+                          guidebookModel.createTime),
+                      style:
+                      TextStyle(fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
+                    ),
+                    SizedBox(width: 5),
+                    Icon(
+                      Icons.fiber_manual_record,
+                      color: GREY_COLOR,
+                      size: 6,
+                    ),
+                    SizedBox(width: 6),
+                    Text(
+                      guidebookModel.estimatedFinishTime.toString() +
+                          " phút đọc",
+                      style: TextStyle(fontSize: 15,color: LIGHT_DARK_GREY_COLOR),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -144,7 +213,7 @@ class _GuidebookCategoryState extends State<GuidebookCategory> {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => GuidebookDetail(guidebookModel),
+              builder: (context) => GuidebookDetail(guidebookModel,NORMAL_ENTRY),
             ));
       },
       child: Stack(
@@ -160,15 +229,13 @@ class _GuidebookCategoryState extends State<GuidebookCategory> {
                     color: LIGHT_GREY_COLOR,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  height: 75,
-                  width: 100,
+                  height: 90,
+                  width: 120,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: CachedNetworkImage(
                       imageUrl: guidebookModel.imageURL,
                       fit: BoxFit.cover,
-                      height: 75,
-                      width: 100,
                     ),
                   ),
                 ),
@@ -179,7 +246,7 @@ class _GuidebookCategoryState extends State<GuidebookCategory> {
                     children: <Widget>[
                       Text(
                         guidebookModel.title,
-                        maxLines: 2,
+                        maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -250,14 +317,16 @@ class _GuidebookCategoryState extends State<GuidebookCategory> {
 
   Widget Empty(){
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Center(child: Column(
-        children: [
-          SvgPicture.asset(emptybox,height: 180,),
-          SizedBox(height: 10,),
-          Text("Danh mục này chưa có bài viết nào :<",style: TextStyle(fontSize: 20),),
-        ],
-      )),
+      padding: const EdgeInsets.fromLTRB(8, 30, 8, 0),
+      child: Center(
+        child: Column(
+          children: [
+            SvgPicture.asset(emptybox,height: 160,),
+            SizedBox(height: 10,),
+            Align(alignment: Alignment.center ,child: Text("Danh mục này chưa có bài viết nào",style: TextStyle(fontSize: 18),)),
+          ],
+        ),
+      ),
     );
   }
 }

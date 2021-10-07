@@ -88,9 +88,6 @@ class _MyApp extends State<MyApp> {
         Locale('vi', ''),
       ],
       home: MainScreen(),
-      routes: {
-        '/LoginScreen': (context) => LoginScreen(),
-      },
     );
   }
 }
@@ -108,24 +105,22 @@ class MainScreen extends StatelessWidget {
     return FutureBuilder(
       future: checkJwtAndCurrentMember,
       builder: (context, snapshot)  {
-        if (!snapshot.hasData) return SplashScreen();
+        if (!snapshot.hasData) return SplashScreen(false);
         if (snapshot.data != "") {
           var userInfo = jsonDecode(snapshot.data);
           var jwt = userInfo['data']['jwToken'].split('.');
           if (jwt.length != 3) {
-            return LoginScreen();
+            return SplashScreen(false);
           } else {
-            var payload = json
-                .decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
-            if (DateTime.fromMillisecondsSinceEpoch(payload["exp"] * 1000)
-                .isAfter(DateTime.now())) {
-              return BotNavBar();
+            var payload = json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
+            if (DateTime.fromMillisecondsSinceEpoch(payload["exp"] * 1000).isAfter(DateTime.now())) {
+              return SplashScreen(true);
             } else {
-              return LoginScreen();
+              return SplashScreen(false);
             }
           }
         } else {
-          return LoginScreen();
+          return SplashScreen(false);
         }
       },
     );

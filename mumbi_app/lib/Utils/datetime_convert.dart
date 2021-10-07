@@ -5,19 +5,22 @@ class DateTimeConvert {
   static String calculateChildAge(String birthday) {
     try {
       DateTime now = DateTime.now();
-      DateTime dob = DateFormat("yyyy-MM-dd")
-          .parse(birthday.split('/').reversed.join("-"));
-      String month = ((now.difference(dob).inDays / 30).floor()).toString();
-      String dayOfMonth = (((((now.difference(dob).inDays / 30)) -
-                  (now.difference(dob).inDays / 30).floor()) *
-              30))
-          .floor()
-          .toString();
-      if (month == "0") {
-        return "$dayOfMonth ngày tuổi";
-      } else {
-        return "$month tháng $dayOfMonth ngày tuổi";
+      DateTime dob = DateFormat("yyyy-MM-dd").parse(birthday.split('/').reversed.join("-"));
+
+      num years = now.year - dob.year;
+      num months = now.month - dob.month;
+      num days = now.day - dob.day;
+
+      if(days < 0){
+        final monthAgo = new DateTime(now.year, now.month - 1, dob.day);
+        days = now.difference(monthAgo).inDays;
+        months--;
       }
+
+      months += years * 12;
+
+      return "${months} tháng ${days} ngày";
+
     } catch (e) {
       return "...";
     }

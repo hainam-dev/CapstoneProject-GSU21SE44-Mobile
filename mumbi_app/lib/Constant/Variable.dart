@@ -1,4 +1,7 @@
+final String FCM_TOKEN = "FCM_TOKEN";
+
 final String MOM_ROLE = "Mẹ";
+final String DAD_ROLE = "Cha";
 final String CHILD_ROLE = "Con";
 final String PREGNANCY_ROLE = "Thai kì";
 
@@ -34,6 +37,8 @@ const String PREGNANCY_BIPARIETAL_DIAMETER_FIELD = 'Đường kính lưỡng đ�
 
 const String CHILD_ENTRY = "Bé";
 const String PREGNANCY_ENTRY = "Thai kì";
+const String SAVED_ENTRY = "SAVED_ENTRY";
+const String NORMAL_ENTRY = "NORMAL_ENTRY";
 
 const String CURRENT_MEMBER_ID = "Id";
 const String CURRENT_MEMBER_ROLE = "Role";

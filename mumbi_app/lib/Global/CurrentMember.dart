@@ -33,8 +33,7 @@ class CurrentMember{
     if(cm_Id != null){
       id = cm_Id;
     }else{
-      String momID = await UserViewModel.getUserID();
-      id = momID;
+      id = await UserViewModel.getUserID();
     }
   }
 

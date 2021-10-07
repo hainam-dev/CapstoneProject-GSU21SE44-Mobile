@@ -1,9 +1,15 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
+import 'package:mumbi_app/View/bottomNavBar_view.dart';
+import 'package:mumbi_app/View/login_view.dart';
 
 class SplashScreen extends StatefulWidget {
+  final loggedIn;
+  const SplashScreen(this.loggedIn);
+
   @override
   SplashScreenState createState() => new SplashScreenState();
 }
@@ -24,8 +30,13 @@ class SplashScreenState extends State<SplashScreen>
     if (this.mounted) {
       // check whether the state object is in tree
       setState(() {
-        Navigator.of(context).pushReplacementNamed('/LoginScreen');
-        // make changes here
+        if(widget.loggedIn == false){
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+              LoginScreen()), (Route<dynamic> route) => false);
+        }else{
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+              BotNavBar()), (Route<dynamic> route) => false);
+        }
       });
     }
   }
@@ -36,8 +47,7 @@ class SplashScreenState extends State<SplashScreen>
     animationController = new AnimationController(
         vsync: this, duration: new Duration(seconds: 2));
 
-    animation =
-        new CurvedAnimation(parent: animationController, curve: Curves.easeOut);
+    animation = new CurvedAnimation(parent: animationController, curve: Curves.fastLinearToSlowEaseIn);
 
     animation.addListener(() => this.setState(() {}));
     animationController.forward();
@@ -57,8 +67,8 @@ class SplashScreenState extends State<SplashScreen>
       body: Container(
         height: 2436,
         width: 1125,
-        decoration: new BoxDecoration(
-          image: new DecorationImage(
+        decoration: BoxDecoration(
+          image: DecorationImage(
             image: AssetImage(backgroundApp),
             fit: BoxFit.cover,
           ),
@@ -66,10 +76,10 @@ class SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new Image.asset(
-              logoApp,
-              width: animation.value * 250,
-              height: animation.value * 250,
+            new SvgPicture.asset(
+              textLogoApp,
+              width: animation.value * 60,
+              height: animation.value * 60,
             ),
           ],
         ),

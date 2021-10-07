@@ -1,27 +1,35 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
-import 'package:mumbi_app/Model/savedGuidebook_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/ViewModel/savedGuidebook_viewmodel.dart';
 import 'package:mumbi_app/Widget/customFlushBar.dart';
-import 'package:mumbi_app/Widget/customProgressDialog.dart';
+import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class GuidebookDetail extends StatefulWidget {
   final model;
+  final entry;
 
-  const GuidebookDetail(this.model);
+  const GuidebookDetail(this.model, this.entry);
 
   @override
   _GuidebookDetailState createState() => _GuidebookDetailState();
 }
 
 class _GuidebookDetailState extends State<GuidebookDetail> {
-  bool SavedFlag;
-  num SavedID;
+  bool unsavedFlag = false;
+  SavedGuidebookViewModel savedGuidebookViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    savedGuidebookViewModel = new SavedGuidebookViewModel();
+    savedGuidebookViewModel.checkSavedGuidebook(widget.model.guidebookId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +38,7 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
         appBar: AppBar(
           title: Text("Cẩm nang"),
           actions: [
-            MoreButton(),
+            SaveFunction(),
           ],
         ),
         body: SingleChildScrollView(
@@ -46,85 +54,6 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
         ));
   }
 
-  Widget MoreButton() {
-    return Padding(
-        padding: EdgeInsets.only(right: 20.0),
-        child: GestureDetector(
-          onTap: () {
-            showModalBottom();
-          },
-          child: Icon(Icons.more_vert),
-        ));
-  }
-
-  Future<dynamic> showModalBottom() {
-    return showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SaveFunction(),
-            ],
-          );
-        });
-  }
-
-  Widget SaveFunction() {
-    return ScopedModel(
-        model: SavedGuidebookViewModel.getInstance(),
-        child: ScopedModelDescendant(
-          builder: (context, Widget child, SavedGuidebookViewModel model) {
-            model.getSavedGuidebookByMom();
-            SavedFlag = false;
-            if (model.savedGuidebookListModel != null) {
-              for (int i = 0; i < model.savedGuidebookListModel.length; i++) {
-                SavedGuidebookModel savedGuidebookModel =
-                    model.savedGuidebookListModel[i];
-                if (savedGuidebookModel.guidebookId ==
-                    widget.model.guidebookId) {
-                  SavedFlag = true;
-                  SavedID = savedGuidebookModel.id;
-                  break;
-                }
-              }
-            }
-            return ListTile(
-              leading: Icon(
-                SavedFlag == true
-                    ? Icons.bookmark_remove_outlined
-                    : Icons.bookmark_add_outlined,
-                color: BLACK_COLOR,
-              ),
-              title:
-                  Text(SavedFlag == true ? 'Bỏ lưu bài viết' : "Lưu bài viết"),
-              onTap: () async {
-                showProgressDialogue(context);
-                bool result = false;
-                if (SavedFlag == true) {
-                  result =
-                      await SavedGuidebookViewModel().unsavedGuidebook(SavedID);
-                } else {
-                  result = await SavedGuidebookViewModel()
-                      .saveGuidebook(widget.model.guidebookId);
-                }
-                Navigator.pop(context);
-                Navigator.pop(context);
-                if (result) {
-                  getFlushBar(
-                      context,
-                      SavedFlag == true
-                          ? "Đã bỏ lưu bài viết"
-                          : "Đã lưu bài viết");
-                } else {
-                  getFlushBar(context, ERROR_MESSAGE);
-                }
-                setState(() {});
-              },
-            );
-          },
-        ));
-  }
 
   Widget Thumbnail() {
     return Center(
@@ -174,5 +103,42 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
         data: widget.model.guidebookContent,
       ),
     );
+  }
+
+  Widget SaveFunction(){
+    return ScopedModel(
+        model: savedGuidebookViewModel,
+        child: ScopedModelDescendant(builder: (BuildContext context, Widget child, SavedGuidebookViewModel model) {
+          return model.isLoading == true
+              ? loadingCheckSaved()
+              : IconButton(
+            icon: Icon(model.savedGuidebookModel.id == 0
+                ? Icons.bookmark_border_outlined
+                : Icons.bookmark ,size: 28,),
+            onPressed: () async {
+              bool result;
+              if(model.savedGuidebookModel.id == 0){
+                result = await SavedGuidebookViewModel().saveGuidebook(widget.model.guidebookId);
+              }else{
+                result = await SavedGuidebookViewModel().unsavedGuidebook(model.savedGuidebookModel);
+                if(widget.entry == SAVED_ENTRY){
+                  removeItem(context);
+                }
+              }
+              if (result) {
+                getFlushBar(context, model.savedGuidebookModel.id == 0 ? SAVED_GUIDEBOOK_MESSAGE : UNSAVED_GUIDEBOOK_MESSAGE);
+              } else {
+                getFlushBar(context, ERROR_MESSAGE);
+              }
+              savedGuidebookViewModel.checkSavedGuidebook(widget.model.guidebookId);
+            },
+          );
+        },)
+    );
+  }
+
+  void removeItem(BuildContext context) {
+    unsavedFlag = true;
+    Navigator.pop(context, unsavedFlag);
   }
 }

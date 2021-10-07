@@ -93,10 +93,9 @@ class _CommunityState extends State<Community> {
       RefreshController(initialRefresh: false);
 
   void _onRefresh() async {
-    _communityViewModel.postListModel.clear();
-    _communityViewModel.getCommunityPost();
-    await Future.delayed(Duration(milliseconds: 5000));
+    await _communityViewModel.postListModel.clear();
     setState(() {});
+    await _communityViewModel.getCommunityPost();
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }
