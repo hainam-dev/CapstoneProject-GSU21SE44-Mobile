@@ -8,6 +8,8 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'dart:ui' as ui;
 
+import 'customGalleryPhotoWrapper.dart';
+
 class CustomGridLayoutPhoto extends StatefulWidget {
   final listImage;
 
@@ -22,6 +24,7 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
   int imageHeight = 0;
   int currentIndex = 0;
   String listImage = "";
+  GestureTapCallback onTap;
   _CustomGridLayoutPhotoState(this.listImage);
   @override
   Widget build(BuildContext context) {
@@ -56,30 +59,16 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
       shrinkWrap: true,
       itemCount: listImage.length,
       itemBuilder: (BuildContext context, int index) {
-        return FullScreenWidget(
-          backgroundIsTransparent: true,
-          child: Center(
-            child: ExtendedImage.network(
-              listImage[index],
-              fit: BoxFit.cover,
-              enableLoadState: true,
-              mode: ExtendedImageMode.gesture,
-              initGestureConfigHandler: (state) {
-                return GestureConfig(
-                  minScale: 0.9,
-                  animationMinScale: 0.7,
-                  maxScale: 3.0,
-                  animationMaxScale: 3.5,
-                  speed: 1.0,
-                  inertialSpeed: 100.0,
-                  initialScale: 1.0,
-                  inPageView: false,
-                  initialAlignment: InitialAlignment.center,
-                );
-              },
-            ),
-          ),
-        );
+        return GestureDetector(
+            onTap: () {
+              GestureTapCallback:
+              _openImage(context, index);
+            },
+            child: Hero(
+              tag: listImage[index].toString(),
+              child: CachedNetworkImage(
+                  fit: BoxFit.cover, imageUrl: listImage[index]),
+            ));
       },
     );
   }
@@ -101,32 +90,19 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                   children: [
                     Container(
                       height: SizeConfig.blockSizeHorizontal * 50,
-                      child: FullScreenWidget(
-                        backgroundIsTransparent: true,
-                        child: Center(
-                          child: ExtendedImage.network(
-                            listImage[index],
-                            height: SizeConfig.blockSizeVertical * 100,
-                            width: SizeConfig.blockSizeHorizontal * 100,
-                            fit: BoxFit.cover,
-                            enableLoadState: true,
-                            mode: ExtendedImageMode.gesture,
-                            initGestureConfigHandler: (state) {
-                              return GestureConfig(
-                                minScale: 0.9,
-                                animationMinScale: 0.7,
-                                maxScale: 3.0,
-                                animationMaxScale: 3.5,
-                                speed: 1.0,
-                                inertialSpeed: 100.0,
-                                initialScale: 1.0,
-                                inPageView: false,
-                                initialAlignment: InitialAlignment.center,
-                              );
-                            },
-                          ),
-                        ),
-                      ),
+                      child: GestureDetector(
+                          onTap: () {
+                            GestureTapCallback:
+                            _openImage(context, index);
+                          },
+                          child: Hero(
+                            tag: listImage[index].toString(),
+                            child: CachedNetworkImage(
+                                height: SizeConfig.blockSizeVertical * 100,
+                                width: SizeConfig.blockSizeHorizontal * 100,
+                                fit: BoxFit.cover,
+                                imageUrl: listImage[index]),
+                          )),
                     ),
                     SizedBox(
                       height: 3.0,
@@ -138,9 +114,13 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                   children: [
                     Container(
                       width: SizeConfig.blockSizeHorizontal * 50,
-                      child: FullScreenWidget(
-                        backgroundIsTransparent: true,
-                        child: Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          GestureTapCallback:
+                          _openImage(context, index);
+                        },
+                        child: Hero(
+                          tag: listImage[index].toString(),
                           child: CachedNetworkImage(
                             imageUrl: listImage[index],
                             imageBuilder: (context, imageProvider) => Container(
@@ -177,29 +157,18 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
               children: [
                 Container(
                   height: SizeConfig.blockSizeHorizontal * 49,
-                  child: FullScreenWidget(
-                    backgroundIsTransparent: true,
-                    child: Center(
-                      child: ExtendedImage.network(
-                        listImage[0],
+                  child: GestureDetector(
+                    onTap: () {
+                      GestureTapCallback:
+                      _openImage(context, 0);
+                    },
+                    child: Hero(
+                      tag: listImage[0].toString(),
+                      child: CachedNetworkImage(
+                        imageUrl: listImage[0],
                         height: SizeConfig.blockSizeVertical * 100,
                         width: SizeConfig.blockSizeHorizontal * 100,
                         fit: BoxFit.cover,
-                        enableLoadState: true,
-                        mode: ExtendedImageMode.gesture,
-                        initGestureConfigHandler: (state) {
-                          return GestureConfig(
-                            minScale: 0.9,
-                            animationMinScale: 0.7,
-                            maxScale: 3.0,
-                            animationMaxScale: 3.5,
-                            speed: 1.0,
-                            inertialSpeed: 100.0,
-                            initialScale: 1.0,
-                            inPageView: false,
-                            initialAlignment: InitialAlignment.center,
-                          );
-                        },
                       ),
                     ),
                   ),
@@ -220,30 +189,18 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                             Container(
                               height: SizeConfig.blockSizeHorizontal * 50,
                               width: SizeConfig.blockSizeHorizontal * 50,
-                              child: FullScreenWidget(
-                                backgroundIsTransparent: true,
-                                child: Center(
-                                  child: ExtendedImage.network(
-                                    listImage[index + 1],
+                              child: GestureDetector(
+                                onTap: () {
+                                  GestureTapCallback:
+                                  _openImage(context, index + 1);
+                                },
+                                child: Hero(
+                                  tag: listImage[index + 1].toString(),
+                                  child: CachedNetworkImage(
+                                    imageUrl: listImage[index + 1],
                                     height: SizeConfig.blockSizeVertical * 100,
                                     width: SizeConfig.blockSizeHorizontal * 100,
                                     fit: BoxFit.cover,
-                                    enableLoadState: true,
-                                    mode: ExtendedImageMode.gesture,
-                                    initGestureConfigHandler: (state) {
-                                      return GestureConfig(
-                                        minScale: 0.9,
-                                        animationMinScale: 0.7,
-                                        maxScale: 3.0,
-                                        animationMaxScale: 3.5,
-                                        speed: 1.0,
-                                        inertialSpeed: 100.0,
-                                        initialScale: 1.0,
-                                        inPageView: false,
-                                        initialAlignment:
-                                            InitialAlignment.center,
-                                      );
-                                    },
                                   ),
                                 ),
                               ),
@@ -261,29 +218,18 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
               children: [
                 Container(
                   width: SizeConfig.blockSizeHorizontal * 49,
-                  child: FullScreenWidget(
-                    backgroundIsTransparent: true,
-                    child: Center(
-                      child: ExtendedImage.network(
-                        listImage[0],
+                  child: GestureDetector(
+                    onTap: () {
+                      GestureTapCallback:
+                      _openImage(context, 0);
+                    },
+                    child: Hero(
+                      tag: listImage[0].toString(),
+                      child: CachedNetworkImage(
+                        imageUrl: listImage[0],
                         height: SizeConfig.blockSizeVertical * 100,
                         width: SizeConfig.blockSizeHorizontal * 100,
                         fit: BoxFit.cover,
-                        enableLoadState: true,
-                        mode: ExtendedImageMode.gesture,
-                        initGestureConfigHandler: (state) {
-                          return GestureConfig(
-                            minScale: 0.9,
-                            animationMinScale: 0.7,
-                            maxScale: 3.0,
-                            animationMaxScale: 3.5,
-                            speed: 1.0,
-                            inertialSpeed: 100.0,
-                            initialScale: 1.0,
-                            inPageView: false,
-                            initialAlignment: InitialAlignment.center,
-                          );
-                        },
                       ),
                     ),
                   ),
@@ -303,30 +249,18 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                           children: [
                             Container(
                               height: SizeConfig.blockSizeHorizontal * 50,
-                              child: FullScreenWidget(
-                                backgroundIsTransparent: true,
-                                child: Center(
-                                  child: ExtendedImage.network(
-                                    listImage[index + 1],
+                              child: GestureDetector(
+                                onTap: () {
+                                  GestureTapCallback:
+                                  _openImage(context, index + 1);
+                                },
+                                child: Hero(
+                                  tag: listImage[index + 1].toString(),
+                                  child: CachedNetworkImage(
+                                    imageUrl: listImage[index + 1],
                                     height: SizeConfig.blockSizeVertical * 100,
                                     width: SizeConfig.blockSizeHorizontal * 100,
                                     fit: BoxFit.cover,
-                                    enableLoadState: true,
-                                    mode: ExtendedImageMode.gesture,
-                                    initGestureConfigHandler: (state) {
-                                      return GestureConfig(
-                                        minScale: 0.9,
-                                        animationMinScale: 0.7,
-                                        maxScale: 3.0,
-                                        animationMaxScale: 3.5,
-                                        speed: 1.0,
-                                        inertialSpeed: 100.0,
-                                        initialScale: 1.0,
-                                        inPageView: false,
-                                        initialAlignment:
-                                            InitialAlignment.center,
-                                      );
-                                    },
                                   ),
                                 ),
                               ),
@@ -353,30 +287,16 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
               children: [
                 Container(
                   height: SizeConfig.blockSizeHorizontal * 66,
-                  child: FullScreenWidget(
-                    backgroundIsTransparent: true,
-                    child: Center(
-                      child: ExtendedImage.network(
-                        listImage[0],
-                        height: SizeConfig.blockSizeVertical * 100,
-                        width: SizeConfig.blockSizeHorizontal * 100,
-                        fit: BoxFit.cover,
-                        enableLoadState: true,
-                        mode: ExtendedImageMode.gesture,
-                        initGestureConfigHandler: (state) {
-                          return GestureConfig(
-                            minScale: 0.9,
-                            animationMinScale: 0.7,
-                            maxScale: 3.0,
-                            animationMaxScale: 3.5,
-                            speed: 1.0,
-                            inertialSpeed: 100.0,
-                            initialScale: 1.0,
-                            inPageView: false,
-                            initialAlignment: InitialAlignment.center,
-                          );
-                        },
-                      ),
+                  child: GestureDetector(
+                    onTap: () {
+                      GestureTapCallback:
+                      _openImage(context, 0);
+                    },
+                    child: CachedNetworkImage(
+                      imageUrl: listImage[0],
+                      height: SizeConfig.blockSizeVertical * 100,
+                      width: SizeConfig.blockSizeHorizontal * 100,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -395,31 +315,16 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                           children: [
                             Container(
                               width: SizeConfig.blockSizeHorizontal * 33,
-                              child: FullScreenWidget(
-                                backgroundIsTransparent: true,
-                                child: Center(
-                                  child: ExtendedImage.network(
-                                    listImage[index + 1],
-                                    height: SizeConfig.blockSizeVertical * 100,
-                                    width: SizeConfig.blockSizeHorizontal * 100,
-                                    fit: BoxFit.cover,
-                                    enableLoadState: true,
-                                    mode: ExtendedImageMode.gesture,
-                                    initGestureConfigHandler: (state) {
-                                      return GestureConfig(
-                                        minScale: 0.9,
-                                        animationMinScale: 0.7,
-                                        maxScale: 3.0,
-                                        animationMaxScale: 3.5,
-                                        speed: 1.0,
-                                        inertialSpeed: 100.0,
-                                        initialScale: 1.0,
-                                        inPageView: false,
-                                        initialAlignment:
-                                            InitialAlignment.center,
-                                      );
-                                    },
-                                  ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  GestureTapCallback:
+                                  _openImage(context, index + 1);
+                                },
+                                child: CachedNetworkImage(
+                                  imageUrl: listImage[index + 1],
+                                  height: SizeConfig.blockSizeVertical * 100,
+                                  width: SizeConfig.blockSizeHorizontal * 100,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
@@ -437,30 +342,16 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                   children: [
                     Container(
                       width: SizeConfig.blockSizeHorizontal * 66,
-                      child: FullScreenWidget(
-                        backgroundIsTransparent: true,
-                        child: Center(
-                          child: ExtendedImage.network(
-                            listImage[0],
-                            height: SizeConfig.blockSizeVertical * 100,
-                            width: SizeConfig.blockSizeHorizontal * 100,
-                            fit: BoxFit.cover,
-                            enableLoadState: true,
-                            mode: ExtendedImageMode.gesture,
-                            initGestureConfigHandler: (state) {
-                              return GestureConfig(
-                                minScale: 0.9,
-                                animationMinScale: 0.7,
-                                maxScale: 3.0,
-                                animationMaxScale: 3.5,
-                                speed: 1.0,
-                                inertialSpeed: 100.0,
-                                initialScale: 1.0,
-                                inPageView: false,
-                                initialAlignment: InitialAlignment.center,
-                              );
-                            },
-                          ),
+                      child: GestureDetector(
+                        onTap: () {
+                          GestureTapCallback:
+                          _openImage(context, 0);
+                        },
+                        child: CachedNetworkImage(
+                          imageUrl: listImage[0],
+                          height: SizeConfig.blockSizeVertical * 100,
+                          width: SizeConfig.blockSizeHorizontal * 100,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -479,33 +370,18 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                               children: [
                                 Container(
                                   height: SizeConfig.blockSizeHorizontal * 33,
-                                  child: FullScreenWidget(
-                                    backgroundIsTransparent: true,
-                                    child: Center(
-                                      child: ExtendedImage.network(
-                                        listImage[index + 1],
-                                        height:
-                                            SizeConfig.blockSizeVertical * 100,
-                                        width: SizeConfig.blockSizeHorizontal *
-                                            100,
-                                        fit: BoxFit.cover,
-                                        enableLoadState: true,
-                                        mode: ExtendedImageMode.gesture,
-                                        initGestureConfigHandler: (state) {
-                                          return GestureConfig(
-                                            minScale: 0.9,
-                                            animationMinScale: 0.7,
-                                            maxScale: 3.0,
-                                            animationMaxScale: 3.5,
-                                            speed: 1.0,
-                                            inertialSpeed: 100.0,
-                                            initialScale: 1.0,
-                                            inPageView: false,
-                                            initialAlignment:
-                                                InitialAlignment.center,
-                                          );
-                                        },
-                                      ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      GestureTapCallback:
+                                      _openImage(context, index + 1);
+                                    },
+                                    child: CachedNetworkImage(
+                                      imageUrl: listImage[index + 1],
+                                      height:
+                                          SizeConfig.blockSizeVertical * 100,
+                                      width:
+                                          SizeConfig.blockSizeHorizontal * 100,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
@@ -527,31 +403,16 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                       crossAxisSpacing: 3.0,
                       mainAxisSpacing: 3.0,
                       children: List.generate(listImage.length, (index) {
-                        return FullScreenWidget(
-                          child: Center(
-                            child: Hero(
-                                tag: listImage[index].toString(),
-                                child: ExtendedImage.network(
-                                  listImage[index],
-                                  height: SizeConfig.blockSizeVertical * 100,
-                                  width: SizeConfig.blockSizeHorizontal * 100,
-                                  fit: BoxFit.cover,
-                                  enableLoadState: true,
-                                  mode: ExtendedImageMode.gesture,
-                                  initGestureConfigHandler: (state) {
-                                    return GestureConfig(
-                                      minScale: 0.9,
-                                      animationMinScale: 0.7,
-                                      maxScale: 3.0,
-                                      animationMaxScale: 3.5,
-                                      speed: 1.0,
-                                      inertialSpeed: 100.0,
-                                      initialScale: 1.0,
-                                      inPageView: false,
-                                      initialAlignment: InitialAlignment.center,
-                                    );
-                                  },
-                                )),
+                        return GestureDetector(
+                          onTap: () {
+                            GestureTapCallback:
+                            _openImage(context, index);
+                          },
+                          child: CachedNetworkImage(
+                            imageUrl: listImage[index],
+                            height: SizeConfig.blockSizeVertical * 100,
+                            width: SizeConfig.blockSizeHorizontal * 100,
+                            fit: BoxFit.cover,
                           ),
                         );
                       }),
@@ -573,29 +434,18 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
               children: [
                 Container(
                   height: SizeConfig.blockSizeHorizontal * 66,
-                  child: FullScreenWidget(
-                    backgroundIsTransparent: true,
-                    child: Center(
-                      child: ExtendedImage.network(
-                        listImage[0],
+                  child: GestureDetector(
+                    onTap: () {
+                      GestureTapCallback:
+                      _openImage(context, 0);
+                    },
+                    child: Hero(
+                      tag: listImage[0].toString(),
+                      child: CachedNetworkImage(
+                        imageUrl: listImage[0],
                         height: SizeConfig.blockSizeVertical * 100,
                         width: SizeConfig.blockSizeHorizontal * 100,
                         fit: BoxFit.cover,
-                        enableLoadState: true,
-                        mode: ExtendedImageMode.gesture,
-                        initGestureConfigHandler: (state) {
-                          return GestureConfig(
-                            minScale: 0.9,
-                            animationMinScale: 0.7,
-                            maxScale: 3.0,
-                            animationMaxScale: 3.5,
-                            speed: 1.0,
-                            inertialSpeed: 100.0,
-                            initialScale: 1.0,
-                            inPageView: false,
-                            initialAlignment: InitialAlignment.center,
-                          );
-                        },
                       ),
                     ),
                   ),
@@ -615,46 +465,43 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                           children: [
                             Container(
                               width: SizeConfig.blockSizeHorizontal * 33,
-                              child: FullScreenWidget(
-                                backgroundIsTransparent: true,
-                                child: index < 2
-                                    ? Center(
-                                        child: ExtendedImage.network(
-                                          listImage[index + 1],
+                              child: index < 2
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        GestureTapCallback:
+                                        _openImage(context, index + 1);
+                                      },
+                                      child: Hero(
+                                        tag: listImage[index + 1].toString(),
+                                        child: CachedNetworkImage(
+                                          imageUrl: listImage[index + 1],
                                           height: SizeConfig.blockSizeVertical *
                                               100,
                                           width:
                                               SizeConfig.blockSizeHorizontal *
                                                   100,
                                           fit: BoxFit.cover,
-                                          enableLoadState: true,
-                                          mode: ExtendedImageMode.gesture,
-                                          initGestureConfigHandler: (state) {
-                                            return GestureConfig(
-                                              minScale: 0.9,
-                                              animationMinScale: 0.7,
-                                              maxScale: 3.0,
-                                              animationMaxScale: 3.5,
-                                              speed: 1.0,
-                                              inertialSpeed: 100.0,
-                                              initialScale: 1.0,
-                                              inPageView: false,
-                                              initialAlignment:
-                                                  InitialAlignment.center,
-                                            );
-                                          },
                                         ),
-                                      )
-                                    : Stack(children: <Widget>[
-                                        ExtendedImage.network(
-                                          listImage[index + 1],
-                                          height: SizeConfig.blockSizeVertical *
-                                              100,
-                                          width:
-                                              SizeConfig.blockSizeHorizontal *
-                                                  100,
-                                          fit: BoxFit.cover,
-                                          enableLoadState: true,
+                                      ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        GestureTapCallback:
+                                        _openImage(context, index + 1);
+                                      },
+                                      child: Stack(children: <Widget>[
+                                        Hero(
+                                          tag: listImage[index + 1].toString(),
+                                          child: CachedNetworkImage(
+                                            imageUrl: listImage[index + 1],
+                                            height:
+                                                SizeConfig.blockSizeVertical *
+                                                    100,
+                                            width:
+                                                SizeConfig.blockSizeHorizontal *
+                                                    100,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                         Positioned(
                                           child: Container(
@@ -682,7 +529,7 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                                           ),
                                         )
                                       ]),
-                              ),
+                                    ),
                             ),
                             SizedBox(
                               width: 3.0,
@@ -698,29 +545,18 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                   children: [
                     Container(
                       width: SizeConfig.blockSizeHorizontal * 66,
-                      child: FullScreenWidget(
-                        backgroundIsTransparent: true,
-                        child: Center(
-                          child: ExtendedImage.network(
-                            listImage[0],
+                      child: GestureDetector(
+                        onTap: () {
+                          GestureTapCallback:
+                          _openImage(context, 0);
+                        },
+                        child: Hero(
+                          tag: listImage[0].toString(),
+                          child: CachedNetworkImage(
+                            imageUrl: listImage[0],
                             height: SizeConfig.blockSizeVertical * 100,
                             width: SizeConfig.blockSizeHorizontal * 100,
                             fit: BoxFit.cover,
-                            enableLoadState: true,
-                            mode: ExtendedImageMode.gesture,
-                            initGestureConfigHandler: (state) {
-                              return GestureConfig(
-                                minScale: 0.9,
-                                animationMinScale: 0.7,
-                                maxScale: 3.0,
-                                animationMaxScale: 3.5,
-                                speed: 1.0,
-                                inertialSpeed: 100.0,
-                                initialScale: 1.0,
-                                inPageView: false,
-                                initialAlignment: InitialAlignment.center,
-                              );
-                            },
                           ),
                         ),
                       ),
@@ -743,73 +579,74 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                                   child: FullScreenWidget(
                                     backgroundIsTransparent: true,
                                     child: index < 2
-                                        ? Center(
-                                            child: ExtendedImage.network(
-                                              listImage[index + 1],
-                                              height:
-                                                  SizeConfig.blockSizeVertical *
-                                                      100,
-                                              width: SizeConfig
-                                                      .blockSizeHorizontal *
-                                                  100,
-                                              fit: BoxFit.cover,
-                                              enableLoadState: true,
-                                              mode: ExtendedImageMode.gesture,
-                                              initGestureConfigHandler:
-                                                  (state) {
-                                                return GestureConfig(
-                                                  minScale: 0.9,
-                                                  animationMinScale: 0.7,
-                                                  maxScale: 3.0,
-                                                  animationMaxScale: 3.5,
-                                                  speed: 1.0,
-                                                  inertialSpeed: 100.0,
-                                                  initialScale: 1.0,
-                                                  inPageView: false,
-                                                  initialAlignment:
-                                                      InitialAlignment.center,
-                                                );
-                                              },
-                                            ),
-                                          )
-                                        : Stack(children: <Widget>[
-                                            ExtendedImage.network(
-                                              listImage[index + 1],
-                                              height:
-                                                  SizeConfig.blockSizeVertical *
-                                                      100,
-                                              width: SizeConfig
-                                                      .blockSizeHorizontal *
-                                                  100,
-                                              fit: BoxFit.cover,
-                                              enableLoadState: true,
-                                            ),
-                                            Positioned(
-                                              child: Container(
+                                        ? GestureDetector(
+                                            onTap: () {
+                                              GestureTapCallback:
+                                              _openImage(context, index + 1);
+                                            },
+                                            child: Hero(
+                                              tag: listImage[index + 1]
+                                                  .toString(),
+                                              child: CachedNetworkImage(
+                                                imageUrl: listImage[index + 1],
                                                 height: SizeConfig
                                                         .blockSizeVertical *
                                                     100,
                                                 width: SizeConfig
                                                         .blockSizeHorizontal *
                                                     100,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black45,
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    "+" +
-                                                        (listImage.length - 4)
-                                                            .toString(),
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.w700),
-                                                  ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          )
+                                        : GestureDetector(
+                                            onTap: () {
+                                              GestureTapCallback:
+                                              _openImage(context, index + 1);
+                                            },
+                                            child: Stack(children: <Widget>[
+                                              Hero(
+                                                tag: listImage[index + 1]
+                                                    .toString(),
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      listImage[index + 1],
+                                                  height: SizeConfig
+                                                          .blockSizeVertical *
+                                                      100,
+                                                  width: SizeConfig
+                                                          .blockSizeHorizontal *
+                                                      100,
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
-                                            )
-                                          ]),
+                                              Positioned(
+                                                child: Container(
+                                                  height: SizeConfig
+                                                          .blockSizeVertical *
+                                                      100,
+                                                  width: SizeConfig
+                                                          .blockSizeHorizontal *
+                                                      100,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black45,
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      "+" +
+                                                          (listImage.length - 4)
+                                                              .toString(),
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16.0,
+                                                          fontWeight:
+                                                              FontWeight.w700),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ]),
+                                          ),
                                   ),
                                 ),
                                 SizedBox(
@@ -841,37 +678,25 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                                           SizeConfig.blockSizeHorizontal * 50,
                                       width:
                                           SizeConfig.blockSizeHorizontal * 50,
-                                      child: FullScreenWidget(
-                                          backgroundIsTransparent: true,
-                                          child: Center(
-                                            child: ExtendedImage.network(
-                                              listImage[index],
-                                              height:
-                                                  SizeConfig.blockSizeVertical *
-                                                      100,
-                                              width: SizeConfig
-                                                      .blockSizeHorizontal *
-                                                  100,
-                                              fit: BoxFit.cover,
-                                              enableLoadState: true,
-                                              mode: ExtendedImageMode.gesture,
-                                              initGestureConfigHandler:
-                                                  (state) {
-                                                return GestureConfig(
-                                                  minScale: 0.9,
-                                                  animationMinScale: 0.7,
-                                                  maxScale: 3.0,
-                                                  animationMaxScale: 3.5,
-                                                  speed: 1.0,
-                                                  inertialSpeed: 100.0,
-                                                  initialScale: 1.0,
-                                                  inPageView: false,
-                                                  initialAlignment:
-                                                      InitialAlignment.center,
-                                                );
-                                              },
-                                            ),
-                                          )),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          GestureTapCallback:
+                                          _openImage(context, index);
+                                        },
+                                        child: Hero(
+                                          tag: listImage[index].toString(),
+                                          child: CachedNetworkImage(
+                                            imageUrl: listImage[index],
+                                            height:
+                                                SizeConfig.blockSizeVertical *
+                                                    100,
+                                            width:
+                                                SizeConfig.blockSizeHorizontal *
+                                                    100,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                     SizedBox(
                                       width: 3.0,
@@ -906,48 +731,50 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                                       child: FullScreenWidget(
                                         backgroundIsTransparent: true,
                                         child: index < 2
-                                            ? Center(
-                                                child: ExtendedImage.network(
-                                                  listImage[index + 2],
-                                                  height: SizeConfig
-                                                          .blockSizeVertical *
-                                                      100,
-                                                  width: SizeConfig
-                                                          .blockSizeHorizontal *
-                                                      100,
-                                                  fit: BoxFit.cover,
-                                                  enableLoadState: true,
-                                                  mode:
-                                                      ExtendedImageMode.gesture,
-                                                  initGestureConfigHandler:
-                                                      (state) {
-                                                    return GestureConfig(
-                                                      minScale: 0.9,
-                                                      animationMinScale: 0.7,
-                                                      maxScale: 3.0,
-                                                      animationMaxScale: 3.5,
-                                                      speed: 1.0,
-                                                      inertialSpeed: 100.0,
-                                                      initialScale: 1.0,
-                                                      inPageView: false,
-                                                      initialAlignment:
-                                                          InitialAlignment
-                                                              .center,
-                                                    );
-                                                  },
+                                            ? GestureDetector(
+                                                onTap: () {
+                                                  GestureTapCallback:
+                                                  _openImage(
+                                                      context, index + 2);
+                                                },
+                                                child: Hero(
+                                                  tag: listImage[index + 2]
+                                                      .toString(),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        listImage[index + 2],
+                                                    height: SizeConfig
+                                                            .blockSizeVertical *
+                                                        100,
+                                                    width: SizeConfig
+                                                            .blockSizeHorizontal *
+                                                        100,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               )
                                             : Stack(children: <Widget>[
-                                                ExtendedImage.network(
-                                                  listImage[index + 2],
-                                                  height: SizeConfig
-                                                          .blockSizeVertical *
-                                                      100,
-                                                  width: SizeConfig
-                                                          .blockSizeHorizontal *
-                                                      100,
-                                                  fit: BoxFit.cover,
-                                                  enableLoadState: true,
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    GestureTapCallback:
+                                                    _openImage(
+                                                        context, index + 2);
+                                                  },
+                                                  child: Hero(
+                                                    tag: listImage[index + 2]
+                                                        .toString(),
+                                                    child: CachedNetworkImage(
+                                                      imageUrl:
+                                                          listImage[index + 2],
+                                                      height: SizeConfig
+                                                              .blockSizeVertical *
+                                                          100,
+                                                      width: SizeConfig
+                                                              .blockSizeHorizontal *
+                                                          100,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
                                                 ),
                                                 Positioned(
                                                   child: Container(
@@ -1006,5 +833,18 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
         });
       }),
     );
+  }
+
+  void _openImage(BuildContext context, final int index) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => GalleryPhotoWrapper(
+                  galleries: listImage,
+                  backgroundDecoration:
+                      const BoxDecoration(color: Colors.black),
+                  initalIndex: index,
+                  scrollDirection: Axis.horizontal,
+                )));
   }
 }
