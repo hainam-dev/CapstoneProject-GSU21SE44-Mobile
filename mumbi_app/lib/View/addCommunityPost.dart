@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
-import 'package:full_screen_image/full_screen_image.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/diary_model.dart';
 import 'package:mumbi_app/Model/post_model.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/Utils/upload_multipleImage.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/community_viewmodel.dart';
@@ -32,6 +32,7 @@ class _AddCommunityPostState extends State<AddCommunityPost> {
   PostModel postModel;
   MomViewModel momViewModel;
   bool postFlag;
+  var decodedImage;
   @override
   void initState() {
     super.initState();
@@ -209,45 +210,23 @@ class _AddCommunityPostState extends State<AddCommunityPost> {
   Widget showMultipleImagePicked() {
     return Column(
       children: [
-        GridView.count(
+        ListView.builder(
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          crossAxisCount: 2,
-          children: List.generate(
-            _files.length,
-            (index) {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 2),
-                child: FullScreenWidget(
-                  backgroundColor: WHITE_COLOR,
-                  child: Center(
-                    child: Hero(
-                        tag: _files[index].toString(),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Card(
-                                clipBehavior: Clip.antiAlias,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: Image.file(
-                                    _files[index],
-                                    height: 120,
-                                    width: 120,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )),
-                  ),
+          scrollDirection: Axis.vertical,
+          itemCount: _files.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Column(
+              children: [
+                Image.file(
+                  _files[index],
                 ),
-              );
-            },
-          ),
+                SizedBox(
+                  height: 5.0,
+                )
+              ],
+            );
+          },
         ),
       ],
     );

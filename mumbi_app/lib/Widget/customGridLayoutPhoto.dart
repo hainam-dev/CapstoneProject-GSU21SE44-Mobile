@@ -1,21 +1,21 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:full_screen_image/full_screen_image.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'dart:ui' as ui;
 
 import 'customGalleryPhotoWrapper.dart';
+import 'customLoading.dart';
 
 class CustomGridLayoutPhoto extends StatefulWidget {
   final listImage;
 
   const CustomGridLayoutPhoto(this.listImage);
   @override
-  _CustomGridLayoutPhotoState createState() => _CustomGridLayoutPhotoState(listImage);
+  _CustomGridLayoutPhotoState createState() =>
+      _CustomGridLayoutPhotoState(listImage);
 }
 
 class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
@@ -575,15 +575,34 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                               children: [
                                 Container(
                                   height: SizeConfig.blockSizeHorizontal * 33,
-                                  child: FullScreenWidget(
-                                    backgroundIsTransparent: true,
-                                    child: index < 2
-                                        ? GestureDetector(
-                                            onTap: () {
-                                              GestureTapCallback:
-                                              _openImage(context, index + 1);
-                                            },
-                                            child: Hero(
+                                  child: index < 2
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            GestureTapCallback:
+                                            _openImage(context, index + 1);
+                                          },
+                                          child: Hero(
+                                            tag:
+                                                listImage[index + 1].toString(),
+                                            child: CachedNetworkImage(
+                                              imageUrl: listImage[index + 1],
+                                              height:
+                                                  SizeConfig.blockSizeVertical *
+                                                      100,
+                                              width: SizeConfig
+                                                      .blockSizeHorizontal *
+                                                  100,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        )
+                                      : GestureDetector(
+                                          onTap: () {
+                                            GestureTapCallback:
+                                            _openImage(context, index + 1);
+                                          },
+                                          child: Stack(children: <Widget>[
+                                            Hero(
                                               tag: listImage[index + 1]
                                                   .toString(),
                                               child: CachedNetworkImage(
@@ -597,56 +616,33 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
-                                          )
-                                        : GestureDetector(
-                                            onTap: () {
-                                              GestureTapCallback:
-                                              _openImage(context, index + 1);
-                                            },
-                                            child: Stack(children: <Widget>[
-                                              Hero(
-                                                tag: listImage[index + 1]
-                                                    .toString(),
-                                                child: CachedNetworkImage(
-                                                  imageUrl:
-                                                      listImage[index + 1],
-                                                  height: SizeConfig
-                                                          .blockSizeVertical *
-                                                      100,
-                                                  width: SizeConfig
-                                                          .blockSizeHorizontal *
-                                                      100,
-                                                  fit: BoxFit.cover,
+                                            Positioned(
+                                              child: Container(
+                                                height: SizeConfig
+                                                        .blockSizeVertical *
+                                                    100,
+                                                width: SizeConfig
+                                                        .blockSizeHorizontal *
+                                                    100,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black45,
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    "+" +
+                                                        (listImage.length - 4)
+                                                            .toString(),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.w700),
+                                                  ),
                                                 ),
                                               ),
-                                              Positioned(
-                                                child: Container(
-                                                  height: SizeConfig
-                                                          .blockSizeVertical *
-                                                      100,
-                                                  width: SizeConfig
-                                                          .blockSizeHorizontal *
-                                                      100,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.black45,
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                      "+" +
-                                                          (listImage.length - 4)
-                                                              .toString(),
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 16.0,
-                                                          fontWeight:
-                                                              FontWeight.w700),
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            ]),
-                                          ),
-                                  ),
+                                            )
+                                          ]),
+                                        ),
                                 ),
                                 SizedBox(
                                   height: 3.0,
@@ -727,10 +723,30 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                                           SizeConfig.blockSizeHorizontal * 33,
                                       width:
                                           SizeConfig.blockSizeHorizontal * 33,
-                                      child: FullScreenWidget(
-                                        backgroundIsTransparent: true,
-                                        child: index < 2
-                                            ? GestureDetector(
+                                      child: index < 2
+                                          ? GestureDetector(
+                                              onTap: () {
+                                                GestureTapCallback:
+                                                _openImage(context, index + 2);
+                                              },
+                                              child: Hero(
+                                                tag: listImage[index + 2]
+                                                    .toString(),
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      listImage[index + 2],
+                                                  height: SizeConfig
+                                                          .blockSizeVertical *
+                                                      100,
+                                                  width: SizeConfig
+                                                          .blockSizeHorizontal *
+                                                      100,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            )
+                                          : Stack(children: <Widget>[
+                                              GestureDetector(
                                                 onTap: () {
                                                   GestureTapCallback:
                                                   _openImage(
@@ -751,59 +767,33 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                                                     fit: BoxFit.cover,
                                                   ),
                                                 ),
-                                              )
-                                            : Stack(children: <Widget>[
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    GestureTapCallback:
-                                                    _openImage(
-                                                        context, index + 2);
-                                                  },
-                                                  child: Hero(
-                                                    tag: listImage[index + 2]
-                                                        .toString(),
-                                                    child: CachedNetworkImage(
-                                                      imageUrl:
-                                                          listImage[index + 2],
-                                                      height: SizeConfig
-                                                              .blockSizeVertical *
-                                                          100,
-                                                      width: SizeConfig
-                                                              .blockSizeHorizontal *
-                                                          100,
-                                                      fit: BoxFit.cover,
+                                              ),
+                                              Positioned(
+                                                child: Container(
+                                                  height: SizeConfig
+                                                          .blockSizeVertical *
+                                                      100,
+                                                  width: SizeConfig
+                                                          .blockSizeHorizontal *
+                                                      100,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black45,
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      "+" +
+                                                          (listImage.length - 4)
+                                                              .toString(),
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16.0,
+                                                          fontWeight:
+                                                              FontWeight.w700),
                                                     ),
                                                   ),
                                                 ),
-                                                Positioned(
-                                                  child: Container(
-                                                    height: SizeConfig
-                                                            .blockSizeVertical *
-                                                        100,
-                                                    width: SizeConfig
-                                                            .blockSizeHorizontal *
-                                                        100,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.black45,
-                                                    ),
-                                                    child: Center(
-                                                      child: Text(
-                                                        "+" +
-                                                            (listImage.length -
-                                                                    4)
-                                                                .toString(),
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 16.0,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                )
-                                              ]),
-                                      ),
+                                              )
+                                            ]),
                                     ),
                                     SizedBox(
                                       width: 3.0,
@@ -837,13 +827,14 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
   void _openImage(BuildContext context, final int index) {
     Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => GalleryPhotoWrapper(
+        PageRouteBuilder(
+            opaque: false,
+            barrierColor: Colors.white.withOpacity(0),
+            pageBuilder: (BuildContext context, _, __) => GalleryPhotoWrapper(
                   galleries: listImage,
-                  backgroundDecoration:
-                      const BoxDecoration(color: Colors.black),
                   initalIndex: index,
                   scrollDirection: Axis.horizontal,
+                  loadingBuilder: (context, event) => loadingProgress(),
                 )));
   }
 }
