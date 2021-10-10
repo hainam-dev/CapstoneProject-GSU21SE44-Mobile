@@ -19,25 +19,25 @@ class GuidebookViewModel extends Model{
     _instance = null;
   }
 
-  bool isLoading;
-  List<dynamic> guidebookList;
+  num pageSize = 10;
+  num currentPage;
+  num totalPage;
+  bool isLoading = true;
   List<GuidebookModel> guidebookListModel;
 
-  bool error = false;
-  int currentPage;
-  double totalPage;
-
-  void getGuidebookByType(num typeId) async{
+  void getGuidebook(bool highlightsFlag, num typeId) async{
     try{
       isLoading = true;
-      String data = await GuidebookRepository.apiGetGuidebookByType(typeId);
+      String data = await GuidebookRepository.apiGetGuidebook(1, highlightsFlag, typeId);
       Map<String, dynamic> jsonList = json.decode(data);
-      guidebookList = jsonList['data'];
+      List<dynamic> guidebookList = jsonList['data'];
       if(guidebookList != null){
         guidebookListModel = guidebookList.map((e) => GuidebookModel.fromJson(e)).toList();
       }else{
         guidebookListModel = null;
       }
+      currentPage = jsonList['pageNumber'];
+      totalPage = jsonList['total'] / pageSize;
       isLoading = false;
       notifyListeners();
     }catch(e){
@@ -45,24 +45,54 @@ class GuidebookViewModel extends Model{
     }
   }
 
-  /*Future<void> addEventBy(int type, bool isDecs) async {
+  void getMoreGuidebook(bool highlightsFlag, num typeId) async {
     try{
       if(currentPage < totalPage){
-        error = false;
         isLoading = true;
+        String data = await GuidebookRepository.apiGetGuidebook(++currentPage, highlightsFlag, typeId);
+        Map<String, dynamic> jsonList = json.decode(data);
+        List<dynamic> guidebookList = jsonList['data'];
+        if(guidebookList != null){
+          List<GuidebookModel> moreGuidebookListModel = guidebookList.map((e) => GuidebookModel.fromJson(e)).toList();
+          currentPage = jsonList['pageNumber'];
+          totalPage = jsonList['total'] / pageSize;
+          guidebookListModel.addAll(moreGuidebookListModel);
+        }else{
+          guidebookListModel = null;
+        }
+        isLoading = false;
         notifyListeners();
-        EventDAO dao = new EventDAO();
-        EventWithPage eventWithPage = await dao.addEventBy(type, ++currentPage, isDecs);
-        list.addAll(eventWithPage.list);
-        currentPage = eventWithPage.currentPage;
-        totalPage = eventWithPage.totalPage;
       }
-    } on Exception{
-      error = true;
+    }catch(e){
+      print("error: " + e.toString());
     }
-    finally{
-      isLoading = false;
+  }
+
+  void getRelatedGuidebook(num typeId, String guidebookId) async {
+    try {
+      isLoading = true;
+      String data = await GuidebookRepository.apiGetGuidebook(1,false, typeId);
+      Map<String, dynamic> jsonList = json.decode(data);
+      List<dynamic> guidebookList = jsonList['data'];
+      if(guidebookList != null){
+        guidebookListModel = guidebookList.map((e) => GuidebookModel.fromJson(e)).toList();
+        for(int i = guidebookListModel.length - 1; i >= 0 ; i--){
+          GuidebookModel guidebookModel = guidebookListModel[i];
+          if(guidebookModel.guidebookId == guidebookId){
+            guidebookListModel.removeAt(i);
+            if(guidebookListModel.length == 0){
+              guidebookListModel = null;
+            }
+            break;
+          }
+        }
+      }else{
+        guidebookListModel = null;
+      }
       notifyListeners();
+      isLoading = false;
+    } catch (e) {
+      print("error: " + e.toString());
     }
-  }*/
+  }
 }

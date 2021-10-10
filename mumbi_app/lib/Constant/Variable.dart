@@ -49,3 +49,8 @@ final num MAX_BIRTHDAY_PARENT = 365 * 100;
 final num MAX_BIRTHDAY_CHILD = 365 * 6;
 final num PREGNANCY_WEEK = 40;
 final num PREGNANCY_DAY = 9 * 30 + 10;
+
+final double ICON_HEIGHT = 40;
+final double ICON_WIDTH = 40;
+
+final double BORDER_RADIUS = 10;

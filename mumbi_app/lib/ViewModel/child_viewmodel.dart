@@ -23,19 +23,6 @@ class ChildViewModel extends Model {
   List<dynamic> childList;
   List<ChildModel> childListModel;
 
-  Future<bool> addChild(ChildModel childModel) async {
-    String momId = await UserViewModel.getUserID();
-    childModel.momID = momId;
-    try {
-      String data = await ChildRepository.apiAddChild(childModel);
-      notifyListeners();
-      return true;
-    } catch (e) {
-      print("error: " + e.toString());
-    }
-    return false;
-  }
-
   Future<void> getChildByID(String id) async {
     try {
       var data = await ChildRepository.apiGetChildByID(id);
@@ -66,10 +53,30 @@ class ChildViewModel extends Model {
     }
   }
 
+  Future<bool> addChild(ChildModel childModel) async {
+    String momId = await UserViewModel.getUserID();
+    childModel.momID = momId;
+    try {
+      String result = await ChildRepository.apiAddChild(childModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
+    } catch (e) {
+      print("error: " + e.toString());
+    }
+    return false;
+  }
+
   Future<bool> updateChildInfo(ChildModel childModel) async {
     try {
-      String data = await ChildRepository.apiUpdateChildInfo(childModel);
-      return true;
+      String result = await ChildRepository.apiUpdateChildInfo(childModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }
@@ -78,8 +85,12 @@ class ChildViewModel extends Model {
 
   Future<bool> deleteChild(String childID) async {
     try {
-      String data = await ChildRepository.apiDeleteChild(childID);
-      return true;
+      String result = await ChildRepository.apiDeleteChild(childID);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }

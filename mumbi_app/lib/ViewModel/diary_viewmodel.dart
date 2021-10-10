@@ -42,9 +42,12 @@ class DiaryViewModel extends Model{
     String userId = await UserViewModel.getUserID();
     diaryModel.createdBy = userId;
     try {
-      String data = await DiaryRepository.apiAddDiary(diaryModel);
-      notifyListeners();
-      return true;
+      String result = await DiaryRepository.apiAddDiary(diaryModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }
@@ -53,8 +56,12 @@ class DiaryViewModel extends Model{
 
   Future<bool> updateDiary(DiaryModel diaryModel) async {
     try {
-      String data = await DiaryRepository.apiUpdateDiary(diaryModel);
-      return true;
+      String result = await DiaryRepository.apiUpdateDiary(diaryModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }
@@ -63,8 +70,12 @@ class DiaryViewModel extends Model{
 
   Future<bool> deleteDiary(num id) async {
     try {
-      String data = await DiaryRepository.apiDeleteDiary(id);
-      return true;
+      String result = await DiaryRepository.apiDeleteDiary(id);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }

@@ -5,9 +5,11 @@ import 'package:mumbi_app/Constant/common_api.dart';
 import 'package:mumbi_app/Model/post_model.dart';
 
 class PostRepository{
-  static Future<dynamic> apiGetCommunityPost(num PageSize) async{
+  static Future<dynamic> apiGetCommunityPost(num pageSize, num pageNumber) async{
     var response = await http.get(
-      Uri.parse("${GET_COMMUNITY_POST}").replace(queryParameters: <String,String> {"PageSize": PageSize.toString()}),
+      Uri.parse("${GET_COMMUNITY_POST}").replace(queryParameters: <String,String> {
+        "PageSize": pageSize.toString(),
+        "PageNumber": pageNumber.toString()}),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },);

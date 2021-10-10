@@ -40,9 +40,12 @@ class DadViewModel extends Model{
     String momId = await UserViewModel.getUserID();
     dadModel.momID = momId;
     try {
-      String data = await DadRepository.apiAddDad(dadModel);
-      notifyListeners();
-      return true;
+      String result = await DadRepository.apiAddDad(dadModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }
@@ -51,8 +54,12 @@ class DadViewModel extends Model{
 
   Future<bool> updateDad(DadModel dadModel) async {
     try {
-      String data = await DadRepository.apiUpdateDad(dadModel);
-      return true;
+      String result = await DadRepository.apiUpdateDad(dadModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }
@@ -61,9 +68,12 @@ class DadViewModel extends Model{
 
   Future<bool> deleteDad(String dadID) async {
     try {
-      String data = await DadRepository.apiDeleteDad(dadID);
-      destroyInstance();
-      return true;
+      String result = await DadRepository.apiDeleteDad(dadID);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }

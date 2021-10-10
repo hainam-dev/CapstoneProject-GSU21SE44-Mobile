@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Constant/common_message.dart';
 import 'package:mumbi_app/Model/comment_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/View/editComment.dart';
@@ -15,8 +16,10 @@ import 'package:mumbi_app/ViewModel/comment_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
 import 'package:mumbi_app/Widget/customConfirmDialog.dart';
+import 'package:mumbi_app/Widget/customEmpty.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:mumbi_app/Widget/customProgressDialog.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readmore/readmore.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -37,6 +40,7 @@ class _PostCommentState extends State<PostComment> {
   MomViewModel _momViewModel;
   CommentViewModel commentViewModel;
   TextEditingController _controller = TextEditingController();
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -44,6 +48,17 @@ class _PostCommentState extends State<PostComment> {
     _momViewModel = MomViewModel.getInstance();
     commentViewModel = new CommentViewModel();
     commentViewModel.getPostComment(widget.postModel);
+  }
+
+  void _onRefresh() async {
+    await commentViewModel.getPostComment(widget.postModel);
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    await commentViewModel.getMorePostComment(widget.postModel);
+    if (mounted) setState(() {});
+    _refreshController.loadComplete();
   }
 
   @override
@@ -55,21 +70,44 @@ class _PostCommentState extends State<PostComment> {
             "Bình luận",
           ),
         ),
-        body: ScopedModel(
-          model: commentViewModel,
-          child: ScopedModelDescendant(builder: (BuildContext context, Widget child, CommentViewModel model) {
-            return model.isLoading == true
-                ? loadingProgress()
-                : model.commentListModel.length == 0
-                ? Empty()
-                : SingleChildScrollView(
-                child: Column(
-                  children: [
-                    for(var comment in model.commentListModel)
-                      postComment(comment),
-                  ],
-                ));
-          },),
+        body: SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          header: MaterialClassicHeader(),
+          footer: CustomFooter(
+            builder: (BuildContext context, LoadStatus mode) {
+              Widget body;
+              if(mode == LoadStatus.loading){
+                body = loadingProgress();
+              } else {
+                body = Text(NO_MORE_COMMENT_MESSAGE);
+              }
+              return Container(
+                height: 55.0,
+                child: Center(child: body),
+              );
+            },
+          ),
+          controller: _refreshController,
+          onRefresh: _onRefresh,
+          onLoading: _onLoading,
+          child: ScopedModel(
+            model: commentViewModel,
+            child: ScopedModelDescendant(builder: (BuildContext context, Widget child, CommentViewModel model) {
+              return model.isLoading == true
+                  ? loadingProgress()
+                  : model.commentListModel == null
+                  ? Empty()
+                  : SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        for(var comment in model.commentListModel)
+                          postComment(comment),
+                      ],
+                    ),
+                  );
+            },),
+          ),
         ),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(

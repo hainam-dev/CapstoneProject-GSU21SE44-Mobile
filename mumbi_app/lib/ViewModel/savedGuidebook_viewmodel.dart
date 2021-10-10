@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:mumbi_app/Model/guidebook_model.dart';
 import 'package:mumbi_app/Model/savedGuidebook_model.dart';
 import 'package:mumbi_app/Repository/savedGuidebook_Repository.dart';
 import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
@@ -21,53 +20,52 @@ class SavedGuidebookViewModel extends Model{
     _instance = null;
   }
 
+  num pageSize = 10;
+  num currentPage;
+  num totalPage;
   SavedGuidebookModel savedGuidebookModel;
-  List<dynamic> savedGuidebookList;
-  bool isLoading;
+  bool isLoading = true;
   List<SavedGuidebookModel> savedGuidebookListModel;
 
-  Future<bool> saveGuidebook(String newsId) async {
-    SavedGuidebookModel savedGuidebookModel = SavedGuidebookModel();
-
-    String momId = await UserViewModel.getUserID();
-    savedGuidebookModel.momId = momId;
-    savedGuidebookModel.guidebookId = newsId;
-    try {
-      String data = await SavedGuidebookRepository.apiSaveGuidebook(savedGuidebookModel);
-      notifyListeners();
-      return true;
-    } catch (e) {
-      print("error: " + e.toString());
-    }
-    return false;
-  }
-
-  Future<bool> unsavedGuidebook(SavedGuidebookModel savedGuidebookModel) async {
-    try {
-      String data = await SavedGuidebookRepository.apiUnsavedGuidebook(savedGuidebookModel.id);
-      notifyListeners();
-      return true;
-    } catch (e) {
-      print("error: " + e.toString());
-    }
-    return false;
-  }
-
-  void getSavedGuidebookByMom() async{
-      String momId = await UserViewModel.getUserID();
-      isLoading = true;
+  void getSavedGuidebook() async{
       try{
-        String data = await SavedGuidebookRepository.apiGetSavedGuidebookByMom(momId);
+        isLoading = true;
+        String momId = await UserViewModel.getUserID();
+        String data = await SavedGuidebookRepository.apiGetSavedGuidebook(momId,1);
         Map<String, dynamic> jsonList = json.decode(data);
-        savedGuidebookList = jsonList['data'];
+        List<dynamic> savedGuidebookList = jsonList['data'];
         if(savedGuidebookList != null){
           savedGuidebookListModel = savedGuidebookList.map((e) => SavedGuidebookModel.fromJson(e)).toList();
         }
+        currentPage = jsonList['pageNumber'];
+        totalPage = jsonList['total'] / pageSize;
         isLoading = false;
         notifyListeners();
       }catch(e){
         print("error: " + e.toString());
       }
+  }
+
+  void getMoreSavedGuidebook() async{
+    try{
+      if(currentPage < totalPage){
+        isLoading = true;
+        String momId = await UserViewModel.getUserID();
+        String data = await SavedGuidebookRepository.apiGetSavedGuidebook(momId, ++currentPage);
+        Map<String, dynamic> jsonList = json.decode(data);
+        List<dynamic> savedGuidebookList = jsonList['data'];
+        if(savedGuidebookList != null){
+          List<SavedGuidebookModel> moreSavedGuidebookListModel = savedGuidebookList.map((e) => SavedGuidebookModel.fromJson(e)).toList();
+          currentPage = jsonList['pageNumber'];
+          totalPage = jsonList['total'] / pageSize;
+          savedGuidebookListModel.addAll(moreSavedGuidebookListModel);
+        }
+        isLoading = false;
+        notifyListeners();
+      }
+    }catch(e){
+      print("error: " + e.toString());
+    }
   }
 
   void checkSavedGuidebook(String guidebookId) async {
@@ -88,5 +86,38 @@ class SavedGuidebookViewModel extends Model{
     }catch(e){
       print("error: " + e.toString());
     }
+  }
+
+  Future<bool> saveGuidebook(String newsId) async {
+    SavedGuidebookModel savedGuidebookModel = SavedGuidebookModel();
+
+    String momId = await UserViewModel.getUserID();
+    savedGuidebookModel.momId = momId;
+    savedGuidebookModel.guidebookId = newsId;
+    try {
+      String result = await SavedGuidebookRepository.apiSaveGuidebook(savedGuidebookModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
+    } catch (e) {
+      print("error: " + e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> unsavedGuidebook(SavedGuidebookModel savedGuidebookModel) async {
+    try {
+      String result = await SavedGuidebookRepository.apiUnsavedGuidebook(savedGuidebookModel.id);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
+    } catch (e) {
+      print("error: " + e.toString());
+    }
+    return false;
   }
 }

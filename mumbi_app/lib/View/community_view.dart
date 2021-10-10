@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/io_client.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Constant/common_message.dart';
 import 'package:mumbi_app/Model/post_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
@@ -16,6 +17,7 @@ import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
 import 'package:mumbi_app/Widget/customConfirmDialog.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
+import 'package:mumbi_app/Widget/customEmpty.dart';
 import 'package:mumbi_app/Widget/customGridLayoutPhoto.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:mumbi_app/Widget/customProgressDialog.dart';
@@ -37,6 +39,7 @@ class _CommunityState extends State<Community> {
   int imageHeight = 0;
   final serverURL = "https://mumbi.xyz/api/commentHub";
   HubConnection hubConnection;
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -89,21 +92,15 @@ class _CommunityState extends State<Community> {
             });
   }
 
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
-
   void _onRefresh() async {
     await _communityViewModel.postListModel.clear();
     setState(() {});
     await _communityViewModel.getCommunityPost();
-    // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() async {
-    await Future.delayed(Duration(milliseconds: 2000));
-    // if failed,use loadFailed(),if no data return,use LoadNodata()
-    //items.add((items.length+1).toString());
+    await _communityViewModel.getMoreCommunityPost();
     if (mounted) setState(() {});
     _refreshController.loadComplete();
   }
@@ -122,14 +119,10 @@ class _CommunityState extends State<Community> {
           footer: CustomFooter(
             builder: (BuildContext context, LoadStatus mode) {
               Widget body;
-              if (mode == LoadStatus.loading) {
-                body = CupertinoActivityIndicator();
-              } else if (mode == LoadStatus.failed) {
-                body = Text("Load Failed!Click retry!");
-              } else if (mode == LoadStatus.canLoading) {
-                body = Text("release to load more");
+              if(mode == LoadStatus.loading){
+                body =  loadingProgress();
               } else {
-                body = Text("Không còn bài viết nào");
+                body = Text(NO_MORE_POST_MESSAGE);
               }
               return Container(
                 height: 55.0,

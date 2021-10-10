@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Constant/common_message.dart';
 import 'package:mumbi_app/Model/savedGuidebook_model.dart';
 import 'package:mumbi_app/Model/savedNews_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
@@ -9,8 +10,10 @@ import 'package:mumbi_app/View/guidebookDetails_view.dart';
 import 'package:mumbi_app/View/newsDetails_view.dart';
 import 'package:mumbi_app/ViewModel/savedGuidebook_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/savedNews_viewmodel.dart';
+import 'package:mumbi_app/Widget/customCard.dart';
 import 'package:mumbi_app/Widget/customEmpty.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class SavedPost extends StatefulWidget {
@@ -26,21 +29,42 @@ class _SavedPostState extends State<SavedPost> {
   SavedNewsViewModel _savedNewsViewModel;
   SavedGuidebookViewModel _savedGuidebookViewModel;
 
-  String SavedNewsId;
-  String SavedGuidebookId;
-
   num _initialIndex = 0;
 
+  RefreshController _refreshControllerNews = RefreshController(initialRefresh: false);
+  RefreshController _refreshControllerGuidebook = RefreshController(initialRefresh: false);
   @override
   void initState() {
     super.initState();
     _initialIndex = widget.tabIndex;
 
     _savedNewsViewModel = SavedNewsViewModel.getInstance();
-    _savedNewsViewModel.getSavedNewsByMom();
+    _savedNewsViewModel.getSavedNews();
 
     _savedGuidebookViewModel = SavedGuidebookViewModel.getInstance();
-    _savedGuidebookViewModel.getSavedGuidebookByMom();
+    _savedGuidebookViewModel.getSavedGuidebook();
+  }
+
+  void _onRefreshNews() async {
+    await _savedNewsViewModel.getSavedNews();
+    _refreshControllerNews.refreshCompleted();
+  }
+
+  void _onLoadingNews() async {
+    await _savedNewsViewModel.getMoreSavedNews();
+    if (mounted) setState(() {});
+    _refreshControllerNews.loadComplete();
+  }
+
+  void _onRefreshGuidebook() async {
+    await _savedGuidebookViewModel.getSavedGuidebook();
+    _refreshControllerGuidebook.refreshCompleted();
+  }
+
+  void _onLoadingGuidebook() async {
+    await _savedGuidebookViewModel.getMoreSavedGuidebook();
+    if (mounted) setState(() {});
+    _refreshControllerGuidebook.loadComplete();
   }
 
   @override
@@ -75,8 +99,8 @@ class _SavedPostState extends State<SavedPost> {
                   labelColor: WHITE_COLOR,
                   unselectedLabelColor: BLACK_COLOR,
                   tabs: [
-                    Tab(text: 'Cẩm Nang',),
                     Tab(text: 'Tin Tức',),
+                    Tab(text: 'Cẩm Nang',),
                   ],
                 ),
               ),
@@ -84,8 +108,8 @@ class _SavedPostState extends State<SavedPost> {
             Expanded(
               child: TabBarView(
                 children: [
-                  SavedGuidebookList(),
                   SavedNewsList(),
+                  SavedGuidebookList(),
                 ],
               ),
             ),
@@ -96,231 +120,126 @@ class _SavedPostState extends State<SavedPost> {
   }
 
   Widget SavedNewsList() {
-    return ScopedModel(
-        model: _savedNewsViewModel,
-        child: ScopedModelDescendant(
-          builder:
-              (BuildContext context, Widget child, SavedNewsViewModel model) {
-            return model.isLoading == true
-                ? loadingProgress()
-                : model.savedNewsListModel == null
-                ? EmptyWithText("Chưa có tin tức được lưu")
-                : Column(
-              children: [
-                for(var item in model.savedNewsListModel)
-                  NewsItem(context, item),
-              ],
+    return SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: MaterialClassicHeader(),
+        footer: CustomFooter(
+          builder: (BuildContext context,LoadStatus mode){
+            Widget body ;
+            if(mode == LoadStatus.loading){
+              body =  loadingProgress();
+            } else{
+              body = Text(NO_MORE_NEWS_MESSAGE);
+            }
+            return Container(
+              height: 55.0,
+              child: Center(child:body),
             );
           },
-        ));
+        ),
+        controller: _refreshControllerNews,
+        onRefresh: _onRefreshNews,
+        onLoading: _onLoadingNews,
+        child: CustomScrollView(
+          slivers: [
+            SliverList(delegate: SliverChildListDelegate(
+              [
+            ScopedModel(
+                model: _savedNewsViewModel,
+                child: ScopedModelDescendant(
+                  builder:
+                      (BuildContext context, Widget child, SavedNewsViewModel model) {
+                    return model.isLoading == true
+                        ? loadingProgress()
+                        : model.savedNewsListModel == null
+                        ? Empty("",NO_SAVED_NEWS_MESSAGE)
+                        : Column(
+                      children: [
+                        for(var item in model.savedNewsListModel)
+                          NormalCardItem(item.imageURL, item.title, item.createTime, item.estimatedFinishTime,
+                            onTap: ()  async {
+                              final result = await Navigator.push(
+                                context,
+                                await MaterialPageRoute(
+                                  builder: (context) => NewsDetail(item,SAVED_ENTRY),
+                                ),
+                              );
+                              if(result == true){
+                                _savedNewsViewModel.savedNewsListModel.remove(item);
+                                setState(() {});
+                              }
+                            })
+                      ],
+                    );
+                  },
+                )),
+              ],
+            ))
+          ],
+        )
+    );
   }
 
   Widget SavedGuidebookList() {
-    return ScopedModel(
-        model: _savedGuidebookViewModel,
-        child: ScopedModelDescendant(
-          builder: (BuildContext context, Widget child,
-              SavedGuidebookViewModel model) {
-            return model.isLoading == true
-                ? loadingProgress()
-                : model.savedGuidebookListModel == null
-                ? EmptyWithText("Chưa có cẩm nang được lưu")
-                : Column(
-              children: [
-                for(var item in model.savedGuidebookListModel)
-                  GuidebookItem(context, item),
+    return
+      SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          header: MaterialClassicHeader(),
+          footer: CustomFooter(
+            builder: (BuildContext context,LoadStatus mode){
+              Widget body ;
+              if(mode == LoadStatus.loading){
+                body = loadingProgress();
+              } else {
+                body = Text(NO_MORE_GUIDEBOOK_MESSAGE);
+              }
+              return Container(
+                height: 55.0,
+                child: Center(child:body),
+              );
+            },
+          ),
+          controller: _refreshControllerGuidebook,
+          onRefresh: _onRefreshGuidebook,
+          onLoading: _onLoadingGuidebook,
+          child: CustomScrollView(
+            slivers: [
+              SliverList(delegate: SliverChildListDelegate(
+                [
+                ScopedModel(
+                    model: _savedGuidebookViewModel,
+                    child: ScopedModelDescendant(
+                      builder: (BuildContext context, Widget child,
+                          SavedGuidebookViewModel model) {
+                        return model.isLoading == true
+                            ? loadingProgress()
+                            : model.savedGuidebookListModel == null
+                            ? Empty("",NO_SAVED_GUIDEBOOK_MESSAGE)
+                            : Column(
+                          children: [
+                            for(var item in model.savedGuidebookListModel)
+                              NormalCardItem(item.imageURL, item.title, item.createTime, item.estimatedFinishTime,
+                                onTap: () async {
+                                  final result = await  Navigator.push(context, MaterialPageRoute(builder: (context)
+                                  => GuidebookDetail(item,SAVED_ENTRY),));
+                                  if(result == true){
+                                    _savedGuidebookViewModel.savedGuidebookListModel.remove(item);
+                                    setState(() {});
+                                  }
+                                },
+                              )
+                          ],
+                        );
+                      },
+                    )),
+
               ],
-            );
-          },
-        ));
-  }
-
-  Widget NewsItem(context, SavedNewsModel savedNewsModel) {
-    return GestureDetector(
-      onTap: ()  async {
-        final result = await Navigator.push(
-            context,
-            await MaterialPageRoute(
-              builder: (context) => NewsDetail(savedNewsModel,SAVED_ENTRY),
-            ),
-        );
-        if(result == true){
-          _savedNewsViewModel.savedNewsListModel.remove(savedNewsModel);
-          setState(() {});
-        }
-      },
-      child: Container(
-        key: UniqueKey(),
-        child: Stack(
-          children: <Widget>[
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      color: LIGHT_GREY_COLOR,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    height: 90,
-                    width: 120,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: CachedNetworkImage(
-                        imageUrl: savedNewsModel.imageURL,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 15.0),
-                  Expanded(
-                    child: Column(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            savedNewsModel.title,
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                                DateTimeConvert.convertDatetimeDMY(
-                                    savedNewsModel.createTime),
-                                style: TextStyle(
-                                    fontSize: 15.0,
-                                    color: LIGHT_DARK_GREY_COLOR)),
-                            SizedBox(
-                              width: 6,
-                            ),
-                            Icon(
-                              Icons.fiber_manual_record,
-                              color: GREY_COLOR,
-                              size: 6,
-                            ),
-                            SizedBox(
-                              width: 6,
-                            ),
-                            Text(
-                              savedNewsModel.estimatedFinishTime.toString() +
-                                  " phút đọc",
-                              style: TextStyle(
-                                  fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget GuidebookItem(context, SavedGuidebookModel savedGuidebookModel) {
-    return GestureDetector(
-      onTap: () async {
-        final result = await  Navigator.push(context, MaterialPageRoute(builder: (context) => GuidebookDetail(savedGuidebookModel,SAVED_ENTRY),));
-        if(result == true){
-          _savedGuidebookViewModel.savedGuidebookListModel.remove(savedGuidebookModel);
-          setState(() {});
-        }
-      },
-      child: Container(
-        child: Stack(
-          children: <Widget>[
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      color: LIGHT_GREY_COLOR,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    height: 90,
-                    width: 120,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: CachedNetworkImage(
-                        imageUrl: savedGuidebookModel.imageURL,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 15.0),
-                  Expanded(
-                    child: Column(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            savedGuidebookModel.title,
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                                DateTimeConvert.convertDatetimeDMY(
-                                    savedGuidebookModel.createTime),
-                                style: TextStyle(
-                                    fontSize: 15.0,
-                                    color: LIGHT_DARK_GREY_COLOR)),
-                            SizedBox(
-                              width: 6,
-                            ),
-                            Icon(
-                              Icons.fiber_manual_record,
-                              color: GREY_COLOR,
-                              size: 6,
-                            ),
-                            SizedBox(
-                              width: 6,
-                            ),
-                            Text(
-                              savedGuidebookModel.estimatedFinishTime.toString() +
-                                  " phút đọc",
-                              style: TextStyle(
-                                  fontSize: 15, color: LIGHT_DARK_GREY_COLOR),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+              ))
+            ],
+          )
+      );
   }
 }
 

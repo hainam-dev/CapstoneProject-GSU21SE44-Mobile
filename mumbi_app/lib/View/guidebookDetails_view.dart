@@ -5,7 +5,9 @@ import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
+import 'package:mumbi_app/ViewModel/guidebook_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/savedGuidebook_viewmodel.dart';
+import 'package:mumbi_app/Widget/customCard.dart';
 import 'package:mumbi_app/Widget/customFlushBar.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -22,11 +24,15 @@ class GuidebookDetail extends StatefulWidget {
 
 class _GuidebookDetailState extends State<GuidebookDetail> {
   bool unsavedFlag = false;
+  GuidebookViewModel relatedGuidebookViewModel;
   SavedGuidebookViewModel savedGuidebookViewModel;
 
   @override
   void initState() {
     super.initState();
+    relatedGuidebookViewModel = new GuidebookViewModel();
+    relatedGuidebookViewModel.getRelatedGuidebook(widget.model.typeId, widget.model.guidebookId);
+
     savedGuidebookViewModel = new SavedGuidebookViewModel();
     savedGuidebookViewModel.checkSavedGuidebook(widget.model.guidebookId);
   }
@@ -46,9 +52,11 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Thumbnail(),
+              Type(),
               Title(),
               CreateAndReadTime(),
               Content(),
+              RelatedPostContainer(),
             ],
           ),
         ));
@@ -62,9 +70,20 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
     );
   }
 
+  Widget Type() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 10, 0),
+      child: Text(
+        widget.model.typeName,
+        style: TextStyle(
+            fontSize: 12, color: LIGHT_DARK_GREY_COLOR.withOpacity(0.7)),
+      ),
+    );
+  }
+
   Widget Title() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 10, 8),
+      padding: const EdgeInsets.fromLTRB(16, 0, 10, 8),
       child: Text(
         widget.model.title,
         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -101,6 +120,44 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
       padding: const EdgeInsets.fromLTRB(10, 0, 8, 16),
       child: Html(
         data: widget.model.guidebookContent,
+      ),
+    );
+  }
+
+  Widget RelatedPost() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 10, 8),
+      child: Text(
+        "Cẩm nang liên quan",
+        style: TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: PINK_COLOR),
+      ),
+    );
+  }
+
+  Widget RelatedPostContainer(){
+    return ScopedModel(
+      model: relatedGuidebookViewModel,
+      child: ScopedModelDescendant(
+        builder: (BuildContext context, Widget child,
+            GuidebookViewModel model) {
+          return model.isLoading == true
+              ? loadingProgress()
+              : model.guidebookListModel == null
+              ? SizedBox.shrink()
+              : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RelatedPost(),
+              for(var guidebookModel in model.guidebookListModel)
+                NormalCardItem(guidebookModel.imageURL, guidebookModel.title, guidebookModel.createTime, guidebookModel.estimatedFinishTime,
+                    onTap: (){
+                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => GuidebookDetail(guidebookModel, NORMAL_ENTRY),));
+                    }),
+            ],
+          );
+        },
       ),
     );
   }

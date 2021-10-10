@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:comment_tree/data/comment.dart';
 import 'package:mumbi_app/Model/comment_model.dart';
 import 'package:mumbi_app/Model/post_model.dart';
 import 'package:mumbi_app/Model/reaction_model.dart';
-import 'package:mumbi_app/Repository/comment_repository.dart';
 import 'package:mumbi_app/Repository/reaction_repository.dart';
 import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -81,9 +79,12 @@ class ReactionViewModel extends Model{
     reactionModel.postId = postId;
     reactionModel.typeId = 1;
     try {
-      String data = await ReactionRepository.apiAddPostReaction(reactionModel);
-      notifyListeners();
-      return true;
+      String result = await ReactionRepository.apiAddPostReaction(reactionModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }
@@ -97,9 +98,12 @@ class ReactionViewModel extends Model{
     reactionModel.commentId = commentId;
     reactionModel.typeId = 1;
     try {
-      String data = await ReactionRepository.apiAddCommentReaction(reactionModel);
-      notifyListeners();
-      return true;
+      String result = await ReactionRepository.apiAddCommentReaction(reactionModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }
@@ -108,8 +112,12 @@ class ReactionViewModel extends Model{
 
   Future<bool> deleteReaction(num id) async {
     try {
-      String data = await ReactionRepository.apiDeleteReaction(id);
-      return true;
+      String result = await ReactionRepository.apiDeleteReaction(id);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }

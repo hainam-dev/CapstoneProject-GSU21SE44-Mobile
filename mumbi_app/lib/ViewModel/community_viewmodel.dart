@@ -21,6 +21,9 @@ class CommunityViewModel extends Model {
     _instance = null;
   }
 
+  num pageSize = 3;
+  num currentPage;
+  num totalPage;
   bool isLoading = true;
   List<dynamic> postList;
   List<PostModel> postListModel;
@@ -28,15 +31,44 @@ class CommunityViewModel extends Model {
   void getCommunityPost() async {
     try {
       isLoading = true;
-      var data = await PostRepository.apiGetCommunityPost(3);
+      var data = await PostRepository.apiGetCommunityPost(pageSize,1);
       Map<String, dynamic> jsonList = json.decode(data);
       postList = jsonList['data'];
-      postListModel = postList.map((e) => PostModel.fromJson(e)).toList();
-      await Future.forEach(postListModel, (postModel) async {
-        await ReactionViewModel().countPostReaction(postModel);
-        await CommentViewModel().countCommentPost(postModel);
-        await ReactionViewModel().checkPostReaction(postModel);
-      });
+      if(postList != null){
+        postListModel = postList.map((e) => PostModel.fromJson(e)).toList();
+        await Future.forEach(postListModel, (postModel) async {
+          await ReactionViewModel().countPostReaction(postModel);
+          await CommentViewModel().countCommentPost(postModel);
+          await ReactionViewModel().checkPostReaction(postModel);
+        });
+      }
+      currentPage = jsonList['pageNumber'];
+      totalPage = jsonList['total'] / pageSize;
+      isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      isLoading = false;
+      print("error: " + e.toString());
+    }
+  }
+
+  void getMoreCommunityPost() async {
+    try {
+      isLoading = true;
+      var data = await PostRepository.apiGetCommunityPost(pageSize, ++currentPage);
+      Map<String, dynamic> jsonList = json.decode(data);
+      postList = jsonList['data'];
+      if(postList != null){
+        List<PostModel> morePostListModel = postList.map((e) => PostModel.fromJson(e)).toList();
+        currentPage = jsonList['pageNumber'];
+        totalPage = jsonList['total'] / pageSize;
+        await Future.forEach(morePostListModel, (postModel) async {
+          await ReactionViewModel().countPostReaction(postModel);
+          await CommentViewModel().countCommentPost(postModel);
+          await ReactionViewModel().checkPostReaction(postModel);
+        });
+        await postListModel.addAll(morePostListModel);
+      }
       isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -49,9 +81,12 @@ class CommunityViewModel extends Model {
     String userId = await UserViewModel.getUserID();
     postModel.userId = userId;
     try {
-      String data = await PostRepository.apiAddCommunityPost(postModel);
-      notifyListeners();
-      return true;
+      String result = await PostRepository.apiAddCommunityPost(postModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }
@@ -60,8 +95,12 @@ class CommunityViewModel extends Model {
 
   Future<bool> updateCommunityPost(PostModel postModel) async {
     try {
-      String data = await PostRepository.apiUpdateCommunityPost(postModel);
-      return true;
+      String result = await PostRepository.apiUpdateCommunityPost(postModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }
@@ -70,8 +109,12 @@ class CommunityViewModel extends Model {
 
   Future<bool> deleteCommunityPost(PostModel postModel) async {
     try {
-      String data = await PostRepository.apiDeletePost(postModel.id);
-      return true;
+      String result = await PostRepository.apiDeletePost(postModel.id);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }

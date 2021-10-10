@@ -23,25 +23,27 @@ class MomViewModel extends Model{
   MomModel momModel;
 
   void getMomByID() async{
-    if(_instance != null){
+    try{
       String id = await UserViewModel.getUserID();
-      try{
-        var data = await MomRepository.apiGetMomByID(id);
-        if(data != null){
-          data = jsonDecode(data);
-          momModel = MomModel.fromJson(data);
-          notifyListeners();
-        }
-      }catch (e){
-        print("error: " + e.toString());
+      var data = await MomRepository.apiGetMomByID(id);
+      if(data != null){
+        data = jsonDecode(data);
+        momModel = MomModel.fromJson(data);
+        notifyListeners();
       }
+    }catch (e){
+      print("error: " + e.toString());
     }
   }
 
   Future<bool> updateMom(MomModel momModel) async {
     try {
-      String data = await MomRepository.apiUpdateMom(momModel);
-      return true;
+      String result = await MomRepository.apiUpdateMom(momModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }

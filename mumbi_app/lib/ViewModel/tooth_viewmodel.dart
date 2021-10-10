@@ -48,10 +48,13 @@ class ToothViewModel extends Model {
 
   Future<bool> upsertTooth(ToothModel childModel) async {
     try {
-      String data = await ToothRepository.apiUpsertToothById(childModel);
+      String result = await ToothRepository.apiUpsertToothById(childModel);
       print("Update thành công");
-      notifyListeners();
-      return true;
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error upsert tooth: " + e.toString());
       return false;

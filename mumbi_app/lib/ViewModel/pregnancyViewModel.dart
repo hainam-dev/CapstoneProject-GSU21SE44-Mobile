@@ -43,8 +43,12 @@ class PregnancyHistoryViewModel extends Model{
 
   Future<bool> updatePregnancyHistory(String childId, PregnancyHistoryModel pregnancyHistoryModel, String date) async {
     try {
-      String data = await PregnancyHistoryRepository.apiUpdatePregnancyHistory(childId, pregnancyHistoryModel, date);
-      return true;
+      String result = await PregnancyHistoryRepository.apiUpdatePregnancyHistory(childId, pregnancyHistoryModel, date);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }

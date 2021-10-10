@@ -20,18 +20,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LogoutViewModel {
 
-  Future<bool> deleteFcmToken() async {
+  Future<void> deleteFcmToken() async {
     String userId = await UserViewModel.getUserID();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String fcmToken = await prefs.getString(FCM_TOKEN);
     try {
-      String data = await LogoutRepository.apiDeleteFcmToken(userId, fcmToken);
+      await LogoutRepository.apiDeleteFcmToken(userId, fcmToken);
       await prefs.remove(FCM_TOKEN);
-      return true;
     } catch (e) {
       print("error: " + e.toString());
     }
-    return false;
   }
 
   void destroyInstance() async{

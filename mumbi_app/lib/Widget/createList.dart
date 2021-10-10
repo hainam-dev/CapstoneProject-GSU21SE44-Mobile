@@ -98,16 +98,15 @@ Widget createTitleCard(String _text) {
 }
 
 Widget createTitle(String _text) {
-  return Column(
-    children: [
-      Text(
-        _text,
-        style: TextStyle(
-            color: Color.fromRGBO(33, 33, 33, 1),
-            fontWeight: FontWeight.w700,
-            fontSize: 20),
-      ),
-    ],
+  return Padding(
+    padding: const EdgeInsets.only(left: 8),
+    child: Text(
+      _text,textAlign: TextAlign.left,
+      style: TextStyle(
+          color: Color.fromRGBO(33, 33, 33, 1),
+          fontWeight: FontWeight.w700,
+          fontSize: 20),
+    ),
   );
 }
 

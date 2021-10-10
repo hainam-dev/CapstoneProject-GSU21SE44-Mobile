@@ -52,8 +52,12 @@ class ChildHistoryViewModel extends Model {
 
   Future<bool> updateChildHistory(ChildHistoryModel childHistoryModel, String date) async {
     try {
-      String data = await ChildHistoryRepository.apiUpdateChildHistory(childHistoryModel, date);
-      return true;
+      String result = await ChildHistoryRepository.apiUpdateChildHistory(childHistoryModel, date);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }

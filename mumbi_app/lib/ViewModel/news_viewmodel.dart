@@ -17,38 +17,68 @@ class NewsViewModel extends Model {
     _instance = null;
   }
 
-  NewsModel newsModel;
-
-  List<dynamic> newsList;
-  bool loadingNewsListModel;
+  num pageSize = 10;
+  num currentPage;
+  num totalPage;
+  bool isLoading = true;
   List<NewsModel> newsListModel;
 
-  void getAllNews() async {
-    loadingNewsListModel = true;
+  void getNews() async {
     try {
-      String data = await NewsRepository.apiGetAllNews();
+      isLoading = true;
+      String data = await NewsRepository.apiGetNews(1);
       Map<String, dynamic> jsonList = json.decode(data);
-      newsList = jsonList['data'];
-      newsListModel = newsList.map((e) => NewsModel.fromJson(e)).toList();
+      List<dynamic> newsList = jsonList['data'];
+      if(newsList != null){
+        newsListModel = newsList.map((e) => NewsModel.fromJson(e)).toList();
+      }else{
+        newsListModel = null;
+      }
+      currentPage = jsonList['pageNumber'];
+      totalPage = jsonList['total'] / pageSize;
+      isLoading = false;
       notifyListeners();
-      loadingNewsListModel = false;
     } catch (e) {
       print("error: " + e.toString());
     }
   }
 
-  void getNewsByType(num typeId, String newsId) async {
-    loadingNewsListModel = true;
+  void getMoreNews() async {
     try {
-      String data = await NewsRepository.apiGetNewsByType(typeId);
+      if(currentPage < totalPage){
+        isLoading = true;
+        String data = await NewsRepository.apiGetNews(++currentPage);
+        Map<String, dynamic> jsonList = json.decode(data);
+        List<dynamic> newsList = jsonList['data'];
+        if(newsList != null){
+          List<NewsModel> moreNewsListModel = newsList.map((e) => NewsModel.fromJson(e)).toList();
+          currentPage = jsonList['pageNumber'];
+          totalPage = jsonList['total'] / pageSize;
+          newsListModel.addAll(moreNewsListModel);
+        }
+        isLoading = false;
+        notifyListeners();
+      }
+    } catch (e) {
+      print("error: " + e.toString());
+    }
+  }
+
+  void getRelatedNews(num typeId, String newsId) async {
+    try {
+      isLoading = true;
+      String data = await NewsRepository.apiGetNews(1, typeId);
       Map<String, dynamic> jsonList = json.decode(data);
-      newsList = jsonList['data'];
+      List<dynamic> newsList = jsonList['data'];
       if(newsList != null){
         newsListModel = newsList.map((e) => NewsModel.fromJson(e)).toList();
         for(int i = newsListModel.length - 1; i >= 0 ; i--){
-          NewsModel newsModelFromList = newsListModel[i];
-          if(newsModelFromList.newsId == newsId){
+          NewsModel newsModel = newsListModel[i];
+          if(newsModel.newsId == newsId){
             newsListModel.removeAt(i);
+            if(newsListModel.length == 0){
+              newsListModel = null;
+            }
             break;
           }
         }
@@ -56,7 +86,7 @@ class NewsViewModel extends Model {
         newsListModel = null;
       }
       notifyListeners();
-      loadingNewsListModel = false;
+      isLoading = false;
     } catch (e) {
       print("error: " + e.toString());
     }

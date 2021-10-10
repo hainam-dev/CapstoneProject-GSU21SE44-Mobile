@@ -30,7 +30,7 @@ showProgressDialogue(BuildContext context) {
     context:context,
     builder: (BuildContext context) {
       return WillPopScope(
-          onWillPop: null, // prevent close on back
+          onWillPop: (){}, // prevent close on back
           child: alert);
     },
   );

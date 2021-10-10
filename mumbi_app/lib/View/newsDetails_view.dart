@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,6 +10,7 @@ import 'package:mumbi_app/Model/news_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/ViewModel/news_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/savedNews_viewmodel.dart';
+import 'package:mumbi_app/Widget/customCard.dart';
 import 'package:mumbi_app/Widget/customFlushBar.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -27,14 +27,14 @@ class NewsDetail extends StatefulWidget {
 
 class _NewsDetailState extends State<NewsDetail> {
   bool unsavedFlag = false;
-  NewsViewModel newsTypeViewModel;
+  NewsViewModel relatedNewsViewModel;
   SavedNewsViewModel savedNewsViewModel;
 
   @override
   void initState() {
     super.initState();
-    newsTypeViewModel = new NewsViewModel();
-    newsTypeViewModel.getNewsByType(widget.model.typeId, widget.model.newsId);
+    relatedNewsViewModel = new NewsViewModel();
+    relatedNewsViewModel.getRelatedNews(widget.model.typeId, widget.model.newsId);
 
     savedNewsViewModel = new SavedNewsViewModel();
     savedNewsViewModel.checkSavedNews(widget.model.newsId);
@@ -61,9 +61,6 @@ class _NewsDetailState extends State<NewsDetail> {
               CreateAndReadTime(),
               Content(),
               RelatedPostContainer(),
-              SizedBox(
-                height: 15,
-              ),
             ],
           ),
         ));
@@ -106,7 +103,7 @@ class _NewsDetailState extends State<NewsDetail> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 10, 8),
       child: Text(
-        "Bài viết cùng chủ đề",
+        "Tin tức liên quan",
         style: TextStyle(
             fontSize: 20, fontWeight: FontWeight.bold, color: PINK_COLOR),
       ),
@@ -148,11 +145,11 @@ class _NewsDetailState extends State<NewsDetail> {
 
   Widget RelatedPostContainer(){
     return ScopedModel(
-      model: newsTypeViewModel,
+      model: relatedNewsViewModel,
       child: ScopedModelDescendant(
         builder: (BuildContext context, Widget child,
             NewsViewModel model) {
-          return model.loadingNewsListModel == true
+          return model.isLoading == true
               ? loadingProgress()
               : model.newsListModel == null
               ? SizedBox.shrink()
@@ -160,109 +157,15 @@ class _NewsDetailState extends State<NewsDetail> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RelatedPost(),
-              CarouselSlider.builder(
-                options: CarouselOptions(
-                  height: 250,
-                  enlargeCenterPage: false,
-                  enableInfiniteScroll: false,
-                  autoPlay: true,
-                  autoPlayCurve:
-                  Curves.fastLinearToSlowEaseIn,
-                  viewportFraction: 1,
-                ),
-                itemCount: model.newsListModel.length,
-                itemBuilder: (context, index, realIndex) {
-                  NewsModel newsModel =
-                  model.newsListModel[index];
-                  return createNewsItem(
-                      newsModel.imageURL,
-                      newsModel.title,
-                      newsModel.estimatedFinishTime
-                          .toString(),
-                      NewsDetail(newsModel,NORMAL_ENTRY));
-                },
-              ),
+              for(var newsModel in model.newsListModel)
+              NormalCardItem(newsModel.imageURL, newsModel.title, newsModel.createTime, newsModel.estimatedFinishTime,
+              onTap: (){
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => NewsDetail(newsModel, NORMAL_ENTRY),));
+              }),
             ],
           );
         },
-      ),
-    );
-  }
-
-  Widget createNewsItem(
-      String _imageURL, String _title, String _estimatedTime, Widget _screen) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => _screen));
-        },
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          elevation: 0.1,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(
-              color: LIGHT_DARK_GREY_COLOR.withOpacity(0.2),
-            ),
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Scaffold(
-            backgroundColor: WHITE_COLOR,
-            extendBody: true,
-            body: Ink.image(
-              image: CachedNetworkImageProvider(
-                _imageURL,
-              ),
-              fit: BoxFit.cover,
-            ),
-            bottomNavigationBar: Container(
-              color: BLACK_COLOR.withOpacity(0.7),
-              height: 80,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsets.only(left: 10, right: 5, top: 5, bottom: 5),
-                    child: Text(
-                      _title,
-                      textAlign: TextAlign.left,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          color: WHITE_COLOR),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 10, left: 4),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Container(
-                            child: SvgPicture.asset(readIcon,
-                                height: 16, width: 16, color: WHITE_COLOR)),
-                        SizedBox(width: 5),
-                        Text(
-                          _estimatedTime + " phút đọc",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 14, color: WHITE_COLOR),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }

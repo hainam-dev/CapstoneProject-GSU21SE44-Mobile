@@ -22,16 +22,18 @@ class CommentViewModel extends Model{
     _instance = null;
   }
 
+  num pageSize = 10;
+  num currentPage;
+  num totalPage;
   bool isLoading;
-  List<dynamic> commentList;
   List<CommentModel> commentListModel;
 
   void getPostComment(PostModel postModel) async {
     try{
       isLoading = true;
-      var data = await CommentRepository.apiGetPostComment(postModel.id);
+      var data = await CommentRepository.apiGetPostComment(postModel.id, 1);
       Map<String, dynamic> jsonList = json.decode(data);
-      commentList = jsonList['data'];
+      List<dynamic> commentList = jsonList['data'];
       if(commentList != null){
         commentListModel = commentList.map((e) => CommentModel.fromJson(e)).toList();
         await Future.forEach(commentListModel, (commentModel) async {
@@ -40,10 +42,38 @@ class CommentViewModel extends Model{
           await ReactionViewModel().checkCommentReaction(commentModel);
         });
       }else{
-        commentListModel = new List();
+        commentListModel = null;
       }
+      currentPage = jsonList['pageNumber'];
+      totalPage = jsonList['total'] / pageSize;
       isLoading = false;
       notifyListeners();
+    }catch (e){
+      print("error: " + e.toString());
+    }
+  }
+
+  void getMorePostComment(PostModel postModel) async {
+    try{
+      if(currentPage < totalPage){
+        isLoading = true;
+        var data = await CommentRepository.apiGetPostComment(postModel.id, ++currentPage);
+        Map<String, dynamic> jsonList = json.decode(data);
+        List<dynamic> commentList = jsonList['data'];
+        if(commentList != null){
+          List<CommentModel> moreCommentListModel = commentList.map((e) => CommentModel.fromJson(e)).toList();
+          currentPage = jsonList['pageNumber'];
+          totalPage = jsonList['total'] / pageSize;
+          await Future.forEach(moreCommentListModel, (commentModel) async {
+            await ReactionViewModel().countCommentReaction(commentModel);
+            await CommentViewModel().countReply(commentModel);
+            await ReactionViewModel().checkCommentReaction(commentModel);
+          });
+          await commentListModel.addAll(moreCommentListModel);
+        }
+        isLoading = false;
+        notifyListeners();
+      }
     }catch (e){
       print("error: " + e.toString());
     }
@@ -52,9 +82,9 @@ class CommentViewModel extends Model{
   void getReplyPostComment(CommentModel commentModel) async {
     try{
       isLoading = true;
-      var data = await CommentRepository.apiGetReplyPostComment(commentModel.replyCommentId);
+      var data = await CommentRepository.apiGetReplyPostComment(commentModel.replyCommentId,1);
       Map<String, dynamic> jsonList = json.decode(data);
-      commentList = jsonList['data'];
+      List<dynamic> commentList = jsonList['data'];
       if(commentList != null){
         commentListModel = commentList.map((e) => CommentModel.fromJson(e)).toList();
         await Future.forEach(commentListModel, (commentModel) async {
@@ -62,10 +92,37 @@ class CommentViewModel extends Model{
           await ReactionViewModel().checkCommentReaction(commentModel);
         });
       }else{
-        commentListModel = new List();
+        commentListModel = null;
       }
+      currentPage = jsonList['pageNumber'];
+      totalPage = jsonList['total'] / pageSize;
       isLoading = false;
       notifyListeners();
+    }catch (e){
+      print("error: " + e.toString());
+    }
+  }
+
+  void getMoreReplyPostComment(CommentModel commentModel) async {
+    try{
+      if(currentPage < totalPage){
+        isLoading = true;
+        var data = await CommentRepository.apiGetReplyPostComment(commentModel.replyCommentId,++currentPage);
+        Map<String, dynamic> jsonList = json.decode(data);
+        List<dynamic> commentList = jsonList['data'];
+        if(commentList != null){
+          List<CommentModel> moreCommentListModel = commentList.map((e) => CommentModel.fromJson(e)).toList();
+          currentPage = jsonList['pageNumber'];
+          totalPage = jsonList['total'] / pageSize;
+          await Future.forEach(moreCommentListModel, (commentModel) async {
+            await ReactionViewModel().countCommentReaction(commentModel);
+            await ReactionViewModel().checkCommentReaction(commentModel);
+          });
+          await commentListModel.addAll(moreCommentListModel);
+        }
+        isLoading = false;
+        notifyListeners();
+      }
     }catch (e){
       print("error: " + e.toString());
     }
@@ -85,9 +142,12 @@ class CommentViewModel extends Model{
     String userId = await UserViewModel.getUserID();
     commentModel.userId = userId;
     try {
-      String data = await CommentRepository.apiAddPostComment(commentModel);
-      notifyListeners();
-      return true;
+      String result = await CommentRepository.apiAddPostComment(commentModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }
@@ -98,9 +158,12 @@ class CommentViewModel extends Model{
     String userId = await UserViewModel.getUserID();
     commentModel.userId = userId;
     try {
-      String data = await CommentRepository.apiAddReplyPostComment(commentModel);
-      notifyListeners();
-      return true;
+      String result = await CommentRepository.apiAddReplyPostComment(commentModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }
@@ -109,8 +172,12 @@ class CommentViewModel extends Model{
 
   Future<bool> updateComment(CommentModel commentModel) async {
     try {
-      String data = await CommentRepository.apiUpdateComment(commentModel);
-      return true;
+      String result = await CommentRepository.apiUpdateComment(commentModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }
@@ -119,8 +186,12 @@ class CommentViewModel extends Model{
 
   Future<bool> deleteComment(num id) async {
     try {
-      String data = await CommentRepository.apiDeleteComment(id);
-      return true;
+      String result = await CommentRepository.apiDeleteComment(id);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
     } catch (e) {
       print("error: " + e.toString());
     }

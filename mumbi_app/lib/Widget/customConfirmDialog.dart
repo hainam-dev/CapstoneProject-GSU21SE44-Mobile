@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 showConfirmDialog(BuildContext context, String ContinueText, String ConfirmMessage, {Function ContinueFunction}) {
-  // set up the buttons
   Widget cancelButton = TextButton(
     child: Text("Hủy"),
     onPressed:  () {
@@ -12,7 +11,6 @@ showConfirmDialog(BuildContext context, String ContinueText, String ConfirmMessa
     child: Text(ContinueText),
     onPressed: ContinueFunction,
   );
-  // set up the AlertDialog
   AlertDialog alert = AlertDialog(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10.0),
@@ -24,7 +22,6 @@ showConfirmDialog(BuildContext context, String ContinueText, String ConfirmMessa
       continueButton,
     ],
   );
-  // show the dialog
   showDialog(
     context: context,
     builder: (BuildContext context) {

@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Constant/common_message.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/news_model.dart';
@@ -20,8 +21,9 @@ import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/news_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
+import 'package:mumbi_app/Widget/customEmpty.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
-import 'package:mumbi_app/Widget/customProgressDialog.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'drawer_view.dart';
 import 'changeAccount_view.dart';
@@ -36,12 +38,13 @@ class _DashBoardState extends State<DashBoard> {
   NewsViewModel _newsViewModel;
   MomViewModel _momViewModel;
   ChildViewModel _childViewModel;
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   @override
   void initState() {
     super.initState();
     _newsViewModel = NewsViewModel.getInstance();
-    _newsViewModel.getAllNews();
+    _newsViewModel.getNews();
 
     _momViewModel = MomViewModel.getInstance();
     _momViewModel.getMomByID();
@@ -51,6 +54,17 @@ class _DashBoardState extends State<DashBoard> {
 
     if (CurrentMember.role == CHILD_ROLE)
       _childViewModel.getChildByID(CurrentMember.id);
+  }
+
+  void _onRefresh() async {
+    await _newsViewModel.getNews();
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    await _newsViewModel.getMoreNews();
+    if (mounted) setState(() {});
+    _refreshController.loadComplete();
   }
 
   @override
@@ -65,26 +79,41 @@ class _DashBoardState extends State<DashBoard> {
         ],
       ),
       drawer: getDrawer(context),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (CurrentMember.role == MOM_ROLE) PregnancyInfo(),
-          if (CurrentMember.role == CHILD_ROLE) ChildInfo(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-            child: Align(
-                alignment: Alignment.topLeft,
-                child: createTitle("Tính năng nổi bật")),
+      body: SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          header: MaterialClassicHeader(),
+          footer: CustomFooter(
+            builder: (BuildContext context,LoadStatus mode){
+              Widget body ;
+              if(mode == LoadStatus.loading){
+                body =  loadingProgress();
+              } else {
+                body = Text(NO_MORE_NEWS_MESSAGE);
+              }
+              return Container(
+                height: 55.0,
+                child: Center(child:body),
+              );
+            },
           ),
-          SalientFeatures(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
-            child: Align(
-                alignment: Alignment.topLeft,
-                child: createTitle("Tin tức mới nhất")),
-          ),
-          GridViewNews(),
-        ],
+          controller: _refreshController,
+          onRefresh: _onRefresh,
+          onLoading: _onLoading,
+          child: CustomScrollView(
+            slivers: [
+              SliverList(delegate: SliverChildListDelegate(
+                [
+                  if (CurrentMember.role == MOM_ROLE) PregnancyInfo(),
+                  if (CurrentMember.role == CHILD_ROLE) ChildInfo(),
+                  createTitle("Tính năng nổi bật"),
+                  SalientFeatures(),
+                  createTitle("Tin tức mới nhất"),
+                  GridViewNews(),
+                ],
+              ))
+            ],
+          )
       ),
     );
   }
@@ -177,73 +206,70 @@ class _DashBoardState extends State<DashBoard> {
 
   Widget createNewsItem(
       String _imageURL, String _title, String _estimatedTime, Widget _screen) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => _screen));
-        },
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          elevation: 0.1,
-          shape: RoundedRectangleBorder(
-            side: BorderSide(
-              color: LIGHT_DARK_GREY_COLOR.withOpacity(0.2),
-            ),
-            borderRadius: BorderRadius.circular(10.0),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => _screen));
+      },
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        elevation: 0.1,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: LIGHT_DARK_GREY_COLOR.withOpacity(0.2),
           ),
-          child: Scaffold(
-            backgroundColor: WHITE_COLOR,
-            body: Ink.image(
-              image: CachedNetworkImageProvider(
-                _imageURL,
-              ),
-              height: 125,
-              fit: BoxFit.cover,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Scaffold(
+          backgroundColor: WHITE_COLOR,
+          body: Ink.image(
+            image: CachedNetworkImageProvider(
+              _imageURL,
             ),
-            bottomNavigationBar: Container(
-              height: 80,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsets.only(left: 10, right: 5, top: 5, bottom: 5),
-                    child: Text(
-                      _title,
-                      textAlign: TextAlign.left,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                    ),
+            height: 125,
+            fit: BoxFit.cover,
+          ),
+          bottomNavigationBar: Container(
+            height: 80,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.only(left: 10, right: 5, top: 5, bottom: 5),
+                  child: Text(
+                    _title,
+                    textAlign: TextAlign.left,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style:
+                        TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 10, left: 4),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Container(
-                            child: SvgPicture.asset(readIcon,
-                                height: 16, width: 16)),
-                        SizedBox(width: 5),
-                        Text(
-                          _estimatedTime + " phút đọc",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 14, color: LIGHT_DARK_GREY_COLOR),
-                        ),
-                      ],
-                    ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 10, left: 4),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Container(
+                          child: SvgPicture.asset(readIcon,
+                              height: 16, width: 16)),
+                      SizedBox(width: 5),
+                      Text(
+                        _estimatedTime + " phút đọc",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 14, color: LIGHT_DARK_GREY_COLOR),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -341,31 +367,34 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   Widget GridViewNews() {
-    return ScopedModel(
-      model: _newsViewModel,
-      child: ScopedModelDescendant(
-        builder: (BuildContext context, Widget child, NewsViewModel model) {
-          return model.newsListModel == null
-              ? loadingProgress()
-              : Expanded(
-                  child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 250,
-                          crossAxisSpacing: 3,
-                          mainAxisSpacing: 3),
-                      itemCount: model.newsListModel != null
-                          ? model.newsListModel.length
-                          : 0,
-                      itemBuilder: (BuildContext context, index) {
-                        NewsModel newsModel = model.newsListModel[index];
-                        return createNewsItem(
-                            newsModel.imageURL,
-                            newsModel.title,
-                            newsModel.estimatedFinishTime.toString(),
-                            NewsDetail(newsModel,NORMAL_ENTRY));
-                      }),
-                );
-        },
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: ScopedModel(
+        model: _newsViewModel,
+        child: ScopedModelDescendant(
+          builder: (BuildContext context, Widget child, NewsViewModel model) {
+            return model.newsListModel == null
+                ? loadingProgress()
+                : GridView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 250,
+                        crossAxisSpacing: 2,
+                        mainAxisSpacing: 2),
+                    itemCount: model.newsListModel != null
+                        ? model.newsListModel.length
+                        : 0,
+                    itemBuilder: (BuildContext context, index) {
+                      NewsModel newsModel = model.newsListModel[index];
+                      return createNewsItem(
+                          newsModel.imageURL,
+                          newsModel.title,
+                          newsModel.estimatedFinishTime.toString(),
+                          NewsDetail(newsModel,NORMAL_ENTRY));
+                    });
+          },
+        ),
       ),
     );
   }

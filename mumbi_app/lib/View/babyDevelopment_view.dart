@@ -92,7 +92,7 @@ class _BabyDevelopmentState extends State<BabyDevelopment> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Theo dõi bé'),
+        title: Text('Theo dõi'),
       ),
       body: SingleChildScrollView(
         child: Column(

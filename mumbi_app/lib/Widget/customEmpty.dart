@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
-Widget EmptyWithText(_content) {
-  return Center(
-    child: Text(
-      _content,style: TextStyle(fontSize: 18),
-    ),
+Widget Empty(String image, String message){
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      if(image != "")
+      SvgPicture.asset(image,height: 160,),
+      SizedBox(height: 10,),
+      Align(alignment: Alignment.center ,child: Text(message ,style: TextStyle(fontSize: 18),)),
+    ],
   );
+}
+
+Widget InvisibleBox(){
+  return SizedBox.shrink();
 }

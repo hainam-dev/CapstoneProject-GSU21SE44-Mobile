@@ -7,14 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Constant/common_message.dart';
 import 'package:mumbi_app/Model/comment_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/ViewModel/comment_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
 import 'package:mumbi_app/Widget/customConfirmDialog.dart';
+import 'package:mumbi_app/Widget/customEmpty.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:mumbi_app/Widget/customProgressDialog.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readmore/readmore.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -34,6 +37,7 @@ class _ReplyCommentState extends State<ReplyComment> {
   CommentViewModel commentViewModel;
   MomViewModel _momViewModel;
   TextEditingController _controller = TextEditingController();
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -43,6 +47,17 @@ class _ReplyCommentState extends State<ReplyComment> {
     commentViewModel.getReplyPostComment(widget.commentModel);
   }
 
+  void _onRefresh() async {
+    await commentViewModel.getReplyPostComment(widget.commentModel);
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    await commentViewModel.getMoreReplyPostComment(widget.commentModel);
+    if (mounted) setState(() {});
+    _refreshController.loadComplete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,166 +65,36 @@ class _ReplyCommentState extends State<ReplyComment> {
         appBar: AppBar(
           title: Text("Phản hồi"),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 4),
-            child: CommentTreeWidget<Comment, Comment>(
-            Comment(
-              avatar: widget.commentModel.avatar,
-              userName: widget.commentModel.fullName,
-              content: widget.commentModel.commentContent,),
-            [
-            ],
-            treeThemeData: TreeThemeData(lineColor: TRANSPARENT_COLOR, lineWidth: 0.5),
-            avatarRoot: (context, data) => PreferredSize(
-              child: CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.grey,
-                backgroundImage: CachedNetworkImageProvider(data.avatar),
-              ),
-              preferredSize: Size.fromRadius(18),
-            ),
-            avatarChild: (context, data) => PreferredSize(
-              child: CircleAvatar(
-                radius: 12,
-                backgroundColor: Colors.grey,
-                backgroundImage: CachedNetworkImageProvider(data.avatar),
-              ),
-              preferredSize: Size.fromRadius(12),
-            ),
-            contentRoot: (context, data) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                    decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(19)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${data.userName}',
-                          style: Theme.of(context).textTheme.caption?.copyWith(
-                              fontWeight: FontWeight.w600, color: Colors.black,fontSize: 16),
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        data.content.length < 300
-                            ? Text(
-                            '${data.content}',
-                            style: Theme.of(context).textTheme.caption?.copyWith(
-                                fontWeight: FontWeight.w300, color: Colors.black,fontSize: 16))
-                            : CommentContent(data.content),
-                      ],
-                    ),
-                  ),
-                  DefaultTextStyle(
-                    style: Theme.of(context).textTheme.caption?.copyWith(
-                        color: LIGHT_DARK_GREY_COLOR, fontWeight: FontWeight.bold),
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 6),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 12,
-                          ),
-                          Text("${DateTimeConvert.timeAgoInShort(widget.commentModel.createdTime)}"),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Text(widget.commentModel.totalReaction == 0 ? "" : widget.commentModel.totalReaction.toString(),
-                            style: TextStyle(color: widget.commentModel.idReaction != 0 ? PINK_COLOR : LIGHT_DARK_GREY_COLOR),),
-                          SizedBox(
-                            width: 2,
-                          ),
-                          GestureDetector(
-                            onTap: () async {
-                              showProgressDialogue(context);
-                              if(widget.commentModel.idReaction != 0){
-                                await ReactionViewModel().deleteReaction(widget.commentModel.idReaction);
-                                await ReactionViewModel().checkCommentReaction(widget.commentModel);
-                                widget.commentModel.totalReaction--;
-                              }else{
-                                await ReactionViewModel().addCommentReaction(widget.commentModel.id);
-                                await ReactionViewModel().checkCommentReaction(widget.commentModel);
-                                widget.commentModel.totalReaction++;
-                              }
-                              Navigator.pop(context);
-                              setState(() {});
-                            },
-                            child: Text("Thích",
-                              style: TextStyle(color: widget.commentModel.idReaction != 0 ? PINK_COLOR : LIGHT_DARK_GREY_COLOR),),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Text("${widget.commentModel.totalReply == 0 ? "" : widget.commentModel.totalReply.toString()} Trả lời"),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          if(widget.commentModel.userId == _momViewModel.momModel.id)
-                            GestureDetector(
-                              onTap: (){
-                                showConfirmDialog(context, "Xoá", "Bạn có muốn xóa bình luận này?",ContinueFunction: () async{
-                                  Navigator.pop(context);
-                                  showProgressDialogue(context);
-                                  bool result = await CommentViewModel().deleteComment(widget.commentModel.id);
-                                  if(result){
-                                    commentViewModel.commentListModel.remove(widget.commentModel);
-                                    widget.commentModel.totalReply--;
-                                  }
-                                  Navigator.pop(context);
-                                  setState(() {});
-                                });
-                              },
-                              child: Text("Xóa"),
-                            ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          if(widget.commentModel.userId == _momViewModel.momModel.id)
-                            GestureDetector(
-                              onTap: () async{
-                                await Navigator.push(context, MaterialPageRoute(builder: (context) => EditComment(widget.commentModel),));
-                                setState(() {});
-                              },
-                              child: Text("Sửa"),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+        body: SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          header: MaterialClassicHeader(),
+          footer: CustomFooter(
+            builder: (BuildContext context, LoadStatus mode) {
+              Widget body;
+              if(mode == LoadStatus.loading){
+                body =  loadingProgress();
+              } else {
+                body = Text(NO_MORE_REPLY_MESSAGE);
+              }
+              return Container(
+                height: 55.0,
+                child: Center(child: body),
               );
             },
-            contentChild: (context, data) {
-              return Container();
-            },
           ),
-        ),
-              Divider(),
-              ScopedModel(
-                model: commentViewModel,
-                child: ScopedModelDescendant(builder: (BuildContext context, Widget child, CommentViewModel model) {
-                  return model.isLoading == true
-                      ? loadingProgress()
-                      : model.commentListModel.length == 0
-                      ? Empty()
-                      : SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          for(var comment in model.commentListModel)
-                            replyComment(comment),
-                        ],
-                      ));
-                },),
-              ),
-            ],
+          controller: _refreshController,
+          onRefresh: _onRefresh,
+          onLoading: _onLoading,
+          child:
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                UserComment(),
+                Divider(),
+                UserReply(),
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: Container(
@@ -220,6 +105,167 @@ class _ReplyCommentState extends State<ReplyComment> {
           Card(margin: EdgeInsets.zero, child: CommentSection()),
         ),
       ),
+    );
+  }
+
+  Widget UserComment(){
+    return Container(
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 4),
+      child: CommentTreeWidget<Comment, Comment>(
+        Comment(
+          avatar: widget.commentModel.avatar,
+          userName: widget.commentModel.fullName,
+          content: widget.commentModel.commentContent,),
+        [
+        ],
+        treeThemeData: TreeThemeData(lineColor: TRANSPARENT_COLOR, lineWidth: 0.5),
+        avatarRoot: (context, data) => PreferredSize(
+          child: CircleAvatar(
+            radius: 20,
+            backgroundColor: Colors.grey,
+            backgroundImage: CachedNetworkImageProvider(data.avatar),
+          ),
+          preferredSize: Size.fromRadius(18),
+        ),
+        avatarChild: (context, data) => PreferredSize(
+          child: CircleAvatar(
+            radius: 12,
+            backgroundColor: Colors.grey,
+            backgroundImage: CachedNetworkImageProvider(data.avatar),
+          ),
+          preferredSize: Size.fromRadius(12),
+        ),
+        contentRoot: (context, data) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(19)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${data.userName}',
+                      style: Theme.of(context).textTheme.caption?.copyWith(
+                          fontWeight: FontWeight.w600, color: Colors.black,fontSize: 16),
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    data.content.length < 300
+                        ? Text(
+                        '${data.content}',
+                        style: Theme.of(context).textTheme.caption?.copyWith(
+                            fontWeight: FontWeight.w300, color: Colors.black,fontSize: 16))
+                        : CommentContent(data.content),
+                  ],
+                ),
+              ),
+              DefaultTextStyle(
+                style: Theme.of(context).textTheme.caption?.copyWith(
+                    color: LIGHT_DARK_GREY_COLOR, fontWeight: FontWeight.bold),
+                child: Padding(
+                  padding: EdgeInsets.only(top: 6),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Text("${DateTimeConvert.timeAgoInShort(widget.commentModel.createdTime)}"),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text(widget.commentModel.totalReaction == 0 ? "" : widget.commentModel.totalReaction.toString(),
+                        style: TextStyle(color: widget.commentModel.idReaction != 0 ? PINK_COLOR : LIGHT_DARK_GREY_COLOR),),
+                      SizedBox(
+                        width: 2,
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          showProgressDialogue(context);
+                          if(widget.commentModel.idReaction != 0){
+                            await ReactionViewModel().deleteReaction(widget.commentModel.idReaction);
+                            await ReactionViewModel().checkCommentReaction(widget.commentModel);
+                            widget.commentModel.totalReaction--;
+                          }else{
+                            await ReactionViewModel().addCommentReaction(widget.commentModel.id);
+                            await ReactionViewModel().checkCommentReaction(widget.commentModel);
+                            widget.commentModel.totalReaction++;
+                          }
+                          Navigator.pop(context);
+                          setState(() {});
+                        },
+                        child: Text("Thích",
+                          style: TextStyle(color: widget.commentModel.idReaction != 0 ? PINK_COLOR : LIGHT_DARK_GREY_COLOR),),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text("${widget.commentModel.totalReply == 0 ? "" : widget.commentModel.totalReply.toString()} Trả lời"),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      if(widget.commentModel.userId == _momViewModel.momModel.id)
+                        GestureDetector(
+                          onTap: (){
+                            showConfirmDialog(context, "Xoá", "Bạn có muốn xóa bình luận này?",ContinueFunction: () async{
+                              Navigator.pop(context);
+                              showProgressDialogue(context);
+                              bool result = await CommentViewModel().deleteComment(widget.commentModel.id);
+                              if(result){
+                                commentViewModel.commentListModel.remove(widget.commentModel);
+                                widget.commentModel.totalReply--;
+                              }
+                              Navigator.pop(context);
+                              setState(() {});
+                            });
+                          },
+                          child: Text("Xóa"),
+                        ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      if(widget.commentModel.userId == _momViewModel.momModel.id)
+                        GestureDetector(
+                          onTap: () async{
+                            await Navigator.push(context, MaterialPageRoute(builder: (context) => EditComment(widget.commentModel),));
+                            setState(() {});
+                          },
+                          child: Text("Sửa"),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+        contentChild: (context, data) {
+          return Container();
+        },
+      ),
+    );
+  }
+
+  Widget UserReply(){
+    return ScopedModel(
+      model: commentViewModel,
+      child: ScopedModelDescendant(builder: (BuildContext context, Widget child, CommentViewModel model) {
+        return model.isLoading == true
+            ? loadingProgress()
+            : model.commentListModel == null
+            ? Empty()
+            : SingleChildScrollView(
+            child: Column(
+              children: [
+                for(var comment in model.commentListModel)
+                  replyComment(comment),
+              ],
+            ));
+      },),
     );
   }
 
@@ -458,6 +504,7 @@ class _ReplyCommentState extends State<ReplyComment> {
     bool result = await CommentViewModel().addReplyPostComment(commentModel);
     if(result){
       commentViewModel.getReplyPostComment(widget.commentModel);
+      widget.commentModel.totalReply++;
     }
 
     Navigator.pop(context);

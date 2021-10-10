@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:mumbi_app/Model/news_model.dart';
 import 'package:mumbi_app/Model/savedNews_model.dart';
 import 'package:mumbi_app/Repository/savedNews_Repository.dart';
 import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
@@ -21,47 +20,27 @@ class SavedNewsViewModel extends Model{
     _instance = null;
   }
 
+  num pageSize = 10;
+  num currentPage;
+  num totalPage;
   SavedNewsModel savedNewsModel;
-  List<dynamic> savedNewsList;
-  bool isLoading;
+  bool isLoading = true;
   List<SavedNewsModel> savedNewsListModel;
 
-  Future<bool> saveNews(String newsId) async {
-    SavedNewsModel savedNewsModel = new SavedNewsModel();
-
-    String momId = await UserViewModel.getUserID();
-    savedNewsModel.momId = momId;
-    savedNewsModel.newsId = newsId;
-    try {
-      String data = await SavedNewsRepository.apiSaveNews(savedNewsModel);
-      return true;
-    } catch (e) {
-      print("error: " + e.toString());
-    }
-    return false;
-  }
-
-  Future<bool> unsavedNews(num id) async {
-    try {
-      String data = await SavedNewsRepository.apiUnsavedNews(id);
-      return true;
-    } catch (e) {
-      print("error: " + e.toString());
-    }
-    return false;
-  }
-
-  void getSavedNewsByMom() async{
-      String momId = await UserViewModel.getUserID();
-      isLoading = true;
+  void getSavedNews() async{
       try{
-        String data = await SavedNewsRepository.apiGetSavedNewsByMom(momId);
+        isLoading = true;
+        String momId = await UserViewModel.getUserID();
+        String data = await SavedNewsRepository.apiGetSavedNews(momId,1);
         Map<String, dynamic> jsonList = json.decode(data);
-        savedNewsList = jsonList['data'];
+        List<dynamic> savedNewsList = jsonList['data'];
         if(savedNewsList != null){
           savedNewsListModel = savedNewsList.map((e) => SavedNewsModel.fromJson(e)).toList();
-          savedNewsListModel.sort((a,b) => b.id.compareTo(a.id));
+        }else{
+          savedNewsModel = null;
         }
+        currentPage = jsonList['pageNumber'];
+        totalPage = jsonList['total'] / pageSize;
         isLoading = false;
         notifyListeners();
       }catch(e){
@@ -69,12 +48,34 @@ class SavedNewsViewModel extends Model{
       }
   }
 
+  void getMoreSavedNews() async{
+    try{
+      if(currentPage < totalPage){
+        isLoading = true;
+        String momId = await UserViewModel.getUserID();
+        String data = await SavedNewsRepository.apiGetSavedNews(momId, ++currentPage);
+        Map<String, dynamic> jsonList = json.decode(data);
+        List<dynamic> savedNewsList = jsonList['data'];
+        if(savedNewsList != null){
+          List<SavedNewsModel> moreSavedNewsListModel = savedNewsList.map((e) => SavedNewsModel.fromJson(e)).toList();
+          currentPage = jsonList['pageNumber'];
+          totalPage = jsonList['total'] / pageSize;
+          savedNewsListModel.addAll(moreSavedNewsListModel);
+        }
+        isLoading = false;
+        notifyListeners();
+      }
+    }catch(e){
+      print("error: " + e.toString());
+    }
+  }
+
   void checkSavedNews(String newsId) async {
     try{
       isLoading = true;
       String userId = await UserViewModel.getUserID();
       var checkSaved = await SavedNewsRepository.apiCheckSavedNews(userId, newsId);
-      List checkSavedJsonList = json.decode(checkSaved)['data'];
+      List<dynamic> checkSavedJsonList = json.decode(checkSaved)['data'];
       savedNewsModel = new SavedNewsModel();
       if(checkSavedJsonList != null){
         List savedModelList = checkSavedJsonList.map((e) => SavedNewsModel.fromJson(e)).toList();
@@ -87,5 +88,38 @@ class SavedNewsViewModel extends Model{
     }catch(e){
       print("error: " + e.toString());
     }
+  }
+
+  Future<bool> saveNews(String newsId) async {
+    try {
+      SavedNewsModel savedNewsModel = new SavedNewsModel();
+      String momId = await UserViewModel.getUserID();
+      savedNewsModel.momId = momId;
+      savedNewsModel.newsId = newsId;
+
+      String result = await SavedNewsRepository.apiSaveNews(savedNewsModel);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
+    } catch (e) {
+      print("error: " + e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> unsavedNews(num id) async {
+    try {
+      String result = await SavedNewsRepository.apiUnsavedNews(id);
+      if(result != null){
+        return true;
+      }else{
+        return false;
+      }
+    } catch (e) {
+      print("error: " + e.toString());
+    }
+    return false;
   }
 }
