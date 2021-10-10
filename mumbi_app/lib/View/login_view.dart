@@ -22,16 +22,21 @@ class _LoginScreenState extends State<LoginScreen> {
   ProgressDialog pr;
   @override
   Widget build(BuildContext context) {
-    pr = ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: false,);
+    pr = ProgressDialog(
+      context,
+      type: ProgressDialogType.Normal,
+      isDismissible: false,
+    );
 
     pr.style(
       message: "Đang xử lý, vui lòng đợi trong giây lát...",
       borderRadius: 10.0,
       backgroundColor: WHITE_COLOR,
       elevation: 10.0,
-      messageTextStyle:
-          TextStyle(color: PINK_COLOR, fontSize: 16.0,),
+      messageTextStyle: TextStyle(
+        color: PINK_COLOR,
+        fontSize: 16.0,
+      ),
     );
     SizeConfig().init(context);
     return Scaffold(
@@ -46,11 +51,16 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         child: Column(
           children: <Widget>[
-            SizedBox(height: 240,),
-            SvgPicture.asset(
-              textLogoApp,height: 50,
+            SizedBox(
+              height: 240,
             ),
-            SizedBox(height: 70,),
+            SvgPicture.asset(
+              textLogoApp,
+              height: 50,
+            ),
+            SizedBox(
+              height: 70,
+            ),
             _btnLogin()
           ],
         ),
@@ -65,16 +75,19 @@ class _LoginScreenState extends State<LoginScreen> {
           textColor: textColor,
           color: backgroundColor,
           elevation: 0.0,
-          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+          shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(30.0)),
           onPressed: onPressed,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 45,vertical: 13),
+            padding: const EdgeInsets.symmetric(horizontal: 45, vertical: 13),
             child: new Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 logo,
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 text,
               ],
             ),
@@ -141,9 +154,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
     LoginViewModel loginViewModel = LoginViewModel();
     var userInfo;
+    await pr.show();
     await loginViewModel.signInWithGoogle().then((value) => {userInfo = value});
     if (userInfo != null) {
-      await pr.show();
       storage.write(key: "UserInfo", value: userInfo);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('UserInfo', userInfo);
