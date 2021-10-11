@@ -51,15 +51,15 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         child: Column(
           children: <Widget>[
-            SizedBox(
-              height: 240,
+            Padding(
+              padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 20),
+              child: SvgPicture.asset(
+                textLogoApp,
+                height: SizeConfig.safeBlockVertical * 10,
+              ),
             ),
-            SvgPicture.asset(
-              textLogoApp,
-              height: 50,
-            ),
             SizedBox(
-              height: 70,
+              height: SizeConfig.safeBlockVertical * 15,
             ),
             _btnLogin()
           ],
@@ -79,7 +79,9 @@ class _LoginScreenState extends State<LoginScreen> {
               borderRadius: new BorderRadius.circular(30.0)),
           onPressed: onPressed,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 45, vertical: 13),
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.safeBlockHorizontal * 13,
+                vertical: SizeConfig.safeBlockVertical * 2),
             child: new Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -95,32 +97,33 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
 
-  Widget _btnLogin() => Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
+  Widget _btnLogin() => Container(
         child: Column(
           children: [
-            _btnLoginStyle(
-              () async {
-                _isLoading ? null : _loginGoogle();
-              },
-              new Text(
-                "Đăng nhập qua google",
-                style: TextStyle(
-                    fontSize: 19.0,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Lato'),
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 0.0, right: 0.0, top: 16.0, bottom: 0.0),
+              child: _btnLoginStyle(
+                () async {
+                  _isLoading ? null : _loginGoogle();
+                },
+                new Text(
+                  "Đăng nhập qua google",
+                  style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Lato'),
+                ),
+                new Image.asset(
+                  logoGoogle,
+                  height: SizeConfig.safeBlockVertical * 5,
+                  width: SizeConfig.safeBlockHorizontal * 8,
+                ),
+                Colors.white,
+                Color.fromRGBO(79, 79, 79, 1),
               ),
-              new Image.asset(
-                logoGoogle,
-                height: 30,
-                width: 30,
-              ),
-              Colors.white,
-              Color.fromRGBO(79, 79, 79, 1),
             ),
-            /*Padding(
+            Padding(
               padding: const EdgeInsets.only(
                   left: 0.0, right: 0.0, top: 16.0, bottom: 0.0),
               child: _btnLoginStyle(
@@ -144,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Colors.black,
                 Color.fromRGBO(255, 255, 255, 1),
               ),
-            ),*/
+            ),
           ],
         ),
       );

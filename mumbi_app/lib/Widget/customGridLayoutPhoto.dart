@@ -9,22 +9,55 @@ import 'dart:ui' as ui;
 import 'customGalleryPhotoWrapper.dart';
 import 'customLoading.dart';
 
-class CustomGridLayoutPhoto extends StatefulWidget {
+class CalculateImageDimension extends StatefulWidget {
   final listImage;
-
-  const CustomGridLayoutPhoto(this.listImage);
+  const CalculateImageDimension(this.listImage);
   @override
-  _CustomGridLayoutPhotoState createState() =>
-      _CustomGridLayoutPhotoState(listImage);
+  _CalculateImageDimensionState createState() =>
+      _CalculateImageDimensionState(listImage);
 }
 
-class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
+class _CalculateImageDimensionState extends State<CalculateImageDimension> {
+  String listImage = "";
   int imageWidth = 0;
   int imageHeight = 0;
-  int currentIndex = 0;
-  String listImage = "";
-  GestureTapCallback onTap;
-  _CustomGridLayoutPhotoState(this.listImage);
+  _CalculateImageDimensionState(this.listImage);
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    List<String> getImages = listImage.split(";");
+    _calculateImageDimension(getImages[0]);
+  }
+
+  void _calculateImageDimension(String imageURL) {
+    new CachedNetworkImageProvider(imageURL)
+        .resolve(ImageConfiguration())
+        .addListener(
+      ImageStreamListener((ImageInfo info, bool _) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          setState(() {
+            imageWidth = info.image.width.toInt();
+            imageHeight = info.image.height.toInt();
+          });
+        });
+      }),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomGridLayoutPhoto(
+        this.imageWidth, this.imageHeight, this.listImage);
+  }
+}
+
+class CustomGridLayoutPhoto extends StatelessWidget {
+  final String listImage;
+  final int imageWidth;
+  final int imageHeight;
+  CustomGridLayoutPhoto(this.imageWidth, this.imageHeight, this.listImage);
+  BuildContext context;
   @override
   Widget build(BuildContext context) {
     return getPostImage(listImage);
@@ -38,21 +71,26 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
           builder: (context, orientation) {
             SizeConfig().initConfig(constraints, orientation);
             return getImages.length == 1
-                ? _buildGridLayoutOnlyPhoto(getImages)
+                ? _buildGridLayoutOnlyPhoto(getImages, imageWidth, imageHeight)
                 : getImages.length == 2
-                    ? _buildGridLayoutTwoPhoto(getImages)
+                    ? _buildGridLayoutTwoPhoto(
+                        getImages, imageWidth, imageHeight)
                     : getImages.length == 3
-                        ? _buildGridLayoutThreePhoto(getImages)
+                        ? _buildGridLayoutThreePhoto(
+                            getImages, imageWidth, imageHeight)
                         : getImages.length == 4
-                            ? _buildGridLayoutFourPhoto(getImages)
-                            : _buildGridLayoutGreaterThanFourPhoto(getImages);
+                            ? _buildGridLayoutFourPhoto(
+                                getImages, imageWidth, imageHeight)
+                            : _buildGridLayoutGreaterThanFourPhoto(
+                                getImages, imageWidth, imageHeight);
           },
         );
       },
     );
   }
 
-  _buildGridLayoutOnlyPhoto(List<String> listImage) {
+  _buildGridLayoutOnlyPhoto(
+      List<String> listImage, int imageWidth, int imageHeight) {
     return ListView.builder(
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -60,7 +98,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
             onTap: () {
-              GestureTapCallback:
               _openImage(context, index);
             },
             child: Hero(
@@ -72,8 +109,8 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
     );
   }
 
-  _buildGridLayoutTwoPhoto(List<String> listImage) {
-    _calculateImageDimension(listImage[0]);
+  _buildGridLayoutTwoPhoto(
+      List<String> listImage, int imageWidth, int imageHeight) {
     return Container(
       width: SizeConfig.blockSizeHorizontal * 100,
       height: SizeConfig.blockSizeHorizontal * 100,
@@ -91,7 +128,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                       height: SizeConfig.blockSizeHorizontal * 50,
                       child: GestureDetector(
                           onTap: () {
-                            GestureTapCallback:
                             _openImage(context, index);
                           },
                           child: Hero(
@@ -115,7 +151,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                       width: SizeConfig.blockSizeHorizontal * 50,
                       child: GestureDetector(
                         onTap: () {
-                          GestureTapCallback:
                           _openImage(context, index);
                         },
                         child: Hero(
@@ -146,8 +181,8 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
     );
   }
 
-  _buildGridLayoutThreePhoto(List<String> listImage) {
-    _calculateImageDimension(listImage[0]);
+  _buildGridLayoutThreePhoto(
+      List<String> listImage, int imageWidth, int imageHeight) {
     return Container(
       width: SizeConfig.blockSizeHorizontal * 100,
       height: SizeConfig.blockSizeHorizontal * 100,
@@ -158,7 +193,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                   height: SizeConfig.blockSizeHorizontal * 49,
                   child: GestureDetector(
                     onTap: () {
-                      GestureTapCallback:
                       _openImage(context, 0);
                     },
                     child: Hero(
@@ -190,7 +224,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                               width: SizeConfig.blockSizeHorizontal * 50,
                               child: GestureDetector(
                                 onTap: () {
-                                  GestureTapCallback:
                                   _openImage(context, index + 1);
                                 },
                                 child: Hero(
@@ -219,7 +252,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                   width: SizeConfig.blockSizeHorizontal * 49,
                   child: GestureDetector(
                     onTap: () {
-                      GestureTapCallback:
                       _openImage(context, 0);
                     },
                     child: Hero(
@@ -250,7 +282,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                               height: SizeConfig.blockSizeHorizontal * 50,
                               child: GestureDetector(
                                 onTap: () {
-                                  GestureTapCallback:
                                   _openImage(context, index + 1);
                                 },
                                 child: Hero(
@@ -276,8 +307,8 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
     );
   }
 
-  _buildGridLayoutFourPhoto(List<String> listImage) {
-    _calculateImageDimension(listImage[0]);
+  _buildGridLayoutFourPhoto(
+      List<String> listImage, int imageWidth, int imageHeight) {
     return Container(
       width: SizeConfig.blockSizeHorizontal * 100,
       height: SizeConfig.blockSizeHorizontal * 100,
@@ -288,7 +319,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                   height: SizeConfig.blockSizeHorizontal * 66,
                   child: GestureDetector(
                     onTap: () {
-                      GestureTapCallback:
                       _openImage(context, 0);
                     },
                     child: CachedNetworkImage(
@@ -316,7 +346,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                               width: SizeConfig.blockSizeHorizontal * 33,
                               child: GestureDetector(
                                 onTap: () {
-                                  GestureTapCallback:
                                   _openImage(context, index + 1);
                                 },
                                 child: CachedNetworkImage(
@@ -343,7 +372,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                       width: SizeConfig.blockSizeHorizontal * 66,
                       child: GestureDetector(
                         onTap: () {
-                          GestureTapCallback:
                           _openImage(context, 0);
                         },
                         child: CachedNetworkImage(
@@ -371,7 +399,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                                   height: SizeConfig.blockSizeHorizontal * 33,
                                   child: GestureDetector(
                                     onTap: () {
-                                      GestureTapCallback:
                                       _openImage(context, index + 1);
                                     },
                                     child: CachedNetworkImage(
@@ -404,7 +431,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                       children: List.generate(listImage.length, (index) {
                         return GestureDetector(
                           onTap: () {
-                            GestureTapCallback:
                             _openImage(context, index);
                           },
                           child: CachedNetworkImage(
@@ -421,8 +447,8 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
     );
   }
 
-  _buildGridLayoutGreaterThanFourPhoto(List<String> listImage) {
-    _calculateImageDimension(listImage[0]);
+  _buildGridLayoutGreaterThanFourPhoto(
+      List<String> listImage, int imageWidth, int imageHeight) {
     return Container(
       width: SizeConfig.blockSizeHorizontal * 100,
       height: imageWidth == imageHeight
@@ -435,7 +461,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                   height: SizeConfig.blockSizeHorizontal * 66,
                   child: GestureDetector(
                     onTap: () {
-                      GestureTapCallback:
                       _openImage(context, 0);
                     },
                     child: Hero(
@@ -467,7 +492,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                               child: index < 2
                                   ? GestureDetector(
                                       onTap: () {
-                                        GestureTapCallback:
                                         _openImage(context, index + 1);
                                       },
                                       child: Hero(
@@ -485,7 +509,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                                     )
                                   : GestureDetector(
                                       onTap: () {
-                                        GestureTapCallback:
                                         _openImage(context, index + 1);
                                       },
                                       child: Stack(children: <Widget>[
@@ -546,7 +569,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                       width: SizeConfig.blockSizeHorizontal * 66,
                       child: GestureDetector(
                         onTap: () {
-                          GestureTapCallback:
                           _openImage(context, 0);
                         },
                         child: Hero(
@@ -578,7 +600,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                                   child: index < 2
                                       ? GestureDetector(
                                           onTap: () {
-                                            GestureTapCallback:
                                             _openImage(context, index + 1);
                                           },
                                           child: Hero(
@@ -598,7 +619,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                                         )
                                       : GestureDetector(
                                           onTap: () {
-                                            GestureTapCallback:
                                             _openImage(context, index + 1);
                                           },
                                           child: Stack(children: <Widget>[
@@ -675,7 +695,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                                           SizeConfig.blockSizeHorizontal * 50,
                                       child: GestureDetector(
                                         onTap: () {
-                                          GestureTapCallback:
                                           _openImage(context, index);
                                         },
                                         child: Hero(
@@ -726,7 +745,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                                       child: index < 2
                                           ? GestureDetector(
                                               onTap: () {
-                                                GestureTapCallback:
                                                 _openImage(context, index + 2);
                                               },
                                               child: Hero(
@@ -748,7 +766,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                                           : Stack(children: <Widget>[
                                               GestureDetector(
                                                 onTap: () {
-                                                  GestureTapCallback:
                                                   _openImage(
                                                       context, index + 2);
                                                 },
@@ -806,21 +823,6 @@ class _CustomGridLayoutPhotoState extends State<CustomGridLayoutPhoto> {
                     )
                   ],
                 ),
-    );
-  }
-
-  void _calculateImageDimension(String imageURL) {
-    new CachedNetworkImageProvider(imageURL)
-        .resolve(ImageConfiguration())
-        .addListener(
-      ImageStreamListener((ImageInfo info, bool _) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          setState(() {
-            imageWidth = info.image.width.toInt();
-            imageHeight = info.image.height.toInt();
-          });
-        });
-      }),
     );
   }
 

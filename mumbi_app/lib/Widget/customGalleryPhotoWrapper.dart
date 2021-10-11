@@ -129,15 +129,6 @@ class _GalleryPhotoWrapper extends State<GalleryPhotoWrapper> {
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                Positioned(
-                  top: SizeConfig.blockSizeVertical * 6,
-                  child: Text(
-                    (currentIndex + 1).toString() +
-                        "/" +
-                        listImage.length.toString(),
-                    style: TextStyle(fontSize: 15, color: GREY_COLOR),
-                  ),
-                ),
                 AnimatedPositioned(
                   duration: animationDuration,
                   curve: Curves.fastOutSlowIn,
@@ -155,6 +146,15 @@ class _GalleryPhotoWrapper extends State<GalleryPhotoWrapper> {
                     pageController: widget.pageController,
                     onPageChanged: onPageChanged,
                     scrollDirection: widget.scrollDirection,
+                  ),
+                ),
+                Positioned(
+                  top: SizeConfig.blockSizeVertical * 6,
+                  child: Text(
+                    (currentIndex + 1).toString() +
+                        "/" +
+                        listImage.length.toString(),
+                    style: TextStyle(fontSize: 15, color: GREY_COLOR),
                   ),
                 ),
               ],

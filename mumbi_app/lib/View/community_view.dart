@@ -39,7 +39,8 @@ class _CommunityState extends State<Community> {
   int imageHeight = 0;
   final serverURL = "https://mumbi.xyz/api/commentHub";
   HubConnection hubConnection;
-  RefreshController _refreshController = RefreshController(initialRefresh: false);
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -119,8 +120,8 @@ class _CommunityState extends State<Community> {
           footer: CustomFooter(
             builder: (BuildContext context, LoadStatus mode) {
               Widget body;
-              if(mode == LoadStatus.loading){
-                body =  loadingProgress();
+              if (mode == LoadStatus.loading) {
+                body = loadingProgress();
               } else {
                 body = Text(NO_MORE_POST_MESSAGE);
               }
@@ -167,7 +168,7 @@ class _CommunityState extends State<Community> {
             UserInfo(postModel),
             PostContent(postModel.postContent),
             if (postModel.imageURL != null && postModel.imageURL != "")
-              CustomGridLayoutPhoto(postModel.imageURL),
+              CalculateImageDimension(postModel.imageURL),
             PostInteraction(postModel),
           ],
         ),
@@ -234,14 +235,15 @@ class _CommunityState extends State<Community> {
                   onSelected: (value) async {
                     switch (value) {
                       case 'Xóa bài viết':
-                        showConfirmDialog(context, "Xóa",
-                            "Bạn có muốn xóa bài viết này?",
+                        showConfirmDialog(
+                            context, "Xóa", "Bạn có muốn xóa bài viết này?",
                             ContinueFunction: () async {
                           Navigator.pop(context);
                           showProgressDialogue(context);
                           bool result = false;
-                          result = await CommunityViewModel().deleteCommunityPost(postModel);
-                          if(result){
+                          result = await CommunityViewModel()
+                              .deleteCommunityPost(postModel);
+                          if (result) {
                             _communityViewModel.postListModel.remove(postModel);
                             setState(() {});
                           }
@@ -260,7 +262,8 @@ class _CommunityState extends State<Community> {
                         child: Text(choice),
                       );
                     }).toList();
-                  },icon: Icon(Icons.more_horiz),
+                  },
+                  icon: Icon(Icons.more_horiz),
                 )
               : SizedBox.shrink(),
     );
