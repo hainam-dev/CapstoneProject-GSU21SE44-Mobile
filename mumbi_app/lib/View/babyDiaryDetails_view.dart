@@ -13,6 +13,7 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/Widget/customConfirmDialog.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
@@ -50,6 +51,7 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(DateTimeConvert.getDayOfWeek(widget.model.createTime) +

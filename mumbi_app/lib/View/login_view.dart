@@ -101,8 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 0.0, right: 0.0, top: 16.0, bottom: 0.0),
+              padding: const EdgeInsets.only(top: 16.0),
               child: _btnLoginStyle(
                 () async {
                   _isLoading ? null : _loginGoogle();
@@ -116,16 +115,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 new Image.asset(
                   logoGoogle,
-                  height: SizeConfig.safeBlockVertical * 5,
-                  width: SizeConfig.safeBlockHorizontal * 8,
+                  height: SizeConfig.safeBlockVertical * 4,
+                  width: SizeConfig.safeBlockHorizontal * 7,
                 ),
                 Colors.white,
                 Color.fromRGBO(79, 79, 79, 1),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 0.0, right: 0.0, top: 16.0, bottom: 0.0),
+              padding: const EdgeInsets.only(top: 16.0),
               child: _btnLoginStyle(
                 () async {
                   await LoginViewModel().signInWithGoogle().then(
@@ -141,8 +139,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 new Image.asset(
                   logoFacebook,
-                  height: SizeConfig.safeBlockVertical * 5,
-                  width: SizeConfig.safeBlockHorizontal * 8,
+                  height: SizeConfig.safeBlockVertical * 4,
+                  width: SizeConfig.safeBlockHorizontal * 7,
                 ),
                 Colors.black,
                 Color.fromRGBO(255, 255, 255, 1),

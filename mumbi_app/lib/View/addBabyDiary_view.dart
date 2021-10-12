@@ -133,8 +133,8 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
         model: childViewModel,
         child: ScopedModelDescendant(
           builder: (BuildContext context, Widget child, ChildViewModel model) {
-            return createListTileDiaryPost(model.childModel.imageURL,
-                model.childModel.fullName);
+            return createListTileDiaryPost(
+                model.childModel.imageURL, model.childModel.fullName);
           },
         ));
   }
@@ -195,7 +195,7 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
             ),
             Text(
               "Hình ảnh",
-              style: TextStyle(fontWeight: FontWeight.w600,fontSize: 17),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
             ),
           ],
         ),
@@ -203,49 +203,26 @@ class _AddBabyDiaryState extends State<AddBabyDiary> {
     );
   }
 
-
   Widget showMultipleImagePicked() {
     return Column(
       children: [
-        GridView.count(
+        ListView.builder(
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          crossAxisCount: 2,
-          children: List.generate(
-            _files.length,
-            (index) {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 2),
-                child: FullScreenWidget(
-                  backgroundColor: WHITE_COLOR,
-                  child: Center(
-                    child: Hero(
-                        tag: _files[index].toString(),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Card(
-                                clipBehavior: Clip.antiAlias,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: Image.file(
-                                    _files[index],
-                                    height: 120,
-                                    width: 120,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )),
-                  ),
+          scrollDirection: Axis.vertical,
+          itemCount: _files.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Column(
+              children: [
+                Image.file(
+                  _files[index],
                 ),
-              );
-            },
-          ),
+                SizedBox(
+                  height: 5.0,
+                )
+              ],
+            );
+          },
         ),
       ],
     );

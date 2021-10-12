@@ -764,13 +764,12 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                                                 ),
                                               ),
                                             )
-                                          : Stack(children: <Widget>[
-                                              GestureDetector(
-                                                onTap: () {
-                                                  _openImage(
-                                                      context, index + 2);
-                                                },
-                                                child: Hero(
+                                          : GestureDetector(
+                                              onTap: () {
+                                                _openImage(context, index + 2);
+                                              },
+                                              child: Stack(children: <Widget>[
+                                                Hero(
                                                   tag: listImage[index + 2]
                                                       .toString(),
                                                   child: CachedNetworkImage(
@@ -785,33 +784,35 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                                                     fit: BoxFit.cover,
                                                   ),
                                                 ),
-                                              ),
-                                              Positioned(
-                                                child: Container(
-                                                  height: SizeConfig
-                                                          .blockSizeVertical *
-                                                      100,
-                                                  width: SizeConfig
-                                                          .blockSizeHorizontal *
-                                                      100,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.black45,
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                      "+" +
-                                                          (listImage.length - 4)
-                                                              .toString(),
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 16.0,
-                                                          fontWeight:
-                                                              FontWeight.w700),
+                                                Positioned(
+                                                  child: Container(
+                                                    height: SizeConfig
+                                                            .blockSizeVertical *
+                                                        100,
+                                                    width: SizeConfig
+                                                            .blockSizeHorizontal *
+                                                        100,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.black45,
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "+" +
+                                                            (listImage.length -
+                                                                    4)
+                                                                .toString(),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w700),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              )
-                                            ]),
+                                                )
+                                              ]),
+                                            ),
                                     ),
                                     SizedBox(
                                       width: 3.0,
