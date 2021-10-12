@@ -1,18 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
-import 'package:mumbi_app/Model/savedGuidebook_model.dart';
-import 'package:mumbi_app/Model/savedNews_model.dart';
-import 'package:mumbi_app/Utils/datetime_convert.dart';
-import 'package:mumbi_app/View/guidebookDetails_view.dart';
-import 'package:mumbi_app/View/newsDetails_view.dart';
-import 'package:mumbi_app/ViewModel/savedGuidebook_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/savedNews_viewmodel.dart';
-import 'package:mumbi_app/Widget/customCard.dart';
-import 'package:mumbi_app/Widget/customEmpty.dart';
-import 'package:mumbi_app/Widget/customLoading.dart';
+import 'package:mumbi_app/modules/guidebook/views/guidebook_details_view.dart';
+import 'package:mumbi_app/modules/news/views/news_details_view.dart';
+import 'package:mumbi_app/modules/guidebook/viewmodel/saved_guidebook_viewmodel.dart';
+import 'package:mumbi_app/modules/news/viewmodel/saved_news_viewmodel.dart';
+import 'package:mumbi_app/widgets/customCard.dart';
+import 'package:mumbi_app/widgets/customEmpty.dart';
+import 'package:mumbi_app/widgets/customLoading.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -25,14 +21,15 @@ class SavedPost extends StatefulWidget {
 }
 
 class _SavedPostState extends State<SavedPost> {
-
   SavedNewsViewModel _savedNewsViewModel;
   SavedGuidebookViewModel _savedGuidebookViewModel;
 
   num _initialIndex = 0;
 
-  RefreshController _refreshControllerNews = RefreshController(initialRefresh: false);
-  RefreshController _refreshControllerGuidebook = RefreshController(initialRefresh: false);
+  RefreshController _refreshControllerNews =
+      RefreshController(initialRefresh: false);
+  RefreshController _refreshControllerGuidebook =
+      RefreshController(initialRefresh: false);
   @override
   void initState() {
     super.initState();
@@ -99,8 +96,12 @@ class _SavedPostState extends State<SavedPost> {
                   labelColor: WHITE_COLOR,
                   unselectedLabelColor: BLACK_COLOR,
                   tabs: [
-                    Tab(text: 'Tin Tức',),
-                    Tab(text: 'Cẩm Nang',),
+                    Tab(
+                      text: 'Tin Tức',
+                    ),
+                    Tab(
+                      text: 'Cẩm Nang',
+                    ),
                   ],
                 ),
               ),
@@ -125,16 +126,16 @@ class _SavedPostState extends State<SavedPost> {
         enablePullUp: true,
         header: MaterialClassicHeader(),
         footer: CustomFooter(
-          builder: (BuildContext context,LoadStatus mode){
-            Widget body ;
-            if(mode == LoadStatus.loading){
-              body =  loadingProgress();
-            } else{
+          builder: (BuildContext context, LoadStatus mode) {
+            Widget body;
+            if (mode == LoadStatus.loading) {
+              body = loadingProgress();
+            } else {
               body = Text(NO_MORE_NEWS_MESSAGE);
             }
             return Container(
               height: 55.0,
-              child: Center(child:body),
+              child: Center(child: body),
             );
           },
         ),
@@ -143,71 +144,78 @@ class _SavedPostState extends State<SavedPost> {
         onLoading: _onLoadingNews,
         child: CustomScrollView(
           slivers: [
-            SliverList(delegate: SliverChildListDelegate(
+            SliverList(
+                delegate: SliverChildListDelegate(
               [
-            ScopedModel(
-                model: _savedNewsViewModel,
-                child: ScopedModelDescendant(
-                  builder:
-                      (BuildContext context, Widget child, SavedNewsViewModel model) {
-                    return model.isLoading == true
-                        ? loadingProgress()
-                        : model.savedNewsListModel == null
-                        ? Empty("",NO_SAVED_NEWS_MESSAGE)
-                        : Column(
-                      children: [
-                        for(var item in model.savedNewsListModel)
-                          NormalCardItem(item.imageURL, item.title, item.createTime, item.estimatedFinishTime,
-                            onTap: ()  async {
-                              final result = await Navigator.push(
-                                context,
-                                await MaterialPageRoute(
-                                  builder: (context) => NewsDetail(item,SAVED_ENTRY),
-                                ),
-                              );
-                              if(result == true){
-                                _savedNewsViewModel.savedNewsListModel.remove(item);
-                                setState(() {});
-                              }
-                            })
-                      ],
-                    );
-                  },
-                )),
+                ScopedModel(
+                    model: _savedNewsViewModel,
+                    child: ScopedModelDescendant(
+                      builder: (BuildContext context, Widget child,
+                          SavedNewsViewModel model) {
+                        return model.isLoading == true
+                            ? loadingProgress()
+                            : model.savedNewsListModel == null
+                                ? Empty("", NO_SAVED_NEWS_MESSAGE)
+                                : Column(
+                                    children: [
+                                      for (var item in model.savedNewsListModel)
+                                        NormalCardItem(
+                                            item.imageURL,
+                                            item.title,
+                                            item.createTime,
+                                            item.estimatedFinishTime,
+                                            onTap: () async {
+                                          final result = await Navigator.push(
+                                            context,
+                                            await MaterialPageRoute(
+                                              builder: (context) =>
+                                                  NewsDetail(item, SAVED_ENTRY),
+                                            ),
+                                          );
+                                          if (result == true) {
+                                            _savedNewsViewModel
+                                                .savedNewsListModel
+                                                .remove(item);
+                                            setState(() {});
+                                          }
+                                        })
+                                    ],
+                                  );
+                      },
+                    )),
               ],
             ))
           ],
-        )
-    );
+        ));
   }
 
   Widget SavedGuidebookList() {
-    return
-      SmartRefresher(
-          enablePullDown: true,
-          enablePullUp: true,
-          header: MaterialClassicHeader(),
-          footer: CustomFooter(
-            builder: (BuildContext context,LoadStatus mode){
-              Widget body ;
-              if(mode == LoadStatus.loading){
-                body = loadingProgress();
-              } else {
-                body = Text(NO_MORE_GUIDEBOOK_MESSAGE);
-              }
-              return Container(
-                height: 55.0,
-                child: Center(child:body),
-              );
-            },
-          ),
-          controller: _refreshControllerGuidebook,
-          onRefresh: _onRefreshGuidebook,
-          onLoading: _onLoadingGuidebook,
-          child: CustomScrollView(
-            slivers: [
-              SliverList(delegate: SliverChildListDelegate(
-                [
+    return SmartRefresher(
+        enablePullDown: true,
+        enablePullUp: true,
+        header: MaterialClassicHeader(),
+        footer: CustomFooter(
+          builder: (BuildContext context, LoadStatus mode) {
+            Widget body;
+            if (mode == LoadStatus.loading) {
+              body = loadingProgress();
+            } else {
+              body = Text(NO_MORE_GUIDEBOOK_MESSAGE);
+            }
+            return Container(
+              height: 55.0,
+              child: Center(child: body),
+            );
+          },
+        ),
+        controller: _refreshControllerGuidebook,
+        onRefresh: _onRefreshGuidebook,
+        onLoading: _onLoadingGuidebook,
+        child: CustomScrollView(
+          slivers: [
+            SliverList(
+                delegate: SliverChildListDelegate(
+              [
                 ScopedModel(
                     model: _savedGuidebookViewModel,
                     child: ScopedModelDescendant(
@@ -216,32 +224,39 @@ class _SavedPostState extends State<SavedPost> {
                         return model.isLoading == true
                             ? loadingProgress()
                             : model.savedGuidebookListModel == null
-                            ? Empty("",NO_SAVED_GUIDEBOOK_MESSAGE)
-                            : Column(
-                          children: [
-                            for(var item in model.savedGuidebookListModel)
-                              NormalCardItem(item.imageURL, item.title, item.createTime, item.estimatedFinishTime,
-                                onTap: () async {
-                                  final result = await  Navigator.push(context, MaterialPageRoute(builder: (context)
-                                  => GuidebookDetail(item,SAVED_ENTRY),));
-                                  if(result == true){
-                                    _savedGuidebookViewModel.savedGuidebookListModel.remove(item);
-                                    setState(() {});
-                                  }
-                                },
-                              )
-                          ],
-                        );
+                                ? Empty("", NO_SAVED_GUIDEBOOK_MESSAGE)
+                                : Column(
+                                    children: [
+                                      for (var item
+                                          in model.savedGuidebookListModel)
+                                        NormalCardItem(
+                                          item.imageURL,
+                                          item.title,
+                                          item.createTime,
+                                          item.estimatedFinishTime,
+                                          onTap: () async {
+                                            final result = await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      GuidebookDetail(
+                                                          item, SAVED_ENTRY),
+                                                ));
+                                            if (result == true) {
+                                              _savedGuidebookViewModel
+                                                  .savedGuidebookListModel
+                                                  .remove(item);
+                                              setState(() {});
+                                            }
+                                          },
+                                        )
+                                    ],
+                                  );
                       },
                     )),
-
               ],
-              ))
-            ],
-          )
-      );
+            ))
+          ],
+        ));
   }
 }
-
-
-

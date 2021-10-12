@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/View/login_view.dart';
-import 'package:mumbi_app/Widget/customText.dart';
+import 'package:mumbi_app/core/auth/login/views/login_view.dart';
+import 'package:mumbi_app/widgets/customText.dart';
 
 import 'listRemind_view.dart';
 

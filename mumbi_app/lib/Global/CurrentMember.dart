@@ -1,8 +1,8 @@
 import 'package:mumbi_app/Constant/Variable.dart';
-import 'package:mumbi_app/ViewModel/user_viewmodel.dart';
+import 'package:mumbi_app/core/auth/login/viewmodel/user_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class CurrentMember{
+class CurrentMember {
   static String id = null;
   static String role = MOM_ROLE;
   static bool pregnancyFlag = false;
@@ -15,7 +15,7 @@ class CurrentMember{
 
   SharedPreferences prefs;
 
-  void getCurrentMember() async{
+  void getCurrentMember() async {
     prefs = await SharedPreferences.getInstance();
 
     cm_Id = await prefs.getString(CURRENT_MEMBER_ID);
@@ -30,33 +30,33 @@ class CurrentMember{
   }
 
   Future<void> getCurrentMemberID() async {
-    if(cm_Id != null){
+    if (cm_Id != null) {
       id = cm_Id;
-    }else{
+    } else {
       id = await UserViewModel.getUserID();
     }
   }
 
   void getCurrentMemberRole() {
-    if(cm_Role != null){
+    if (cm_Role != null) {
       role = cm_Role;
-    }else{
+    } else {
       role = MOM_ROLE;
     }
   }
 
   void getCurrentMemberPF() {
-    if(cm_PF == true){
+    if (cm_PF == true) {
       pregnancyFlag = true;
-    }else{
+    } else {
       pregnancyFlag = false;
     }
   }
 
   void getCurrentMemberPI() {
-    if(cm_FI != "" && cm_FI != null){
+    if (cm_FI != "" && cm_FI != null) {
       pregnancyID = cm_FI;
-    }else{
+    } else {
       pregnancyID = null;
     }
   }

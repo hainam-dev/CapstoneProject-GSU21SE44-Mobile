@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
-import 'package:mumbi_app/View/bottomNavBar_view.dart';
+import 'package:mumbi_app/widgets/splashScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Constant/colorTheme.dart';
 import 'Utils/message.dart';
-import 'View/login_view.dart';
-import 'Widget/splashScreen.dart';
 import 'main.dart';
 
 class MyApp extends StatefulWidget {
@@ -104,7 +102,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: checkJwtAndCurrentMember,
-      builder: (context, snapshot)  {
+      builder: (context, snapshot) {
         if (!snapshot.hasData) return SplashScreen(false);
         if (snapshot.data != "") {
           var userInfo = jsonDecode(snapshot.data);
@@ -112,8 +110,10 @@ class MainScreen extends StatelessWidget {
           if (jwt.length != 3) {
             return SplashScreen(false);
           } else {
-            var payload = json.decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
-            if (DateTime.fromMillisecondsSinceEpoch(payload["exp"] * 1000).isAfter(DateTime.now())) {
+            var payload = json
+                .decode(ascii.decode(base64.decode(base64.normalize(jwt[1]))));
+            if (DateTime.fromMillisecondsSinceEpoch(payload["exp"] * 1000)
+                .isAfter(DateTime.now())) {
               return SplashScreen(true);
             } else {
               return SplashScreen(false);

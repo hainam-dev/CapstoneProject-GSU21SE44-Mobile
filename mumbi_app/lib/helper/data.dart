@@ -1,11 +1,11 @@
 import 'package:mumbi_app/Constant/assets_path.dart';
-import 'package:mumbi_app/Model/tooth_model.dart';
+import 'package:mumbi_app/modules/growing_teeth/models/teeth_model.dart';
 
-List<ToothInfoModel> getListTeeth() {
-  List<ToothInfoModel> listTeeth = <ToothInfoModel>[];
-  ToothInfoModel teethModel;
+List<TeethInfoModel> getListTeeth() {
+  List<TeethInfoModel> listTeeth = <TeethInfoModel>[];
+  TeethInfoModel teethModel;
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth1_ht;
   teethModel.iconChoose = ic_teeth1_ht_choose;
   teethModel.height = 65;
@@ -15,7 +15,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.name = 'Răng 19';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth2_ht;
   teethModel.iconChoose = ic_teeth2_ht_choose;
   teethModel.height = 63;
@@ -25,7 +25,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.name = 'Răng 10';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth3_ht;
   teethModel.iconChoose = ic_teeth3_ht_choose;
   teethModel.height = 55;
@@ -35,7 +35,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.name = 'Răng 13';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth4_ht;
   teethModel.iconChoose = ic_teeth4_ht_choose;
   teethModel.height = 50;
@@ -45,7 +45,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.name = 'Răng 5';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth5_ht;
   teethModel.iconChoose = ic_teeth5_ht_choose;
   teethModel.height = 50;
@@ -55,7 +55,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.name = 'Răng 3';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth6_ht;
   teethModel.iconChoose = ic_teeth6_ht_choose;
   teethModel.height = 53;
@@ -65,7 +65,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.name = 'Răng 4';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth7_ht;
   teethModel.iconChoose = ic_teeth7_ht_choose;
   teethModel.height = 53;
@@ -76,7 +76,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.growTime = 'Răng 1';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth8_ht;
   teethModel.iconChoose = ic_teeth8_ht_choose;
   teethModel.height = 46;
@@ -87,7 +87,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.growTime = 'Răng 1';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth9_ht;
   teethModel.iconChoose = ic_teeth9_ht_choose;
   teethModel.height = 60;
@@ -98,7 +98,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.growTime = 'Răng 1';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth10_ht;
   teethModel.iconChoose = ic_teeth10_ht_choose;
   teethModel.height = 65;
@@ -109,7 +109,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.growTime = 'Răng 1';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth1_hd;
   teethModel.iconChoose = ic_teeth1_hd_choose;
   teethModel.height = 65;
@@ -120,7 +120,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.growTime = 'Răng 1';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth2_hd;
   teethModel.iconChoose = ic_teeth2_hd_choose;
   teethModel.height = 60;
@@ -131,7 +131,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.growTime = 'Răng 1';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth3_hd;
   teethModel.iconChoose = ic_teeth3_hd_choose;
   teethModel.height = 52;
@@ -142,7 +142,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.growTime = 'Răng 1';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth4_hd;
   teethModel.iconChoose = ic_teeth4_hd_choose;
   teethModel.height = 50;
@@ -153,7 +153,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.growTime = 'Răng 1';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth5_hd;
   teethModel.iconChoose = ic_teeth5_hd_choose;
   teethModel.height = 45;
@@ -164,7 +164,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.growTime = 'Răng 1';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth6_hd;
   teethModel.iconChoose = ic_teeth6_hd_choose;
   teethModel.height = 45;
@@ -175,7 +175,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.growTime = 'Răng 1';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth7_hd;
   teethModel.iconChoose = ic_teeth7_hd_choose;
   teethModel.height = 50;
@@ -186,7 +186,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.growTime = 'Răng 1';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth8_hd;
   teethModel.iconChoose = ic_teeth8_hd_choose;
   teethModel.height = 50;
@@ -197,7 +197,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.growTime = 'Răng 1';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth9_hd;
   teethModel.iconChoose = ic_teeth9_hd_choose;
   teethModel.height = 63;
@@ -208,7 +208,7 @@ List<ToothInfoModel> getListTeeth() {
   teethModel.growTime = 'Răng 1';
   listTeeth.add(teethModel);
 
-  teethModel = new ToothInfoModel();
+  teethModel = new TeethInfoModel();
   teethModel.icon = ic_teeth10_hd;
   teethModel.iconChoose = ic_teeth10_hd_choose;
   teethModel.height = 65;

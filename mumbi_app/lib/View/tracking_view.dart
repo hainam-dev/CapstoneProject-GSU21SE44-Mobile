@@ -1,27 +1,19 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
-import 'package:mumbi_app/Model/activity_model.dart';
-import 'package:mumbi_app/Model/child_model.dart';
+import 'package:mumbi_app/modules/family/models/child_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
-import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/View/babyDevelopment_view.dart';
-import 'package:mumbi_app/View/childrenInfo_view.dart';
-import 'package:mumbi_app/View/injectionSchedule.dart';
-import 'package:mumbi_app/View/teethTrack_view.dart';
-import 'package:mumbi_app/ViewModel/activity_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
-import 'package:mumbi_app/Widget/customLoading.dart';
+import 'package:mumbi_app/modules/family/viewmodel/child_viewmodel.dart';
+import 'package:mumbi_app/modules/family/views/child_info_view.dart';
+import 'package:mumbi_app/modules/injection_schedules/views/injection_schedules_view.dart';
+import 'package:mumbi_app/modules/standard_index/views/development_milestone_view.dart';
+import 'package:mumbi_app/widgets/customComponents.dart';
+import 'package:mumbi_app/widgets/customLoading.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mumbi_app/Widget/custom_playlist.dart';
-import 'package:mumbi_app/Widget/customComponents.dart';
-import 'drawer_view.dart';
 
 class Tracking extends StatefulWidget {
   @override
@@ -46,39 +38,42 @@ class _TrackingState extends State<Tracking> {
   Widget build(BuildContext context) {
     return ScopedModel(
       model: _childViewModel,
-      child: ScopedModelDescendant(builder: (BuildContext context, Widget child, ChildViewModel model) {
-        return Scaffold(
-          body: model.childModel == null
-              ? loadingProgress()
-              : SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.fromLTRB(13, 30, 13, 10),
-                  child: Column(
-                    children: <Widget>[
-                      CircleThing(model.childModel),
-                      SizedBox(
-                        height: 23,
-                      ),
-                      ListTileFunction(developmentMilestone,"Mốc phát triển",BabyDevelopment()),
-                      if(CurrentMember.role == CHILD_ROLE)
-                      ListTileFunction(teethGrow,"Mọc răng", TeethTrack()),
-                      if(CurrentMember.role == CHILD_ROLE)
-                      ListTileFunction(injection,"Tiêm chủng", InjectionSchedule()),
-                    ],
+      child: ScopedModelDescendant(
+        builder: (BuildContext context, Widget child, ChildViewModel model) {
+          return Scaffold(
+            body: model.childModel == null
+                ? loadingProgress()
+                : SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(13, 30, 13, 10),
+                          child: Column(
+                            children: <Widget>[
+                              CircleThing(model.childModel),
+                              SizedBox(
+                                height: 23,
+                              ),
+                              ListTileFunction(developmentMilestone,
+                                  "Mốc phát triển", DevelopmentMilestone()),
+                              if (CurrentMember.role == CHILD_ROLE)
+                                ListTileFunction(
+                                    teethGrow, "Mọc răng", TeethTrack()),
+                              if (CurrentMember.role == CHILD_ROLE)
+                                ListTileFunction(injection, "Tiêm chủng",
+                                    InjectionSchedule()),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },),
+          );
+        },
+      ),
     );
   }
-
-
 
   Widget CircleThing(ChildModel childModel) {
     return Container(
@@ -115,13 +110,16 @@ class _TrackingState extends State<Tracking> {
               child: Text(
                 CurrentMember.pregnancyFlag == true
                     ? DateTimeConvert.pregnancyWeekAndDay(
-                    childModel.estimatedBornDate)
+                        childModel.estimatedBornDate)
                     : DateTimeConvert.calculateChildAge(childModel.birthday),
-                style: TextStyle(fontSize: 18,color: WHITE_COLOR,fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    fontSize: 18,
+                    color: WHITE_COLOR,
+                    fontWeight: FontWeight.w600),
               )),
           CurrentMember.pregnancyFlag == true
               ? createFlatButton(context, 'Bé đã ra đời',
-              ChildrenInfo(childModel, UPDATE_STATE, CHILD_ENTRY))
+                  ChildrenInfo(childModel, UPDATE_STATE, CHILD_ENTRY))
               : Container(),
         ],
       ),
@@ -142,16 +140,26 @@ class _TrackingState extends State<Tracking> {
     }
   }
 
-  Widget ListTileFunction(String image, String name, Widget _screen){
+  Widget ListTileFunction(String image, String name, Widget _screen) {
     return Card(
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: ListTile(
-        leading: SvgPicture.asset(image,height: 32,),
-        title: Text(name,style: TextStyle(fontSize: 17),),
-        trailing: Icon(Icons.arrow_forward_ios, size: 15,color: BLACK_COLOR,),
+        leading: SvgPicture.asset(
+          image,
+          height: 32,
+        ),
+        title: Text(
+          name,
+          style: TextStyle(fontSize: 17),
+        ),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          size: 15,
+          color: BLACK_COLOR,
+        ),
         onTap: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => _screen));
@@ -165,9 +173,9 @@ class _TrackingState extends State<Tracking> {
       padding: const EdgeInsets.symmetric(vertical: 15),
       child: Center(
           child: Text(
-            title,
-            style: TextStyle(color: GREY_COLOR),
-          )),
+        title,
+        style: TextStyle(color: GREY_COLOR),
+      )),
     );
   }
 }
