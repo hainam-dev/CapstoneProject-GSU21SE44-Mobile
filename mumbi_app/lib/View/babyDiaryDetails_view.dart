@@ -16,6 +16,7 @@ import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/Widget/customConfirmDialog.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
+import 'package:mumbi_app/Widget/customGridLayoutPhoto.dart';
 import 'package:mumbi_app/Widget/customProgressDialog.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -63,9 +64,9 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (widget.model.imageURL != null && widget.model.imageURL != "")
-                getDiaryImage(widget.model.imageURL),
               DiaryContent(),
+              if (widget.model.imageURL != null && widget.model.imageURL != "")
+                CalculateImageDimension(widget.model.imageURL),
             ],
           ),
         ),
@@ -231,33 +232,6 @@ class _BabyDiaryDetailsState extends State<BabyDiaryDetails> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget getDiaryImage(String _image) {
-    List<String> getImages = _image.split(";");
-    return Column(
-      children: [
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: getImages.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Column(
-              children: [
-                FullScreenWidget(
-                  backgroundColor: WHITE_COLOR,
-                  child: Center(
-                    child: CachedNetworkImage(
-                      imageUrl: getImages[index],
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ],
     );
   }
 

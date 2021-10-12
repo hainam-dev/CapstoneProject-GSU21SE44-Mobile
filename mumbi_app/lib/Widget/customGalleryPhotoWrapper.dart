@@ -100,7 +100,7 @@ class _GalleryPhotoWrapper extends State<GalleryPhotoWrapper> {
       Navigator.of(context).pop();
     } else {
       setState(() {
-        animationDuration = Duration(milliseconds: 100);
+        animationDuration = Duration(milliseconds: 150);
         opacity = 1;
         positionYDelta = 0;
       });

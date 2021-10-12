@@ -48,7 +48,7 @@ class _CalculateImageDimensionState extends State<CalculateImageDimension> {
   @override
   Widget build(BuildContext context) {
     return CustomGridLayoutPhoto(
-        this.imageWidth, this.imageHeight, this.listImage);
+        imageWidth, imageHeight, listImage, this.context);
   }
 }
 
@@ -56,8 +56,9 @@ class CustomGridLayoutPhoto extends StatelessWidget {
   final String listImage;
   final int imageWidth;
   final int imageHeight;
-  CustomGridLayoutPhoto(this.imageWidth, this.imageHeight, this.listImage);
-  BuildContext context;
+  final BuildContext context;
+  CustomGridLayoutPhoto(
+      this.imageWidth, this.imageHeight, this.listImage, this.context);
   @override
   Widget build(BuildContext context) {
     return getPostImage(listImage);
@@ -193,7 +194,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                   height: SizeConfig.blockSizeHorizontal * 49,
                   child: GestureDetector(
                     onTap: () {
-                      _openImage(context, 0);
+                      _openImage(this.context, 0);
                     },
                     child: Hero(
                       tag: listImage[0].toString(),
@@ -252,7 +253,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                   width: SizeConfig.blockSizeHorizontal * 49,
                   child: GestureDetector(
                     onTap: () {
-                      _openImage(context, 0);
+                      _openImage(this.context, 0);
                     },
                     child: Hero(
                       tag: listImage[0].toString(),
@@ -319,7 +320,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                   height: SizeConfig.blockSizeHorizontal * 66,
                   child: GestureDetector(
                     onTap: () {
-                      _openImage(context, 0);
+                      _openImage(this.context, 0);
                     },
                     child: CachedNetworkImage(
                       imageUrl: listImage[0],
@@ -372,7 +373,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                       width: SizeConfig.blockSizeHorizontal * 66,
                       child: GestureDetector(
                         onTap: () {
-                          _openImage(context, 0);
+                          _openImage(this.context, 0);
                         },
                         child: CachedNetworkImage(
                           imageUrl: listImage[0],
@@ -461,7 +462,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                   height: SizeConfig.blockSizeHorizontal * 66,
                   child: GestureDetector(
                     onTap: () {
-                      _openImage(context, 0);
+                      _openImage(this.context, 0);
                     },
                     child: Hero(
                       tag: listImage[0].toString(),
@@ -569,7 +570,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                       width: SizeConfig.blockSizeHorizontal * 66,
                       child: GestureDetector(
                         onTap: () {
-                          _openImage(context, 0);
+                          _openImage(this.context, 0);
                         },
                         child: Hero(
                           tag: listImage[0].toString(),
