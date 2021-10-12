@@ -24,7 +24,8 @@ class PostModel{
       this.lastModifiedTime,
       this.reviewedBy,
       this.approvedTime,
-      this.totalReaction});
+      this.totalReaction,
+      this.totalComment});
 
   factory PostModel.fromJson(dynamic json){
     return PostModel(
@@ -38,6 +39,8 @@ class PostModel{
       lastModifiedTime: json['lastModifiedTime'],
       reviewedBy: json['reviewedBy'],
       approvedTime: json['approvedTime'],
+      totalReaction: json['countReactPost'],
+      totalComment: json['countCommentPost'],
     );
   }
 

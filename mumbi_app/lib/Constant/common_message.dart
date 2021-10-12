@@ -28,3 +28,5 @@ final String PREGNANCY_BIPARIETAL_DIAMETER_VALIDATION_MESSAGE = "Giá trị hợ
 final String NO_MORE_POST_MESSAGE = "Không còn bài viết nào để hiển thị";
 final String NO_MORE_COMMENT_MESSAGE = "Không còn bình luận nào để hiển thị";
 final String NO_MORE_REPLY_MESSAGE = "Không còn phản hồi nào để hiển thị";
+
+final String NO_MORE_DIARY_MESSAGE = "Không còn nhật ký nào để hiển thị";

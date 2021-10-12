@@ -245,15 +245,16 @@ Widget createFamilyCard(BuildContext context, String _imageURL, String _name,
               children: [
                 Flexible(
                   child: Stack(
+                    clipBehavior: Clip.none,
                     children: [
                       CircleAvatar(
                           radius: 37,
                           backgroundColor: PINK_COLOR,
                           backgroundImage:
                               CachedNetworkImageProvider(_imageURL)),
-                      /*Positioned(
+                      Positioned(
                         top: -1,
-                        right: -1,
+                        right: -8,
                         child: Container(
                           child: SvgPicture.asset(
                             editpencil,
@@ -261,7 +262,7 @@ Widget createFamilyCard(BuildContext context, String _imageURL, String _name,
                             height: 25,
                           ),
                         ),
-                      ),*/
+                      ),
                       if (_labelText == "Mẹ bầu")
                         Positioned(
                           bottom: 1,
@@ -680,18 +681,6 @@ Widget createFormPhone(
           ),
           hintText: hintText),
     ),
-  );
-}
-
-Widget backButton(BuildContext context, Widget screen) {
-  return IconButton(
-    icon: Icon(Icons.keyboard_backspace),
-    onPressed: () => {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => screen),
-      )
-    },
   );
 }
 

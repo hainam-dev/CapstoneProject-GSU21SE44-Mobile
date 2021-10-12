@@ -17,7 +17,6 @@ import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
 import 'package:mumbi_app/Widget/customConfirmDialog.dart';
 import 'package:mumbi_app/Widget/customDialog.dart';
-import 'package:mumbi_app/Widget/customEmpty.dart';
 import 'package:mumbi_app/Widget/customGridLayoutPhoto.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:mumbi_app/Widget/customProgressDialog.dart';
@@ -108,6 +107,7 @@ class _CommunityState extends State<Community> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
         backgroundColor: LIGHT_GREY_COLOR,
         appBar: AppBar(
@@ -206,7 +206,7 @@ class _CommunityState extends State<Community> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
               child: Text(
-                "Hôm nay bạn có gì?",
+                "Hôm nay bạn thế nào?",
                 style: TextStyle(color: LIGHT_DARK_GREY_COLOR),
               ),
             ),

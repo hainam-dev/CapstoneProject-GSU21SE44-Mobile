@@ -65,7 +65,7 @@ class _TeethTrackState extends State<TeethTrack> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Text('Theo dõi mọc răng'),
+            title: Text('Mọc răng'),
             actions: [
               Container(
                 child: IconButton(
@@ -79,7 +79,7 @@ class _TeethTrackState extends State<TeethTrack> {
                 ),
               )
             ],
-            leading: backButton(context, BotNavBar())),
+            ),
         body: SingleChildScrollView(
             child: Column(
           children: <Widget>[

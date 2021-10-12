@@ -20,22 +20,44 @@ class DiaryViewModel extends Model{
     _instance = null;
   }
 
-  List<dynamic> diaryList;
+  num pageSize = 10;
+  num currentPage;
+  num totalPage;
   List<DiaryModel> childDiaryListModel;
 
   void getChildDiary(String id) async {
       try{
-        var data = await DiaryRepository.apiGetChildDiary(id);
+        var data = await DiaryRepository.apiGetChildDiary(id, 1);
         Map<String, dynamic> jsonList = json.decode(data);
-        diaryList = jsonList['data'];
+        List<dynamic> diaryList = jsonList['data'];
         if(diaryList != null){
           childDiaryListModel = diaryList.map((e) => DiaryModel.fromJson(e)).toList();
-          childDiaryListModel.sort((a,b) => b.createTime.compareTo(a.createTime));
         }
+        currentPage = jsonList['pageNumber'];
+        totalPage = jsonList['total'] / pageSize;
         notifyListeners();
       }catch (e){
         print("error: " + e.toString());
       }
+  }
+
+  void getMoreChildDiary(String id) async {
+    try{
+      if(currentPage < totalPage){
+        var data = await DiaryRepository.apiGetChildDiary(id, ++currentPage);
+        Map<String, dynamic> jsonList = json.decode(data);
+        List<dynamic> diaryList = jsonList['data'];
+        if(diaryList != null){
+          List<DiaryModel> moreChildDiaryListModel = diaryList.map((e) => DiaryModel.fromJson(e)).toList();
+          currentPage = jsonList['pageNumber'];
+          totalPage = jsonList['total'] / pageSize;
+          await childDiaryListModel.addAll(moreChildDiaryListModel);
+        }
+        notifyListeners();
+      }
+    }catch (e){
+      print("error: " + e.toString());
+    }
   }
 
   Future<bool> addDiary(DiaryModel diaryModel) async {

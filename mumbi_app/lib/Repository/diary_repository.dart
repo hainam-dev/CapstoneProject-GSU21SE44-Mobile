@@ -6,10 +6,11 @@ import 'package:mumbi_app/Model/diary_model.dart';
 
 class DiaryRepository{
 
-  static Future<dynamic> apiGetChildDiary(String id) async{
+  static Future<dynamic> apiGetChildDiary(String id, num pageNumber) async{
     var response = await http.get(
       Uri.parse("${GET_ALL_DIARY_OF_CHILD}").replace(queryParameters: <String, String>
-      {'ChildId': id}),
+      {'ChildId': id,
+      'PageNumber': pageNumber.toString()}),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },);

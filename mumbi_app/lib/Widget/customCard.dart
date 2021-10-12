@@ -118,11 +118,11 @@ Widget NormalCardItem(String imageURL, String title, String createTime, num esti
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 19.0,
+                        fontSize: 18.0,
                       ),
                     ),
                     SizedBox(
-                      height: 6,
+                      height: 2,
                     ),
                     Row(
                       children: [
@@ -159,5 +159,29 @@ Widget NormalCardItem(String imageURL, String title, String createTime, num esti
         ),
       ],
     ),
+  );
+}
+
+Widget CardInfo(String imageURL, String title, String subtitle){
+  return Card(
+    elevation: 0,
+    margin: EdgeInsets.zero,
+    child: ListTile(
+      leading: imageURL == null
+          ? CircleAvatar(radius: 22, backgroundColor: LIGHT_GREY_COLOR)
+          : CircleAvatar(
+        radius: 22,
+        backgroundColor: LIGHT_GREY_COLOR,
+        backgroundImage:
+        CachedNetworkImageProvider(imageURL,
+      ),),
+      title: Text(
+        title == null ? "" : title,
+        style: TextStyle(fontWeight: FontWeight.w600),
+      ),
+      subtitle: Text(
+        subtitle == null ? "" : DateTimeConvert.calculateChildAge(subtitle),
+        style: TextStyle(fontWeight: FontWeight.w600),
+      ),),
   );
 }

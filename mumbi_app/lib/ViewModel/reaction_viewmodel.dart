@@ -38,11 +38,6 @@ class ReactionViewModel extends Model{
     }
   }
 
-  void countPostReaction(PostModel postModel) async {
-    var countReact = await ReactionRepository.apiCountPostReaction(postModel.id);
-    postModel.totalReaction = json.decode(countReact)['total'];
-  }
-
   void checkPostReaction(PostModel postModel) async {
     String userId = await UserViewModel.getUserID();
     var checkReact = await ReactionRepository.apiCheckPostReaction(userId, postModel.id);
@@ -53,11 +48,6 @@ class ReactionViewModel extends Model{
     }else{
       postModel.idReaction = 0;
     }
-  }
-
-  void countCommentReaction(CommentModel commentModel) async {
-    var countReact = await ReactionRepository.apiCountCommentReaction(commentModel.id);
-    commentModel.totalReaction = json.decode(countReact)['total'];
   }
 
   void checkCommentReaction(CommentModel commentModel) async {

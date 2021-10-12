@@ -1,25 +1,22 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
-import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/injectionSchedule_model.dart';
 import 'package:mumbi_app/Repository/vaccination_respository.dart';
-import 'package:mumbi_app/Utils/datetime_convert.dart';
-import 'package:mumbi_app/Utils/rebuildAllChildren.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/View/vaccinePrice_compare.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/injectionSchedule_viewmodel.dart';
+import 'package:mumbi_app/Widget/customCard.dart';
 import 'package:mumbi_app/Widget/customComponents.dart';
 import 'package:mumbi_app/View/injectiondetail_view.dart';
 import 'package:mumbi_app/Widget/customConfirmDialog.dart';
+import 'package:mumbi_app/Widget/customEmpty.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -38,7 +35,6 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
   bool isLogin = false;
   ChildViewModel childViewModel;
   InjectionScheduleViewModel injectionScheduleViewModel;
-  StateSetter _setStateLoginDialog;
 
   @override
   void initState() {
@@ -107,31 +103,13 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
       ),
       body: Column(
         children: <Widget>[
-          ChildInfo(childViewModel.childModel),
+          CardInfo(childViewModel.childModel.imageURL,
+              childViewModel.childModel.fullName,
+              childViewModel.childModel.birthday),
           InjectTable(),
         ],
       ),
     );
-  }
-
-  Widget ChildInfo(ChildModel childModel) {
-    return ListTile(
-        leading: childModel == null
-            ? CircleAvatar(radius: 22, backgroundColor: LIGHT_GREY_COLOR)
-            : CircleAvatar(
-                radius: 22,
-                backgroundColor: LIGHT_GREY_COLOR,
-                backgroundImage:
-                    CachedNetworkImageProvider(childModel.imageURL),
-              ),
-        title: Text(
-          childModel == null ? "..." : childModel.fullName,
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
-      subtitle: Text(
-        childModel == null ? "..." : DateTimeConvert.calculateChildAge(childModel.birthday),
-        style: TextStyle(fontWeight: FontWeight.w600),
-      ),);
   }
 
   Widget InjectTable() {
@@ -141,16 +119,7 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
         builder: (BuildContext context, Widget child,
             InjectionScheduleViewModel model) {
           return model.injectionScheduleListModel == null
-              ? Padding(
-                padding: EdgeInsets.symmetric(vertical: 30),
-                child: Center(child: Column(
-                  children: [
-                    SvgPicture.asset(vaccination,width: 160,height: 160,),
-                    SizedBox(height: 10,),
-                    Text("- Chưa có lịch sử tiêm chủng được ghi nhận -",style: TextStyle(fontSize: 16),),
-                  ],
-                )),
-              )
+              ? Empty(noInjection, "Chưa có lịch sử tiêm chủng được ghi nhận")
               : Expanded(
                 child: Column(
                   children: [
@@ -182,9 +151,9 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
   Widget Header() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      /*decoration: BoxDecoration(
-        color: PINK_COLOR,
-      ),*/
+      decoration: BoxDecoration(
+        color: WHITE_COLOR,
+      ),
       child: Row(
         children: <Widget>[
           HeaderItem(25, "Ngày tiêm"),
@@ -305,11 +274,10 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
         context: context,
         builder: (context) => AlertDialog(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(18.0))
+                  borderRadius: BorderRadius.all(Radius.circular(BORDER_RADIUS))
               ),
               content: StatefulBuilder(
                 builder: (context, setState) {
-                  _setStateLoginDialog = setState;
                   return SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -317,7 +285,7 @@ class _InjectionScheduleState extends State<InjectionSchedule> {
                         Align(
                             alignment: Alignment.center,
                             child: Text(
-                                "Cập nhật lịch sử tiêm chủng cho bé",style: TextStyle(fontWeight: FontWeight.w600),)),
+                                "Cập nhật lịch sử tiêm chủng",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 18),)),
                         SizedBox(
                           height: 15.0,
                         ),

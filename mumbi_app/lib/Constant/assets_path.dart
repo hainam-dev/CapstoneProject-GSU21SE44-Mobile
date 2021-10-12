@@ -6,8 +6,8 @@ final String logoApp = _getImagePath('logo.png');
 final String textLogoApp = _getImagePath("textLogo.svg");
 final String logoFacebook = _getImagePath('apple_logo.jpg');
 final String logoGoogle = _getImagePath('google_logo.png');
-final String iconBoy = _getImagePath('icon_boy.png');
-final String iconGirl = _getImagePath('icon_girl.png');
+final String iconBoy = _getImagePath('iconBoy.svg');
+final String iconGirl = _getImagePath('iconGirl.svg');
 final String iconChild = _getImagePath('icon_child.png');
 final String iconCalendar = _getImagePath('image_calendar.svg');
 final String remindDrink = _getImagePath('remindDrink.png');
@@ -19,33 +19,51 @@ final String remindSleep = _getImagePath('remindSleep.png');
 final String backgroundAlarm = _getImagePath('background_alarm.png');
 final String circleAlarm = _getImagePath('circleAlarm.png');
 
+final String community = _getImagePath('congdong.svg');
+final String doctor = _getImagePath('bacsi.svg');
+final String thaigiao = _getImagePath('thaigiao.svg');
+
+final String myFamily = _getImagePath('myFamily.svg');
+final String saved = _getImagePath('saved.svg');
+final String diary = _getImagePath('diary.svg');
+final String contact = _getImagePath('contact.svg');
+final String logout = _getImagePath('logout.svg');
+
+final String developmentMilestone = _getImagePath('development.svg');
+final String teethGrow = _getImagePath('teeth.svg');
+final String injection = _getImagePath('injection.svg');
+
+final String swap = _getImagePath("swap.svg");
+final String noInjection = _getImagePath('noInjection.svg');
+final String iconTeeth = _getImagePath("iconTeeth.svg");
+final String gallery = _getImagePath("gallery.svg");
+final String gallery2 = _getImagePath("gallery2.svg");
+
+final String dashboard = _getImagePath("dashboard.svg");
+final String guidebook = _getImagePath("guidebook.svg");
+final String tracking = _getImagePath("tracking.svg");
+
 final String fatherImage = _getImagePath('cha.jpg');
 final String term = _getImagePath('chinhsach.png');
-final String emptyDiary = _getImagePath('chuaconhatky.svg');
-final String saved = _getImagePath('daluu.png');
-final String logout = _getImagePath('dangxuat.png');
+final String emptyPost = _getImagePath('chuaconhatky.svg');
 final String rule = _getImagePath('dieukhoan.png');
 final String email = _getImagePath('email.png');
 final String embe = _getImagePath('embe.svg');
 final String embenhatky = _getImagePath('embenhatky.jpg');
-final String myFamily = _getImagePath('giadinhcuatoi.png');
+
 final String hinhcon = _getImagePath('hinhcon.jpg');
 final String hinhembe1 = _getImagePath('hinhembe1.jpg');
 final String hotline = _getImagePath('hotline.png');
 final String diaryFrame = _getImagePath('khungnhatki.svg');
 final String empty = _getImagePath('koco.svg');
-final String community = _getImagePath('congdong.svg');
-final String contact = _getImagePath('lienhehotro.png');
-final String developmentMilestone = _getImagePath('mocphattrien.svg');
-final String teethGrow = _getImagePath('mocrang.png');
+
 final String motherImage = _getImagePath('mom.jpg');
 final String reminder = _getImagePath('nhacnho.png');
-final String babyDiary = _getImagePath('nhatkycuabe.png');
 final String readIcon = _getImagePath('readicon.svg');
 final String pregnancy = _getImagePath('thaiki.svg');
 final String addImage = _getImagePath('themhinhanh.png');
 final String pen = _getImagePath('pen.svg');
-final String injection = _getImagePath('tiemchung.svg');
+final String pencil = _getImagePath('pencil.svg');
 final String add = _getImagePath('add.svg');
 final String rectFrame = _getImagePath('rectframe.svg');
 final String circleFrame = _getImagePath('circleframe.svg');
@@ -57,7 +75,6 @@ final String ic_tooth = _getImagePath('ic_tooth.svg');
 final String ic_needle = _getImagePath('needle.svg');
 final String btn_plus = _getImagePath('btn_plus.svg');
 final String emptyPhone = _getImagePath('empty.svg');
-final String vaccination = _getImagePath('vaccination.svg');
 final String mecobau = _getImagePath('mecobau.svg');
 final String comment = _getImagePath('comment.svg');
 final String emptybox = _getImagePath('emptybox.svg');

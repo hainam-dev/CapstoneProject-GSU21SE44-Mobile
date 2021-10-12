@@ -37,8 +37,6 @@ class CommunityViewModel extends Model {
       if(postList != null){
         postListModel = postList.map((e) => PostModel.fromJson(e)).toList();
         await Future.forEach(postListModel, (postModel) async {
-          await ReactionViewModel().countPostReaction(postModel);
-          await CommentViewModel().countCommentPost(postModel);
           await ReactionViewModel().checkPostReaction(postModel);
         });
       }
@@ -54,23 +52,23 @@ class CommunityViewModel extends Model {
 
   void getMoreCommunityPost() async {
     try {
-      isLoading = true;
-      var data = await PostRepository.apiGetCommunityPost(pageSize, ++currentPage);
-      Map<String, dynamic> jsonList = json.decode(data);
-      postList = jsonList['data'];
-      if(postList != null){
-        List<PostModel> morePostListModel = postList.map((e) => PostModel.fromJson(e)).toList();
-        currentPage = jsonList['pageNumber'];
-        totalPage = jsonList['total'] / pageSize;
-        await Future.forEach(morePostListModel, (postModel) async {
-          await ReactionViewModel().countPostReaction(postModel);
-          await CommentViewModel().countCommentPost(postModel);
-          await ReactionViewModel().checkPostReaction(postModel);
-        });
-        await postListModel.addAll(morePostListModel);
+      if(currentPage < totalPage){
+        isLoading = true;
+        var data = await PostRepository.apiGetCommunityPost(pageSize, ++currentPage);
+        Map<String, dynamic> jsonList = json.decode(data);
+        postList = jsonList['data'];
+        if(postList != null){
+          List<PostModel> morePostListModel = postList.map((e) => PostModel.fromJson(e)).toList();
+          currentPage = jsonList['pageNumber'];
+          totalPage = jsonList['total'] / pageSize;
+          await Future.forEach(morePostListModel, (postModel) async {
+            await ReactionViewModel().checkPostReaction(postModel);
+          });
+          await postListModel.addAll(morePostListModel);
+        }
+        isLoading = false;
+        notifyListeners();
       }
-      isLoading = false;
-      notifyListeners();
     } catch (e) {
       isLoading = false;
       print("error: " + e.toString());

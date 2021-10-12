@@ -46,10 +46,6 @@ class _TeethProcessState extends State<TeethProcess> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Quá trình mọc răng'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
       ),
       body: SingleChildScrollView(
         child: Column(

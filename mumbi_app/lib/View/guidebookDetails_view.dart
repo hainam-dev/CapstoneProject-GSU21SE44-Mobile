@@ -120,6 +120,11 @@ class _GuidebookDetailState extends State<GuidebookDetail> {
       padding: const EdgeInsets.fromLTRB(10, 0, 8, 16),
       child: Html(
         data: widget.model.guidebookContent,
+        style: {
+          "body": Style(
+            fontSize: FontSize(16.0),
+          ),
+        },
       ),
     );
   }

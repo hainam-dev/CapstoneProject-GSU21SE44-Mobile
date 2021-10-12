@@ -18,21 +18,16 @@ class InjectionScheduleViewModel extends Model {
     _instance = null;
   }
 
-  List<dynamic> injectionScheduleList;
   List<InjectionScheduleModel> injectionScheduleListModel;
 
   Future<bool> getInjectionSchedule(String childId) async {
     try {
-      String data =
-          await VaccinationRespository.apiGetInjectionSchedule(childId);
+      String data = await VaccinationRespository.apiGetInjectionSchedule(childId);
       Map<String, dynamic> jsonList = json.decode(data);
-      injectionScheduleList = jsonList['data'];
+      List<dynamic> injectionScheduleList = jsonList['data'];
       if (injectionScheduleList != null) {
-        injectionScheduleListModel = injectionScheduleList
-            .map((e) => InjectionScheduleModel.fromJson(e))
-            .toList();
-        injectionScheduleListModel
-            .sort((a, b) => b.date.compareTo(a.date));
+        injectionScheduleListModel = injectionScheduleList.map((e) => InjectionScheduleModel.fromJson(e)).toList();
+        injectionScheduleListModel.sort((a, b) => b.date.compareTo(a.date));
       } else {
         injectionScheduleListModel = null;
       }
