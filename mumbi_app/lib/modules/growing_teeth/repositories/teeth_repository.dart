@@ -41,19 +41,19 @@ class ToothRepository {
     }
   }
 
-  static Future<dynamic> apiUpsertToothById(ToothModel toothModel) async {
-    String toothId = await toothModel.toothId;
+  static Future<dynamic> apiUpsertToothById(TeethModel teethModel) async {
+    String toothId = await teethModel.toothId;
     print("TOOTH VIEW MODEL:" +
-        toothModel.toothId.toString() +
-        toothModel.grownFlag.toString());
-    dynamic jsonData = jsonEncode(toothModel.toJson());
+        teethModel.toothId.toString() +
+        teethModel.grownFlag.toString());
+    dynamic jsonData = jsonEncode(teethModel.toJson());
     print("JSONDATA: " + jsonData);
     var response = await http.post(
         Uri.parse("${UPSERT_TOOTH_BY_TOOTH_ID}${toothId}"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
         },
-        body: jsonEncode(toothModel.toJson()));
+        body: jsonEncode(teethModel.toJson()));
     print('jsonEncode');
 
     if (response.statusCode == 200) {

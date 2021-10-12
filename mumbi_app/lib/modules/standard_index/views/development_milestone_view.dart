@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mumbi_app/Constant/saveKey.dart';
-import 'package:mumbi_app/Global/CurrentMember.dart';
+import 'package:mumbi_app/core/change_member/models/change_member_model.dart';
 import 'package:mumbi_app/main.dart';
 import 'package:mumbi_app/modules/action/models/action_model.dart';
 import 'package:mumbi_app/modules/action/views/action_view.dart';

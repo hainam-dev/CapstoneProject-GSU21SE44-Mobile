@@ -5,7 +5,7 @@ import 'package:mumbi_app/Constant/common_api.dart';
 import 'package:mumbi_app/modules/community/model/post_model.dart';
 
 class PostRepository {
-  static Future<dynamic> apiGetCommunityPost(
+  static Future<dynamic> apiGetPost(
       num pageSize, num pageNumber) async {
     var response = await http.get(
       Uri.parse("${GET_COMMUNITY_POST}").replace(
@@ -22,7 +22,7 @@ class PostRepository {
     }
   }
 
-  static Future<dynamic> apiAddCommunityPost(PostModel postModel) async {
+  static Future<dynamic> apiAddPost(PostModel postModel) async {
     var response = await http.post(Uri.parse("${ADD_COMMUNITY_POST}"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -33,7 +33,7 @@ class PostRepository {
     }
   }
 
-  static Future<dynamic> apiUpdateCommunityPost(PostModel postModel) async {
+  static Future<dynamic> apiUpdatePost(PostModel postModel) async {
     var response = await http.put(
         Uri.parse("${UPDATE_COMMUNITY_POST}${postModel.id}"),
         headers: <String, String>{

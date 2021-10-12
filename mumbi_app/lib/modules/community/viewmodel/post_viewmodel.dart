@@ -27,10 +27,10 @@ class PostViewModel extends Model {
   List<dynamic> postList;
   List<PostModel> postListModel;
 
-  void getCommunityPost() async {
+  void getPost() async {
     try {
       isLoading = true;
-      var data = await PostRepository.apiGetCommunityPost(pageSize, 1);
+      var data = await PostRepository.apiGetPost(pageSize, 1);
       Map<String, dynamic> jsonList = json.decode(data);
       postList = jsonList['data'];
       if (postList != null) {
@@ -49,12 +49,12 @@ class PostViewModel extends Model {
     }
   }
 
-  void getMoreCommunityPost() async {
+  void getMorePost() async {
     try {
       if (currentPage < totalPage) {
         isLoading = true;
         var data =
-            await PostRepository.apiGetCommunityPost(pageSize, ++currentPage);
+            await PostRepository.apiGetPost(pageSize, ++currentPage);
         Map<String, dynamic> jsonList = json.decode(data);
         postList = jsonList['data'];
         if (postList != null) {
@@ -76,11 +76,11 @@ class PostViewModel extends Model {
     }
   }
 
-  Future<bool> addCommunityPost(PostModel postModel) async {
+  Future<bool> addPost(PostModel postModel) async {
     String userId = await UserViewModel.getUserID();
     postModel.userId = userId;
     try {
-      String result = await PostRepository.apiAddCommunityPost(postModel);
+      String result = await PostRepository.apiAddPost(postModel);
       if (result != null) {
         return true;
       } else {
@@ -92,9 +92,9 @@ class PostViewModel extends Model {
     return false;
   }
 
-  Future<bool> updateCommunityPost(PostModel postModel) async {
+  Future<bool> updatePost(PostModel postModel) async {
     try {
-      String result = await PostRepository.apiUpdateCommunityPost(postModel);
+      String result = await PostRepository.apiUpdatePost(postModel);
       if (result != null) {
         return true;
       } else {
@@ -106,7 +106,7 @@ class PostViewModel extends Model {
     return false;
   }
 
-  Future<bool> deleteCommunityPost(PostModel postModel) async {
+  Future<bool> deletePost(PostModel postModel) async {
     try {
       String result = await PostRepository.apiDeletePost(postModel.id);
       if (result != null) {

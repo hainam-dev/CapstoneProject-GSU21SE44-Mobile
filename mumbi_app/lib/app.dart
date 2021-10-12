@@ -3,11 +3,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/widgets/splashScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'Constant/colorTheme.dart';
 import 'Utils/message.dart';
+import 'core/change_member/models/change_member_model.dart';
 import 'main.dart';
 
 class MyApp extends StatefulWidget {

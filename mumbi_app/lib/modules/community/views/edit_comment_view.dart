@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/ViewModel/comment_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
-import 'package:mumbi_app/Widget/customProgressDialog.dart';
+import 'package:mumbi_app/modules/community/viewmodel/comment_viewmodel.dart';
+import 'package:mumbi_app/modules/family/viewmodel/mom_viewmodel.dart';
+import 'package:mumbi_app/widgets/customProgressDialog.dart';
 
 class EditComment extends StatefulWidget {
   final commentModel;

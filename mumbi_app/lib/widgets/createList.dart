@@ -5,13 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Global/CurrentMember.dart';
+import 'package:mumbi_app/core/change_member/models/change_member_model.dart';
+import 'package:mumbi_app/core/change_member/viewmodel/change_member_viewmodel.dart';
 import 'package:mumbi_app/modules/diary/models/diary_model.dart';
 import 'package:mumbi_app/Utils/calculation.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/core/walk_through/home_bottom_navigation.dart';
-import 'package:mumbi_app/core/change_account/viewmodel/change_account_viewmodel.dart';
 import 'package:mumbi_app/core/auth/login/viewmodel/login_viewmodel.dart';
 import 'package:mumbi_app/core/auth/logout/viewmodel/logout_viewmodel.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -320,7 +320,7 @@ Widget createListTileSelectedAccount(BuildContext context, String _imageURL,
           }
           CurrentMember.role = role;
           await prefs.setString(CURRENT_MEMBER_ROLE, role);
-          await ChangeAccountViewModel().destroyInstance();
+          await ChangeMemberViewModel().destroyInstance();
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (context) => BotNavBar()),
               (Route<dynamic> route) => false);

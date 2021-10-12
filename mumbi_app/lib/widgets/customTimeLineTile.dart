@@ -9,7 +9,7 @@ import 'package:timeline_tile/timeline_tile.dart';
 
 class CustomTimeLine {}
 
-Widget firstTimeLineTile(ToothModel model) {
+Widget firstTimeLineTile(TeethModel model) {
   DateTime oDate = DateTime.tryParse(model.grownDate.toString());
   String growTime = oDate.day.toString() +
       "/" +
@@ -120,7 +120,7 @@ Widget firstTimeLineTile(ToothModel model) {
   );
 }
 
-Widget customTimeLineTile(ToothModel model) {
+Widget customTimeLineTile(TeethModel model) {
   DateTime oDate = DateTime.tryParse(model.grownDate.toString());
   String growTime = oDate.day.toString() +
       "/" +
@@ -226,7 +226,7 @@ Widget customTimeLineTile(ToothModel model) {
   );
 }
 
-Widget lastTimeLineTile(ToothModel model) {
+Widget lastTimeLineTile(TeethModel model) {
   DateTime oDate = DateTime.tryParse(model.grownDate.toString());
   String growTime = oDate.day.toString() +
       "/" +

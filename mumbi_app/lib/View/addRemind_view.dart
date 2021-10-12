@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/Widget/customBottomButton.dart';
-import 'package:mumbi_app/Widget/customStatusDropdown.dart';
-import 'package:mumbi_app/Widget/customText.dart';
-import 'package:mumbi_app/Widget/timePicker.dart';
+import 'package:mumbi_app/widgets/customBottomButton.dart';
+import 'package:mumbi_app/widgets/customStatusDropdown.dart';
+import 'package:mumbi_app/widgets/customText.dart';
+import 'package:mumbi_app/widgets/timePicker.dart';
 
 class AddRemindScreen extends StatefulWidget {
   @override

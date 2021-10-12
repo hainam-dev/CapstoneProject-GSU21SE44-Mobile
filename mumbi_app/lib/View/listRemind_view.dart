@@ -4,7 +4,7 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/addRemind_view.dart';
-import 'package:mumbi_app/Widget/customText.dart';
+import 'package:mumbi_app/widgets/customText.dart';
 import 'package:titled_navigation_bar/titled_navigation_bar.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 

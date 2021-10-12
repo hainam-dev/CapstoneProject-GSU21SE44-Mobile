@@ -7,11 +7,12 @@ import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
-import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
+import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/calculateDate_view.dart';
-import 'package:mumbi_app/View/community_view.dart';
 import 'package:mumbi_app/View/doctor.dart';
+import 'package:mumbi_app/core/change_member/models/change_member_model.dart';
+import 'package:mumbi_app/modules/community/views/community_view.dart';
 import 'package:mumbi_app/modules/family/models/child_model.dart';
 import 'package:mumbi_app/modules/family/viewmodel/child_viewmodel.dart';
 import 'package:mumbi_app/modules/family/views/child_info_view.dart';
@@ -57,6 +58,7 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: WHITE_COLOR,
       body: SmartRefresher(

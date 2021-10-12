@@ -8,20 +8,19 @@ import 'package:full_screen_image/full_screen_image.dart';
 import 'package:intl/intl.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
+import 'package:mumbi_app/modules/family/viewmodel/child_viewmodel.dart';
 import 'package:mumbi_app/modules/growing_teeth/models/teeth_model.dart';
 import 'package:mumbi_app/Utils/upload_multipleImage.dart';
-import 'package:mumbi_app/View/teethTrack_view.dart';
-import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/modules/growing_teeth/viewmodel/teeth_viewmodel.dart';
-import 'package:mumbi_app/Widget/calendarBirthday.dart';
-import 'package:mumbi_app/Widget/customBottomButton.dart';
-import 'package:mumbi_app/Widget/customLoading.dart';
-import 'package:mumbi_app/Widget/customProgressDialog.dart';
-import 'package:mumbi_app/Widget/customStatusDropdown.dart';
-import 'package:mumbi_app/Widget/customText.dart';
-import 'package:mumbi_app/Widget/customComponents.dart';
+import 'package:mumbi_app/widgets/calendarBirthday.dart';
+import 'package:mumbi_app/widgets/customBottomButton.dart';
+import 'package:mumbi_app/widgets/customComponents.dart';
+import 'package:mumbi_app/widgets/customDialog.dart';
+import 'package:mumbi_app/widgets/customLoading.dart';
+import 'package:mumbi_app/widgets/customProgressDialog.dart';
+import 'package:mumbi_app/widgets/customStatusDropdown.dart';
+import 'package:mumbi_app/widgets/customText.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:mumbi_app/Widget/customDialog.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -37,7 +36,7 @@ class _TeethDetailState extends State<TeethDetail> {
   List<String> splitImage;
   CollectionReference imgRef;
   firebase_storage.Reference ref;
-  ToothModel toothModel;
+  TeethModel teethModel;
   String growTimeDB;
   String growTimePick;
   String status;
@@ -48,7 +47,7 @@ class _TeethDetailState extends State<TeethDetail> {
   bool result = false;
   bool isShow = false;
 
-  ToothViewModel toothViewModel;
+  TeethViewModel teethViewModel;
   ChildViewModel childViewModel;
 
   String update = "Update";
@@ -57,8 +56,8 @@ class _TeethDetailState extends State<TeethDetail> {
 
   @override
   void initState() {
-    toothViewModel = ToothViewModel.getInstance();
-    toothViewModel.getToothInfoById();
+    teethViewModel = TeethViewModel.getInstance();
+    teethViewModel.getToothInfoById();
 
     super.initState();
     // getToothModel();
@@ -73,10 +72,10 @@ class _TeethDetailState extends State<TeethDetail> {
       ),
       body: SingleChildScrollView(
         child: ScopedModel(
-          model: toothViewModel,
-          child: ScopedModelDescendant<ToothViewModel>(
+          model: teethViewModel,
+          child: ScopedModelDescendant<TeethViewModel>(
               builder: (context, child, model) {
-            toothModel = model.toothModel;
+                teethModel = model.toothModel;
             // print("TOOTH MODEL: " +toothModel.note.toString());
             getToothModel();
             return Form(
@@ -97,7 +96,7 @@ class _TeethDetailState extends State<TeethDetail> {
                               });
                             },
                           ),
-                    ScopedModelDescendant<ToothViewModel>(
+                    ScopedModelDescendant<TeethViewModel>(
                         builder: (context, child, modelInfo) {
                       return createTextFeildDisable(
                           "Răng", modelInfo.toothInforModel.name);
@@ -121,9 +120,9 @@ class _TeethDetailState extends State<TeethDetail> {
                       noteInput = value;
                     }),
                     ChooseImageButton(context),
-                    if (toothModel.imageURL != null &&
-                        toothModel.imageURL != "")
-                      getDiaryImage(toothModel.imageURL),
+                    if (teethModel.imageURL != null &&
+                        teethModel.imageURL != "")
+                      getDiaryImage(teethModel.imageURL),
                     CustomBottomButton(
                       titleCancel: 'Hủy',
                       titleSave: "Cập nhật",
@@ -132,7 +131,7 @@ class _TeethDetailState extends State<TeethDetail> {
                         if (formKey.currentState.validate()) {
                           showProgressDialogue(context);
                           List<String> listUrl = await uploadMultipleImage(
-                              fileName: toothModel.childId.toString(),
+                              fileName: teethModel.childId.toString(),
                               thread: "ToothImages",
                               files: _files);
                           if (listUrl != null && listUrl != "") {
@@ -144,30 +143,30 @@ class _TeethDetailState extends State<TeethDetail> {
                                 url += getUrl;
                               }
                             }
-                            if (toothModel.imageURL != null &&
-                                toothModel.imageURL != "") {
-                              toothModel.imageURL += url;
+                            if (teethModel.imageURL != null &&
+                                teethModel.imageURL != "") {
+                              teethModel.imageURL += url;
                             } else {
-                              toothModel.imageURL = url;
+                              teethModel.imageURL = url;
                             }
                           }
                           if (growTimePick != "--") {
-                            toothModel.grownDate =
+                            teethModel.grownDate =
                                 DateFormat('dd/M/yyyy').parse(growTimePick);
                           }
-                          toothModel.note = noteInput;
+                          teethModel.note = noteInput;
                           print("growFlag cần update" + growFlag.toString());
-                          toothModel.grownFlag = growFlag;
+                          teethModel.grownFlag = growFlag;
                           print("DATA TOOTH UPDATE: " +
-                              toothModel.toothId.toString() +
+                              teethModel.toothId.toString() +
                               "child:" +
-                              toothModel.grownFlag.toString() +
-                              toothModel.childId.toString() +
+                              teethModel.grownFlag.toString() +
+                              teethModel.childId.toString() +
                               " " +
-                              toothModel.grownDate.toString() +
-                              toothModel.note.toString());
+                              teethModel.grownDate.toString() +
+                              teethModel.note.toString());
                           result =
-                              await ToothViewModel().upsertTooth(toothModel);
+                              await TeethViewModel().upsertTooth(teethModel);
                         }
                         Navigator.pop(context);
                         Navigator.pop(context);
@@ -194,8 +193,8 @@ class _TeethDetailState extends State<TeethDetail> {
   }
 
   void getToothModel() {
-    if (toothModel != null && toothModel.grownFlag == true) {
-      DateTime oDate = toothModel.grownDate;
+    if (teethModel != null && teethModel.grownFlag == true) {
+      DateTime oDate = teethModel.grownDate;
       if (oDate == null) {
         growTimeDB = "--";
       } else
@@ -212,10 +211,10 @@ class _TeethDetailState extends State<TeethDetail> {
           growFlag = true;
       }
 
-      if (toothModel.note == null) {
+      if (teethModel.note == null) {
         noteDB = "";
       } else
-        noteDB = toothModel.note;
+        noteDB = teethModel.note;
     } else {
       status = notGrow;
       growTimeDB = "--";
@@ -329,7 +328,7 @@ class _TeethDetailState extends State<TeethDetail> {
                           }
                           print(url);
 
-                          toothModel.imageURL = url;
+                          teethModel.imageURL = url;
                         });
                       },
                     ),

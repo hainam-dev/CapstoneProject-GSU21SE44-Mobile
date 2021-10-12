@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
-import 'package:mumbi_app/Global/CurrentMember.dart';
+import 'package:mumbi_app/core/change_member/models/change_member_model.dart';
 import 'package:mumbi_app/modules/diary/viewmodel/diary_viewmodel.dart';
 import 'package:mumbi_app/modules/family/viewmodel/child_viewmodel.dart';
 import 'package:mumbi_app/widgets/createList.dart';

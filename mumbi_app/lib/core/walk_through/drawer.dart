@@ -4,17 +4,17 @@ import 'package:flutter/services.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
+import 'package:mumbi_app/core/change_member/models/change_member_model.dart';
+import 'package:mumbi_app/core/change_member/views/change_member_view.dart';
 import 'package:mumbi_app/modules/diary/views/diary_view.dart';
 import 'package:mumbi_app/modules/family/viewmodel/mom_viewmodel.dart';
 import 'package:mumbi_app/modules/family/views/family_view.dart';
 import 'package:mumbi_app/modules/family/views/parent_info_view.dart';
 import 'package:mumbi_app/widgets/createList.dart';
 import 'package:scoped_model/scoped_model.dart';
-import '../change_account/views/change_account_view.dart';
 import '../../View/contact_view.dart';
-import '../../View/savedPost_view.dart';
+import '../../View/saved.dart';
 
 Widget getDrawer(BuildContext context) {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -94,7 +94,7 @@ Widget getDrawer(BuildContext context) {
                 createListTileNavigator(
                     context, myFamily, 'Gia đình của tôi', Family()),
                 /*createListTileNavigator(context, reminder, 'Nhắc nhở', MenuRemind()),*/
-                createListTileNavigator(context, saved, 'Đã lưu', SavedPost(0)),
+                createListTileNavigator(context, saved, 'Đã lưu', Saved(0)),
                 createListTileNavigator(
                     context,
                     diary,

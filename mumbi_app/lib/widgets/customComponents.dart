@@ -5,9 +5,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/modules/growing_teeth/models/teeth_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
+import 'package:mumbi_app/modules/growing_teeth/models/teeth_model.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 Widget createTextFeild(String title, String hintText, String value, ontap) {
@@ -459,7 +459,7 @@ Widget getButtonUpload(BuildContext context) {
   );
 }
 
-Widget createTeeth(ToothInfoModel teethModel, bool choose, ontap) {
+Widget createTeeth(TeethInfoModel teethModel, bool choose, ontap) {
   return Positioned(
     height: teethModel.height,
     width: teethModel.width,

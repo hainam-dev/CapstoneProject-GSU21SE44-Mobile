@@ -17,12 +17,12 @@ import 'package:scoped_model/scoped_model.dart';
 
 import 'guidebook_details_view.dart';
 
-class GuidebookCategory extends StatefulWidget {
+class Guidebook extends StatefulWidget {
   @override
-  _GuidebookCategoryState createState() => _GuidebookCategoryState();
+  _GuidebookState createState() => _GuidebookState();
 }
 
-class _GuidebookCategoryState extends State<GuidebookCategory> {
+class _GuidebookState extends State<Guidebook> {
   GuidebookTypeViewModel guidebookTypeViewModel;
   GuidebookViewModel guidebookViewModel;
   GuidebookViewModel hlGuidebookViewModel;

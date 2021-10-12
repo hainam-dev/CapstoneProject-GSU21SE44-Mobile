@@ -8,20 +8,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
-import 'package:mumbi_app/Model/comment_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
-import 'package:mumbi_app/View/editComment.dart';
-import 'package:mumbi_app/View/replyComment_view.dart';
-import 'package:mumbi_app/ViewModel/comment_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
-import 'package:mumbi_app/Widget/customConfirmDialog.dart';
-import 'package:mumbi_app/Widget/customEmpty.dart';
-import 'package:mumbi_app/Widget/customLoading.dart';
-import 'package:mumbi_app/Widget/customProgressDialog.dart';
+import 'package:mumbi_app/modules/community/model/comment_model.dart';
+import 'package:mumbi_app/modules/community/viewmodel/comment_viewmodel.dart';
+import 'package:mumbi_app/modules/community/viewmodel/reaction_viewmodel.dart';
+import 'package:mumbi_app/modules/community/views/reply_view.dart';
+import 'package:mumbi_app/modules/family/viewmodel/mom_viewmodel.dart';
+import 'package:mumbi_app/widgets/customConfirmDialog.dart';
+import 'package:mumbi_app/widgets/customLoading.dart';
+import 'package:mumbi_app/widgets/customProgressDialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readmore/readmore.dart';
 import 'package:scoped_model/scoped_model.dart';
+
+import 'edit_comment_view.dart';
 
 class PostComment extends StatefulWidget {
   final postModel;
@@ -259,7 +259,7 @@ class _PostCommentState extends State<PostComment> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    ReplyComment(commentModel),
+                                    Reply(commentModel),
                               ));
                           setState(() {});
                         },

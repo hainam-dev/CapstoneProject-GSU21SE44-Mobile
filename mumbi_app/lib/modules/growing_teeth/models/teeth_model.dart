@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-class ToothInfoModel {
+class TeethInfoModel {
   String id;
   String icon;
   String iconChoose;
@@ -11,11 +11,11 @@ class ToothInfoModel {
   String growTime;
   int number;
 
-  ToothInfoModel(
+  TeethInfoModel(
       {this.id, this.position, this.number, this.name, this.growTime});
 
-  factory ToothInfoModel.fromJson(dynamic json) {
-    return ToothInfoModel(
+  factory TeethInfoModel.fromJson(dynamic json) {
+    return TeethInfoModel(
       id: json['data']['id'],
       position: json['data']['position'],
       name: json['data']['name'],
@@ -35,7 +35,7 @@ class ToothInfoModel {
   }
 }
 
-class ToothModel {
+class TeethModel {
   String toothId;
   String childId;
   DateTime grownDate;
@@ -45,7 +45,7 @@ class ToothModel {
   String toothName;
   int position;
 
-  ToothModel(
+  TeethModel(
       {this.toothId,
       this.childId,
       this.grownDate,
@@ -55,8 +55,8 @@ class ToothModel {
       this.toothName,
       this.position});
 
-  factory ToothModel.fromJson(dynamic json) {
-    return ToothModel(
+  factory TeethModel.fromJson(dynamic json) {
+    return TeethModel(
       toothId: json['data']['toothId'],
       childId: json['data']['childId'],
       grownDate: DateTime.tryParse(json['data']['grownDate']),
@@ -67,8 +67,8 @@ class ToothModel {
     );
   }
 
-  factory ToothModel.fromJsonModel(dynamic json) {
-    return ToothModel(
+  factory TeethModel.fromJsonModel(dynamic json) {
+    return TeethModel(
       toothId: json['toothId'],
       childId: json['childId'],
       grownDate: DateTime.tryParse(json['grownDate']),

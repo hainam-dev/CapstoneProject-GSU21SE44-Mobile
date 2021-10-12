@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
-import 'package:mumbi_app/Widget/createList.dart';
+import 'package:mumbi_app/widgets/createList.dart';
 
 class Contact extends StatefulWidget {
   @override

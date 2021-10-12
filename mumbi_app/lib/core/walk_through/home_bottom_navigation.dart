@@ -4,14 +4,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Global/CurrentMember.dart';
-import 'package:mumbi_app/core/change_account/views/change_account_view.dart';
+import 'package:mumbi_app/View/saved.dart';
+import 'package:mumbi_app/core/change_member/models/change_member_model.dart';
+import 'package:mumbi_app/core/change_member/views/change_member_view.dart';
 import 'package:mumbi_app/core/walk_through/drawer.dart';
-import 'package:mumbi_app/View/savedPost_view.dart';
 import 'package:mumbi_app/View/tracking_view.dart';
-import 'package:mumbi_app/modules/community/viewmodel/View/guidebook_view.dart';
 import 'package:mumbi_app/modules/family/viewmodel/child_viewmodel.dart';
 import 'package:mumbi_app/modules/family/viewmodel/mom_viewmodel.dart';
+import 'package:mumbi_app/modules/guidebook/views/guidebook_view.dart';
 import 'package:mumbi_app/modules/news/viewmodel/news_viewmodel.dart';
 import 'package:mumbi_app/widgets/customEmpty.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -25,7 +25,7 @@ class BotNavBar extends StatefulWidget {
 class _BotNavBarState extends State<BotNavBar> {
   int selectedIndex = 0;
   Widget _dashBoard = DashBoard();
-  Widget _guideBook = GuidebookCategory();
+  Widget _guideBook = Guidebook();
   Widget _tracking = Tracking();
   Widget _changeAccount = ChangeAccount();
 
@@ -151,7 +151,7 @@ class _BotNavBarState extends State<BotNavBar> {
             onPressed: () => {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SavedPost(0)),
+                    MaterialPageRoute(builder: (context) => Saved(0)),
                   )
                 }),
       ),
@@ -216,23 +216,15 @@ class _BotNavBarState extends State<BotNavBar> {
                     backgroundColor: Colors.white,
                     radius: 18,
                   )
-                : Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 17,
-                        backgroundColor: WHITE_COLOR,
-                      ),
-                      CircleAvatar(
-                        radius: 17,
-                        backgroundImage: CachedNetworkImageProvider(
-                            model.childModel.imageURL),
-                      ),
-                      CircleAvatar(
-                        radius: 17,
-                        backgroundColor: BLACK_COLOR.withOpacity(0.4),
-                      ),
-                    ],
-                  );
+                : CircleAvatar(
+                  radius: 20,
+                  backgroundColor: LIGHT_DARK_PINK_COLOR,
+                  child: CircleAvatar(
+                    radius: 17,
+                    backgroundImage: CachedNetworkImageProvider(
+                        model.childModel.imageURL),
+                  ),
+                );
           },
         ));
   }

@@ -2,36 +2,34 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:comment_tree/data/comment.dart';
 import 'package:comment_tree/widgets/comment_tree_widget.dart';
 import 'package:comment_tree/widgets/tree_theme_data.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
-import 'package:mumbi_app/Model/comment_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
-import 'package:mumbi_app/ViewModel/comment_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
-import 'package:mumbi_app/Widget/customConfirmDialog.dart';
-import 'package:mumbi_app/Widget/customEmpty.dart';
-import 'package:mumbi_app/Widget/customLoading.dart';
-import 'package:mumbi_app/Widget/customProgressDialog.dart';
+import 'package:mumbi_app/modules/community/model/comment_model.dart';
+import 'package:mumbi_app/modules/community/viewmodel/comment_viewmodel.dart';
+import 'package:mumbi_app/modules/community/viewmodel/reaction_viewmodel.dart';
+import 'package:mumbi_app/modules/family/viewmodel/mom_viewmodel.dart';
+import 'package:mumbi_app/widgets/customConfirmDialog.dart';
+import 'package:mumbi_app/widgets/customLoading.dart';
+import 'package:mumbi_app/widgets/customProgressDialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readmore/readmore.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'edit_comment_view.dart';
 
-class ReplyComment extends StatefulWidget {
+class Reply extends StatefulWidget {
   final commentModel;
 
-  const ReplyComment(this.commentModel);
+  const Reply(this.commentModel);
   @override
-  _ReplyCommentState createState() => _ReplyCommentState();
+  _ReplyState createState() => _ReplyState();
 }
 
-class _ReplyCommentState extends State<ReplyComment> {
+class _ReplyState extends State<Reply> {
   bool commentFlag = false;
   CommentViewModel commentViewModel;
   MomViewModel _momViewModel;

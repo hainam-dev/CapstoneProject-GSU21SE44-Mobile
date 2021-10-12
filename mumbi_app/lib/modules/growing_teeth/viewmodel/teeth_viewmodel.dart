@@ -5,12 +5,12 @@ import 'package:mumbi_app/modules/growing_teeth/repositories/teeth_repository.da
 import 'package:mumbi_app/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class ToothViewModel extends Model {
-  static ToothViewModel _instance;
+class TeethViewModel extends Model {
+  static TeethViewModel _instance;
 
-  static ToothViewModel getInstance() {
+  static TeethViewModel getInstance() {
     if (_instance == null) {
-      _instance = ToothViewModel();
+      _instance = TeethViewModel();
     }
     return _instance;
   }
@@ -19,15 +19,15 @@ class ToothViewModel extends Model {
     _instance = null;
   }
 
-  ToothInfoModel _toothInforModel;
-  ToothModel _toothModel;
+  TeethInfoModel _toothInforModel;
+  TeethModel _toothModel;
   List<dynamic> _list;
-  List<ToothModel> _listTooth;
+  List<TeethModel> _listTooth;
 
-  ToothInfoModel get toothInforModel => _toothInforModel;
-  ToothModel get toothModel => _toothModel;
+  TeethInfoModel get toothInforModel => _toothInforModel;
+  TeethModel get toothModel => _toothModel;
   List<dynamic> get list => _list;
-  List<ToothModel> get listTooth => _listTooth;
+  List<TeethModel> get listTooth => _listTooth;
 
   Future<void> getToothInfoById() async {
     try {
@@ -36,7 +36,7 @@ class ToothViewModel extends Model {
       var data = await ToothRepository.apiGetToothInfoByToothId(position);
       if (data != null) {
         Map<String, dynamic> jsonData = jsonDecode(data);
-        _toothInforModel = ToothInfoModel.fromJson(jsonData);
+        _toothInforModel = TeethInfoModel.fromJson(jsonData);
         await storage.write(key: toothIdKey, value: _toothInforModel.id);
         getToothByChildId();
         notifyListeners();
@@ -46,7 +46,7 @@ class ToothViewModel extends Model {
     }
   }
 
-  Future<bool> upsertTooth(ToothModel childModel) async {
+  Future<bool> upsertTooth(TeethModel childModel) async {
     try {
       String result = await ToothRepository.apiUpsertToothById(childModel);
       print("Update thành công");
@@ -75,16 +75,16 @@ class ToothViewModel extends Model {
         Map<String, dynamic> jsonData = jsonDecode(data);
         if (jsonData['succeeded'] == true) {
           if (jsonData['data'] != null) {
-            _toothModel = ToothModel.fromJson(jsonData);
+            _toothModel = TeethModel.fromJson(jsonData);
           } else {
-            _toothModel = new ToothModel();
+            _toothModel = new TeethModel();
             _toothModel.toothId = toothID;
             _toothModel.childId = childID;
             _toothModel.note = " ";
           }
         }
       } else {
-        _toothModel = new ToothModel();
+        _toothModel = new TeethModel();
         print("NULL TOOTH");
       }
       notifyListeners();
@@ -107,13 +107,13 @@ class ToothViewModel extends Model {
         Map<String, dynamic> jsonData = jsonDecode(data);
         // print("jsonData " +jsonData.toString());
         if (jsonData['data'] == null) {
-          _listTooth = <ToothModel>[];
+          _listTooth = <TeethModel>[];
         } else {
           _list = jsonData['data'];
-          _listTooth = _list.map((e) => ToothModel.fromJsonModel(e)).toList();
+          _listTooth = _list.map((e) => TeethModel.fromJsonModel(e)).toList();
         }
       } else {
-        _listTooth = <ToothModel>[];
+        _listTooth = <TeethModel>[];
       }
       notifyListeners();
     } catch (e) {

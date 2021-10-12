@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:mumbi_app/Model/comment_model.dart';
-import 'package:mumbi_app/Model/post_model.dart';
+import 'package:mumbi_app/modules/community/model/comment_model.dart';
+import 'package:mumbi_app/modules/community/model/post_model.dart';
 import 'package:mumbi_app/modules/community/repositories/comment_repository.dart';
-import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
 import 'package:mumbi_app/core/auth/login/viewmodel/user_viewmodel.dart';
+import 'package:mumbi_app/modules/community/viewmodel/reaction_viewmodel.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class CommentViewModel extends Model {

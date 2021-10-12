@@ -1,6 +1,6 @@
 import 'package:mumbi_app/Constant/Variable.dart';
-import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/core/auth/logout/repositories/logout_repository.dart';
+import 'package:mumbi_app/core/change_member/models/change_member_model.dart';
 import 'package:mumbi_app/modules/action/viewmodel/action_viewmodel.dart';
 import 'package:mumbi_app/modules/activity/viewmodel/activity_viewmodel.dart';
 import 'package:mumbi_app/modules/community/viewmodel/post_viewmodel.dart';

@@ -7,23 +7,24 @@ import 'package:flutter/widgets.dart';
 import 'package:http/io_client.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
-import 'package:mumbi_app/Model/post_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/View/addCommunityPost.dart';
-import 'package:mumbi_app/View/postComment_view.dart';
-import 'package:mumbi_app/ViewModel/community_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/reaction_viewmodel.dart';
-import 'package:mumbi_app/Widget/customConfirmDialog.dart';
-import 'package:mumbi_app/Widget/customDialog.dart';
-import 'package:mumbi_app/Widget/customGridLayoutPhoto.dart';
-import 'package:mumbi_app/Widget/customLoading.dart';
-import 'package:mumbi_app/Widget/customProgressDialog.dart';
+import 'package:mumbi_app/modules/community/model/post_model.dart';
+import 'package:mumbi_app/modules/community/viewmodel/post_viewmodel.dart';
+import 'package:mumbi_app/modules/community/viewmodel/reaction_viewmodel.dart';
+import 'package:mumbi_app/modules/community/views/add_post_view.dart';
+import 'package:mumbi_app/modules/family/viewmodel/mom_viewmodel.dart';
+import 'package:mumbi_app/widgets/customConfirmDialog.dart';
+import 'package:mumbi_app/widgets/customDialog.dart';
+import 'package:mumbi_app/widgets/customGridLayoutPhoto.dart';
+import 'package:mumbi_app/widgets/customLoading.dart';
+import 'package:mumbi_app/widgets/customProgressDialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:readmore/readmore.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:signalr_core/signalr_core.dart';
+
+import 'comment_view.dart';
 
 class Community extends StatefulWidget {
   @override
@@ -32,7 +33,7 @@ class Community extends StatefulWidget {
 
 class _CommunityState extends State<Community> {
   int currentPos = 0;
-  CommunityViewModel _communityViewModel;
+  PostViewModel _postViewModel;
   MomViewModel _momViewModel;
   int imageWidth = 0;
   int imageHeight = 0;
@@ -44,8 +45,8 @@ class _CommunityState extends State<Community> {
   @override
   void initState() {
     super.initState();
-    _communityViewModel = CommunityViewModel.getInstance();
-    _communityViewModel.getCommunityPost();
+    _postViewModel = PostViewModel.getInstance();
+    _postViewModel.getPost();
 
     _momViewModel = MomViewModel.getInstance();
     initSignalR();
@@ -93,14 +94,12 @@ class _CommunityState extends State<Community> {
   }
 
   void _onRefresh() async {
-    await _communityViewModel.postListModel.clear();
-    setState(() {});
-    await _communityViewModel.getCommunityPost();
+    await _postViewModel.getPost();
     _refreshController.refreshCompleted();
   }
 
   void _onLoading() async {
-    await _communityViewModel.getMoreCommunityPost();
+    await _postViewModel.getMorePost();
     if (mounted) setState(() {});
     _refreshController.loadComplete();
   }
@@ -140,10 +139,10 @@ class _CommunityState extends State<Community> {
 
   Widget listCommunityPost() {
     return ScopedModel(
-      model: _communityViewModel,
+      model: _postViewModel,
       child: ScopedModelDescendant(
         builder:
-            (BuildContext context, Widget child, CommunityViewModel model) {
+            (BuildContext context, Widget child, PostViewModel model) {
           return model.postListModel == null
               ? loadingProgress()
               : Column(
@@ -194,7 +193,7 @@ class _CommunityState extends State<Community> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddCommunityPost(),
+                  builder: (context) => AddPost(),
                 ));
           },
           child: Container(
@@ -241,10 +240,10 @@ class _CommunityState extends State<Community> {
                           Navigator.pop(context);
                           showProgressDialogue(context);
                           bool result = false;
-                          result = await CommunityViewModel()
-                              .deleteCommunityPost(postModel);
+                          result = await PostViewModel()
+                              .deletePost(postModel);
                           if (result) {
-                            _communityViewModel.postListModel.remove(postModel);
+                            _postViewModel.postListModel.remove(postModel);
                             setState(() {});
                           }
                           Navigator.pop(context);

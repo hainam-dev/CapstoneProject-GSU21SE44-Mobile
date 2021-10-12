@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/saveKey.dart';
-import 'package:mumbi_app/Global/CurrentMember.dart';
-import 'package:mumbi_app/Model/child_model.dart';
-import 'package:mumbi_app/core/walk_through/home_bottom_navigation.dart';
-import 'package:mumbi_app/View/teethDetail_view.dart';
-import 'package:mumbi_app/View/teethProcess.dart';
-import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
-import 'package:mumbi_app/Widget/customComponents.dart';
-import 'package:mumbi_app/Widget/customLoading.dart';
-import 'package:mumbi_app/modules/growing_teeth/models/teeth_model.dart';
+import 'package:mumbi_app/core/change_member/models/change_member_model.dart';
 import 'package:mumbi_app/helper/data.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:mumbi_app/modules/family/models/child_model.dart';
+import 'package:mumbi_app/modules/family/viewmodel/child_viewmodel.dart';
+import 'package:mumbi_app/modules/growing_teeth/models/teeth_model.dart';
 import 'package:mumbi_app/modules/growing_teeth/viewmodel/teeth_viewmodel.dart';
+import 'package:mumbi_app/modules/growing_teeth/views/teeth_details_view.dart';
+import 'package:mumbi_app/modules/growing_teeth/views/teeth_progress_view.dart';
+import 'package:mumbi_app/widgets/customComponents.dart';
+import 'package:mumbi_app/widgets/customLoading.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:mumbi_app/main.dart';
 
 class TeethTracking extends StatefulWidget {
@@ -37,11 +36,11 @@ class _TeethTrackingState extends State<TeethTracking> {
   String status;
   String growTime;
 
-  ToothViewModel toothViewModel;
+  TeethViewModel toothViewModel;
   ChildViewModel childViewModel;
   List<ChildModel> listChild;
-  List<ToothInfoModel> listTeeth;
-  List<ToothModel> listAllTooth;
+  List<TeethInfoModel> listTeeth;
+  List<TeethModel> listAllTooth;
 
   final children = Widget;
   final listChid = <Widget>[];
@@ -55,7 +54,7 @@ class _TeethTrackingState extends State<TeethTracking> {
     childViewModel = ChildViewModel.getInstance();
     childViewModel.getChildByID(CurrentMember.id);
 
-    toothViewModel = ToothViewModel.getInstance();
+    toothViewModel = TeethViewModel.getInstance();
     toothViewModel.getAllToothByChildId();
 
     setState(() {});
@@ -73,7 +72,7 @@ class _TeethTrackingState extends State<TeethTracking> {
                 onPressed: () => {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => TeethProcess()),
+                    MaterialPageRoute(builder: (context) => TeethProgress()),
                   ),
                 },
               ),
@@ -104,7 +103,7 @@ class _TeethTrackingState extends State<TeethTracking> {
                     ))),
             ScopedModel(
               model: toothViewModel,
-              child: ScopedModelDescendant<ToothViewModel>(
+              child: ScopedModelDescendant<TeethViewModel>(
                 builder: (context, child, model) {
                   listAllTooth = toothViewModel.listTooth;
                   if (listAllTooth != null)
@@ -177,7 +176,7 @@ class _TeethTrackingState extends State<TeethTracking> {
                         : Column(
                             children: <Widget>[
                               // Thông tin
-                              ScopedModelDescendant<ToothViewModel>(
+                              ScopedModelDescendant<TeethViewModel>(
                                   builder: (context, child, modelTooth) {
                                 if (modelTooth.toothInforModel != null) {
                                   return createTextAlignInformation(
@@ -189,9 +188,9 @@ class _TeethTrackingState extends State<TeethTracking> {
                                 return createTextAlignInformation("", "", "");
                               }),
                               // Bé của bạn
-                              ScopedModelDescendant<ToothViewModel>(
+                              ScopedModelDescendant<TeethViewModel>(
                                   builder: (context, child, modelTooth) {
-                                ToothModel tooth = modelTooth.toothModel;
+                                TeethModel tooth = modelTooth.toothModel;
                                 if (tooth != null &&
                                     tooth.toothId != null &&
                                     tooth.grownFlag == true) {

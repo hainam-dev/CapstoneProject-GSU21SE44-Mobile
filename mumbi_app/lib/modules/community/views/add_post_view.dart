@@ -4,18 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Global/CurrentMember.dart';
-import 'package:mumbi_app/modules/diary/models/diary_model.dart';
-import 'package:mumbi_app/Model/post_model.dart';
-import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/Utils/upload_multipleImage.dart';
-import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/community_viewmodel.dart';
-import 'package:mumbi_app/modules/diary/viewmodel/diary_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
-import 'package:mumbi_app/Widget/createList.dart';
-import 'package:mumbi_app/Widget/customDialog.dart';
-import 'package:mumbi_app/Widget/customProgressDialog.dart';
+import 'package:mumbi_app/modules/community/model/post_model.dart';
+import 'package:mumbi_app/modules/community/viewmodel/post_viewmodel.dart';
+import 'package:mumbi_app/modules/family/viewmodel/mom_viewmodel.dart';
+import 'package:mumbi_app/widgets/createList.dart';
+import 'package:mumbi_app/widgets/customDialog.dart';
+import 'package:mumbi_app/widgets/customProgressDialog.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -99,7 +94,7 @@ class _AddPostState extends State<AddPost> {
       postModel.imageURL = url;
     }
     bool result = false;
-    result = await CommunityViewModel().AddPost(postModel);
+    result = await PostViewModel().addPost(postModel);
     Navigator.pop(context);
     Navigator.pop(context);
     showResult(context, result,

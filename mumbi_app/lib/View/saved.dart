@@ -12,15 +12,15 @@ import 'package:mumbi_app/widgets/customLoading.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class SavedPost extends StatefulWidget {
+class Saved extends StatefulWidget {
   final num tabIndex;
-  const SavedPost(this.tabIndex);
+  const Saved(this.tabIndex);
 
   @override
-  _SavedPostState createState() => _SavedPostState();
+  _SavedState createState() => _SavedState();
 }
 
-class _SavedPostState extends State<SavedPost> {
+class _SavedState extends State<Saved> {
   SavedNewsViewModel _savedNewsViewModel;
   SavedGuidebookViewModel _savedGuidebookViewModel;
 
