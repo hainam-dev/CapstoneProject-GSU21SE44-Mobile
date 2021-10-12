@@ -169,7 +169,8 @@ class _ReplyCommentState extends State<ReplyComment> {
                     color: LIGHT_DARK_GREY_COLOR, fontWeight: FontWeight.bold),
                 child: Padding(
                   padding: EdgeInsets.only(top: 6),
-                  child: Row(
+                  child: Wrap(
+                    runSpacing: 5.0,
                     children: [
                       SizedBox(
                         width: 12,
@@ -330,7 +331,8 @@ class _ReplyCommentState extends State<ReplyComment> {
                     color: LIGHT_DARK_GREY_COLOR, fontWeight: FontWeight.bold),
                 child: Padding(
                   padding: EdgeInsets.only(top: 6),
-                  child: Row(
+                  child: Wrap(
+                    runSpacing: 5.0,
                     children: [
                       SizedBox(
                         width: 12,
