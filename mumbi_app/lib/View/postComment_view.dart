@@ -181,7 +181,8 @@ class _PostCommentState extends State<PostComment> {
                     color: LIGHT_DARK_GREY_COLOR, fontWeight: FontWeight.bold),
                 child: Padding(
                   padding: EdgeInsets.only(top: 6),
-                  child: Row(
+                  child: Wrap(
+                    runSpacing: 5.0,
                     children: [
                       SizedBox(
                         width: 12,
@@ -223,8 +224,8 @@ class _PostCommentState extends State<PostComment> {
                       GestureDetector(
                         onTap: () async {
                           /*_controller.clear();
-                          commentFlag = false;
-                          replyUser = commentModel.fullName;*/
+                        commentFlag = false;
+                        replyUser = commentModel.fullName;*/
                           commentModel.replyCommentId = commentModel.id;
                           await Navigator.push(context, MaterialPageRoute(builder: (context) => ReplyComment(commentModel),));
                           setState(() {});
