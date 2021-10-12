@@ -15,18 +15,15 @@ import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/calculateDate_view.dart';
 import 'package:mumbi_app/View/childrenInfo_view.dart';
 import 'package:mumbi_app/View/community_view.dart';
-import 'package:mumbi_app/View/injectionSchedule.dart';
+import 'package:mumbi_app/View/doctor.dart';
 import 'package:mumbi_app/View/newsDetails_view.dart';
+import 'package:mumbi_app/View/pregnancy_view.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
-import 'package:mumbi_app/ViewModel/mom_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/news_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
-import 'package:mumbi_app/Widget/customEmpty.dart';
 import 'package:mumbi_app/Widget/customLoading.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'drawer_view.dart';
-import 'changeAccount_view.dart';
 
 class DashBoard extends StatefulWidget {
   @override
@@ -36,7 +33,6 @@ class DashBoard extends StatefulWidget {
 class _DashBoardState extends State<DashBoard> {
   ChildModel pregnancyModel;
   NewsViewModel _newsViewModel;
-  MomViewModel _momViewModel;
   ChildViewModel _childViewModel;
   RefreshController _refreshController = RefreshController(initialRefresh: false);
 
@@ -44,16 +40,9 @@ class _DashBoardState extends State<DashBoard> {
   void initState() {
     super.initState();
     _newsViewModel = NewsViewModel.getInstance();
-    _newsViewModel.getNews();
-
-    _momViewModel = MomViewModel.getInstance();
-    _momViewModel.getMomByID();
 
     _childViewModel = ChildViewModel.getInstance();
-    _childViewModel.getChildByMom();
 
-    if (CurrentMember.role == CHILD_ROLE)
-      _childViewModel.getChildByID(CurrentMember.id);
   }
 
   void _onRefresh() async {
@@ -69,16 +58,8 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: WHITE_COLOR,
-      appBar: AppBar(
-        title: Text("Trang chủ"),
-        actions: [
-          ChangeAccountButton(context),
-        ],
-      ),
-      drawer: getDrawer(context),
       body: SmartRefresher(
           enablePullDown: true,
           enablePullUp: true,
@@ -277,93 +258,16 @@ class _DashBoardState extends State<DashBoard> {
     );
   }
 
-  Widget ChangeAccountButton(BuildContext context) {
-    return FlatButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ChangeAccount()));
-        },
-        child: Row(
-          children: [
-            MomAvatar(),
-            if (CurrentMember.role == CHILD_ROLE)
-              Row(
-                children: [
-                  Icon(
-                    Icons.all_inclusive,
-                    color: WHITE_COLOR,
-                    size: 19,
-                  ),
-                  ChildAvatar(),
-                ],
-              )
-          ],
-        ));
-  }
-
-  Widget MomAvatar() {
-    return ScopedModel(
-      model: _momViewModel,
-      child: ScopedModelDescendant(
-          builder: (BuildContext context, Widget child, MomViewModel model) {
-        return model.momModel == null
-            ? CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 18,
-              )
-            : CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 18,
-                child: CircleAvatar(
-                  radius: 17,
-                  backgroundImage:
-                      CachedNetworkImageProvider(model.momModel.imageURL),
-                ),
-              );
-      }),
-    );
-  }
-
-  Widget ChildAvatar() {
-    return ScopedModel(
-        model: _childViewModel,
-        child: ScopedModelDescendant(
-          builder: (BuildContext context, Widget child, ChildViewModel model) {
-            return model.childModel == null
-                ? CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 18,
-                  )
-                : CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 18,
-                    child: CircleAvatar(
-                      radius: 17,
-                      backgroundImage:
-                          CachedNetworkImageProvider(model.childModel.imageURL),
-                    ),
-                  );
-          },
-        ));
-  }
-
   Widget SalientFeatures() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        createButtonTextImageLink(
-            context, "Tiêm chủng", injection, checkEntryInjectionSchedule()),
         createButtonTextImageLink(context, "Cộng đồng", community, Community()),
+        createButtonTextImageLink(
+            context, "Thai giáo", thaigiao, Pregnancy()),
+        createButtonTextImageLink(context, "Bác sĩ", doctor, Doctor()),
       ],
     );
-  }
-
-  Widget checkEntryInjectionSchedule() {
-    if (CurrentMember.role == MOM_ROLE) {
-      return ChangeAccount();
-    } else {
-      return InjectionSchedule();
-    }
   }
 
   Widget GridViewNews() {

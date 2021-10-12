@@ -4,26 +4,29 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 
 Widget customActivity({String icon, String title, Widget widget}){
-  return InkWell(
-    child: Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Column(
-        children: <Widget>[
-          ExpansionTile(
-            leading: IconButton(
-              icon: SvgPicture.asset(icon), onPressed: null,
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 8),
+    child: InkWell(
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Column(
+          children: <Widget>[
+            ExpansionTile(
+              leading: IconButton(
+                icon: SvgPicture.asset(icon), onPressed: null,
+              ),
+              title: Text(title, style: TextStyle(fontSize: 18)),
+              trailing:Icon(
+                Icons.keyboard_arrow_down,
+              ),
+              children: [
+                widget
+              ],
             ),
-            title: Text(title, style: TextStyle(fontSize: 18)),
-            trailing:Icon(
-              Icons.keyboard_arrow_down,
-            ),
-            children: [
-              widget
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );

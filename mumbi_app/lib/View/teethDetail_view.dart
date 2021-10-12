@@ -70,7 +70,6 @@ class _TeethDetailState extends State<TeethDetail> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text('Mọc răng'),
-        leading: backButton(context, TeethTrack()),
       ),
       body: SingleChildScrollView(
         child: ScopedModel(

@@ -57,7 +57,6 @@ class _InectionUpdatePasswordState extends State<InectionUpdatePassword> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Cập nhật mật khẩu"),
-        leading: backButton(context, InjectionSchedule()),
       ),
       body: Container(
         padding: EdgeInsets.only(left: 16, right: 16),

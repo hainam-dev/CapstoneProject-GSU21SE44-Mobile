@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
@@ -69,13 +70,6 @@ class _GuidebookCategoryState extends State<GuidebookCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: WHITE_COLOR,
-      appBar: AppBar(
-        title: Text('Cẩm nang'),
-        actions: [
-          ButtonGotoSavePost(context),
-        ],
-      ),
-      drawer: getDrawer(context),
       body: SmartRefresher(
         enablePullDown: true,
         enablePullUp: true,
@@ -187,7 +181,7 @@ class _GuidebookCategoryState extends State<GuidebookCategory> {
             return model.isLoading == true
                 ? loadingProgress()
                 : model.guidebookListModel == null
-                ? Empty("", "Danh mục này chưa có bài viết nào")
+                ? Empty(emptyPost, "Danh mục này chưa có bài viết nào")
                 : Column(
               children: [
                 for (var guidebookModel in model.guidebookListModel)
@@ -254,27 +248,4 @@ class _GuidebookCategoryState extends State<GuidebookCategory> {
       ),
     );
   }
-
-  Widget ButtonGotoSavePost(context) {
-    return Container(
-      padding: EdgeInsets.only(left: 10, right: 12),
-      child: CircleAvatar(
-        backgroundColor: Colors.white,
-        child: IconButton(
-            icon: Image(
-              image: AssetImage(saved),
-              height: ICON_HEIGHT,
-              width: ICON_WIDTH,
-            ),
-            onPressed: () =>
-            {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SavedPost(0)),
-              )
-            }),
-      ),
-    );
-  }
-
 }

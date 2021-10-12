@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
+import 'package:mumbi_app/Constant/common_message.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/child_model.dart';
 import 'package:mumbi_app/Model/diary_model.dart';
@@ -11,6 +12,9 @@ import 'package:mumbi_app/View/babyDiaryDetails_view.dart';
 import 'package:mumbi_app/ViewModel/child_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/diary_viewmodel.dart';
 import 'package:mumbi_app/Widget/createList.dart';
+import 'package:mumbi_app/Widget/customCard.dart';
+import 'package:mumbi_app/Widget/customLoading.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'addBabyDiary_view.dart';
@@ -23,6 +27,7 @@ class BabyDiary extends StatefulWidget {
 class _BabyDiaryState extends State<BabyDiary> {
   DiaryViewModel _diaryViewModel;
   ChildViewModel _childViewModel;
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   @override
   void initState() {
@@ -33,90 +38,96 @@ class _BabyDiaryState extends State<BabyDiary> {
     _childViewModel = ChildViewModel.getInstance();
   }
 
+  void _onRefresh() async {
+    await _diaryViewModel.getChildDiary(CurrentMember.id);
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoading() async {
+    await _diaryViewModel.getMoreChildDiary(CurrentMember.id);
+    if (mounted) setState(() {});
+    _refreshController.loadComplete();
+  }
+
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: LIGHT_GREY_COLOR,
+      appBar: AppBar(
+        title: Text("Nhật ký"),
+      ),
+      body: SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          header: MaterialClassicHeader(),
+          footer: CustomFooter(
+            builder: (BuildContext context,LoadStatus mode){
+              Widget body ;
+              if(mode == LoadStatus.loading){
+                body =  loadingProgress();
+              } else {
+                body = Text(NO_MORE_DIARY_MESSAGE);
+              }
+              return Container(
+                height: 55.0,
+                child: Center(child:body),
+              );
+            },
+          ),
+          controller: _refreshController,
+          onRefresh: _onRefresh,
+          onLoading: _onLoading,
+          child: CustomScrollView(
+            slivers: [
+              SliverList(delegate: SliverChildListDelegate(
+                [
+                  CardInfo(_childViewModel.childModel.imageURL, _childViewModel.childModel.fullName, _childViewModel.childModel.birthday),
+                  DiaryList(),
+                ],
+              ))
+            ],
+          )
+      ),
+      floatingActionButton: GotoAddDiary(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  Widget DiaryList(){
     return ScopedModel(
-      model: _diaryViewModel,
-      child: ScopedModelDescendant(
-        builder: (BuildContext context, Widget child, DiaryViewModel model) {
-          return Scaffold(
-            backgroundColor: LIGHT_GREY_COLOR,
-            appBar: AppBar(
-              title: Text("Nhật ký"),
-            ),
-            body: Column(
+        model: _diaryViewModel,
+        child: ScopedModelDescendant(
+          builder: (BuildContext context, Widget child, DiaryViewModel model) {
+            return model.childDiaryListModel == null
+                ? createEmptyDiary(context)
+                : Column(
               children: [
-                ChildInfo(_childViewModel.childModel),
-                model.childDiaryListModel == null
-                    ? createEmptyDiary(context)
-                    : Expanded(
-                      child: ListView.builder(
-                        itemCount: model.childDiaryListModel != null
-                            ? model.childDiaryListModel.length
-                            : 0,
-                        itemBuilder: (context, index) {
-                          DiaryModel diaryModel = model.childDiaryListModel[index];
-                          return createDiaryItem(context, diaryModel,
-                              onClick: () async {
-                                await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            BabyDiaryDetails(diaryModel)));
-                                await _diaryViewModel.getChildDiary(CurrentMember.id);
-                              });
-                        },
-                      ),
-                    ),
+                for(var diaryModel in model.childDiaryListModel)
+            createDiaryItem(context, diaryModel,
+                onClick: () async {
+                  await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              BabyDiaryDetails(diaryModel)));
+                  await _diaryViewModel.getChildDiary(CurrentMember.id);
+                }),
               ],
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                await Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddBabyDiary()));
-                await _diaryViewModel.getChildDiary(CurrentMember.id);
-              },
-              child: SvgPicture.asset(add,height: 23,width: 23,color: PINK_COLOR,),
-              backgroundColor: WHITE_COLOR,
-            ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.endFloat,
-          );
-        },
-      ),
+            );
+          },
+        )
     );
   }
 
-  Widget ChildInfo(ChildModel childModel) {
-    return Container(
-        decoration:
-        new BoxDecoration(
-            border: new Border(
-                bottom: new BorderSide(color: GREY_COLOR)
-            )
-        ),
-      child: Card(
-        elevation: 0,
-        margin: EdgeInsets.zero,
-        child: ListTile(
-          leading: childModel == null
-              ? CircleAvatar(radius: 22, backgroundColor: LIGHT_GREY_COLOR)
-              : CircleAvatar(
-            radius: 22,
-            backgroundColor: LIGHT_GREY_COLOR,
-            backgroundImage:
-            CachedNetworkImageProvider(childModel.imageURL),
-          ),
-          title: Text(
-            childModel == null ? "..." : childModel.fullName,
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          subtitle: Text(
-            childModel == null ? "..." : DateTimeConvert.calculateChildAge(childModel.birthday),
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),),
-      ),
+  Widget GotoAddDiary(){
+    return FloatingActionButton(
+      onPressed: () async {
+        await Navigator.push(context,
+            MaterialPageRoute(builder: (context) => AddBabyDiary()));
+        await _diaryViewModel.getChildDiary(CurrentMember.id);
+      },
+      child: SvgPicture.asset(pencil,height: 18,width: 18),
+      backgroundColor: PINK_COLOR,
     );
   }
-
 }

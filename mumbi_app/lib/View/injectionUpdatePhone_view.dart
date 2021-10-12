@@ -56,8 +56,7 @@ class _InjectionUpdatePhoneState extends State<InjectionUpdatePhone> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(widget.isRecover ? "Quên mật khẩu" : "Lịch Tiêm chủng"),
-          leading: backButton(context, InjectionSchedule())),
+          title: Text(widget.isRecover ? "Quên mật khẩu" : "Lịch Tiêm chủng")),
       body: Center(
           child: Padding(
         padding: const EdgeInsets.all(16.0),

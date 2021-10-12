@@ -7,18 +7,14 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Global/CurrentMember.dart';
 import 'package:mumbi_app/Model/diary_model.dart';
-import 'package:mumbi_app/Repository/vaccination_respository.dart';
 import 'package:mumbi_app/Utils/calculation.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/bottomNavBar_view.dart';
-import 'package:mumbi_app/View/login_view.dart';
 import 'package:mumbi_app/ViewModel/changeAccount_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/login_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/logout_viewmodel.dart';
 import 'package:mumbi_app/Widget/customConfirmDialog.dart';
-import 'package:mumbi_app/Widget/customProgressDialog.dart';
-import 'package:mumbi_app/main.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -99,7 +95,7 @@ Widget createTitleCard(String _text) {
 
 Widget createTitle(String _text) {
   return Padding(
-    padding: const EdgeInsets.only(left: 8),
+    padding: const EdgeInsets.only(left: 12,top: 10),
     child: Text(
       _text,textAlign: TextAlign.left,
       style: TextStyle(
@@ -369,11 +365,7 @@ Widget createListTileNavigator(
       elevation: 0,
       margin: EdgeInsets.zero,
       child: ListTile(
-        leading: Image(
-          image: AssetImage(_imageName),
-          height: SizeConfig.blockSizeVertical * 8,
-          width: SizeConfig.blockSizeHorizontal * 8,
-        ),
+        leading: SvgPicture.asset(_imageName),
         title: Text(_text),
         trailing: Icon(Icons.arrow_forward_ios, size: 15),
         onTap: () {
@@ -392,11 +384,7 @@ Widget createListTileNavigatorNoTrailing(
     elevation: 0,
     margin: EdgeInsets.zero,
     child: ListTile(
-      leading: Image(
-        image: AssetImage(_imageName),
-        height: SizeConfig.blockSizeVertical * 8,
-        width: SizeConfig.blockSizeHorizontal * 8,
-      ),
+      leading: SvgPicture.asset(_imageName),
       title: Text(_text),
       onTap: () async {
         showConfirmDialog(context, "Đăng xuất", "Bạn có muốn đăng xuất khỏi tài khoản này?",
@@ -433,7 +421,7 @@ Widget createEmptyDiary(BuildContext context) {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(emptyDiary),
+                  SvgPicture.asset(emptyPost),
                   SizedBox(
                     height: 10,
                   ),
@@ -480,109 +468,80 @@ Widget createDiaryItem(BuildContext context, DiaryModel diaryModel,
       onClick();
     },
     child: Padding(
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-      child: Stack(
-        children: [
-          Card(
-            elevation: 1,
-            shadowColor: GREY_COLOR,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(BORDER_RADIUS),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 5),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Text("Ngày ${DateTimeConvert.getDay(diaryModel.createTime)} "
-                                    "tháng ${DateTimeConvert.getMonth(diaryModel.createTime)}, "
-                                    "${DateTimeConvert.getYear(diaryModel.createTime)}",
-                                  style: TextStyle( fontSize: 19.0, color: DARK_PINK_COLOR,fontWeight: FontWeight.w600),
-                                ),
-                                SizedBox(height: 5,),
-                                Row(
-                                  children: [
-                                    Text("vào lúc ${DateTimeConvert.getTime(diaryModel.createTime)}",
-                                      style: TextStyle( fontSize: 14.0, color: LIGHT_DARK_GREY_COLOR),
-                                    ),
-                                    if (diaryModel.imageURL != null && diaryModel.imageURL != "" && CountImage(diaryModel.imageURL) >= 1)
-                                      Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 3),
-                                            child: Icon(
-                                              Icons.fiber_manual_record,color: GREY_COLOR,size: 6,
-                                            ),
-                                          ),
-                                          Text(
-                                            CountImage(diaryModel.imageURL).toString(),style: TextStyle(color: LIGHT_DARK_GREY_COLOR,fontSize: 16),
-                                          ),
-                                          Icon(
-                                            Icons.photo_outlined,color: LIGHT_DARK_GREY_COLOR,size: 15,
-                                          ),
-                                        ],
-                                      )
-                                  ],
-                                ),
-                                SizedBox(height: 10,),
-                                Text(
-                                  diaryModel.diaryContent,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: BLACK_COLOR,
-                                    fontSize: 16.0,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Ngày ${DateTimeConvert.getDay(diaryModel.createTime)} "
+                          "tháng ${DateTimeConvert.getMonth(diaryModel.createTime)}, "
+                          "${DateTimeConvert.getYear(diaryModel.createTime)}",
+                        style: TextStyle(fontSize: 19.0, color: PINK_COLOR),
+                      ),
+                      SizedBox(height: 3,),
+                        Row(
+                          children: [
+                            Text("vào lúc ${DateTimeConvert.getTime(diaryModel.createTime)}",
+                              style: TextStyle(fontSize: 15.0, color: BLACK_COLOR),
+                            ),
+                            if (diaryModel.imageURL != null && diaryModel.imageURL != "" && CountImage(diaryModel.imageURL) >= 1)
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                                  child: Icon(
+                                    Icons.fiber_manual_record,color: GREY_COLOR,size: 6,
                                   ),
                                 ),
+                                Text(
+                                  CountImage(diaryModel.imageURL).toString(),style: TextStyle(fontSize: 16),
+                                ),
+                                SvgPicture.asset(gallery),
                               ],
                             ),
-                          ),
+                          ],
                         ),
-                        if (diaryModel.imageURL != null && diaryModel.imageURL != "")
-                          Stack(
-                            children: [
-                              SvgPicture.asset(
-                                rectFrame,height: 115,
-                              ),
-                              Positioned(
-                                top: 38,
-                                left: 19,
-                                child: CachedNetworkImage(
-                                  imageUrl: diaryModel.imageURL.split(";").first,
-                                  fit: BoxFit.cover,
-                                  height: 58,
-                                  width: 77,
-                                ),
-                              ),
-                            ],
-                          ),
-                      ],
-                    ),
+                    ],
                   ),
+                  if (diaryModel.imageURL != null && diaryModel.imageURL != "")
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(BORDER_RADIUS),
+                      child: CachedNetworkImage(
+                        imageUrl: diaryModel.imageURL.split(";").first,
+                        fit: BoxFit.cover,
+                        height: 48,
+                        width: 48,
+                      ),
+                    ),
                 ],
               ),
-            ),
+              Divider(height: 25,),
+              Text(
+                diaryModel.diaryContent,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: LIGHT_DARK_GREY_COLOR,
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
           ),
-          Positioned(
-            top: 0,
-            left: 0,
-            child: SvgPicture.asset(
-              edgeFrame,height: 40,
-            ),
-          ),
-        ],
+        ),
       ),
     ),
   );

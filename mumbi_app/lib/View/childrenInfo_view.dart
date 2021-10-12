@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
@@ -488,8 +489,8 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          new Image.asset(
-            iconBoy,
+          SvgPicture.asset(
+              iconBoy
           ),
           Padding(
             padding: EdgeInsets.only(left: 10.0),
@@ -506,8 +507,8 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          new Image.asset(
-            iconGirl,
+          SvgPicture.asset(
+              iconGirl
           ),
           Padding(
             padding: EdgeInsets.only(left: 10.0),

@@ -45,7 +45,6 @@ class _InjectionUpdateTokenState extends State<InjectionUpdateToken> {
       backgroundColor: WHITE_COLOR,
       appBar: AppBar(
         title: Text("Xác nhận số điện thoại"),
-        leading: backButton(context, InjectionUpdatePhone()),
       ),
       body: Container(
         padding: EdgeInsets.all(16),

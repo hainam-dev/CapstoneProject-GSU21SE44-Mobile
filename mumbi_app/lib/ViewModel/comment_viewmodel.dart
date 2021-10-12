@@ -37,8 +37,6 @@ class CommentViewModel extends Model{
       if(commentList != null){
         commentListModel = commentList.map((e) => CommentModel.fromJson(e)).toList();
         await Future.forEach(commentListModel, (commentModel) async {
-          await ReactionViewModel().countCommentReaction(commentModel);
-          await CommentViewModel().countReply(commentModel);
           await ReactionViewModel().checkCommentReaction(commentModel);
         });
       }else{
@@ -65,8 +63,6 @@ class CommentViewModel extends Model{
           currentPage = jsonList['pageNumber'];
           totalPage = jsonList['total'] / pageSize;
           await Future.forEach(moreCommentListModel, (commentModel) async {
-            await ReactionViewModel().countCommentReaction(commentModel);
-            await CommentViewModel().countReply(commentModel);
             await ReactionViewModel().checkCommentReaction(commentModel);
           });
           await commentListModel.addAll(moreCommentListModel);
@@ -88,7 +84,6 @@ class CommentViewModel extends Model{
       if(commentList != null){
         commentListModel = commentList.map((e) => CommentModel.fromJson(e)).toList();
         await Future.forEach(commentListModel, (commentModel) async {
-          await ReactionViewModel().countCommentReaction(commentModel);
           await ReactionViewModel().checkCommentReaction(commentModel);
         });
       }else{
@@ -115,7 +110,6 @@ class CommentViewModel extends Model{
           currentPage = jsonList['pageNumber'];
           totalPage = jsonList['total'] / pageSize;
           await Future.forEach(moreCommentListModel, (commentModel) async {
-            await ReactionViewModel().countCommentReaction(commentModel);
             await ReactionViewModel().checkCommentReaction(commentModel);
           });
           await commentListModel.addAll(moreCommentListModel);
@@ -126,16 +120,6 @@ class CommentViewModel extends Model{
     }catch (e){
       print("error: " + e.toString());
     }
-  }
-
-  void countCommentPost(PostModel postModel) async {
-    var countComment = await CommentRepository.apiCountPostComment(postModel.id);
-    postModel.totalComment = json.decode(countComment)['total'];
-  }
-
-  void countReply(CommentModel commentModel) async {
-    var countReply = await CommentRepository.apiCountReply(commentModel.id);
-    commentModel.totalReply = json.decode(countReply)['total'];
   }
 
   Future<bool> addPostComment(CommentModel commentModel) async {

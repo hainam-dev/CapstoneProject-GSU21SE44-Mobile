@@ -3,7 +3,8 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 
 class CustomDialog extends StatelessWidget {
-  final String title, description;
+  final String title;
+  final String description;
   final String image;
 
   CustomDialog({
@@ -28,7 +29,8 @@ class CustomDialog extends StatelessWidget {
   }
 
   dialogContent(BuildContext context) {
-    return Stack(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
           width: SizeConfig.blockSizeHorizontal * 100,
@@ -55,7 +57,7 @@ class CustomDialog extends StatelessWidget {
             ],
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.min, // To make the card compact
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Image.asset(image,width: 70,height: 70,),
               SizedBox(

@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -160,15 +162,11 @@ class _PickerImageState extends State<PickerImage> {
                               bottom: 5,
                               child: CircleAvatar(
                                 backgroundColor: WHITE_COLOR,
-                                radius: 14.0,
+                                radius: 15.0,
                                 child: new CircleAvatar(
                                   backgroundColor: PINK_COLOR,
                                   radius: 13.0,
-                                  child: Icon(
-                                    Icons.image_rounded,
-                                    color: Colors.white,
-                                    size: 22,
-                                  ),
+                                  child: SvgPicture.asset(gallery2),
                                 ),
                               ),
                             ),

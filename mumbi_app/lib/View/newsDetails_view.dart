@@ -1,12 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
-import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/common_message.dart';
-import 'package:mumbi_app/Model/news_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/ViewModel/news_viewmodel.dart';
 import 'package:mumbi_app/ViewModel/savedNews_viewmodel.dart';
@@ -139,6 +136,11 @@ class _NewsDetailState extends State<NewsDetail> {
       padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
       child: Html(
         data: widget.model.newsContent,
+        style: {
+          "body": Style(
+            fontSize: FontSize(16.0),
+          ),
+        },
       ),
     );
   }

@@ -11,7 +11,6 @@ class CommentModel{
   num replyCommentId;
   num totalReaction;
   num totalReply;
-  List replyList;
   num idReaction;
 
   CommentModel(
@@ -24,7 +23,10 @@ class CommentModel{
       this.imageURL,
       this.createdTime,
       this.lastModifiedTime,
-      this.replyCommentId});
+      this.replyCommentId,
+      this.totalReaction,
+        this.totalReply
+      });
 
   factory CommentModel.fromJson(dynamic json){
     return CommentModel(
@@ -38,6 +40,8 @@ class CommentModel{
       createdTime: json['createdTime'],
       lastModifiedTime: json['lastModifiedTime'],
       replyCommentId: json['replyCommentId'],
+      totalReaction: json['countReactComment'],
+      totalReply: json['countReplyComment'],
     );
   }
 
