@@ -2,10 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Model/dateTime_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/View/calculateDate_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+class Date {
+  DateTime date;
+  Date({this.date});
+}
 
 class CalendarCalculate extends StatefulWidget {
   final estimatedDate;

@@ -236,12 +236,13 @@ class _AddPostState extends State<AddPost> {
         selectedAssets: images,
         cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
         materialOptions: MaterialOptions(
-          actionBarColor: "#abcdef",
-          actionBarTitle: "Thêm hình ảnh",
-          allViewTitle: "Tất cả hình ảnh",
-          useDetailsView: true,
-          selectCircleStrokeColor: "#ffffff",
-        ),
+            statusBarColor: "#FB668A",
+            actionBarColor: "#FB668A",
+            actionBarTitle: "Thêm hình ảnh",
+            allViewTitle: "Tất cả hình ảnh",
+            useDetailsView: true,
+            selectCircleStrokeColor: "#ffffff",
+            selectionLimitReachedText: "Vui lòng chọn tối đa 30 hình ảnh!"),
       );
     } on Exception catch (e) {
       e.toString();

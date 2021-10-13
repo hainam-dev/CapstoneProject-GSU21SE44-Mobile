@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,11 +11,10 @@ import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:mumbi_app/modules/diary/viewmodel/diary_viewmodel.dart';
-
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:mumbi_app/utils/delete_image_firebase.dart';
+import 'package:mumbi_app/utils/openImageWrapper.dart';
 import 'package:mumbi_app/widgets/customConfirmDialog.dart';
 import 'package:mumbi_app/widgets/customDialog.dart';
-import 'package:mumbi_app/widgets/customGridLayoutPhoto.dart';
 import 'package:mumbi_app/widgets/customProgressDialog.dart';
 
 class DiaryDetails extends StatefulWidget {
@@ -33,7 +33,7 @@ class _DiaryDetailsState extends State<DiaryDetails> {
   List<Asset> images = <Asset>[];
   List<File> _files = <File>[];
   CollectionReference imgRef;
-  firebase_storage.Reference ref;
+  List<String> imageDeleted = [];
   @override
   void initState() {
     super.initState();
@@ -62,9 +62,9 @@ class _DiaryDetailsState extends State<DiaryDetails> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              DiaryContent(),
               if (widget.model.imageURL != null && widget.model.imageURL != "")
-                CalculateImageDimension(widget.model.imageURL),
+                getDiaryImage(widget.model.imageURL),
+              DiaryContent(),
             ],
           ),
         ),
@@ -160,6 +160,9 @@ class _DiaryDetailsState extends State<DiaryDetails> {
                 });
                 bool result = false;
                 result = await DiaryViewModel().updateDiary(widget.model);
+                if (imageDeleted != null || imageDeleted != "") {
+                  deleteImage(imageDeleted);
+                }
                 Navigator.pop(context);
                 showResult(context, result, "Chỉnh sửa nhật ký thành công");
               },
@@ -202,7 +205,7 @@ class _DiaryDetailsState extends State<DiaryDetails> {
 
   Widget DiaryContent() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -233,121 +236,123 @@ class _DiaryDetailsState extends State<DiaryDetails> {
     );
   }
 
-  // Widget getDiaryImage(String _image) {
-  //   getImages = _image.split(";");
-  //   return Stack(
-  //     alignment: Alignment.center,
-  //     children: [
-  //       Stack(
-  //           alignment: Alignment.center,
-  //           children: [
-  //           CarouselSlider.builder(
-  //           itemCount: getImages.length,
-  //           options: CarouselOptions(
-  //               viewportFraction: 1,
-  //               autoPlay: true,
-  //               enableInfiniteScroll: false,
-  //               onPageChanged: (index, reason) {
-  //                 setState(() {
-  //                   currentPos = index;
-  //                 });
-  //               }),
-  //           itemBuilder: (context, index, _) {
-  //             return Stack(
-  //                 children: <Widget>[
-  //                 FullScreenWidget(
-  //                   backgroundColor: WHITE_COLOR,
-  //                   child: Center(
-  //                     child: Hero(
-  //                       tag: getImages[index].toString(),
-  //                       child: CachedNetworkImage(
-  //                         imageUrl: getImages[index],
-  //                         fit: BoxFit.cover,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               if (editFlag)
-  //                 Positioned(
-  //                   right: 5,
-  //                   top: 5,
-  //                   child: InkWell(
-  //                     child: Icon(
-  //                       Icons.cancel,
-  //                       size: 30,
-  //                       color: PINK_COLOR,
-  //                     ),
-  //                     onTap: () {
-  //                       setState(() {
-  //                         getImages.removeAt(index);
-  //                         String url = "";
-  //                         for (var getUrl in getImages) {
-  //                           if (getUrl != getImages.last) {
-  //                             url += getUrl + ";";
-  //                           } else {
-  //                             url += getUrl;
-  //                           }
-  //                         }
-  //                         widget.model.imageURL = url;
-  //                       });
-  //                     },
-  //                   ),
-  //                 ),
-  //             ]);
-  //           },
-  //         ),
-  //           if (editFlag == false)
-  //           Positioned(
-  //             right: 10,
-  //             top: 10,
-  //             child: Container(
-  //               width: 32.0,
-  //               padding: EdgeInsets.all(5),
-  //               alignment: Alignment.center,
-  //               decoration: BoxDecoration(
-  //                 color: BLACK_COLOR.withOpacity(0.5),
-  //                 borderRadius: BorderRadius.all(Radius.circular(15.0)),
-  //               ),
-  //               child: Text(
-  //                 (currentPos + 1).toString() +
-  //                     "/" +
-  //                     getImages.length.toString(),
-  //                 style: TextStyle(fontSize: 13,color: WHITE_COLOR),
-  //               ),
-  //             ),
-  //           ),
-  //           Positioned(
-  //           bottom: 0,
-  //           child: Row(
-  //             mainAxisAlignment: MainAxisAlignment.center,
-  //             children: getImages.map((pic) {
-  //               int index = getImages.indexOf(pic);
-  //               return Container(
-  //                 width: currentPos == index ? 8.0 : 6.0,
-  //                 height: currentPos == index ? 8.0 : 6.0,
-  //                 margin: EdgeInsets.symmetric(vertical: 15.0, horizontal: 4.0),
-  //                 decoration: BoxDecoration(
-  //                   shape: BoxShape.circle,
-  //                   boxShadow: [
-  //                     BoxShadow(
-  //                       color: GREY_COLOR.withOpacity(0.6),
-  //                       spreadRadius: 2,
-  //                       blurRadius: 4,
-  //                       offset: Offset(1, 1), // changes position of shadow
-  //                     ),
-  //                   ],
-  //                   color: currentPos == index
-  //                       ? WHITE_COLOR
-  //                       : WHITE_COLOR.withOpacity(0.6),
-  //                 ),
-  //               );
-  //             }).toList(),
-  //           ),
-  //         ),
-  //       ]),
-  //     ],
-  //   );
-  // }
+  Widget getDiaryImage(String _image) {
+    getImages = _image.split(";");
+    return Padding(
+      padding: EdgeInsets.only(top: 10.0),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Stack(alignment: Alignment.center, children: [
+            CarouselSlider.builder(
+              itemCount: getImages.length,
+              options: CarouselOptions(
+                  viewportFraction: 1,
+                  autoPlay: true,
+                  enableInfiniteScroll: false,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      currentPos = index;
+                    });
+                  }),
+              itemBuilder: (context, index, _) {
+                return Stack(children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      openImage(context, index, widget.model.imageURL);
+                    },
+                    child: Hero(
+                      tag: getImages[index].toString(),
+                      child: CachedNetworkImage(
+                        imageUrl: getImages[index],
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  if (editFlag)
+                    Positioned(
+                      right: 5,
+                      top: 5,
+                      child: InkWell(
+                        child: Icon(
+                          Icons.cancel,
+                          size: 30,
+                          color: PINK_COLOR,
+                        ),
+                        onTap: () {
+                          setState(() {
+                            imageDeleted.add(getImages[index]);
+                            getImages.removeAt(index);
+                            String url = "";
+                            for (var getUrl in getImages) {
+                              if (getUrl != getImages.last) {
+                                url += getUrl + ";";
+                              } else {
+                                url += getUrl;
+                              }
+                            }
+                            widget.model.imageURL = url;
+                          });
+                        },
+                      ),
+                    ),
+                ]);
+              },
+            ),
+            if (editFlag == false)
+              Positioned(
+                right: 10,
+                top: 10,
+                child: Container(
+                  width: 32.0,
+                  padding: EdgeInsets.all(5),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: BLACK_COLOR.withOpacity(0.5),
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
+                  child: Text(
+                    (currentPos + 1).toString() +
+                        "/" +
+                        getImages.length.toString(),
+                    style: TextStyle(fontSize: 13, color: WHITE_COLOR),
+                  ),
+                ),
+              ),
+            Positioned(
+              bottom: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: getImages.map((pic) {
+                  int index = getImages.indexOf(pic);
+                  return Container(
+                    width: currentPos == index ? 8.0 : 6.0,
+                    height: currentPos == index ? 8.0 : 6.0,
+                    margin:
+                        EdgeInsets.symmetric(vertical: 15.0, horizontal: 4.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: GREY_COLOR.withOpacity(0.6),
+                          spreadRadius: 2,
+                          blurRadius: 4,
+                          offset: Offset(1, 1), // changes position of shadow
+                        ),
+                      ],
+                      color: currentPos == index
+                          ? WHITE_COLOR
+                          : WHITE_COLOR.withOpacity(0.6),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ]),
+        ],
+      ),
+    );
+  }
 
   Widget ChooseImageButton() {
     return InkWell(
@@ -378,17 +383,18 @@ class _DiaryDetailsState extends State<DiaryDetails> {
     List<Asset> resultList = <Asset>[];
     try {
       resultList = await MultiImagePicker.pickImages(
-        maxImages: 5,
+        maxImages: 30,
         enableCamera: true,
         selectedAssets: images,
         cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
         materialOptions: MaterialOptions(
-          actionBarColor: "#abcdef",
-          actionBarTitle: "Thêm hình ảnh",
-          allViewTitle: "Tất cả hình ảnh",
-          useDetailsView: true,
-          selectCircleStrokeColor: "#ffffff",
-        ),
+            statusBarColor: "#FB668A",
+            actionBarColor: "#FB668A",
+            actionBarTitle: "Thêm hình ảnh",
+            allViewTitle: "Tất cả hình ảnh",
+            useDetailsView: true,
+            selectCircleStrokeColor: "#ffffff",
+            selectionLimitReachedText: "Vui lòng chọn tối đa 30 hình ảnh!"),
       );
     } on Exception catch (e) {
       e.toString();

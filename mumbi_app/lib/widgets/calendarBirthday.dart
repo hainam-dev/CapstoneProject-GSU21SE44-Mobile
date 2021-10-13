@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mumbi_app/Constant/Variable.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
-import 'package:mumbi_app/Model/dateTime_model.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+class Date {
+  DateTime date;
+  Date({this.date});
+}
 
 class CalendarBirthday extends StatefulWidget {
   final title;

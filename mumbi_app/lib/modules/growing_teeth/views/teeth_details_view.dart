@@ -12,6 +12,8 @@ import 'package:mumbi_app/modules/family/viewmodel/child_viewmodel.dart';
 import 'package:mumbi_app/modules/growing_teeth/models/teeth_model.dart';
 import 'package:mumbi_app/Utils/upload_multipleImage.dart';
 import 'package:mumbi_app/modules/growing_teeth/viewmodel/teeth_viewmodel.dart';
+import 'package:mumbi_app/utils/delete_image_firebase.dart';
+import 'package:mumbi_app/utils/openImageWrapper.dart';
 import 'package:mumbi_app/widgets/calendarBirthday.dart';
 import 'package:mumbi_app/widgets/customBottomButton.dart';
 import 'package:mumbi_app/widgets/customComponents.dart';
@@ -34,6 +36,7 @@ class _TeethDetailState extends State<TeethDetail> {
   List<Asset> images = <Asset>[];
   List<File> _files = <File>[];
   List<String> splitImage;
+  List<String> imageDeleted = [];
   CollectionReference imgRef;
   firebase_storage.Reference ref;
   TeethModel teethModel;
@@ -75,7 +78,7 @@ class _TeethDetailState extends State<TeethDetail> {
           model: teethViewModel,
           child: ScopedModelDescendant<TeethViewModel>(
               builder: (context, child, model) {
-                teethModel = model.toothModel;
+            teethModel = model.toothModel;
             // print("TOOTH MODEL: " +toothModel.note.toString());
             getToothModel();
             return Form(
@@ -167,6 +170,9 @@ class _TeethDetailState extends State<TeethDetail> {
                               teethModel.note.toString());
                           result =
                               await TeethViewModel().upsertTooth(teethModel);
+                        }
+                        if (imageDeleted != null || imageDeleted != "") {
+                          deleteImage(imageDeleted);
                         }
                         Navigator.pop(context);
                         Navigator.pop(context);
@@ -289,52 +295,53 @@ class _TeethDetailState extends State<TeethDetail> {
           children: List.generate(
             splitImage.length,
             (index) {
-              return Card(
-                child: Stack(children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2),
-                    child: FullScreenWidget(
-                      backgroundColor: WHITE_COLOR,
-                      child: Center(
-                        child: Hero(
-                          tag: splitImage[index].toString(),
-                          child: Image(
-                            image:
-                                CachedNetworkImageProvider(splitImage[index]),
-                          ),
-                        ),
+              return Stack(children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 2, right: 4),
+                  child: GestureDetector(
+                    onTap: () {
+                      openImage(context, index, _image);
+                    },
+                    child: Hero(
+                      tag: splitImage[index].toString(),
+                      child: CachedNetworkImage(
+                        imageUrl: splitImage[index],
+                        fit: BoxFit.cover,
+                        height: 80,
+                        width: 80,
                       ),
                     ),
                   ),
-                  Positioned(
-                    right: 3,
-                    top: 3,
-                    child: InkWell(
-                      child: Icon(
-                        Icons.cancel,
-                        size: 20,
-                        color: PINK_COLOR,
-                      ),
-                      onTap: () {
-                        setState(() {
-                          splitImage.removeAt(index);
-                          String url = "";
-                          for (var getUrl in splitImage) {
-                            if (getUrl != splitImage.last) {
-                              url += getUrl + ";";
-                            } else {
-                              url += getUrl;
-                            }
+                ),
+                Positioned(
+                  right: 3,
+                  top: 3,
+                  child: InkWell(
+                    child: Icon(
+                      Icons.cancel,
+                      size: 20,
+                      color: PINK_COLOR,
+                    ),
+                    onTap: () {
+                      setState(() {
+                        imageDeleted.add(splitImage[index]);
+                        splitImage.removeAt(index);
+                        String url = "";
+                        for (var getUrl in splitImage) {
+                          if (getUrl != splitImage.last) {
+                            url += getUrl + ";";
+                          } else {
+                            url += getUrl;
                           }
-                          print(url);
+                        }
+                        print(url);
 
-                          teethModel.imageURL = url;
-                        });
-                      },
-                    ),
+                        teethModel.imageURL = url;
+                      });
+                    },
                   ),
-                ]),
-              );
+                ),
+              ]);
             },
           ),
         ),
@@ -353,34 +360,35 @@ class _TeethDetailState extends State<TeethDetail> {
             shrinkWrap: true,
             crossAxisCount: 3,
             children: List.generate(_files.length, (index) {
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(2, 0, 0, 2),
-                child: FullScreenWidget(
-                  backgroundColor: WHITE_COLOR,
-                  child: Center(
-                    child: Hero(
-                        tag: _files[index].toString(),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Card(
-                                clipBehavior: Clip.antiAlias,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  child: Image.file(
-                                    _files[index],
-                                    height: 80,
-                                    width: 80,
-                                  ),
+              return GestureDetector(
+                onTap: () {
+                  openImage(context, index, _files);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(2, 0, 0, 2),
+                  child: Hero(
+                      tag: _files[index].toString(),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Card(
+                              clipBehavior: Clip.antiAlias,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5.0),
+                                child: Image.file(
+                                  _files[index],
+                                  height: 80,
+                                  width: 80,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
-                          ],
-                        )),
-                  ),
+                          ),
+                        ],
+                      )),
                 ),
               );
             }),
@@ -399,12 +407,13 @@ class _TeethDetailState extends State<TeethDetail> {
         selectedAssets: images,
         cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
         materialOptions: MaterialOptions(
-          actionBarColor: "#abcdef",
-          actionBarTitle: "Thêm hình ảnh",
-          allViewTitle: "Tất cả hình ảnh",
-          useDetailsView: true,
-          selectCircleStrokeColor: "#ffffff",
-        ),
+            statusBarColor: "#FB668A",
+            actionBarColor: "#FB668A",
+            actionBarTitle: "Thêm hình ảnh",
+            allViewTitle: "Tất cả hình ảnh",
+            useDetailsView: true,
+            selectCircleStrokeColor: "#ffffff",
+            selectionLimitReachedText: "Vui lòng chọn tối đa 5 hình ảnh!"),
       );
     } on Exception catch (e) {
       e.toString();

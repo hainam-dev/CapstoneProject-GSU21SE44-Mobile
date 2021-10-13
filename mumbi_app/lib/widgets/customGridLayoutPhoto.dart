@@ -4,8 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
+import 'package:mumbi_app/utils/openImageWrapper.dart';
 import 'dart:ui' as ui;
-
 import 'customGalleryPhotoWrapper.dart';
 import 'customLoading.dart';
 
@@ -99,7 +99,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         return GestureDetector(
             onTap: () {
-              _openImage(context, index);
+              openImage(context, index, this.listImage);
             },
             child: Hero(
               tag: listImage[index].toString(),
@@ -129,7 +129,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                       height: SizeConfig.blockSizeHorizontal * 50,
                       child: GestureDetector(
                           onTap: () {
-                            _openImage(context, index);
+                            openImage(context, index, this.listImage);
                           },
                           child: Hero(
                             tag: listImage[index].toString(),
@@ -152,7 +152,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                       width: SizeConfig.blockSizeHorizontal * 50,
                       child: GestureDetector(
                         onTap: () {
-                          _openImage(context, index);
+                          openImage(context, index, this.listImage);
                         },
                         child: Hero(
                           tag: listImage[index].toString(),
@@ -194,7 +194,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                   height: SizeConfig.blockSizeHorizontal * 49,
                   child: GestureDetector(
                     onTap: () {
-                      _openImage(this.context, 0);
+                      openImage(this.context, 0, this.listImage);
                     },
                     child: Hero(
                       tag: listImage[0].toString(),
@@ -225,7 +225,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                               width: SizeConfig.blockSizeHorizontal * 50,
                               child: GestureDetector(
                                 onTap: () {
-                                  _openImage(context, index + 1);
+                                  openImage(context, index + 1, this.listImage);
                                 },
                                 child: Hero(
                                   tag: listImage[index + 1].toString(),
@@ -253,7 +253,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                   width: SizeConfig.blockSizeHorizontal * 49,
                   child: GestureDetector(
                     onTap: () {
-                      _openImage(this.context, 0);
+                      openImage(this.context, 0, this.listImage);
                     },
                     child: Hero(
                       tag: listImage[0].toString(),
@@ -283,7 +283,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                               height: SizeConfig.blockSizeHorizontal * 50,
                               child: GestureDetector(
                                 onTap: () {
-                                  _openImage(context, index + 1);
+                                  openImage(context, index + 1, this.listImage);
                                 },
                                 child: Hero(
                                   tag: listImage[index + 1].toString(),
@@ -320,7 +320,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                   height: SizeConfig.blockSizeHorizontal * 66,
                   child: GestureDetector(
                     onTap: () {
-                      _openImage(this.context, 0);
+                      openImage(this.context, 0, this.listImage);
                     },
                     child: CachedNetworkImage(
                       imageUrl: listImage[0],
@@ -347,7 +347,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                               width: SizeConfig.blockSizeHorizontal * 33,
                               child: GestureDetector(
                                 onTap: () {
-                                  _openImage(context, index + 1);
+                                  openImage(context, index + 1, this.listImage);
                                 },
                                 child: CachedNetworkImage(
                                   imageUrl: listImage[index + 1],
@@ -373,7 +373,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                       width: SizeConfig.blockSizeHorizontal * 66,
                       child: GestureDetector(
                         onTap: () {
-                          _openImage(this.context, 0);
+                          openImage(this.context, 0, this.listImage);
                         },
                         child: CachedNetworkImage(
                           imageUrl: listImage[0],
@@ -400,7 +400,8 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                                   height: SizeConfig.blockSizeHorizontal * 33,
                                   child: GestureDetector(
                                     onTap: () {
-                                      _openImage(context, index + 1);
+                                      openImage(
+                                          context, index + 1, this.listImage);
                                     },
                                     child: CachedNetworkImage(
                                       imageUrl: listImage[index + 1],
@@ -432,7 +433,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                       children: List.generate(listImage.length, (index) {
                         return GestureDetector(
                           onTap: () {
-                            _openImage(context, index);
+                            openImage(context, index, this.listImage);
                           },
                           child: CachedNetworkImage(
                             imageUrl: listImage[index],
@@ -462,7 +463,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                   height: SizeConfig.blockSizeHorizontal * 66,
                   child: GestureDetector(
                     onTap: () {
-                      _openImage(this.context, 0);
+                      openImage(this.context, 0, this.listImage);
                     },
                     child: Hero(
                       tag: listImage[0].toString(),
@@ -493,7 +494,8 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                               child: index < 2
                                   ? GestureDetector(
                                       onTap: () {
-                                        _openImage(context, index + 1);
+                                        openImage(
+                                            context, index + 1, this.listImage);
                                       },
                                       child: Hero(
                                         tag: listImage[index + 1].toString(),
@@ -510,7 +512,8 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                                     )
                                   : GestureDetector(
                                       onTap: () {
-                                        _openImage(context, index + 1);
+                                        openImage(
+                                            context, index + 1, this.listImage);
                                       },
                                       child: Stack(children: <Widget>[
                                         Hero(
@@ -570,7 +573,7 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                       width: SizeConfig.blockSizeHorizontal * 66,
                       child: GestureDetector(
                         onTap: () {
-                          _openImage(this.context, 0);
+                          openImage(this.context, 0, this.listImage);
                         },
                         child: Hero(
                           tag: listImage[0].toString(),
@@ -601,7 +604,8 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                                   child: index < 2
                                       ? GestureDetector(
                                           onTap: () {
-                                            _openImage(context, index + 1);
+                                            openImage(context, index + 1,
+                                                this.listImage);
                                           },
                                           child: Hero(
                                             tag:
@@ -620,7 +624,8 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                                         )
                                       : GestureDetector(
                                           onTap: () {
-                                            _openImage(context, index + 1);
+                                            openImage(context, index + 1,
+                                                this.listImage);
                                           },
                                           child: Stack(children: <Widget>[
                                             Hero(
@@ -696,7 +701,8 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                                           SizeConfig.blockSizeHorizontal * 50,
                                       child: GestureDetector(
                                         onTap: () {
-                                          _openImage(context, index);
+                                          openImage(
+                                              context, index, this.listImage);
                                         },
                                         child: Hero(
                                           tag: listImage[index].toString(),
@@ -746,7 +752,8 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                                       child: index < 2
                                           ? GestureDetector(
                                               onTap: () {
-                                                _openImage(context, index + 2);
+                                                openImage(context, index + 2,
+                                                    this.listImage);
                                               },
                                               child: Hero(
                                                 tag: listImage[index + 2]
@@ -766,7 +773,8 @@ class CustomGridLayoutPhoto extends StatelessWidget {
                                             )
                                           : GestureDetector(
                                               onTap: () {
-                                                _openImage(context, index + 2);
+                                                openImage(context, index + 2,
+                                                    this.listImage);
                                               },
                                               child: Stack(children: <Widget>[
                                                 Hero(
@@ -828,17 +836,17 @@ class CustomGridLayoutPhoto extends StatelessWidget {
     );
   }
 
-  void _openImage(BuildContext context, final int index) {
-    Navigator.push(
-        context,
-        PageRouteBuilder(
-            opaque: false,
-            barrierColor: Colors.white.withOpacity(0),
-            pageBuilder: (BuildContext context, _, __) => GalleryPhotoWrapper(
-                  galleries: listImage,
-                  initalIndex: index,
-                  scrollDirection: Axis.horizontal,
-                  loadingBuilder: (context, event) => loadingProgress(),
-                )));
-  }
+  // void openImage(BuildContext context, final int index) {
+  //   Navigator.push(
+  //       context,
+  //       PageRouteBuilder(
+  //           opaque: false,
+  //           barrierColor: Colors.white.withOpacity(0),
+  //           pageBuilder: (BuildContext context, _, __) => GalleryPhotoWrapper(
+  //                 galleries: listImage,
+  //                 initalIndex: index,
+  //                 scrollDirection: Axis.horizontal,
+  //                 loadingBuilder: (context, event) => loadingProgress(),
+  //               )));
+  // }
 }

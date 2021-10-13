@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
@@ -11,7 +13,7 @@ class GalleryPhotoWrapper extends StatefulWidget {
   final dynamic maxScale;
   final int initalIndex;
   final PageController pageController;
-  final String galleries;
+  final galleries;
   final Axis scrollDirection;
 
   GalleryPhotoWrapper(
@@ -43,6 +45,8 @@ class _GalleryPhotoWrapper extends State<GalleryPhotoWrapper> {
   double disposeLimit = 150;
 
   Duration animationDuration;
+
+  List<dynamic> listImage;
   @override
   void initState() {
     // TODO: implement initState
@@ -115,7 +119,9 @@ class _GalleryPhotoWrapper extends State<GalleryPhotoWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> listImage = widget.galleries.split(";");
+    widget.galleries.runtimeType == String
+        ? listImage = widget.galleries.split(";")
+        : listImage = widget.galleries;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: GestureDetector(
@@ -164,10 +170,17 @@ class _GalleryPhotoWrapper extends State<GalleryPhotoWrapper> {
   }
 
   PhotoViewGalleryPageOptions _buildItem(BuildContext context, int index) {
-    List<String> listImage = widget.galleries.split(";");
-    final item = listImage[index];
+    var item = null;
+    if (widget.galleries.runtimeType == String) {
+      listImage = widget.galleries.split(";");
+      item = listImage[index];
+    } else {
+      item = listImage[index];
+    }
     return PhotoViewGalleryPageOptions(
-        imageProvider: (CachedNetworkImageProvider(listImage[index])),
+        imageProvider: widget.galleries.runtimeType == String
+            ? CachedNetworkImageProvider(listImage[index])
+            : FileImage(listImage[index]),
         initialScale: PhotoViewComputedScale.contained,
         minScale: PhotoViewComputedScale.contained * (0.5 + index / 30),
         maxScale: PhotoViewComputedScale.contained * 2,
