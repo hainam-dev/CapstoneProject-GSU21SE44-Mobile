@@ -1,10 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'package:mumbi_app/Constant/common_api.dart';
 
-class StandardRespisotory {
-  static Future<dynamic> apiGetStandedIndexByGender(String gender) async {
+class StandardRepository {
+  static Future<dynamic> apiGetStandardIndex(num gender, bool status) async {
     var response = await http.get(
-      Uri.parse("${GET_STAND_INDEX_BY_GENDER}${gender}"),
+      Uri.parse("${GET_STANDARD_INDEX}").replace(queryParameters: {
+        "Gender" : gender.toString(),
+        "Status" : status.toString()}),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },

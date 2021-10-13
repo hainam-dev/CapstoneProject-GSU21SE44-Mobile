@@ -52,16 +52,60 @@ class _BotNavBarState extends State<BotNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: checkGetAppbar(),
+      drawer: checkGetDrawer(),
       body: getBody(),
-      appBar: AppBar(
-        title: Text(getTitle()),
+      bottomNavigationBar: getBotNavBar(),
+    );
+  }
+
+  Widget checkGetAppbar(){
+    if (selectedIndex == 0 || selectedIndex == 1 || (selectedIndex == 2 &&
+        ((CurrentMember.role == MOM_ROLE && CurrentMember.pregnancyFlag == true)
+            || CurrentMember.role == CHILD_ROLE))) {
+      return AppBar(
+        title: getTitle(),
         actions: [
           getAction(),
         ],
-      ),
-      drawer: getDrawer(context),
-      bottomNavigationBar: getBotNavBar(),
-    );
+      );
+    }else{
+      return null;
+    }
+  }
+
+  Widget getTitle() {
+    if (selectedIndex == 0) {
+      return Text("Trang chủ");
+    } else if (selectedIndex == 1) {
+      return Text("Cẩm nang");
+    } else if (selectedIndex == 2 &&
+        ((CurrentMember.role == MOM_ROLE && CurrentMember.pregnancyFlag == true)
+            || CurrentMember.role == CHILD_ROLE)){
+      return Text("Theo dõi");
+    } else {
+      return null;
+    }
+  }
+
+  Widget getAction() {
+    if (selectedIndex == 0) {
+      return ChangeAccountButton();
+    } else if (selectedIndex == 1) {
+      return ButtonGotoSavePost();
+    } else {
+      return InvisibleBox();
+    }
+  }
+
+  Widget checkGetDrawer(){
+    if (selectedIndex == 0 || selectedIndex == 1 || (selectedIndex == 2 &&
+        ((CurrentMember.role == MOM_ROLE && CurrentMember.pregnancyFlag == true)
+            || CurrentMember.role == CHILD_ROLE))) {
+      return getDrawer(context);
+    }else{
+        return null;
+    }
   }
 
   Widget getBody() {
@@ -115,30 +159,20 @@ class _BotNavBarState extends State<BotNavBar> {
     );
   }
 
+  item(String _icon, String _name, Color color) {
+    return BottomNavigationBarItem(
+      icon: SvgPicture.asset(
+        _icon,
+        color: color,
+      ),
+      label: _name,
+    );
+  }
+
   void onTapHandler(int index) {
     this.setState(() {
       this.selectedIndex = index;
     });
-  }
-
-  String getTitle() {
-    if (selectedIndex == 0) {
-      return "Trang chủ";
-    } else if (selectedIndex == 1) {
-      return "Cẩm nang";
-    } else {
-      return "Theo dõi";
-    }
-  }
-
-  Widget getAction() {
-    if (selectedIndex == 0) {
-      return ChangeAccountButton();
-    } else if (selectedIndex == 1) {
-      return ButtonGotoSavePost();
-    } else {
-      return InvisibleBox();
-    }
   }
 
   Widget ButtonGotoSavePost() {
@@ -159,28 +193,31 @@ class _BotNavBarState extends State<BotNavBar> {
   }
 
   Widget ChangeAccountButton() {
-    return FlatButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ChangeAccount()));
-        },
-        child: Stack(
-          alignment: Alignment.center,
-          clipBehavior: Clip.none,
-          children: [
-            if (CurrentMember.role == CHILD_ROLE)
-              Positioned(left: 5, child: ChildAvatar()),
-            Positioned(
-                right: CurrentMember.role == CHILD_ROLE ? 5 : null,
-                child: MomAvatar()),
-            if (CurrentMember.role == CHILD_ROLE)
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: TextButton(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ChangeAccount()));
+          },
+          child: Stack(
+            alignment: Alignment.center,
+            clipBehavior: Clip.none,
+            children: [
+              if (CurrentMember.role == CHILD_ROLE)
+                Positioned(left: 5, child: ChildAvatar()),
               Positioned(
-                  child: SvgPicture.asset(
-                swap,
-                height: 20,
-              )),
-          ],
-        ));
+                  right: CurrentMember.role == CHILD_ROLE ? 5 : null,
+                  child: MomAvatar()),
+              if (CurrentMember.role == CHILD_ROLE)
+                Positioned(
+                    child: SvgPicture.asset(
+                  swap,
+                  height: 20,
+                )),
+            ],
+          )),
+    );
   }
 
   Widget MomAvatar() {
@@ -228,14 +265,4 @@ class _BotNavBarState extends State<BotNavBar> {
           },
         ));
   }
-}
-
-item(String _icon, String _name, Color color) {
-  return BottomNavigationBarItem(
-    icon: SvgPicture.asset(
-      _icon,
-      color: color,
-    ),
-    label: _name,
-  );
 }

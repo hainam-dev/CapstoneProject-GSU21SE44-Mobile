@@ -61,7 +61,7 @@ final String UPSERT_TOOTH_BY_TOOTH_ID = getApiPath("/api/Tooth/UpsertTooth/");
 
 final String GET_ACTIVITY = getApiPath("/api/Activity/GetActivity");
 
-final String GET_STAND_INDEX_BY_GENDER = getApiPath("/api/StandardIndex/GetStandardIndexBy/");
+final String GET_STANDARD_INDEX = getApiPath("/api/StandardIndex/StandardIndexByGender");
 
 final String GET_ACTION_BY_TYPE = getApiPath("/api/Action/GetActionBy/");
 final String GET_ACTION_ID_BY_CHILDID = getApiPath("/api/ActionChild/GetActionChildBy/");

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/Utils/size_config.dart';
-import 'package:mumbi_app/modules/standard_index/views/standard_index_view.dart';
+import 'package:mumbi_app/modules/development_milestone/views/standard_index_view.dart';
 
 import 'customComponents.dart';
 

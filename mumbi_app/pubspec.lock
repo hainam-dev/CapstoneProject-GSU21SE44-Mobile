@@ -204,6 +204,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  data_table_2:
+    dependency: "direct main"
+    description:
+      name: data_table_2
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.1"
   date_format:
     dependency: "direct main"
     description:
@@ -532,13 +539,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.10.0"
-  graphview:
-    dependency: "direct main"
-    description:
-      name: graphview
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.7.0"
   html:
     dependency: transitive
     description:

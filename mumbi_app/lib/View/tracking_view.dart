@@ -4,13 +4,14 @@ import 'package:mumbi_app/Constant/assets_path.dart';
 import 'package:mumbi_app/Constant/colorTheme.dart';
 import 'package:mumbi_app/Constant/textStyle.dart';
 import 'package:mumbi_app/core/change_member/models/change_member_model.dart';
+import 'package:mumbi_app/modules/development_milestone/views/development_milestone_view.dart';
+import 'package:mumbi_app/modules/development_milestone/views/standard_index_view.dart';
 import 'package:mumbi_app/modules/family/models/child_model.dart';
 import 'package:mumbi_app/Utils/datetime_convert.dart';
 import 'package:mumbi_app/modules/family/viewmodel/child_viewmodel.dart';
 import 'package:mumbi_app/modules/family/views/child_info_view.dart';
 import 'package:mumbi_app/modules/growing_teeth/views/teeth_tracking_view.dart';
 import 'package:mumbi_app/modules/injection_schedules/views/injection_schedules_view.dart';
-import 'package:mumbi_app/modules/standard_index/views/development_milestone_view.dart';
 import 'package:mumbi_app/widgets/customComponents.dart';
 import 'package:mumbi_app/widgets/customLoading.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -57,7 +58,7 @@ class _TrackingState extends State<Tracking> {
                                 height: 23,
                               ),
                               ListTileFunction(developmentMilestone,
-                                  "Mốc phát triển", DevelopmentMilestone()),
+                                  "Mốc phát triển", StandardIndex()),
                               if (CurrentMember.role == CHILD_ROLE)
                                 ListTileFunction(
                                     teethGrow, "Mọc răng", TeethTracking()),

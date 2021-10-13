@@ -392,7 +392,7 @@ class _ChildrenInfoState extends State<ChildrenInfo> {
       ),
       onTap: () async {
         Navigator.pop(context);
-        showConfirmDialog(context, "Xóa thành viên", DELETE_MEMBER_MESSAGE,
+        showConfirmDialog(context, "Xóa", DELETE_MEMBER_MESSAGE,
             ContinueFunction: () async {
           Navigator.pop(context);
           showProgressDialogue(context);

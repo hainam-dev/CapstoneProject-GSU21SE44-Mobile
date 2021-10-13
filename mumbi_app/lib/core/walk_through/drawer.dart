@@ -29,7 +29,7 @@ Widget getDrawer(BuildContext context) {
             child: Column(
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.03,
+                  height: MediaQuery.of(context).padding.top,
                 ),
                 Card(
                   shape: RoundedRectangleBorder(
