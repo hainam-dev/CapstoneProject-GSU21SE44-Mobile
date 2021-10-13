@@ -263,7 +263,7 @@ class _DashBoardState extends State<DashBoard> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         createButtonTextImageLink(context, "Cộng đồng", community, Community()),
-        createButtonTextImageLink(context, "Thai giáo", thaigiao, Pregnancy()),
+        createButtonTextImageLink(context, CurrentMember.role == MOM_ROLE ? "Thai giáo" : "Nuôi dạy trẻ", thaigiao, Pregnancy()),
         createButtonTextImageLink(context, "Bác sĩ", doctor, Doctor()),
       ],
     );

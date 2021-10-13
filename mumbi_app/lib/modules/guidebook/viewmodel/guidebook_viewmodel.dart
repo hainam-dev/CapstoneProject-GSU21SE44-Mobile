@@ -27,8 +27,7 @@ class GuidebookViewModel extends Model {
   void getGuidebook(bool highlightsFlag, num typeId) async {
     try {
       isLoading = true;
-      String data =
-          await GuidebookRepository.apiGetGuidebook(1, highlightsFlag, typeId);
+      String data = await GuidebookRepository.apiGetGuidebook(1, highlightsFlag, typeId);
       Map<String, dynamic> jsonList = json.decode(data);
       List<dynamic> guidebookList = jsonList['data'];
       if (guidebookList != null) {
